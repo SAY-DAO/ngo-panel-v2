@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
-import { setTheme, setDir, setDarkMode } from '../../../redux/actions/CustumizerAction';
+import { setTheme, setDir, setDarkMode } from '../../../redux/actions/custumizerAction';
 import CustomRadio from '../../../components/forms/custom-elements/CustomRadio';
 
 const SidebarWidth = '320px';

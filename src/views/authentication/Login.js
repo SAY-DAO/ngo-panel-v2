@@ -159,8 +159,6 @@ const Login = () => (
                   variant="contained"
                   size="large"
                   fullWidth
-                  component={Link}
-                  to="/"
                   sx={{
                     pt: '10px',
                     pb: '10px',
