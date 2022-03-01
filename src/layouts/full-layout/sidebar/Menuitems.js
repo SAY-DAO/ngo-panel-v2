@@ -25,7 +25,7 @@ const Menuitems = [
       {
         title: 'List',
         icon: 'list',
-        href: '/children/mine',
+        href: '/children/list',
       },
       {
         title: 'Add',

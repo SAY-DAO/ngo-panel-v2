@@ -1,9 +1,14 @@
 import axios from 'axios';
 import i18next from 'i18next';
-import { apiUrl, apiUrl3 } from '../env';
+import { apiUrl, apiUrl3, baseUrl } from '../env';
 
 export const publicApi = axios.create({
   baseURL: apiUrl,
+  headers: {
+    Authorization: '',
+    'Access-Control-Allow-Origin': baseUrl,
+    'Cache-Control': 'no-cache',
+  },
 });
 
 export const publicApi3 = axios.create({

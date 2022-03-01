@@ -11,6 +11,8 @@ const BlankLayout = Loadable(lazy(() => import('../layouts/blank-layout/BlankLay
 const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 
+const ChildrenList = Loadable(lazy(() => import('../views/children/List')));
+
 /* ****Pages***** */
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
 const SocialWorkersList = Loadable(lazy(() => import('../pages/socialWorker/SocialWorkersList')));
@@ -38,6 +40,11 @@ const Router = [
       { path: 'login', element: <Login /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
+  },
+  {
+    path: 'children',
+    element: <FullLayout />,
+    children: [{ path: 'list', element: <ChildrenList /> }],
   },
 ];
 
