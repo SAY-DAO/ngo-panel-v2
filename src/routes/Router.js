@@ -11,6 +11,7 @@ const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 
 /* ****Pages***** */
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
+const SocialWorkersList = Loadable(lazy(() => import('../pages/socialWorker/SocialWorkersList')));
 /* ****Routes***** */
 
 const Router = [
@@ -20,6 +21,7 @@ const Router = [
     children: [
       { path: '/', element: <Navigate to="/dashboards/starter" /> },
       { path: '/dashboards/starter', exact: true, element: <Dashboard /> },
+      { path: '/sw/list', exact: true, element: <SocialWorkersList /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

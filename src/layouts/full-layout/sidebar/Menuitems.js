@@ -91,7 +91,7 @@ const Menuitems = [
       {
         title: 'List',
         icon: 'list',
-        href: '/admin/sws/list',
+        href: '/sw/list',
       },
       {
         title: 'Add',
