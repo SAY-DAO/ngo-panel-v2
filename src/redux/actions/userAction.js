@@ -1,5 +1,4 @@
-import LogRocket from 'logrocket';
-import { publicApi } from '../apis/sayBase';
+import { publicApi } from '../../apis/sayBase';
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -17,59 +16,55 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_SUCCESS,
-  USER_DETAILS_REQUEST,
-  USER_DETAILS_SUCCESS,
-  USER_DETAILS_FAIL,
 } from '../constants/userConstants';
 
-export const register =
-  (userName, password, theKey, value, otp) => async (dispatch) => {
-    try {
-      const formData = new FormData();
-      formData.append('username', userName);
-      formData.append('password', password);
-      formData.append('verifyCode', otp);
+export const register = (userName, password, theKey, value, otp) => async (dispatch) => {
+  try {
+    const formData = new FormData();
+    formData.append('username', userName);
+    formData.append('password', password);
+    formData.append('verifyCode', otp);
 
-      if (theKey === 'email') {
-        formData.append('email', value);
-      }
-      if (theKey === 'phone') {
-        formData.append('phoneNumber', value);
-        // formData.append('countryCode', dialCode);
-      }
-      formData.append('isInstalled', _standalone);
-
-      dispatch({ type: USER_REGISTER_REQUEST });
-      const config = {
-        headers: {
-          'Content-type': 'application/json',
-        },
-      };
-      const { data } = await publicApi.post('/auth/register', formData, {
-        config,
-      });
-      dispatch({
-        type: USER_REGISTER_SUCCESS,
-        payload: data,
-      });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-
-      dispatch({
-        type: USER_LOGIN_SUCCESS,
-        payload: data,
-      });
-      localStorage.removeItem('verifyInfo');
-    } catch (e) {
-      // check for generic and custom message to return using ternary statement
-      dispatch({
-        type: USER_REGISTER_FAIL,
-        payload: e.response && e.response.status ? e.response : e.message,
-      });
+    if (theKey === 'email') {
+      formData.append('email', value);
     }
-  };
+    if (theKey === 'phone') {
+      formData.append('phoneNumber', value);
+      // formData.append('countryCode', dialCode);
+    }
+
+    dispatch({ type: USER_REGISTER_REQUEST });
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
+    const { data } = await publicApi.post('/auth/register', formData, {
+      config,
+    });
+    dispatch({
+      type: USER_REGISTER_SUCCESS,
+      payload: data,
+    });
+    localStorage.setItem('userInfo', JSON.stringify(data));
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+    localStorage.removeItem('verifyInfo');
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: USER_REGISTER_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
 
 export const login = (userName, password) => async (dispatch) => {
   try {
+    console.log('huh?');
     dispatch({ type: USER_LOGIN_REQUEST });
     const config = {
       headers: {
@@ -79,23 +74,15 @@ export const login = (userName, password) => async (dispatch) => {
     const formData = new FormData();
     formData.append('username', userName);
     formData.append('password', password);
-    // required for back-end
-    formData.append('isInstalled', _standalone);
 
-    const { data } = await publicApi.post('/auth/login', formData, config);
+    const { data } = await publicApi.post('/panel/auth/login', formData, config);
 
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: data,
     });
     localStorage.setItem('userInfo', JSON.stringify(data));
-
-    // LogRocket
-    LogRocket.identify(data.user.id, {
-      username: data.user.userName,
-    });
   } catch (e) {
-    // check for generic and custom message to return using ternary statement
     dispatch({
       type: USER_LOGIN_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
@@ -128,11 +115,7 @@ export const forgotPassword = (theKey, value) => async (dispatch) => {
       resetType = 'phone';
     }
 
-    const { data } = await publicApi.post(
-      `/auth/password/reset/${resetType}`,
-      formData,
-      config
-    );
+    const { data } = await publicApi.post(`/auth/password/reset/${resetType}`, formData, config);
     dispatch({
       type: USER_FORGOT_PASSWORD_SUCCESS,
       payload: data,
@@ -141,38 +124,6 @@ export const forgotPassword = (theKey, value) => async (dispatch) => {
     dispatch({
       type: USER_FORGOT_PASSWORD_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
-    });
-  }
-};
-
-export const fetchUserDetails = () => async (dispatch, getState) => {
-  try {
-    dispatch({ type: USER_DETAILS_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.accessToken,
-      },
-    };
-
-    const { data } = await publicApi.get(`user/userId=me`, config);
-
-    dispatch({
-      type: USER_DETAILS_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    // check for generic and custom message to return using ternary statement
-    dispatch({
-      type: USER_DETAILS_FAIL,
-      payload:
-        e.response && e.response.data.detail
-          ? e.response.data.detail
-          : e.message,
     });
   }
 };
@@ -195,11 +146,7 @@ export const resetPassword = (password) => async (dispatch, getState) => {
     const formData = new FormData();
     formData.append('password', password);
 
-    const { data } = await publicApi.patch(
-      `/user/update/userId=me`,
-      formData,
-      config
-    );
+    const { data } = await publicApi.patch(`/user/update/userId=me`, formData, config);
     dispatch({
       type: USER_RESET_PASSWORD_SUCCESS,
       payload: data,
@@ -213,16 +160,7 @@ export const resetPassword = (password) => async (dispatch, getState) => {
 };
 
 export const userEditProfile =
-  (
-    phoneAuth,
-    emailAuth,
-    avatarUrl,
-    firstName,
-    lastName,
-    phoneNumber,
-    email,
-    userName
-  ) =>
+  (phoneAuth, emailAuth, avatarUrl, firstName, lastName, phoneNumber, email, userName) =>
   async (dispatch, getState) => {
     try {
       dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
@@ -257,11 +195,7 @@ export const userEditProfile =
       if (userInfo.user.userName !== userName) {
         formData.append('userName', userName);
       }
-      const { data } = await publicApi.patch(
-        `/user/update/userId=me`,
-        formData,
-        config
-      );
+      const { data } = await publicApi.patch(`/user/update/userId=me`, formData, config);
 
       dispatch({
         type: USER_UPDATE_PROFILE_SUCCESS,
