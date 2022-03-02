@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import contents from '../inputsValidation/Contents';
+import '../i18n';
 
 export default function Message({
   icon,

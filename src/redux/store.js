@@ -10,6 +10,7 @@ const userInfo = localStorage.getItem('userInfo')
 const initialState = {
   userLogin: {
     userInfo,
+    success: true
   },
 };
 const store = createStore(reducers, initialState, composeWithDevTools(applyMiddleware(thunk)));

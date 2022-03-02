@@ -21,7 +21,7 @@ const Login = () => {
   const redirect = location.search
     ? // eslint-disable-next-line no-restricted-globals
       location.search.split('redirect=')[1]
-    : 'main/home';
+    : '/';
 
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);

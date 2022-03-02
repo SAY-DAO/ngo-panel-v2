@@ -51,7 +51,7 @@ const baseTheme = {
     },
     error: {
       main: '#e46a76',
-      light: '#fdf3f5',
+      light: '#E91E63',
       dark: '#e45a68',
     },
     warning: {
