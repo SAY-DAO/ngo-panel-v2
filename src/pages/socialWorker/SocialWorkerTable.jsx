@@ -27,8 +27,60 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
+import img1 from '../../assets/images/user2.svg';
 
-const rows = []
+const rows = [
+  {
+    id: '1',
+    swCode: 1,
+    imgsrc: img1,
+    name: 'Sunil Joshi',
+    email: 'sunil@gmail.com',
+    pname: 'Elite Admin',
+    teams: [
+      {
+        id: '1.1',
+        color: 'secondary.main',
+        text: 'S',
+      },
+      {
+        id: '1.2',
+        color: 'error.main',
+        text: 'D',
+      },
+    ],
+    status: 'Active',
+    weeks: '11',
+    budget: '3.9',
+  },
+  {
+    id: '2',
+    imgsrc: img1,
+    name: 'Andrew McDownland',
+    email: 'andrew@gmail.com',
+    pname: 'Real Homes WP Theme',
+    teams: [
+      {
+        id: '2.1',
+        color: 'primary.main',
+        text: 'A',
+      },
+      {
+        id: '2.2',
+        color: 'warning.main',
+        text: 'X',
+      },
+      {
+        id: '2.3',
+        color: 'secondary.main',
+        text: 'N',
+      },
+    ],
+    status: 'Pending',
+    weeks: '19',
+    budget: '24.5',
+  },
+];
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
