@@ -10,7 +10,7 @@ import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLa
 import PageContainer from '../../components/container/PageContainer';
 import backImage from '../../assets/images/login/intro.png';
 import LogoIcon from '../../layouts/full-layout/logo/LogoIcon';
-import { login } from '../../redux/actions/userAction';
+import { fetchUserDetails, login } from '../../redux/actions/userAction';
 import Message from '../../components/Message';
 
 const Login = () => {
@@ -29,11 +29,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading: loadingLogin, error: errorLogin, success: successLogin } = userLogin;
+  const { userInfo, loading: loadingLogin, error: errorLogin, success: successLogin } = userLogin;
 
   useEffect(() => {
-    if (successLogin) {
+    if (userInfo && successLogin) {
       navigate(`/${redirect}`);
+      dispatch(fetchUserDetails());
     }
   }, [redirect, successLogin]);
 

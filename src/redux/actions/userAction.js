@@ -3,6 +3,9 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGIN_FAIL,
+  USER_DETAILS_SUCCESS,
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
@@ -95,6 +98,35 @@ export const logout = () => async (dispatch) => {
   localStorage.removeItem('userInfo');
 };
 
+export const fetchUserDetails = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DETAILS_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    console.log(userInfo.access_token);
+    const { data } = await publicApi.get(`/socialworkers/me`, config);
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: USER_DETAILS_FAIL,
+      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+    });
+  }
+};
+
 export const forgotPassword = (theKey, value) => async (dispatch) => {
   let resetType;
   try {
@@ -139,7 +171,7 @@ export const resetPassword = (password) => async (dispatch, getState) => {
     const config = {
       headers: {
         'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.accessToken,
+        Authorization: userInfo && userInfo.access_token,
       },
     };
 
@@ -172,7 +204,7 @@ export const userEditProfile =
       const config = {
         headers: {
           'Content-type': 'application/json',
-          Authorization: userInfo && userInfo.accessToken,
+          Authorization: userInfo && userInfo.access_token,
         },
       };
 
