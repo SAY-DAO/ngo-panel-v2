@@ -80,6 +80,19 @@ const components = {
     },
   },
 
+  MuiCardMedia: {
+    styleOverrides: {
+      img: {
+        width: 120,
+        height: 120,
+        marginTop: 20,
+        borderRadius: '50%',
+        boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.25)',
+        backgroundColor: '#f1f1f1',
+      },
+    },
+  },
+
   MuiListItemIcon: {
     styleOverrides: {
       root: {
