@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './App';
-import { configureStore } from './redux/Store';
-import './data';
+import store from './redux/store';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
-import Spinner from './views/spinner/Spinner';
+import Spinner from './pages/spinner/Spinner';
 
 ReactDOM.render(
-  <Provider store={configureStore()}>
+  <Provider store={store}>
     <Suspense fallback={<Spinner />}>
       <HashRouter>
         <App />

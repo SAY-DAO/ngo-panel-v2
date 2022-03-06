@@ -15,14 +15,17 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 // Dropdown Component
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useDispatch } from 'react-redux';
 import ProfileDropdown from './ProfileDropdown';
 import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
 import userimg from '../../../assets/images/user2.svg';
+import { logout } from '../../../redux/actions/userAction';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
+  const dispatch = useDispatch();
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
-
 
   // 4
   const [anchorEl4, setAnchorEl4] = React.useState(null);
@@ -35,7 +38,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     setAnchorEl4(null);
   };
 
-
   // drawer top
   const [showDrawer2, setShowDrawer2] = useState(false);
 
@@ -43,11 +45,15 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     setShowDrawer2(false);
   };
 
+  const handleLogOut = () => {
+    dispatch(logout());
+  };
+
   return (
     <AppBar sx={sx} elevation={0} className={customClass}>
       <Toolbar>
         {mdUp ? <LogoIcon /> : ''}
-        
+
         <IconButton
           edge="start"
           color="inherit"
@@ -129,7 +135,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         {/* ------------ End Menu icon ------------- */}
 
         <Box flexGrow={1} />
-       
+
         {/* ------------------------------------------- */}
         {/* Profile Dropdown */}
         {/* ------------------------------------------- */}
@@ -210,7 +216,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             }}
             to="/auth/login"
           >
-            <Button
+            <LoadingButton
+              onClick={handleLogOut}
               sx={{
                 mt: 2,
                 display: 'block',
@@ -220,7 +227,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               color="primary"
             >
               Logout
-            </Button>
+            </LoadingButton>
           </Link>
         </Menu>
       </Toolbar>

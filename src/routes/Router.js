@@ -6,11 +6,11 @@ import Loadable from '../layouts/full-layout/loadable/Loadable';
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank-layout/BlankLayout')));
 /* ***End Layouts**** */
-const Login = Loadable(lazy(() => import('../views/authentication/Login')));
-const Error = Loadable(lazy(() => import('../views/authentication/Error')));
+const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
+const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 
 /* ****Pages***** */
-const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')));
+const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
 /* ****Routes***** */
 
 const Router = [
