@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import {
@@ -16,15 +16,25 @@ import {
 import PropTypes from 'prop-types';
 // Dropdown Component
 import LoadingButton from '@mui/lab/LoadingButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProfileDropdown from './ProfileDropdown';
 import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
-import userimg from '../../../assets/images/user2.svg';
 import { logout } from '../../../redux/actions/userAction';
+import { fetchSocialWorkerProfile } from '../../../redux/actions/socialWorkerAction';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo, success: successSwDetails } = swDetails;
+
+  useEffect(() => {
+    if (!successSwDetails) {
+      dispatch(fetchSocialWorkerProfile());
+    }
+  }, [successSwDetails]);
+
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
   // 4
@@ -148,8 +158,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <Box display="flex" alignItems="center">
             <Avatar
-              src={userimg}
-              alt={userimg}
+              src={swInfo && swInfo.avatarUrl}
+              alt="Social worker avatar"
               sx={{
                 width: '30px',
                 height: '30px',
@@ -174,7 +184,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
                   ml: 1,
                 }}
               >
-                Julia
+                {swInfo && swInfo.firstName}
               </Typography>
               <FeatherIcon icon="chevron-down" width="20" height="20" />
             </Box>

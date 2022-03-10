@@ -21,7 +21,7 @@ export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await publicApi.get('/socialworkers/swId=me', config);
+    const { data } = await publicApi.get(`/socialworkers/${userInfo.id}`, config);
 
     dispatch({
       type: SW_DETAILS_SUCCESS,
