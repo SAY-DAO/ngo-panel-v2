@@ -518,6 +518,7 @@
   },
   "socialWorker": {
     "isActive": "Status",
+    "update": "Edit",
     "generatedCode": "Code",
     "name": "First Name",
     "lastName": "Last Name",

@@ -3,7 +3,17 @@ export const SW_DETAILS_SUCCESS = 'SW_DETAILS_SUCCESS';
 export const SW_DETAILS_FAIL = 'SW_DETAILS_FAIL';
 export const SW_DETAILS_RESET = 'SW_DETAILS_RESET';
 
+export const SW_BY_ID_REQUEST = 'SW_BY_ID_REQUEST';
+export const SW_BY_ID_SUCCESS = 'SW_BY_ID_SUCCESS';
+export const SW_BY_ID_FAIL = 'SW_BY_ID_FAIL';
+export const SW_BY_ID_RESET = 'SW_BY_ID_RESET';
+
 export const SW_LIST_REQUEST = 'SW_LIST_REQUEST';
 export const SW_LIST_SUCCESS = 'SW_LIST_SUCCESS';
 export const SW_LIST_FAIL = 'SW_LIST_FAIL';
 export const SW_LIST_RESET = 'SW_LIST_RESET';
+
+export const SW_IS_ACTIVE_REQUEST = 'SW_IS_ACTIVE_REQUEST';
+export const SW_IS_ACTIVE_SUCCESS = 'SW_IS_ACTIVE_SUCCESS';
+export const SW_IS_ACTIVE_FAIL = 'SW_IS_ACTIVE_FAIL';
+export const SW_IS_ACTIVE_RESET = 'SW_IS_ACTIVE_RESET';

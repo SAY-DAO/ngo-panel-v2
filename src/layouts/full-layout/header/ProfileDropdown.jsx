@@ -1,26 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, MenuItem, Typography, Avatar, Divider, Card, CardActions } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { fetchSocialWorkerProfile } from '../../../redux/actions/socialWorkerAction';
 
 const ProfileDropdown = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo, success: successSwDetails } = swDetails;
-
-  useEffect(() => {
-    if (!successSwDetails) {
-      dispatch(fetchSocialWorkerProfile());
-    }
-  }, [successSwDetails]);
+  const { swInfo } = swDetails;
 
   const handleClick = () => {
-    navigate(`/sw/edit`);
+    navigate(`/sw/edit/${swInfo.id}`);
   };
   return (
     <Box>

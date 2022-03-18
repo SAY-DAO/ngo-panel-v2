@@ -23,7 +23,7 @@ const Router = [
       { path: '/', element: <Navigate to="/dashboards/starter" /> },
       { path: '/dashboards/starter', exact: true, element: <Dashboard /> },
       { path: '/sw/list', exact: true, element: <SocialWorkersList /> },
-      { path: '/sw/edit', exact: true, element: <SocialWorkerProfileEdit /> },
+      { path: '/sw/edit/:id', exact: true, element: <SocialWorkerProfileEdit /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

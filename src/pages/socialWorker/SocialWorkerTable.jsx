@@ -25,15 +25,16 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
+import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 
 function descendingComparator(a, b, orderBy) {
-  console.log(a);
-  console.log(a[orderBy]);
-  console.log(orderBy);
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -73,6 +74,12 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: true,
       label: t('socialWorker.isActive'),
+    },
+    {
+      id: 'update',
+      numeric: false,
+      disablePadding: true,
+      label: t('socialWorker.update'),
     },
     {
       id: 'lastName',
@@ -279,6 +286,9 @@ const BCrumb = [
 ];
 
 const SocialWorkerTable = ({ swList }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('status');
   const [selected, setSelected] = React.useState([]);
@@ -302,6 +312,7 @@ const SocialWorkerTable = ({ swList }) => {
   };
 
   const handleClick = (event, firstName) => {
+    console.log(event.target);
     const selectedIndex = selected.indexOf(firstName);
     let newSelected = [];
 
@@ -334,6 +345,10 @@ const SocialWorkerTable = ({ swList }) => {
     setDense(event.target.checked);
   };
 
+  const handleEdit = (row) => {
+    dispatch({ type: SW_BY_ID_RESET });
+    navigate(`/sw/edit/${row.id}`);
+  };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -418,6 +433,15 @@ const SocialWorkerTable = ({ swList }) => {
                                   {row.status}
                                 </Typography>
                               </Box>
+                            </TableCell>
+                            <TableCell>
+                              <IconButton
+                                onClick={() => handleEdit(row)}
+                                color="primary"
+                                aria-label="update social worker"
+                              >
+                                <EditOutlinedIcon />
+                              </IconButton>
                             </TableCell>
                             <TableCell>
                               <Box display="flex" alignItems="center">

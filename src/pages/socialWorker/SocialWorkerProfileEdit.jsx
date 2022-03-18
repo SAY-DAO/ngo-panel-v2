@@ -18,27 +18,42 @@ import {
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { fetchSocialWorkerProfile } from '../../redux/actions/socialWorkerAction';
+import { fetchSocialWorkerById, updateSwIsActive } from '../../redux/actions/socialWorkerAction';
 
 const SocialWorkerProfileEdit = () => {
   const dispatch = useDispatch();
+  const { id } = useParams();
   const { t } = useTranslation();
 
   const [open, setOpen] = React.useState(false);
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(false);
 
-  const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo, loading: loadingSwDetails, success: successSwDetails } = swDetails;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const swById = useSelector((state) => state.swById);
+  const { result, loading: loadingSwById, success: successSwById } = swById;
+
+  const swStatus = useSelector((state) => state.swStatus);
+  const { status } = swStatus;
 
   useEffect(() => {
-    if (!successSwDetails) {
-      dispatch(fetchSocialWorkerProfile());
+    dispatch(fetchSocialWorkerById(id));
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    console.log(result);
+    if (result && result.isActive) {
+      setChecked(true);
+    } else {
+      setChecked(false);
     }
-  }, [successSwDetails]);
+  }, [successSwById]);
 
   const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 62,
@@ -54,15 +69,19 @@ const SocialWorkerProfileEdit = () => {
     setOpen(false);
   };
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const handleChange = () => {
+    if (checked && result.isActive) {
+      dispatch(updateSwIsActive(result.id, 'deactivate'));
+    } else if (!checked && !result.isActive) {
+      dispatch(updateSwIsActive(result.id, 'activate'));
+    }
   };
   return (
     <PageContainer title="Customer Edit" description="this is Customer Edit page">
-      {loadingSwDetails ? (
+      {loadingSwById ? (
         <CircularProgress />
       ) : (
-        swInfo && (
+        result && (
           <>
             <Breadcrumb title="Edit page" subtitle="Customer" />
             <Grid container spacing={0}>
@@ -75,35 +94,48 @@ const SocialWorkerProfileEdit = () => {
                       <Button onClick={handleClickOpen}>
                         <SmallAvatar
                           alt="ID card"
-                          src={swInfo.idCardUrl}
+                          src={result.idCardUrl}
                           sx={{ boxShadow: '3px 4px #888888' }}
                         />
                       </Button>
                     }
                   >
                     <Avatar
-                      alt="Travis Howard"
-                      src={swInfo && swInfo.avatarUrl}
+                      alt="photo"
+                      src={result && result.avatarUrl}
                       sx={{ width: 110, height: 110 }}
                     />
                   </Badge>
                   <Typography variant="h2" sx={{ mt: 1 }}>
-                    {swInfo && `${swInfo.firstName} ${swInfo.lastName}`}
+                    {result && `${result.firstName} ${result.lastName}`}
                   </Typography>
-                  <Typography variant="body2"> {swInfo && swInfo.typeName}</Typography>
+                  <Typography variant="body2"> {result && result.typeName}</Typography>
                   <FormControlLabel
                     control={
-                      <>
+                      <Switch
+                        disabled={userInfo.id === result.id}
+                        id="isActive"
+                        variant="outlined"
+                        defaultValue={result.isActive}
+                        checked={checked}
+                        onChange={handleChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                        label="hi"
+                      />
+                    }
+                    label={
+                      <Grid>
                         <Box
                           sx={{
+                            display: 'inline-block',
                             backgroundColor:
-                              swInfo.isActive === true
+                              result.isActive === true
                                 ? (theme) => theme.palette.success.main
-                                : swInfo.status === 'Pending'
+                                : result.status === 'Pending'
                                 ? (theme) => theme.palette.warning.main
-                                : swInfo.status === 'Completed'
+                                : result.status === 'Completed'
                                 ? (theme) => theme.palette.primary.main
-                                : swInfo.status === 'Cancel'
+                                : result.status === 'Cancel'
                                 ? (theme) => theme.palette.error.main
                                 : (theme) => theme.palette.secondary.main,
                             borderRadius: '100%',
@@ -111,28 +143,21 @@ const SocialWorkerProfileEdit = () => {
                             width: '10px',
                           }}
                         />
-                        <Switch
-                          id="isActive"
-                          variant="outlined"
-                          defaultValue={swInfo.isActive}
-                          checked={checked}
-                          onChange={handleChange}
-                          inputProps={{ 'aria-label': 'controlled' }}
-                          label="hi"
-                        />
-                      </>
+                        <Typography sx={{ display: 'inline-block' }}>
+                          {t('socialWorker.isActive')}
+                        </Typography>
+                      </Grid>
                     }
-                    label={t('socialWorker.isActive')}
                   />
 
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
                     Email
                   </Typography>
-                  <Typography variant="body2">{swInfo && swInfo.email}</Typography>
+                  <Typography variant="body2">{result && result.email}</Typography>
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
                     Phone Number
                   </Typography>
-                  <Typography variant="body2">{swInfo && swInfo.phoneNumber}</Typography>
+                  <Typography variant="body2">{result && result.phoneNumber}</Typography>
                 </Card>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
@@ -145,7 +170,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="firstName"
                       variant="outlined"
-                      defaultValue={swInfo.firstName}
+                      defaultValue={result.firstName}
                       fullWidth
                       size="small"
                     />
@@ -153,7 +178,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="lastName"
                       variant="outlined"
-                      defaultValue={swInfo.lastName}
+                      defaultValue={result.lastName}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -162,7 +187,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="Email"
                       variant="outlined"
-                      defaultValue={swInfo.email}
+                      defaultValue={result.email}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -173,7 +198,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="country"
                       variant="outlined"
-                      defaultValue={swInfo.country}
+                      defaultValue={result.country}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -182,7 +207,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="city"
                       variant="outlined"
-                      defaultValue={swInfo.city}
+                      defaultValue={result.city}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -191,7 +216,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="postalAddress"
                       variant="outlined"
-                      defaultValue={swInfo.postalAddress}
+                      defaultValue={result.postalAddress}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -200,7 +225,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="birthDate"
                       variant="outlined"
-                      defaultValue={swInfo.birthDate}
+                      defaultValue={result.birthDate}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -209,7 +234,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="telegramId"
                       variant="outlined"
-                      defaultValue={swInfo.telegramId}
+                      defaultValue={result.telegramId}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -218,7 +243,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="idNumber"
                       variant="outlined"
-                      defaultValue={swInfo.idNumber}
+                      defaultValue={result.idNumber}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -227,7 +252,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="typeId"
                       variant="outlined"
-                      defaultValue={swInfo.typeId}
+                      defaultValue={result.typeId}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -236,7 +261,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="gender"
                       variant="outlined"
-                      defaultValue={swInfo.gender}
+                      defaultValue={result.gender}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -245,7 +270,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="phoneNumber"
                       variant="outlined"
-                      defaultValue={swInfo.phoneNumber}
+                      defaultValue={result.phoneNumber}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -256,7 +281,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="emergencyPhoneNumber"
                       variant="outlined"
-                      defaultValue={swInfo.emergencyPhoneNumber}
+                      defaultValue={result.emergencyPhoneNumber}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -265,7 +290,7 @@ const SocialWorkerProfileEdit = () => {
                     <CustomTextField
                       id="username"
                       variant="outlined"
-                      defaultValue={swInfo.username}
+                      defaultValue={result.username}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
@@ -285,7 +310,7 @@ const SocialWorkerProfileEdit = () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
-                {swInfo && `${swInfo.firstName} ${swInfo.lastName}`}
+                {result && `${result.firstName} ${result.lastName}`}
               </DialogTitle>
               <DialogContent>
                 <Box
@@ -303,7 +328,7 @@ const SocialWorkerProfileEdit = () => {
                 >
                   <img
                     alt="social worker ID"
-                    src={swInfo.idCardUrl}
+                    src={result.idCardUrl}
                     style={{
                       position: 'absolute',
                       padding: '2px',

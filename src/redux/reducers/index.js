@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
 import CustomizerReducer from './customizerReducer';
-import { socialWorkerDetailsReducer, socialWorkerListReducer } from './socialWorkerReducer';
+import { swDetailsReducer, swUpdateIsActiveReducer, swListReducer, swByIdReducer } from './socialWorkerReducer';
 import { userLoginReducer } from './userReducer';
 
 export default combineReducers({
   CustomizerReducer,
   userLogin: userLoginReducer,
-  swDetails: socialWorkerDetailsReducer,
-  swAll: socialWorkerListReducer,
+  swDetails: swDetailsReducer,
+  swById:swByIdReducer,
+  swAll: swListReducer,
+  swStatus: swUpdateIsActiveReducer,
 });
