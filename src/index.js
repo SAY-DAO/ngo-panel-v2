@@ -7,6 +7,7 @@ import store from './redux/store';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import Spinner from './pages/spinner/Spinner';
+import './i18n';
 
 ReactDOM.render(
   <Provider store={store}>

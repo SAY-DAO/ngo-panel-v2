@@ -515,5 +515,28 @@
     "address": "4th Floor, No 22, Azarshahr St, Iranshahr St, Karimkhan Zand St, Tehran, Iran",
     "phoneNumber": "Tel: <1>0 2 1 - 2 2 3 4 7 8 1 4</1>",
     "download": "Download Report"
+  },
+  "socialWorker": {
+    "status": "Status",
+    "swCode": "Code",
+    "name": "First Name",
+    "lastName": "Last Name",
+    "nameAndEmail": "Name & Email",
+    "userName": "User Name",
+    "avatar": "Avatar",
+    "type": "Type",
+    "ngo": "NGO",
+    "IdNumber": "ID Number",
+    "IdImage": "ID Image",
+    "gender": "Gender",
+    "birthDate": "Birthday",
+    "phoneNumber": "Phone Number",
+    "urgentNumber": "Urgent Phone",
+    "email": "Email",
+    "telegramId": "Telegram ID",
+    "address": "Address",
+    "childrenCount": "Children Count",
+    "needsCount": "Needs Count",
+    "lastLogin": "Last Log"
   }
 }

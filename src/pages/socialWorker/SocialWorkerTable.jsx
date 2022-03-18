@@ -20,68 +20,20 @@ import {
   CardContent,
   Typography,
   Avatar,
+  Link,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
+import { useTranslation } from 'react-i18next';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import img1 from '../../assets/images/user2.svg';
 
-const rows = [
-  {
-    id: '1',
-    swCode: 1,
-    imgsrc: img1,
-    name: 'Sunil Joshi',
-    email: 'sunil@gmail.com',
-    pname: 'Elite Admin',
-    teams: [
-      {
-        id: '1.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-      {
-        id: '1.2',
-        color: 'error.main',
-        text: 'D',
-      },
-    ],
-    status: 'Active',
-    weeks: '11',
-    budget: '3.9',
-  },
-  {
-    id: '2',
-    imgsrc: img1,
-    name: 'Andrew McDownland',
-    email: 'andrew@gmail.com',
-    pname: 'Real Homes WP Theme',
-    teams: [
-      {
-        id: '2.1',
-        color: 'primary.main',
-        text: 'A',
-      },
-      {
-        id: '2.2',
-        color: 'warning.main',
-        text: 'X',
-      },
-      {
-        id: '2.3',
-        color: 'secondary.main',
-        text: 'N',
-      },
-    ],
-    status: 'Pending',
-    weeks: '19',
-    budget: '24.5',
-  },
-];
 function descendingComparator(a, b, orderBy) {
+  console.log(a);
+  console.log(a[orderBy]);
+  console.log(orderBy);
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -107,51 +59,120 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Team Lead',
-  },
-  {
-    id: 'pname',
-    numeric: false,
-    disablePadding: false,
-    label: 'Project Name',
-  },
-  {
-    id: 'team',
-    numeric: false,
-    disablePadding: false,
-    label: 'Team',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Status',
-  },
-  {
-    id: 'weeks',
-    numeric: false,
-    disablePadding: false,
-    label: 'Weeks',
-  },
-  {
-    id: 'budget',
-    numeric: false,
-    disablePadding: false,
-    label: 'Budget',
-  },
-];
-
 function EnhancedTableHead(props) {
+  const { t } = useTranslation();
+
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
+  const headCells = [
+    {
+      id: 'isActive',
+      numeric: false,
+      disablePadding: true,
+      label: t('socialWorker.status'),
+    },
+    {
+      id: 'lastName',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.nameAndEmail'),
+    },
+    {
+      id: 'generatedCode',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.swCode'),
+    },
+
+    {
+      id: 'username',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.userName'),
+    },
+
+    {
+      id: 'typeName',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.type'),
+    },
+    {
+      id: 'ngoName',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.ngo'),
+    },
+    {
+      id: 'idNumber',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.IdNumber'),
+    },
+    {
+      id: 'idCardUrl',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.IdImage'),
+    },
+    {
+      id: 'gender',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.gender'),
+    },
+    {
+      id: 'birthDate',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.birthDate'),
+    },
+    {
+      id: 'phoneNumber',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.phoneNumber'),
+    },
+    {
+      id: 'emergencyPhoneNumber',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.urgentNumber'),
+    },
+    {
+      id: 'telegramId',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.telegramId'),
+    },
+    {
+      id: 'postalAddress',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.address'),
+    },
+    {
+      id: 'childCount',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.childrenCount'),
+    },
+    {
+      id: 'needCount',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.needsCount'),
+    },
+    {
+      id: 'lastLoginDate',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.lastLogin'),
+    },
+  ];
   return (
     <TableHead>
       <TableRow>
@@ -257,13 +278,13 @@ const BCrumb = [
   },
 ];
 
-const SocialWorkerTable = () => {
+const SocialWorkerTable = ({ swList }) => {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('status');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -273,19 +294,19 @@ const SocialWorkerTable = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = swList.map((n) => n.firstName);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, firstName) => {
+    const selectedIndex = selected.indexOf(firstName);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, firstName);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -313,11 +334,10 @@ const SocialWorkerTable = () => {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swList.length) : 0;
   return (
     <PageContainer title="Social Worker Table" description="this is Social Worker Table page">
       {/* breadcrumb */}
@@ -340,19 +360,19 @@ const SocialWorkerTable = () => {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
+                    rowCount={swList.length}
                   />
                   <TableBody>
-                    {stableSort(rows, getComparator(order, orderBy))
+                    {stableSort(swList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
-                        const isItemSelected = isSelected(row.name);
+                        const isItemSelected = isSelected(row.firstName);
                         const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
                           <TableRow
                             hover
-                            onClick={(event) => handleClick(event, row.name)}
+                            onClick={(event) => handleClick(event, row.firstName)}
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}
@@ -370,57 +390,10 @@ const SocialWorkerTable = () => {
                             </TableCell>
                             <TableCell>
                               <Box display="flex" alignItems="center">
-                                <Avatar
-                                  src={row.imgsrc}
-                                  alt={row.imgsrc}
-                                  width="35"
-                                  sx={{
-                                    borderRadius: '100%',
-                                  }}
-                                />
-                                <Box
-                                  sx={{
-                                    ml: 2,
-                                  }}
-                                >
-                                  <Typography variant="h6" fontWeight="600">
-                                    {row.name}
-                                  </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                    {row.email}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                {row.pname}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                {row.teams.map((team) => (
-                                  <Avatar
-                                    key={team.id}
-                                    sx={{
-                                      backgroundColor: team.color,
-                                      width: '35px',
-                                      height: '35px',
-                                      color: '#fff',
-                                      ml: '-8px',
-                                    }}
-                                  >
-                                    {team.text}
-                                  </Avatar>
-                                ))}
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
                                 <Box
                                   sx={{
                                     backgroundColor:
-                                      row.status === 'Active'
+                                      row.isActive === true
                                         ? (theme) => theme.palette.success.main
                                         : row.status === 'Pending'
                                         ? (theme) => theme.palette.warning.main
@@ -447,12 +420,97 @@ const SocialWorkerTable = () => {
                               </Box>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.weeks}
+                              <Box display="flex" alignItems="center">
+                                <Avatar
+                                  src={row.avatarUrl}
+                                  alt={row.avatarUrl}
+                                  width="35"
+                                  sx={{
+                                    borderRadius: '100%',
+                                  }}
+                                />
+                                <Box
+                                  sx={{
+                                    ml: 2,
+                                  }}
+                                >
+                                  <Typography variant="h6" fontWeight="600">
+                                    {row.firstName} {row.lastName}
+                                  </Typography>
+                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                    {row.email}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                {row.generatedCode}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography variant="h6">${row.budget}k</Typography>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.username}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.typeName}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.ngoName}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.idNumber}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.idCardUrl && <Link href={row.idCardUrl}>Link</Link>}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.gender ? 'Male' : 'Female'}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.birthDate}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.phoneNumber}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.emergencyPhoneNumber}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.telegramId}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.postalAddress}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.childCount}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.needCount}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.lastLoginDate}
+                              </Typography>
                             </TableCell>
                           </TableRow>
                         );
@@ -472,7 +530,7 @@ const SocialWorkerTable = () => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={rows.length}
+                count={swList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -491,3 +549,7 @@ const SocialWorkerTable = () => {
 };
 
 export default SocialWorkerTable;
+
+SocialWorkerTable.propTypes = {
+  swList: PropTypes.array.isRequired,
+};
