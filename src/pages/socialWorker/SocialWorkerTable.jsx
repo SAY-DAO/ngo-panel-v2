@@ -72,7 +72,7 @@ function EnhancedTableHead(props) {
       id: 'isActive',
       numeric: false,
       disablePadding: true,
-      label: t('socialWorker.status'),
+      label: t('socialWorker.isActive'),
     },
     {
       id: 'lastName',
@@ -84,7 +84,7 @@ function EnhancedTableHead(props) {
       id: 'generatedCode',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.swCode'),
+      label: t('socialWorker.generatedCode'),
     },
 
     {
@@ -98,25 +98,25 @@ function EnhancedTableHead(props) {
       id: 'typeName',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.type'),
+      label: t('socialWorker.typeName'),
     },
     {
       id: 'ngoName',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.ngo'),
+      label: t('socialWorker.ngoName'),
     },
     {
       id: 'idNumber',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.IdNumber'),
+      label: t('socialWorker.idNumber'),
     },
     {
       id: 'idCardUrl',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.IdImage'),
+      label: t('socialWorker.idCardUrl'),
     },
     {
       id: 'gender',
@@ -140,7 +140,7 @@ function EnhancedTableHead(props) {
       id: 'emergencyPhoneNumber',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.urgentNumber'),
+      label: t('socialWorker.emergencyPhoneNumber'),
     },
     {
       id: 'telegramId',
@@ -158,19 +158,19 @@ function EnhancedTableHead(props) {
       id: 'childCount',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.childrenCount'),
+      label: t('socialWorker.childCount'),
     },
     {
       id: 'needCount',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.needsCount'),
+      label: t('socialWorker.needCount'),
     },
     {
       id: 'lastLoginDate',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.lastLogin'),
+      label: t('socialWorker.lastLoginDate'),
     },
   ];
   return (

@@ -517,26 +517,26 @@
     "download": "Download Report"
   },
   "socialWorker": {
-    "status": "Status",
-    "swCode": "Code",
+    "isActive": "Status",
+    "generatedCode": "Code",
     "name": "First Name",
     "lastName": "Last Name",
     "nameAndEmail": "Name & Email",
     "userName": "User Name",
     "avatar": "Avatar",
-    "type": "Type",
-    "ngo": "NGO",
-    "IdNumber": "ID Number",
-    "IdImage": "ID Image",
+    "typeName": "Type",
+    "ngoName": "NGO",
+    "idNumber": "ID Number",
+    "idCardUrl": "ID Image",
     "gender": "Gender",
     "birthDate": "Birthday",
     "phoneNumber": "Phone Number",
-    "urgentNumber": "Urgent Phone",
+    "emergencyPhoneNumber": "Urgent Phone",
     "email": "Email",
     "telegramId": "Telegram ID",
-    "address": "Address",
-    "childrenCount": "Children Count",
-    "needsCount": "Needs Count",
-    "lastLogin": "Last Log"
+    "postalAddress": "Address",
+    "childCount": "Children Count",
+    "needCount": "Needs Count",
+    "lastLoginDate": "Last Log"
   }
 }

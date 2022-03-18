@@ -5,7 +5,6 @@ import {
   Grid,
   Typography,
   Button,
-  Autocomplete,
   CircularProgress,
   Badge,
   Dialog,
@@ -13,37 +12,24 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import { fetchSocialWorkerProfile } from '../../redux/actions/socialWorkerAction';
 
-const Teams = [
-  {
-    id: 'eric',
-    label: 'Eric',
-  },
-  {
-    id: 'joao',
-    label: 'Joao',
-  },
-  {
-    id: 'tushly',
-    label: 'Tushly',
-  },
-  {
-    id: 'pnaji',
-    label: 'Pnaji',
-  },
-];
 const SocialWorkerProfileEdit = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [open, setOpen] = React.useState(false);
+  const [checked, setChecked] = React.useState(true);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo, loading: loadingSwDetails, success: successSwDetails } = swDetails;
@@ -66,6 +52,10 @@ const SocialWorkerProfileEdit = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
   };
   return (
     <PageContainer title="Customer Edit" description="this is Customer Edit page">
@@ -101,6 +91,40 @@ const SocialWorkerProfileEdit = () => {
                     {swInfo && `${swInfo.firstName} ${swInfo.lastName}`}
                   </Typography>
                   <Typography variant="body2"> {swInfo && swInfo.typeName}</Typography>
+                  <FormControlLabel
+                    control={
+                      <>
+                        <Box
+                          sx={{
+                            backgroundColor:
+                              swInfo.isActive === true
+                                ? (theme) => theme.palette.success.main
+                                : swInfo.status === 'Pending'
+                                ? (theme) => theme.palette.warning.main
+                                : swInfo.status === 'Completed'
+                                ? (theme) => theme.palette.primary.main
+                                : swInfo.status === 'Cancel'
+                                ? (theme) => theme.palette.error.main
+                                : (theme) => theme.palette.secondary.main,
+                            borderRadius: '100%',
+                            height: '10px',
+                            width: '10px',
+                          }}
+                        />
+                        <Switch
+                          id="isActive"
+                          variant="outlined"
+                          defaultValue={swInfo.isActive}
+                          checked={checked}
+                          onChange={handleChange}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                          label="hi"
+                        />
+                      </>
+                    }
+                    label={t('socialWorker.isActive')}
+                  />
+
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
                     Email
                   </Typography>
@@ -144,65 +168,104 @@ const SocialWorkerProfileEdit = () => {
                       sx={{ mb: 2 }}
                     />
 
-                    <CustomFormLabel htmlFor="project">Project Name</CustomFormLabel>
+                    {/* ///////////////////////////////////////////////////////////////////////////////////////// */}
+                    <CustomFormLabel htmlFor="country">Country</CustomFormLabel>
                     <CustomTextField
-                      id="project"
+                      id="country"
                       variant="outlined"
-                      defaultValue="Hosting Press HTML"
+                      defaultValue={swInfo.country}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
                     />
-
-                    <CustomFormLabel htmlFor="project-details">Project Description</CustomFormLabel>
+                    <CustomFormLabel htmlFor="city">City</CustomFormLabel>
                     <CustomTextField
-                      id="project-details"
+                      id="city"
                       variant="outlined"
-                      multiline
-                      rows={4}
-                      defaultValue="Sard about this site or you have been to it, but you cannot figure out what it is or what it can do. 
-                        MTA web directory is the simplest way in which one can bid on a link, or a few links if they wish to do so. which makes it much easier for someone to find what they are looking for if "
+                      defaultValue={swInfo.city}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
                     />
-
-                    <CustomFormLabel>Users</CustomFormLabel>
-
-                    <Autocomplete
-                      multiple
-                      id="tags-outlined"
-                      options={Teams}
-                      getOptionLabel={(option) => option.label}
-                      defaultValue={[Teams[1]]}
-                      filterSelectedOptions
-                      renderInput={(params) => (
-                        <CustomTextField
-                          {...params}
-                          placeholder="users"
-                          size="small"
-                          aria-label="users"
-                          sx={{
-                            mb: 3,
-                          }}
-                        />
-                      )}
-                    />
-                    <CustomFormLabel htmlFor="week">Week</CustomFormLabel>
+                    <CustomFormLabel htmlFor="postalAddress">Address</CustomFormLabel>
                     <CustomTextField
-                      id="week"
+                      id="postalAddress"
                       variant="outlined"
-                      defaultValue="40"
+                      defaultValue={swInfo.postalAddress}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
                     />
-
-                    <CustomFormLabel htmlFor="Budget">Budget</CustomFormLabel>
+                    <CustomFormLabel htmlFor="birthDate">birthDate</CustomFormLabel>
                     <CustomTextField
-                      id="Budget"
+                      id="birthDate"
                       variant="outlined"
-                      defaultValue="$2.4K"
+                      defaultValue={swInfo.birthDate}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 2 }}
+                    />
+                    <CustomFormLabel htmlFor="telegramId">telegramId</CustomFormLabel>
+                    <CustomTextField
+                      id="telegramId"
+                      variant="outlined"
+                      defaultValue={swInfo.telegramId}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 2 }}
+                    />
+                    <CustomFormLabel htmlFor="idNumber">idNumber</CustomFormLabel>
+                    <CustomTextField
+                      id="idNumber"
+                      variant="outlined"
+                      defaultValue={swInfo.idNumber}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 2 }}
+                    />
+                    <CustomFormLabel htmlFor="typeId">typeId</CustomFormLabel>
+                    <CustomTextField
+                      id="typeId"
+                      variant="outlined"
+                      defaultValue={swInfo.typeId}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 2 }}
+                    />
+                    <CustomFormLabel htmlFor="gender">gender</CustomFormLabel>
+                    <CustomTextField
+                      id="gender"
+                      variant="outlined"
+                      defaultValue={swInfo.gender}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 2 }}
+                    />
+                    <CustomFormLabel htmlFor="phoneNumber">phoneNumber</CustomFormLabel>
+                    <CustomTextField
+                      id="phoneNumber"
+                      variant="outlined"
+                      defaultValue={swInfo.phoneNumber}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 2 }}
+                    />
+                    <CustomFormLabel htmlFor="emergencyPhoneNumber">
+                      emergencyPhoneNumber
+                    </CustomFormLabel>
+                    <CustomTextField
+                      id="emergencyPhoneNumber"
+                      variant="outlined"
+                      defaultValue={swInfo.emergencyPhoneNumber}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 2 }}
+                    />
+                    <CustomFormLabel htmlFor="username">username</CustomFormLabel>
+                    <CustomTextField
+                      id="username"
+                      variant="outlined"
+                      defaultValue={swInfo.username}
                       fullWidth
                       size="small"
                       sx={{ mb: 2 }}
