@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 // Dropdown Component
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import ProfileDropdown from './ProfileDropdown';
 import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
@@ -25,9 +26,19 @@ import { fetchSocialWorkerProfile } from '../../../redux/actions/socialWorkerAct
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo, success: successSwDetails } = swDetails;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { success: successLogin } = userLogin;
+
+  useEffect(() => {
+    if (!successLogin) {
+      navigate('/auth/login');
+    }
+  }, [successLogin]);
 
   useEffect(() => {
     if (!successSwDetails) {
