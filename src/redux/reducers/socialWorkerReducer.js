@@ -5,14 +5,17 @@ import {
   SW_DETAILS_REQUEST,
   SW_DETAILS_FAIL,
   SW_DETAILS_SUCCESS,
-  SW_IS_ACTIVE_REQUEST,
-  SW_IS_ACTIVE_SUCCESS,
-  SW_IS_ACTIVE_FAIL,
+  UPDATE_SW_IS_ACTIVE_REQUEST,
+  UPDATE_SW_IS_ACTIVE_SUCCESS,
+  UPDATE_SW_IS_ACTIVE_FAIL,
   SW_DETAILS_RESET,
   SW_BY_ID_REQUEST,
   SW_BY_ID_SUCCESS,
   SW_BY_ID_FAIL,
   SW_BY_ID_RESET,
+  UPDATE_SW_REQUEST,
+  UPDATE_SW_SUCCESS,
+  UPDATE_SW_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const swDetailsReducer = (state = { success: false }, action) => {
@@ -60,11 +63,24 @@ export const swListReducer = (state = { success: false }, action) => {
 
 export const swUpdateIsActiveReducer = (state = { success: false }, action) => {
   switch (action.type) {
-    case SW_IS_ACTIVE_REQUEST:
+    case UPDATE_SW_IS_ACTIVE_REQUEST:
       return { loading: true };
-    case SW_IS_ACTIVE_SUCCESS:
+    case UPDATE_SW_IS_ACTIVE_SUCCESS:
       return { loading: false, success: true, status: action.payload };
-    case SW_IS_ACTIVE_FAIL:
+    case UPDATE_SW_IS_ACTIVE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const swUpdateReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case UPDATE_SW_REQUEST:
+      return { loading: true };
+    case UPDATE_SW_SUCCESS:
+      return { loading: false, success: true, updated: action.payload };
+    case UPDATE_SW_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

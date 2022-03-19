@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Card,
@@ -14,24 +14,38 @@ import {
   DialogActions,
   Switch,
   FormControlLabel,
+  TextField,
+  InputAdornment,
+  OutlinedInput,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { fetchSocialWorkerById, updateSwIsActive } from '../../redux/actions/socialWorkerAction';
+import {
+  fetchSocialWorkerById,
+  updateSw,
+  updateSwIsActive,
+} from '../../redux/actions/socialWorkerAction';
+import Message from '../../components/Message';
+import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 
 const SocialWorkerProfileEdit = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const [open, setOpen] = React.useState(false);
-  const [checked, setChecked] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [dateValue, setDateValue] = useState(new Date());
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -39,16 +53,19 @@ const SocialWorkerProfileEdit = () => {
   const swById = useSelector((state) => state.swById);
   const { result, loading: loadingSwById, success: successSwById } = swById;
 
-  const swStatus = useSelector((state) => state.swStatus);
-  const { status } = swStatus;
+  const swStatusUpdate = useSelector((state) => state.swStatusUpdate);
+  const { status } = swStatusUpdate;
+
+  const swUpdate = useSelector((state) => state.swUpdate);
+  const { success: successSwUpdate, error: errorSwUpdate } = swUpdate;
 
   useEffect(() => {
     dispatch(fetchSocialWorkerById(id));
   }, [dispatch, status]);
 
   useEffect(() => {
-    console.log(result);
     if (result && result.isActive) {
+      setDateValue(result.birthDate);
       setChecked(true);
     } else {
       setChecked(false);
@@ -76,10 +93,56 @@ const SocialWorkerProfileEdit = () => {
       dispatch(updateSwIsActive(result.id, 'activate'));
     }
   };
+
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required('Please enter your first name'),
+    // lastName: Yup.string().required('Please enter your last name'),
+    // country: Yup.string().required('Please enter your country'),
+    // city: Yup.string().required('Please enter your city'),
+    // province: Yup.string().required('Please enter your city'),
+    // phoneNumber: Yup.string().required('Please enter your phone number'),
+    // postalCode: Yup.string().required('Please enter your postal code'),
+    // address: Yup.string().required('Please enter your address'),
+    // username: Yup.string()
+    //   .required('Username is required')
+    //   .min(6, 'Username must be at least 6 characters')
+    //   .max(20, 'Username must not exceed 20 characters'),
+    // email: Yup.string().required('Email is required').email('Email is invalid'),
+    // password: Yup.string()
+    //   .required('Password is required')
+    //   .min(6, 'Password must be at least 6 characters')
+    //   .max(40, 'Password must not exceed 40 characters'),
+    // confirmPassword: Yup.string()
+    //   .required('Confirm Password is required')
+    //   .oneOf([Yup.ref('password'), null], 'Confirm Password does not match'),
+    acceptTerms: Yup.bool(),
+  });
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = async (data) => {
+    console.log(JSON.stringify(data, null, 2));
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(300);
+    dispatch(updateSw(id));
+  };
+
+  const handleDateChange = (newValue) => {
+    setDateValue(newValue);
+  };
   return (
     <PageContainer title="Customer Edit" description="this is Customer Edit page">
       {loadingSwById ? (
-        <CircularProgress />
+        <Grid sx={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </Grid>
       ) : (
         result && (
           <>
@@ -151,11 +214,11 @@ const SocialWorkerProfileEdit = () => {
                   />
 
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    Email
+                    {t('socialWorker.email')}
                   </Typography>
                   <Typography variant="body2">{result && result.email}</Typography>
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    Phone Number
+                    {t('socialWorker.phoneNumber')}
                   </Typography>
                   <Typography variant="body2">{result && result.phoneNumber}</Typography>
                 </Card>
@@ -163,141 +226,161 @@ const SocialWorkerProfileEdit = () => {
               <Grid item lg={8} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                    Edit Details
+                    {t('socialWorker.titleEdit')}
                   </Typography>
-                  <form>
-                    <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
-                    <CustomTextField
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    {/* <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel> */}
+                    <TextField
                       id="firstName"
                       variant="outlined"
                       defaultValue={result.firstName}
                       fullWidth
                       size="small"
+                      required
+                      control={control}
+                      sx={{ width: '100%' }}
+                      {...register('firstName')}
+                      error={!!errors.firstName}
                     />
-                    <CustomFormLabel htmlFor="lastName">Last Name</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="lastName">
+                      {t('socialWorker.lastName')}
+                    </CustomFormLabel>
+                    <TextField
                       id="lastName"
                       variant="outlined"
                       defaultValue={result.lastName}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
-                    <CustomFormLabel htmlFor="Email">Email</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
+                    <TextField
                       id="Email"
                       variant="outlined"
                       defaultValue={result.email}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
 
-                    {/* ///////////////////////////////////////////////////////////////////////////////////////// */}
-                    <CustomFormLabel htmlFor="country">Country</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
+                    <TextField
                       id="country"
                       variant="outlined"
                       defaultValue={result.country}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
-                    <CustomFormLabel htmlFor="city">City</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
+                    <TextField
                       id="city"
                       variant="outlined"
                       defaultValue={result.city}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
-                    <CustomFormLabel htmlFor="postalAddress">Address</CustomFormLabel>
+                    <CustomFormLabel htmlFor="postalAddress">
+                      {t('socialWorker.address')}
+                    </CustomFormLabel>
                     <CustomTextField
                       id="postalAddress"
                       variant="outlined"
+                      multiline
+                      rows={4}
                       defaultValue={result.postalAddress}
-                      fullWidth
                       size="small"
                       sx={{ mb: 2 }}
-                    />
-                    <CustomFormLabel htmlFor="birthDate">birthDate</CustomFormLabel>
-                    <CustomTextField
-                      id="birthDate"
-                      variant="outlined"
-                      defaultValue={result.birthDate}
                       fullWidth
-                      size="small"
-                      sx={{ mb: 2 }}
                     />
-                    <CustomFormLabel htmlFor="telegramId">telegramId</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="birthDate">
+                      {t('socialWorker.birthDate')}
+                    </CustomFormLabel>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDatePicker
+                        id="birthDate"
+                        inputFormat="MM/dd/yyyy"
+                        value={dateValue}
+                        onChange={handleDateChange}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+
+                    <CustomFormLabel htmlFor="telegramId">
+                      {t('socialWorker.telegramId')}
+                    </CustomFormLabel>
+                    <OutlinedInput
                       id="telegramId"
+                      startAdornment={<InputAdornment position="start">@</InputAdornment>}
                       variant="outlined"
                       defaultValue={result.telegramId}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
-                    <CustomFormLabel htmlFor="idNumber">idNumber</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="idNumber">
+                      {t('socialWorker.idNumber')}
+                    </CustomFormLabel>
+                    <TextField
                       id="idNumber"
                       variant="outlined"
                       defaultValue={result.idNumber}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
-                    <CustomFormLabel htmlFor="typeId">typeId</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="typeId">{t('socialWorker.typeId')}</CustomFormLabel>
+                    <TextField
                       id="typeId"
                       variant="outlined"
                       defaultValue={result.typeId}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
-                    <CustomFormLabel htmlFor="gender">gender</CustomFormLabel>
-                    <CustomTextField
-                      id="gender"
-                      variant="outlined"
-                      defaultValue={result.gender}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 2 }}
-                    />
-                    <CustomFormLabel htmlFor="phoneNumber">phoneNumber</CustomFormLabel>
-                    <CustomTextField
+                    <CustomFormLabel htmlFor="phoneNumber">
+                      {t('socialWorker.phoneNumber')}
+                    </CustomFormLabel>
+                    <TextField
                       id="phoneNumber"
                       variant="outlined"
                       defaultValue={result.phoneNumber}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
                     <CustomFormLabel htmlFor="emergencyPhoneNumber">
-                      emergencyPhoneNumber
+                      {t('socialWorker.emergencyPhoneNumber')}
                     </CustomFormLabel>
-                    <CustomTextField
+                    <TextField
                       id="emergencyPhoneNumber"
                       variant="outlined"
                       defaultValue={result.emergencyPhoneNumber}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
-                    <CustomFormLabel htmlFor="username">username</CustomFormLabel>
-                    <CustomTextField
-                      id="username"
+                    <CustomFormLabel htmlFor="userName">
+                      {t('socialWorker.userName')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="userName"
                       variant="outlined"
                       defaultValue={result.username}
                       fullWidth
                       size="small"
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1 }}
                     />
 
-                    <Button color="primary" variant="contained">
-                      Update
+                    <Button
+                      color="primary"
+                      type="submit"
+                      onClick={handleSubmit(onSubmit)}
+                      variant="contained"
+                      sx={{ mt: 4 }}
+                    >
+                      {t('socialWorker.button.update')}
                     </Button>
                   </form>
                 </Card>
@@ -340,6 +423,18 @@ const SocialWorkerProfileEdit = () => {
                 <Button onClick={handleClose}>Close</Button>
               </DialogActions>
             </Dialog>
+            <Grid>
+              {(successSwUpdate || errorSwUpdate) && (
+                <Message
+                  severity={successSwUpdate ? 'success' : 'error'}
+                  variant="filled"
+                  backError={errorSwUpdate}
+                  sx={{ width: '100%' }}
+                >
+                  {t('socialWorker.updated')}
+                </Message>
+              )}
+            </Grid>
           </>
         )
       )}

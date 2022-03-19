@@ -18,7 +18,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 const ThemeSelect = () => {
-  const [age, setAge] = React.useState('10');
+  const [age, setAge] = useState('10');
 
   const handleChange = (event) => {
     setAge(event.target.value);

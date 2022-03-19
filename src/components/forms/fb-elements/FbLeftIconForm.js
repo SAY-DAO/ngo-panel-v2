@@ -16,7 +16,7 @@ import CustomCheckbox from '../custom-elements/CustomCheckbox';
 import CustomFormLabel from '../custom-elements/CustomFormLabel';
 
 const FbLeftIconForm = () => {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     checkedA: false,
   });
 

@@ -6,8 +6,8 @@ import BaseCard from '../../base-card/BaseCard';
 const options = ['Option 1', 'Option 2'];
 
 const ControlledStateAutocomplete = () => {
-  const [value, setValue] = React.useState(options[0]);
-  const [inputValue, setInputValue] = React.useState('');
+  const [value, setValue] = useState(options[0]);
+  const [inputValue, setInputValue] = useState('');
   return (
     <BaseCard title="Controlled states">
       <Autocomplete

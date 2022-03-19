@@ -1,8 +1,9 @@
 import * as React from 'react';
-import Alert from '@mui/material/Alert';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import Alert from '@mui/lab/Alert';
+import { Stack } from '@mui/material';
 import contents from '../inputsValidation/Contents';
 import '../i18n';
 
@@ -94,18 +95,15 @@ export default function Message({
     if (typeof backError === 'string' || typeof frontError === 'string') {
       return backError || frontError;
     }
-    return false
+    return false;
   };
 
   return (
-    <Alert
-      icon={icon}
-      variant={variant}
-      severity={severity}
-      sx={{ margin: 'auto' }}
-    >
-      {children || onRequestCheck()}
-    </Alert>
+    <Stack sx={{ width: '100%' }} spacing={2}>
+      <Alert icon={icon} variant={variant} severity={severity} sx={{ margin: 'auto' }}>
+        {children || onRequestCheck()}
+      </Alert>
+    </Stack>
   );
 }
 
@@ -115,9 +113,9 @@ Message.propTypes = {
   frontError: PropTypes.any,
   backError: PropTypes.any,
   backSuccess: PropTypes.any,
-  variant: PropTypes.string.isRequired,
+  variant: PropTypes.string,
   children: PropTypes.string,
-  severity: PropTypes.string.isRequired,
+  severity: PropTypes.string,
 };
 
 Message.defaultProps = {

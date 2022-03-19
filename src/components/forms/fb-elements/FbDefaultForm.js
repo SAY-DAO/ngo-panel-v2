@@ -38,7 +38,7 @@ const numbers = [
 ];
 
 const FbDefaultForm = () => {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     checkedA: false,
     checkedB: false,
     checkedC: false,
@@ -48,13 +48,13 @@ const FbDefaultForm = () => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('');
 
   const handleChange2 = (event) => {
     setValue(event.target.value);
   };
 
-  const [number, setNumber] = React.useState('');
+  const [number, setNumber] = useState('');
 
   const handleChange3 = (event) => {
     setNumber(event.target.value);

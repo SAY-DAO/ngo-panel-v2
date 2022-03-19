@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -19,7 +19,7 @@ import Menuitems from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
 
 const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const { pathname } = useLocation();
   const pathDirect = pathname;
   const pathWithoutLastPart = pathname.slice(0, pathname.lastIndexOf('/'));
@@ -173,7 +173,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
             borderRadius: lgUp ? '9px' : '0',
             border: '0',
             height: 'calc(100vh - 130px)',
-            boxShadow:'0px 7px 30px 0px rgb(90 114 123 / 11%)'
+            boxShadow: '0px 7px 30px 0px rgb(90 114 123 / 11%)',
           },
         }}
       >

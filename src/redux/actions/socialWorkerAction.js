@@ -6,12 +6,15 @@ import {
   SW_LIST_FAIL,
   SW_DETAILS_FAIL,
   SW_DETAILS_SUCCESS,
-  SW_IS_ACTIVE_REQUEST,
-  SW_IS_ACTIVE_SUCCESS,
-  SW_IS_ACTIVE_FAIL,
+  UPDATE_SW_IS_ACTIVE_REQUEST,
+  UPDATE_SW_IS_ACTIVE_SUCCESS,
+  UPDATE_SW_IS_ACTIVE_FAIL,
   SW_BY_ID_REQUEST,
   SW_BY_ID_SUCCESS,
   SW_BY_ID_FAIL,
+  UPDATE_SW_SUCCESS,
+  UPDATE_SW_FAIL,
+  UPDATE_SW_REQUEST,
 } from '../constants/socialWorkerConstants';
 
 export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
@@ -99,7 +102,7 @@ export const fetchSocialWorkersList = () => async (dispatch, getState) => {
 export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
   try {
     console.log(id, status);
-    dispatch({ type: SW_IS_ACTIVE_REQUEST });
+    dispatch({ type: UPDATE_SW_IS_ACTIVE_REQUEST });
     const {
       userLogin: { userInfo },
     } = getState();
@@ -118,12 +121,42 @@ export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
     }
 
     dispatch({
-      type: SW_IS_ACTIVE_SUCCESS,
+      type: UPDATE_SW_IS_ACTIVE_SUCCESS,
       payload: response,
     });
   } catch (e) {
     dispatch({
-      type: SW_IS_ACTIVE_FAIL,
+      type: UPDATE_SW_IS_ACTIVE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
+export const updateSw = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_SW_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const formData = new FormData();
+
+    const { data } = await publicApi.patch(`/socialworkers/${id}`, formData, config);
+
+    dispatch({
+      type: UPDATE_SW_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_SW_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
     });
   }

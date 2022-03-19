@@ -519,6 +519,8 @@
   "socialWorker": {
     "isActive": "Status",
     "update": "Edit",
+    "updated": "Successfully Updated!",
+    "titleEdit": "Edit Details",
     "generatedCode": "Code",
     "name": "First Name",
     "lastName": "Last Name",
@@ -529,7 +531,10 @@
     "ngoName": "NGO",
     "idNumber": "ID Number",
     "idCardUrl": "ID Image",
-    "gender": "Gender",
+    "country": "Country",
+    "city": "City",
+    "address": "Address",
+    "typeId": "User Permission",
     "birthDate": "Birthday",
     "phoneNumber": "Phone Number",
     "emergencyPhoneNumber": "Urgent Phone",
@@ -538,6 +543,9 @@
     "postalAddress": "Address",
     "childCount": "Children Count",
     "needCount": "Needs Count",
-    "lastLoginDate": "Last Log"
+    "lastLoginDate": "Last Log",
+    "button": {
+      "update": "Update"
+    }
   }
 }
