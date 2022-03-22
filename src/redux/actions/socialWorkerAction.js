@@ -132,7 +132,7 @@ export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
   }
 };
 
-export const updateSw = (id) => async (dispatch, getState) => {
+export const updateSw = (values) => async (dispatch, getState) => {
   try {
     dispatch({ type: UPDATE_SW_REQUEST });
     const {
@@ -148,7 +148,24 @@ export const updateSw = (id) => async (dispatch, getState) => {
 
     const formData = new FormData();
 
-    const { data } = await publicApi.patch(`/socialworkers/${id}`, formData, config);
+    // formData.set('firstName', values.firstName);
+    // formData.set('lastName', values.lastName);
+    // formData.set('email', values.email);
+    // formData.set('country', values.country);
+    // formData.set('city', values.city);
+    // formData.set('phoneNumber', values.phoneNumber);
+    // formData.set('emergePhone', values.emergePhone);
+    // formData.set('address', values.address);
+    // formData.set('userName', values.userName);
+    // formData.set('telegramId', values.telegramId);
+    // formData.set('typeId', values.typeId);
+    // formData.set('idCardUrl', values.idCardUrl);
+    // formData.set('idNumber', values.idNumber);
+    // formData.set('ngoName', values.ngoName);
+    // formData.set('avatarUrl', values.avatarUrl);
+    // formData.set('birthDate', values.birthDate);
+    console.log(values);
+    const { data } = await publicApi.patch(`/socialworkers/`, formData, config);
 
     dispatch({
       type: UPDATE_SW_SUCCESS,

@@ -17,16 +17,17 @@ import {
   TextField,
   InputAdornment,
   OutlinedInput,
+  IconButton,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -40,12 +41,32 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 
 const SocialWorkerProfileEdit = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { id } = useParams();
   const { t } = useTranslation();
 
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploadImage, setUploadImage] = useState();
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [dateValue, setDateValue] = useState(new Date());
+  const [birthDate, setBirthDate] = useState(new Date());
+  const [values, setValues] = React.useState({
+    firstName: '',
+    lastName: '',
+    country: '',
+    city: '',
+    phoneNumber: '',
+    emergePhone: '',
+    postalAddress: '',
+    email: '',
+    userName: '',
+    telegramId: '',
+    typeId: 0,
+    idCardUrl: '',
+    idNumber: '',
+    ngoName: '',
+    avatarUrl: '',
+  });
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -65,18 +86,35 @@ const SocialWorkerProfileEdit = () => {
 
   useEffect(() => {
     if (result && result.isActive) {
-      setDateValue(result.birthDate);
+      setBirthDate(result.birthDate);
       setChecked(true);
     } else {
       setChecked(false);
     }
   }, [successSwById]);
 
-  const SmallAvatar = styled(Avatar)(({ theme }) => ({
-    width: 62,
-    height: 62,
-    border: `2px solid ${theme.palette.background.paper}`,
-  }));
+  useEffect(() => {
+    if (result) {
+      setValues({
+        ...values,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: result.email,
+        country: result.country,
+        city: result.city,
+        phoneNumber: result.phoneNumber,
+        emergencyPhoneNumber: result.emergencyPhoneNumber,
+        postalAddress: result.postalAddress,
+        userName: result.username,
+        telegramId: result.telegramId,
+        typeId: result.typeId,
+        idCardUrl: result.idCardUrl,
+        idNumber: result.idNumber,
+        ngoName: result.ngoName,
+        avatarUrl: result.avatarUrl,
+      });
+    }
+  }, [dispatch, result, userInfo]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -102,7 +140,7 @@ const SocialWorkerProfileEdit = () => {
     // province: Yup.string().required('Please enter your city'),
     // phoneNumber: Yup.string().required('Please enter your phone number'),
     // postalCode: Yup.string().required('Please enter your postal code'),
-    // address: Yup.string().required('Please enter your address'),
+    // postalAddress: Yup.string().required('Please enter your postalAddress'),
     // username: Yup.string()
     //   .required('Username is required')
     //   .min(6, 'Username must be at least 6 characters')
@@ -131,14 +169,96 @@ const SocialWorkerProfileEdit = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    dispatch(updateSw(id));
+    dispatch(
+      updateSw({
+        id,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        country: data.country,
+        city: data.city,
+        phoneNumber: data.phoneNumber,
+        data: values.emergencyPhoneNumber,
+        postalAddress: data.postalAddress,
+        userName: data.userName,
+        telegramId: data.telegramId,
+        typeId: data.typeId,
+        idCardUrl: data.idCardUrl,
+        idNumber: data.idNumber,
+        ngoName: data.ngoName,
+        avatarUrl: data.avatarUrl,
+        birthDate,
+      }),
+    );
   };
 
   const handleDateChange = (newValue) => {
-    setDateValue(newValue);
+    setBirthDate(newValue);
   };
+
+  const onImageChange = (e) => {
+    if (e.target.files[0]) {
+      setUploadImage(e.target.files);
+      setImageUrl(e.target.files[0]);
+    }
+  };
+  const handleChangeInput = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+  const shapeStyles = { bgcolor: 'darkGrey', width: 80, height: 50 };
+  const rectangle = (
+    <Box component="span" sx={shapeStyles}>
+      <div className="upload__image-wrapper">
+        <Grid
+          sx={{
+            position: 'relative',
+          }}
+        >
+          <img
+            alt=""
+            src={
+              location.state && location.state.newImage
+                ? URL.createObjectURL(location.state.newImage) // image preview
+                : imageUrl
+            }
+          />
+          <label htmlFor="upload-image">
+            <input
+              accept="image/*"
+              id="upload-image"
+              type="file"
+              style={{ display: 'none' }}
+              onChange={onImageChange}
+            />
+
+            <IconButton
+              name="upload-image"
+              id="upload-image"
+              color="primary"
+              component="div"
+              sx={{
+                width: '100%',
+                position: 'absolute',
+                bottom: '-20px',
+              }}
+            >
+              <CameraAltOutlinedIcon
+                color="secondary"
+                fontSize="large"
+                sx={{
+                  borderRadius: '20%',
+                  backgroundColor: 'primary.light',
+                }}
+              />
+            </IconButton>
+          </label>
+        </Grid>
+      </div>
+    </Box>
+  );
+
   return (
-    <PageContainer title="Customer Edit" description="this is Customer Edit page">
+    <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
       {loadingSwById ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
@@ -146,33 +266,74 @@ const SocialWorkerProfileEdit = () => {
       ) : (
         result && (
           <>
-            <Breadcrumb title="Edit page" subtitle="Customer" />
+            {/*  when uploaded route to editing studio */}
+            {uploadImage && (
+              <Navigate to="/sw/edit/upload" replace state={{ imageUpload: uploadImage[0], id }} />
+            )}
+            <Breadcrumb title="Edit page" subtitle="Social Worker" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Badge
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    badgeContent={
-                      <Button onClick={handleClickOpen}>
-                        <SmallAvatar
-                          alt="ID card"
-                          src={result.idCardUrl}
-                          sx={{ boxShadow: '3px 4px #888888' }}
-                        />
-                      </Button>
-                    }
                   >
-                    <Avatar
-                      alt="photo"
-                      src={result && result.avatarUrl}
-                      sx={{ width: 110, height: 110 }}
-                    />
+                    <div className="upload__image-wrapper">
+                      <Grid
+                        sx={{
+                          position: 'relative',
+                        }}
+                      >
+                        <Avatar
+                          alt="user photo"
+                          sx={{ width: 110, height: 110 }}
+                          src={
+                            location.state && location.state.newImage
+                              ? URL.createObjectURL(location.state.newImage) // image preview
+                              : null
+                          }
+                        />
+                        <label htmlFor="upload-image">
+                          <input
+                            accept="image/*"
+                            id="upload-image"
+                            type="file"
+                            style={{ display: 'none' }}
+                            onChange={onImageChange}
+                          />
+
+                          <IconButton
+                            name="upload-image"
+                            id="upload-image"
+                            color="primary"
+                            component="div"
+                            sx={{
+                              width: '100%',
+                              position: 'absolute',
+                              bottom: '-20px',
+                            }}
+                          >
+                            <CameraAltOutlinedIcon
+                              color="primary"
+                              fontSize="large"
+                              sx={{
+                                borderRadius: '20%',
+                                backgroundColor: 'white',
+                              }}
+                            />
+                          </IconButton>
+                        </label>
+                      </Grid>
+                    </div>
                   </Badge>
-                  <Typography variant="h2" sx={{ mt: 1 }}>
+
+                  <Typography variant="h2" sx={{ mt: 4 }}>
                     {result && `${result.firstName} ${result.lastName}`}
                   </Typography>
-                  <Typography variant="body2"> {result && result.typeName}</Typography>
+                  <Typography variant="body2">
+                    Coordinator: {result && result.isCoordinator ? 'True' : 'False'}
+                  </Typography>
+                  <Typography variant="body2"> Permission: {result && result.typeName}</Typography>
                   <FormControlLabel
                     control={
                       <Switch
@@ -194,13 +355,7 @@ const SocialWorkerProfileEdit = () => {
                             backgroundColor:
                               result.isActive === true
                                 ? (theme) => theme.palette.success.main
-                                : result.status === 'Pending'
-                                ? (theme) => theme.palette.warning.main
-                                : result.status === 'Completed'
-                                ? (theme) => theme.palette.primary.main
-                                : result.status === 'Cancel'
-                                ? (theme) => theme.palette.error.main
-                                : (theme) => theme.palette.secondary.main,
+                                : (theme) => theme.palette.error.main,
                             borderRadius: '100%',
                             height: '10px',
                             width: '10px',
@@ -222,6 +377,18 @@ const SocialWorkerProfileEdit = () => {
                   </Typography>
                   <Typography variant="body2">{result && result.phoneNumber}</Typography>
                 </Card>
+                <Card>
+                  <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <Grid item xs={6}>
+                      <IconButton aria-label="delete" onClick={handleClickOpen}>
+                        {rectangle}
+                      </IconButton>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="caption">ID #:{result.idNumber}</Typography>
+                    </Grid>
+                  </Grid>
+                </Card>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
@@ -229,16 +396,16 @@ const SocialWorkerProfileEdit = () => {
                     {t('socialWorker.titleEdit')}
                   </Typography>
                   <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    {/* <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel> */}
+                    <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
                     <TextField
+                      required
                       id="firstName"
                       variant="outlined"
                       defaultValue={result.firstName}
                       fullWidth
                       size="small"
-                      required
+                      onChange={handleChangeInput('firstName')}
                       control={control}
-                      sx={{ width: '100%' }}
                       {...register('firstName')}
                       error={!!errors.firstName}
                     />
@@ -246,12 +413,17 @@ const SocialWorkerProfileEdit = () => {
                       {t('socialWorker.lastName')}
                     </CustomFormLabel>
                     <TextField
+                      required
                       id="lastName"
                       variant="outlined"
                       defaultValue={result.lastName}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('lastName')}
+                      control={control}
+                      {...register('lastName')}
+                      error={!!errors.lastName}
                     />
                     <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
                     <TextField
@@ -261,6 +433,10 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('email')}
+                      control={control}
+                      {...register('email')}
+                      error={!!errors.email}
                     />
 
                     <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
@@ -271,6 +447,10 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('country')}
+                      control={control}
+                      {...register('country')}
+                      error={!!errors.country}
                     />
                     <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
                     <TextField
@@ -280,9 +460,13 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('city')}
+                      control={control}
+                      {...register('city')}
+                      error={!!errors.city}
                     />
                     <CustomFormLabel htmlFor="postalAddress">
-                      {t('socialWorker.address')}
+                      {t('socialWorker.postalAddress')}
                     </CustomFormLabel>
                     <CustomTextField
                       id="postalAddress"
@@ -293,6 +477,9 @@ const SocialWorkerProfileEdit = () => {
                       size="small"
                       sx={{ mb: 2 }}
                       fullWidth
+                      onChange={handleChangeInput('postalAddress')}
+                      control={control}
+                      register={{ ...register('postalAddress') }}
                     />
                     <CustomFormLabel htmlFor="birthDate">
                       {t('socialWorker.birthDate')}
@@ -301,7 +488,7 @@ const SocialWorkerProfileEdit = () => {
                       <DesktopDatePicker
                         id="birthDate"
                         inputFormat="MM/dd/yyyy"
-                        value={dateValue}
+                        value={birthDate}
                         onChange={handleDateChange}
                         renderInput={(params) => <TextField {...params} />}
                       />
@@ -318,6 +505,10 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('telegramId')}
+                      control={control}
+                      {...register('telegramId')}
+                      error={!!errors.telegramId}
                     />
                     <CustomFormLabel htmlFor="idNumber">
                       {t('socialWorker.idNumber')}
@@ -329,16 +520,17 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('idNumber')}
+                      control={control}
+                      {...register('idNumber')}
+                      error={!!errors.idNumber}
                     />
                     <CustomFormLabel htmlFor="typeId">{t('socialWorker.typeId')}</CustomFormLabel>
-                    <TextField
-                      id="typeId"
-                      variant="outlined"
-                      defaultValue={result.typeId}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                    />
+                    <select {...register('typeId')}>
+                      <option value="female">female</option>
+                      <option value="male">male</option>
+                      <option value="other">other</option>
+                    </select>
                     <CustomFormLabel htmlFor="phoneNumber">
                       {t('socialWorker.phoneNumber')}
                     </CustomFormLabel>
@@ -349,6 +541,10 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('phoneNumber')}
+                      control={control}
+                      {...register('phoneNumber')}
+                      error={!!errors.phoneNumber}
                     />
                     <CustomFormLabel htmlFor="emergencyPhoneNumber">
                       {t('socialWorker.emergencyPhoneNumber')}
@@ -360,6 +556,10 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('emergencyPhoneNumber')}
+                      control={control}
+                      {...register('emergencyPhoneNumber')}
+                      error={!!errors.emergencyPhoneNumber}
                     />
                     <CustomFormLabel htmlFor="userName">
                       {t('socialWorker.userName')}
@@ -371,6 +571,10 @@ const SocialWorkerProfileEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
+                      onChange={handleChangeInput('userName')}
+                      control={control}
+                      {...register('userName')}
+                      error={!!errors.userName}
                     />
 
                     <Button

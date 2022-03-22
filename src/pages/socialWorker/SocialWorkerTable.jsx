@@ -26,8 +26,8 @@ import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -410,13 +410,7 @@ const SocialWorkerTable = ({ swList }) => {
                                     backgroundColor:
                                       row.isActive === true
                                         ? (theme) => theme.palette.success.main
-                                        : row.status === 'Pending'
-                                        ? (theme) => theme.palette.warning.main
-                                        : row.status === 'Completed'
-                                        ? (theme) => theme.palette.primary.main
-                                        : row.status === 'Cancel'
-                                        ? (theme) => theme.palette.error.main
-                                        : (theme) => theme.palette.secondary.main,
+                                        : (theme) => theme.palette.error.main,
                                     borderRadius: '100%',
                                     height: '10px',
                                     width: '10px',

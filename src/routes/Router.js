@@ -2,7 +2,7 @@ import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full-layout/loadable/Loadable';
 import SocialWorkerProfileEdit from '../pages/socialWorker/SocialWorkerProfileEdit';
-
+import UploadImage from '../components/UploadImage';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank-layout/BlankLayout')));
@@ -24,6 +24,7 @@ const Router = [
       { path: '/dashboards/starter', exact: true, element: <Dashboard /> },
       { path: '/sw/list', exact: true, element: <SocialWorkersList /> },
       { path: '/sw/edit/:id', exact: true, element: <SocialWorkerProfileEdit /> },
+      { path: '/sw/edit/upload', exact: true, element: <UploadImage /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
