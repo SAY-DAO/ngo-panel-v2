@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams, Navigate, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -38,15 +38,21 @@ import {
 } from '../../redux/actions/socialWorkerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
+import UploadIdImage from '../../components/UploadImage';
 
 const SocialWorkerProfileEdit = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  // const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const [imageUrl, setImageUrl] = useState('');
-  const [uploadImage, setUploadImage] = useState();
+  const [finalImageFile, setFinalImageFile] = useState();
+  const [finalIdImageFile, setFinalIdImageFile] = useState();
+  const [openImageDialog, setOpenImageDialog] = useState(false);
+  const [openIdImageDialog, setOpenIdImageDialog] = useState(false);
+  const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
+  const [uploadIdImage, setUploadIdImage] = useState(location.state && location.state.newIdImage);
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
@@ -116,14 +122,6 @@ const SocialWorkerProfileEdit = () => {
     }
   }, [dispatch, result, userInfo]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const handleChange = () => {
     if (checked && result.isActive) {
       dispatch(updateSwIsActive(result.id, 'deactivate'));
@@ -192,16 +190,60 @@ const SocialWorkerProfileEdit = () => {
     );
   };
 
+  // dialog
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // dialog image
+  const handleImageClickOpen = () => {
+    setOpenImageDialog(true);
+  };
+  const handleImageClose = () => {
+    setOpenImageDialog(false);
+  };
+
+  // dialog id image
+  const handleIdImageClickOpen = () => {
+    setOpenIdImageDialog(true);
+  };
+  const handleIdImageClose = () => {
+    setOpenIdImageDialog(false);
+  };
+
   const handleDateChange = (newValue) => {
     setBirthDate(newValue);
   };
 
   const onImageChange = (e) => {
+    // if (location.state && location.state.newIdImage) {
+    //   setUploadIdImage(location.state.newIdImage);
+    // }
     if (e.target.files[0]) {
-      setUploadImage(e.target.files);
-      setImageUrl(e.target.files[0]);
+      setUploadImage(e.target.files[0]);
+      handleImageClickOpen();
+      // navigate(`/sw/edit/upload`, {
+      //   state: { imageUpload: e.target.files[0], id },
+      // });
     }
   };
+
+  const onIdImageChange = (e) => {
+    // if (location.state && location.state.newImage) {
+    //   setUploadImage(location.state.newImage);
+    // }
+    if (e.target.files[0]) {
+      setUploadIdImage(e.target.files[0]);
+      handleIdImageClickOpen();
+      // navigate(`/sw/edit/upload`, {
+      //   state: { idImageUpload: e.target.files[0], id },
+      // });
+    }
+  };
+
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -213,47 +255,52 @@ const SocialWorkerProfileEdit = () => {
           sx={{
             position: 'relative',
           }}
+          onClick={handleClickOpen}
         >
           <img
             alt=""
+            width="100%"
+            style={{
+              maxHeight: 50,
+            }}
             src={
-              location.state && location.state.newImage
-                ? URL.createObjectURL(location.state.newImage) // image preview
-                : imageUrl
+              finalIdImageFile
+                ? URL.createObjectURL(finalIdImageFile) // image preview
+                : values.idCardUrl
             }
           />
-          <label htmlFor="upload-image">
-            <input
-              accept="image/*"
-              id="upload-image"
-              type="file"
-              style={{ display: 'none' }}
-              onChange={onImageChange}
-            />
-
-            <IconButton
-              name="upload-image"
-              id="upload-image"
-              color="primary"
-              component="div"
-              sx={{
-                width: '100%',
-                position: 'absolute',
-                bottom: '-20px',
-              }}
-            >
-              <CameraAltOutlinedIcon
-                color="secondary"
-                fontSize="large"
-                sx={{
-                  borderRadius: '20%',
-                  backgroundColor: 'primary.light',
-                }}
-              />
-            </IconButton>
-          </label>
         </Grid>
       </div>
+      <label htmlFor="upload-id-image">
+        <input
+          accept="image/*"
+          id="upload-id-image"
+          type="file"
+          style={{ display: 'none' }}
+          onChange={onIdImageChange}
+        />
+
+        <IconButton
+          name="upload-id-image"
+          id="upload-id-image"
+          color="primary"
+          component="div"
+          sx={{
+            width: '100%',
+            position: 'absolute',
+            bottom: '-20px',
+          }}
+        >
+          <CameraAltOutlinedIcon
+            color="secondary"
+            fontSize="large"
+            sx={{
+              borderRadius: '20%',
+              backgroundColor: 'primary.light',
+            }}
+          />
+        </IconButton>
+      </label>
     </Box>
   );
 
@@ -267,9 +314,6 @@ const SocialWorkerProfileEdit = () => {
         result && (
           <>
             {/*  when uploaded route to editing studio */}
-            {uploadImage && (
-              <Navigate to="/sw/edit/upload" replace state={{ imageUpload: uploadImage[0], id }} />
-            )}
             <Breadcrumb title="Edit page" subtitle="Social Worker" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
@@ -288,9 +332,9 @@ const SocialWorkerProfileEdit = () => {
                           alt="user photo"
                           sx={{ width: 110, height: 110 }}
                           src={
-                            location.state && location.state.newImage
-                              ? URL.createObjectURL(location.state.newImage) // image preview
-                              : null
+                            finalImageFile
+                              ? URL.createObjectURL(finalImageFile) // image preview
+                              : values.avatarUrl
                           }
                         />
                         <label htmlFor="upload-image">
@@ -380,9 +424,7 @@ const SocialWorkerProfileEdit = () => {
                 <Card>
                   <Grid container direction="row" justifyContent="center" alignItems="center">
                     <Grid item xs={6}>
-                      <IconButton aria-label="delete" onClick={handleClickOpen}>
-                        {rectangle}
-                      </IconButton>
+                      <IconButton aria-label="id card">{rectangle}</IconButton>
                     </Grid>
                     <Grid item xs={6}>
                       <Typography variant="caption">ID #:{result.idNumber}</Typography>
@@ -615,16 +657,66 @@ const SocialWorkerProfileEdit = () => {
                 >
                   <img
                     alt="social worker ID"
-                    src={result.idCardUrl}
+                    src={
+                      (finalIdImageFile && URL.createObjectURL(finalIdImageFile)) ||
+                      result.idCardUrl
+                    }
                     style={{
                       position: 'absolute',
                       padding: '2px',
                     }}
+                    width="100%"
                   />
                 </Box>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Close</Button>
+              </DialogActions>
+            </Dialog>
+            {/* Social Worker Image */}
+            <Dialog
+              open={openImageDialog}
+              onClose={handleImageClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
+                {result && `${result.firstName} ${result.lastName}`}
+              </DialogTitle>
+              <DialogContent>
+                <Box>
+                  <UploadIdImage
+                    uploadImage={uploadImage}
+                    handleImageClose={handleImageClose}
+                    setFinalImageFile={setFinalImageFile}
+                  />
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleImageClose}>Close</Button>
+              </DialogActions>
+            </Dialog>
+            {/* Social Worker ID Image */}
+            <Dialog
+              open={openIdImageDialog}
+              onClose={handleIdImageClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
+                {result && `${result.firstName} ${result.lastName}`}
+              </DialogTitle>
+              <DialogContent>
+                <Box>
+                  <UploadIdImage
+                    uploadImage={uploadIdImage}
+                    handleImageClose={handleIdImageClose}
+                    setFinalImageFile={setFinalIdImageFile}
+                  />
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleImageClose}>Close</Button>
               </DialogActions>
             </Dialog>
             <Grid>

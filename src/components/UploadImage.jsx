@@ -1,10 +1,8 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-// For multi-language
 import AvatarEditor from 'react-avatar-editor';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography, IconButton, CircularProgress, Slider } from '@mui/material';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
@@ -40,28 +38,27 @@ const PrettySlider = styled((props) => <Slider {...props} />)({
 });
 
 // eslint-disable-next-line react/prop-types
-export default function UserProfileEdit() {
+export default function UploadIdImage({ uploadImage, handleImageClose, setFinalImageFile }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [editor, setEditor] = useState(null);
-  const [file, setFile] = useState(location.state.imageUpload); // from ProfileEdit.jsx
-  const [thumb, setThumb] = useState(null);
+  const [file, setFile] = useState(); // from ProfileEdit.jsx
+  // const [thumb, setThumb] = useState(null);
 
   useEffect(() => {
-    if (location.state.imageUpload) {
-      setFile(location.state.imageUpload);
-    }
+    // setFile(location.state.imageUpload || location.state.idImageUpload);
+    setFile(uploadImage);
   }, [location]);
 
   // disable IconButton
   useEffect(() => {
-    if (!location.state.imageUpload) {
+    if (!uploadImage) {
       setIsDisabled(true);
     } else {
       setIsDisabled(false);
@@ -119,38 +116,47 @@ export default function UserProfileEdit() {
       console.warn('test png file --> ', theFile);
       console.warn('uploaded file --> ', file);
 
-      setThumb(canvas);
-      navigate(`/sw/edit/${location.state.id}`, { state: { newImage: theFile, thumbnail: thumb } });
+      // setThumb(canvas);
+      setFinalImageFile(theFile);
+      handleImageClose(); // close dialog
+
+      // if (location.state.imageUpload) {
+      //   navigate(`/sw/edit/${location.state.id}`, {
+      //     state: {
+      //       newImage: location.state.imageUpload && theFile,
+      //       newIdImage: location.state.idImageUpload && theFile,
+      //       thumbnail: thumb,
+      //     },
+      //   });
+      // } else if (location.state.idImageUpload) {
+      //   navigate(`/sw/edit/${location.state.id}`, {
+      //     state: {
+      //       newImage: location.state.imageUpload && theFile,
+      //       newIdImage: location.state.idImageUpload && theFile,
+      //       thumbnail: thumb,
+      //     },
+      //   });
+      // }
+
       setIsLoading(false);
     }
   };
-
-  console.log('location');
-  console.log(location);
 
   const setEditorRef = (thisEditor) => setEditor(thisEditor);
 
   return (
     <Grid container maxWidth="50%" sx={{ margin: 'auto  ' }}>
       <Grid item container justifyContent="space-between" alignItems="center">
-        <Link
-          to={{
-            pathname: `/sw/edit/${location.state.id}`,
-            state: { newPhoto: null, thumbnail: null },
+        <CloseIcon
+          sx={{
+            color: 'red',
+            top: 0,
+            right: 0,
+            width: '24px',
+            margin: '18px',
+            zIndex: 10,
           }}
-        >
-          <CloseIcon
-            sx={{
-              color: 'red',
-              top: 0,
-              right: 0,
-              width: '24px',
-              margin: '18px',
-              zIndex: 10,
-            }}
-          />
-        </Link>
-
+        />
         <Typography
           variant="h6"
           sx={{
@@ -161,7 +167,6 @@ export default function UserProfileEdit() {
         >
           {t('profile.editProfile.avatar.title')}
         </Typography>
-
         {isLoading ? (
           <CircularProgress
             size={20}
