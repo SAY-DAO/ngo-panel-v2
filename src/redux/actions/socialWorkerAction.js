@@ -169,8 +169,8 @@ export const updateSw = (values) => async (dispatch, getState) => {
     if (values.emergePhone) {
       formData.set('emergePhone', values.emergePhone);
     }
-    if (values.address) {
-      formData.set('address', values.address);
+    if (values.postalAddress) {
+      formData.set('postalAddress', values.postalAddress);
     }
     if (values.userName) {
       formData.set('userName', values.userName);
