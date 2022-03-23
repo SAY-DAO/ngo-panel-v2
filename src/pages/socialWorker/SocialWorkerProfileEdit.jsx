@@ -136,9 +136,9 @@ const SocialWorkerProfileEdit = () => {
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('Please enter your first name'),
-    // lastName: Yup.string().required('Please enter your last name'),
-    // country: Yup.string().required('Please enter your country'),
-    // city: Yup.string().required('Please enter your city'),
+    lastName: Yup.string().required('Please enter your last name'),
+    country: Yup.string().required('Please enter your country'),
+    city: Yup.string().required('Please enter your city'),
     // province: Yup.string().required('Please enter your city'),
     // phoneNumber: Yup.string().required('Please enter your phone number'),
     // postalCode: Yup.string().required('Please enter your postal code'),

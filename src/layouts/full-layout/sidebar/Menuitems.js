@@ -95,8 +95,13 @@ const Menuitems = [
       },
       {
         title: 'Add',
-        icon: 'edit',
-        href: '/admin/sws/add',
+        icon: 'plus',
+        href: '/sw/add',
+      },
+      {
+        title: 'Migrate',
+        icon: 'shuffle',
+        href: '/sw/migrate',
       },
     ],
   },
