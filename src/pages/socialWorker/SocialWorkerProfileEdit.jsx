@@ -18,6 +18,7 @@ import {
   InputAdornment,
   OutlinedInput,
   IconButton,
+  MenuItem,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,8 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -39,6 +41,7 @@ import {
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
+import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 
 const SocialWorkerProfileEdit = () => {
   const dispatch = useDispatch();
@@ -68,11 +71,12 @@ const SocialWorkerProfileEdit = () => {
     userName: '',
     telegramId: '',
     typeId: 0,
-    idCardUrl: '',
+    idCardFile: '',
     idNumber: '',
     ngoName: '',
-    avatarUrl: '',
+    avatarFile: '',
   });
+  // const [openSelect, setOpenSelect] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -114,10 +118,10 @@ const SocialWorkerProfileEdit = () => {
         userName: result.username,
         telegramId: result.telegramId,
         typeId: result.typeId,
-        idCardUrl: result.idCardUrl,
+        idCardFile: result.idCardUrl,
         idNumber: result.idNumber,
         ngoName: result.ngoName,
-        avatarUrl: result.avatarUrl,
+        avatarFile: result.avatarUrl,
       });
     }
   }, [dispatch, result, userInfo]);
@@ -181,10 +185,10 @@ const SocialWorkerProfileEdit = () => {
         userName: data.userName,
         telegramId: data.telegramId,
         typeId: data.typeId,
-        idCardUrl: data.idCardUrl,
+        idCardFile: finalIdImageFile,
         idNumber: data.idNumber,
         ngoName: data.ngoName,
-        avatarUrl: data.avatarUrl,
+        avatarFile: finalImageFile,
         birthDate,
       }),
     );
@@ -218,6 +222,14 @@ const SocialWorkerProfileEdit = () => {
     setBirthDate(newValue);
   };
 
+  // const handleSelectClose = () => {
+  //   setOpenSelect(false);
+  // };
+
+  // const handleSelectOpen = () => {
+  //   setOpenSelect(true);
+  // };
+
   const onImageChange = (e) => {
     // if (location.state && location.state.newIdImage) {
     //   setUploadIdImage(location.state.newIdImage);
@@ -244,6 +256,14 @@ const SocialWorkerProfileEdit = () => {
     }
   };
 
+  const handleRemoveImage = () => {
+    console.log('remove');
+  };
+
+  const handleRemoveIdImage = () => {
+    console.log('remove');
+  };
+
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -251,32 +271,36 @@ const SocialWorkerProfileEdit = () => {
   const rectangle = (
     <Box component="span" sx={shapeStyles}>
       <div className="upload__image-wrapper">
-        <Grid
+        <Button
           sx={{
             position: 'relative',
+            width: '100%',
           }}
           onClick={handleClickOpen}
         >
           <img
             alt=""
-            width="100%"
+            width="80%"
             style={{
               maxHeight: 50,
             }}
             src={
               finalIdImageFile
                 ? URL.createObjectURL(finalIdImageFile) // image preview
-                : values.idCardUrl
+                : values.idCardFile
             }
           />
-        </Grid>
+        </Button>
       </div>
       <label htmlFor="upload-id-image">
         <input
           accept="image/*"
           id="upload-id-image"
           type="file"
-          style={{ display: 'none' }}
+          style={{
+            display: 'none',
+            left: '60px',
+          }}
           onChange={onIdImageChange}
         />
 
@@ -286,17 +310,35 @@ const SocialWorkerProfileEdit = () => {
           color="primary"
           component="div"
           sx={{
-            width: '100%',
             position: 'absolute',
-            bottom: '-20px',
+            bottom: '-10px',
+            left: '60px',
           }}
         >
-          <CameraAltOutlinedIcon
-            color="secondary"
-            fontSize="large"
+          <AddCircleOutlineIcon
+            color="primary"
+            fontSize="small"
             sx={{
               borderRadius: '20%',
               backgroundColor: 'primary.light',
+            }}
+          />
+        </IconButton>
+        <IconButton
+          onClick={handleRemoveIdImage}
+          color="secondary"
+          sx={{
+            position: 'absolute',
+            bottom: '-10px',
+            left: '25px',
+          }}
+        >
+          <RemoveCircleOutlineIcon
+            color="secondary"
+            fontSize="small"
+            sx={{
+              borderRadius: '20%',
+              backgroundColor: 'white',
             }}
           />
         </IconButton>
@@ -321,6 +363,26 @@ const SocialWorkerProfileEdit = () => {
                   <Badge
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    badgeContent={
+                      <IconButton
+                        onClick={handleRemoveImage}
+                        color="secondary"
+                        sx={{
+                          position: 'absolute',
+                          bottom: '-25px',
+                          right: '60px',
+                        }}
+                      >
+                        <RemoveCircleOutlineIcon
+                          color="secondary"
+                          fontSize="small"
+                          sx={{
+                            borderRadius: '20%',
+                            backgroundColor: 'white',
+                          }}
+                        />
+                      </IconButton>
+                    }
                   >
                     <div className="upload__image-wrapper">
                       <Grid
@@ -334,7 +396,7 @@ const SocialWorkerProfileEdit = () => {
                           src={
                             finalImageFile
                               ? URL.createObjectURL(finalImageFile) // image preview
-                              : values.avatarUrl
+                              : values.avatarFile
                           }
                         />
                         <label htmlFor="upload-image">
@@ -352,14 +414,14 @@ const SocialWorkerProfileEdit = () => {
                             color="primary"
                             component="div"
                             sx={{
-                              width: '100%',
                               position: 'absolute',
                               bottom: '-20px',
+                              right: '25px',
                             }}
                           >
-                            <CameraAltOutlinedIcon
+                            <AddCircleOutlineIcon
                               color="primary"
-                              fontSize="large"
+                              fontSize="small"
                               sx={{
                                 borderRadius: '20%',
                                 backgroundColor: 'white',
@@ -423,8 +485,8 @@ const SocialWorkerProfileEdit = () => {
                 </Card>
                 <Card>
                   <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={6}>
-                      <IconButton aria-label="id card">{rectangle}</IconButton>
+                    <Grid item xs={6} sx={{ position: 'relative' }}>
+                      <Grid aria-label="id card">{rectangle}</Grid>
                     </Grid>
                     <Grid item xs={6}>
                       <Typography variant="caption">ID #:{result.idNumber}</Typography>
@@ -567,12 +629,39 @@ const SocialWorkerProfileEdit = () => {
                       {...register('idNumber')}
                       error={!!errors.idNumber}
                     />
-                    <CustomFormLabel htmlFor="typeId">{t('socialWorker.typeId')}</CustomFormLabel>
-                    <select {...register('typeId')}>
-                      <option value="female">female</option>
-                      <option value="male">male</option>
-                      <option value="other">other</option>
-                    </select>
+                    <CustomFormLabel htmlFor="idNumber">
+                      {t('socialWorker.ngoName')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="ngoName"
+                      variant="outlined"
+                      defaultValue={result.ngoName}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('ngoName')}
+                      control={control}
+                      {...register('ngoName')}
+                      error={!!errors.ngoName}
+                    />
+                    <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
+                      {t('socialWorker.typeId')}
+                    </CustomFormLabel>
+                    <CustomSelect
+                      labelId="demo-controlled-open-select-label"
+                      id="demo-controlled-open-select"
+                      defaultValue={result.typeId}
+                      label="Age"
+                      onChange={handleChangeInput('typeId')}
+                      register={{ ...register('typeId') }}
+                    >
+                      <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
+                      <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
+                      <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
+                      <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
+                      <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
+                      <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
+                    </CustomSelect>
                     <CustomFormLabel htmlFor="phoneNumber">
                       {t('socialWorker.phoneNumber')}
                     </CustomFormLabel>

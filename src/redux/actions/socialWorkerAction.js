@@ -148,24 +148,56 @@ export const updateSw = (values) => async (dispatch, getState) => {
 
     const formData = new FormData();
 
-    // formData.set('firstName', values.firstName);
-    // formData.set('lastName', values.lastName);
-    // formData.set('email', values.email);
-    // formData.set('country', values.country);
-    // formData.set('city', values.city);
-    // formData.set('phoneNumber', values.phoneNumber);
-    // formData.set('emergePhone', values.emergePhone);
-    // formData.set('address', values.address);
-    // formData.set('userName', values.userName);
-    // formData.set('telegramId', values.telegramId);
-    // formData.set('typeId', values.typeId);
-    // formData.set('idCardUrl', values.idCardUrl);
-    // formData.set('idNumber', values.idNumber);
-    // formData.set('ngoName', values.ngoName);
-    // formData.set('avatarUrl', values.avatarUrl);
-    // formData.set('birthDate', values.birthDate);
-    console.log(values);
-    const { data } = await publicApi.patch(`/socialworkers/`, formData, config);
+    if (values.firstName) {
+      formData.set('firstName', values.firstName);
+    }
+    if (values.lastName) {
+      formData.set('lastName', values.lastName);
+    }
+    if (values.email) {
+      formData.set('email', values.email);
+    }
+    if (values.country) {
+      formData.set('country', values.country);
+    }
+    if (values.city) {
+      formData.set('city', values.city);
+    }
+    if (values.phoneNumber) {
+      formData.set('phoneNumber', values.phoneNumber);
+    }
+    if (values.emergePhone) {
+      formData.set('emergePhone', values.emergePhone);
+    }
+    if (values.address) {
+      formData.set('address', values.address);
+    }
+    if (values.userName) {
+      formData.set('userName', values.userName);
+    }
+    if (values.telegramId) {
+      formData.set('telegramId', values.telegramId);
+    }
+    if (values.typeId) {
+      formData.set('typeId', values.typeId);
+    }
+    if (values.idCardFile) {
+      formData.set('idCardUrl', values.idCardFile);
+    }
+    if (values.idNumber) {
+      formData.set('idNumber', values.idNumber);
+    }
+    if (values.ngoName) {
+      formData.set('ngoName', values.ngoName);
+    }
+    if (values.avatarFile) {
+      formData.set('avatarUrl', values.avatarFile);
+    }
+    if (values.birthDate) {
+      formData.set('birthDate', values.birthDate);
+    }
+
+    const { data } = await publicApi.patch(`/socialworkers/${values.id}`, formData, config);
 
     dispatch({
       type: UPDATE_SW_SUCCESS,

@@ -545,6 +545,15 @@
     "lastLoginDate": "Last Log",
     "button": {
       "update": "Update"
+    },
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "SOCIAL_WORKER": "Social Worker",
+      "COORDINATOR": "Coordinator",
+      "NGO_SUPERVISOR": "NGO Supervisor",
+      "SAY_SUPERVISOR": "SAY Supervisor",
+      "ADMIN": "Admin",
+      "USER": "User"
     }
   }
 }

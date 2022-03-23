@@ -39,6 +39,13 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     }
   }, [successLogin]);
 
+  // if mot active log out
+  useEffect(() => {
+    if (successSwDetails && !swInfo.isActive) {
+      dispatch(logout());
+    }
+  }, [successSwDetails]);
+
   useEffect(() => {
     if (!successSwDetails) {
       dispatch(fetchSocialWorkerProfile());
