@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Avatar,
   Card,
@@ -15,6 +15,10 @@ import {
   OutlinedInput,
   IconButton,
   MenuItem,
+  FormHelperText,
+  CircularProgress,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -29,19 +33,20 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { fetchSocialWorkerById, updateSw } from '../../redux/actions/socialWorkerAction';
+import { AddSw } from '../../redux/actions/socialWorkerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
+import { fetchNgoList } from '../../redux/actions/NgoAction';
 
-const SocialWorkerProfileEdit = () => {
+const SocialWorkerAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  // const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
+  const [coordChecked, setCoordChecked] = useState(false);
   const [finalImageFile, setFinalImageFile] = useState();
   const [finalIdImageFile, setFinalIdImageFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
@@ -65,24 +70,31 @@ const SocialWorkerProfileEdit = () => {
     idNumber: '',
     ngoName: '',
     avatarFile: '',
+    isCoordinator: false,
   });
 
   const swUpdate = useSelector((state) => state.swUpdate);
   const { success: successSwUpdate, error: errorSwUpdate } = swUpdate;
 
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
+
   useEffect(() => {
-    dispatch(fetchSocialWorkerById(id));
-  }, [dispatch]);
+    if (!successNgoList) {
+      dispatch(fetchNgoList());
+    }
+  }, []);
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('Please enter your first name'),
     lastName: Yup.string().required('Please enter your last name'),
-    country: Yup.string().required('Please enter your country'),
-    city: Yup.string().required('Please enter your city'),
-    // province: Yup.string().required('Please enter your city'),
-    // phoneNumber: Yup.string().required('Please enter your phone number'),
-    // postalCode: Yup.string().required('Please enter your postal code'),
-    // postalAddress: Yup.string().required('Please enter your postalAddress'),
+    ngoId: Yup.string().required('Please enter your NGO'),
+    typeId: Yup.string().required('Please enter permission'),
+    idNumber: Yup.string().required('Please enter your ID number'),
+    phoneNumber: Yup.string().required('Please enter your phone number'),
+    emergencyPhoneNumber: Yup.string().required('Please enter your emergency phone'),
+    email: Yup.string().required('Please enter your email'),
+    telegramId: Yup.string().required('Please enter your telegram handle'),
     // username: Yup.string()
     //   .required('Username is required')
     //   .min(6, 'Username must be at least 6 characters')
@@ -112,7 +124,7 @@ const SocialWorkerProfileEdit = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      updateSw({
+      AddSw({
         id,
         firstName: data.firstName,
         lastName: data.lastName,
@@ -130,6 +142,7 @@ const SocialWorkerProfileEdit = () => {
         ngoName: data.ngoName,
         avatarFile: finalImageFile,
         birthDate,
+        isCoordinator: values.isCoordinator,
       }),
     );
   };
@@ -179,14 +192,30 @@ const SocialWorkerProfileEdit = () => {
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-  const shapeStyles = { bgcolor: 'darkGrey', width: 80, height: 50 };
+
+  const handleChangeCoord = () => {
+    if (coordChecked) {
+      setCoordChecked(false);
+    } else if (!coordChecked) {
+      setCoordChecked(true);
+    }
+    setValues({
+      ...values,
+      isCoordinator: coordChecked,
+    });
+  };
+
+  console.log(errors);
+
+  const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
   const rectangle = (
     <Box component="span" sx={shapeStyles}>
       <div className="upload__image-wrapper">
         <Button
           sx={{
-            position: 'relative',
-            width: '100%',
+            border: '1px dashed white',
+            width: 80,
+            minHeight: 50,
           }}
         >
           <img
@@ -194,6 +223,7 @@ const SocialWorkerProfileEdit = () => {
             width="80%"
             style={{
               maxHeight: 50,
+              bgcolor: 'white',
             }}
             src={
               finalIdImageFile
@@ -215,41 +245,23 @@ const SocialWorkerProfileEdit = () => {
           onChange={onIdImageChange}
         />
 
-        <IconButton
-          name="upload-id-image"
-          id="upload-id-image"
-          color="primary"
-          component="div"
-          sx={{
-            position: 'absolute',
-            bottom: '-10px',
-            left: '60px',
-          }}
-        >
-          <AddCircleOutlineIcon
-            color="primary"
-            fontSize="small"
-            sx={{
-              borderRadius: '20%',
-              backgroundColor: 'primary.light',
-            }}
-          />
-        </IconButton>
-        <IconButton
-          onClick={handleRemoveIdImage}
-          color="secondary"
-          sx={{
-            position: 'absolute',
-            bottom: '-10px',
-            left: '25px',
-          }}
-        >
+        <IconButton onClick={handleRemoveIdImage} color="secondary">
           <RemoveCircleOutlineIcon
             color="secondary"
-            fontSize="small"
+            fontSize="medium"
             sx={{
               borderRadius: '20%',
               backgroundColor: 'white',
+            }}
+          />
+        </IconButton>
+        <IconButton name="upload-id-image" id="upload-id-image" color="primary" component="div">
+          <AddCircleOutlineIcon
+            color="primary"
+            fontSize="medium"
+            sx={{
+              borderRadius: '20%',
+              backgroundColor: 'primary.light',
             }}
           />
         </IconButton>
@@ -258,74 +270,33 @@ const SocialWorkerProfileEdit = () => {
   );
 
   return (
-    <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
-      <>
-        {/*  when uploaded route to editing studio */}
-        <Breadcrumb title="Edit page" subtitle="Social Worker" />
-        <Grid container spacing={0}>
-          <Grid item lg={4} md={12} xs={12}>
-            <Card sx={{ p: 3 }}>
-              <Badge
-                overlap="circular"
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                badgeContent={
-                  <IconButton
-                    onClick={handleRemoveImage}
-                    color="secondary"
-                    sx={{
-                      position: 'absolute',
-                      bottom: '-25px',
-                      right: '60px',
-                    }}
-                  >
-                    <RemoveCircleOutlineIcon
-                      color="secondary"
-                      fontSize="small"
-                      sx={{
-                        borderRadius: '20%',
-                        backgroundColor: 'white',
-                      }}
-                    />
-                  </IconButton>
-                }
-              >
-                <div className="upload__image-wrapper">
-                  <Grid
-                    sx={{
-                      position: 'relative',
-                    }}
-                  >
-                    <Avatar
-                      alt="user photo"
-                      sx={{ width: 110, height: 110 }}
-                      src={
-                        finalImageFile
-                          ? URL.createObjectURL(finalImageFile) // image preview
-                          : values.avatarFile
-                      }
-                    />
-                    <label htmlFor="upload-image">
-                      <input
-                        accept="image/*"
-                        id="upload-image"
-                        type="file"
-                        style={{ display: 'none' }}
-                        onChange={onImageChange}
-                      />
-
+    <PageContainer title="Social Worker Add" description="this is Social Worker Add page">
+      {loadingNgoAll ? (
+        <Grid sx={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </Grid>
+      ) : (
+        successNgoList && (
+          <>
+            <Breadcrumb title="Add page" subtitle="Social Worker" />
+            <Grid container spacing={0}>
+              <Grid item lg={4} md={12} xs={12}>
+                <Card sx={{ p: 3, textAlign: 'center' }}>
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    badgeContent={
                       <IconButton
-                        name="upload-image"
-                        id="upload-image"
-                        color="primary"
-                        component="div"
+                        onClick={handleRemoveImage}
+                        color="secondary"
                         sx={{
                           position: 'absolute',
-                          bottom: '-20px',
-                          right: '25px',
+                          bottom: '-5px',
+                          right: '65px',
                         }}
                       >
-                        <AddCircleOutlineIcon
-                          color="primary"
+                        <RemoveCircleOutlineIcon
+                          color="secondary"
                           fontSize="small"
                           sx={{
                             borderRadius: '20%',
@@ -333,279 +304,393 @@ const SocialWorkerProfileEdit = () => {
                           }}
                         />
                       </IconButton>
-                    </label>
+                    }
+                  >
+                    <div className="upload__image-wrapper">
+                      <Grid
+                        sx={{
+                          position: 'relative',
+                        }}
+                      >
+                        <Avatar
+                          alt="user photo"
+                          sx={{ width: 110, height: 110 }}
+                          src={
+                            finalImageFile
+                              ? URL.createObjectURL(finalImageFile) // image preview
+                              : values.avatarFile
+                          }
+                        />
+                        <label htmlFor="upload-image">
+                          <input
+                            accept="image/*"
+                            id="upload-image"
+                            type="file"
+                            style={{ display: 'none' }}
+                            onChange={onImageChange}
+                          />
+
+                          <IconButton
+                            name="upload-image"
+                            id="upload-image"
+                            color="primary"
+                            component="div"
+                            sx={{
+                              position: 'absolute',
+                              bottom: '0px',
+                              right: '0px',
+                            }}
+                          >
+                            <AddCircleOutlineIcon
+                              color="primary"
+                              fontSize="small"
+                              sx={{
+                                zIndex: 10,
+                                borderRadius: '20%',
+                                backgroundColor: 'white',
+                              }}
+                            />
+                          </IconButton>
+                        </label>
+                      </Grid>
+                    </div>
+                  </Badge>
+                </Card>
+                <Card sx={{ p: 3, minHeight: 150 }}>
+                  <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <Grid item xs={6} sx={{ position: 'relative', textAlign: 'center' }}>
+                      <Typography variant="caption"> {t('socialWorker.idCardUrl')}</Typography>
+                      <Grid aria-label="id card">{rectangle}</Grid>
+                    </Grid>
                   </Grid>
-                </div>
-              </Badge>
-            </Card>
-            <Card>
-              <Grid container direction="row" justifyContent="center" alignItems="center">
-                <Grid item xs={6} sx={{ position: 'relative' }}>
-                  <Grid aria-label="id card">{rectangle}</Grid>
-                </Grid>
+                </Card>
               </Grid>
-            </Card>
-          </Grid>
-          <Grid item lg={8} md={12} xs={12}>
-            <Card sx={{ p: 3 }}>
-              <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                {t('socialWorker.titleEdit')}
-              </Typography>
-              <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
-                <TextField
-                  required
-                  id="firstName"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  onChange={handleChangeInput('firstName')}
-                  control={control}
-                  {...register('firstName')}
-                  error={!!errors.firstName}
-                />
-                <CustomFormLabel htmlFor="lastName">{t('socialWorker.lastName')}</CustomFormLabel>
-                <TextField
-                  required
-                  id="lastName"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('lastName')}
-                  control={control}
-                  {...register('lastName')}
-                  error={!!errors.lastName}
-                />
-                <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
-                <TextField
-                  id="Email"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('email')}
-                  control={control}
-                  {...register('email')}
-                  error={!!errors.email}
-                />
+              <Grid item lg={8} md={12} xs={12}>
+                <Card sx={{ p: 3 }}>
+                  <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
+                    {t('socialWorker.titleAdd')}
+                  </Typography>
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
+                    <TextField
+                      required
+                      id="firstName"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      onChange={handleChangeInput('firstName')}
+                      control={control}
+                      {...register('firstName')}
+                      error={!!errors.firstName}
+                      helperText={errors && errors.firstName && errors.firstName.message}
+                    />
+                    <CustomFormLabel htmlFor="lastName">
+                      {t('socialWorker.lastName')}
+                    </CustomFormLabel>
+                    <TextField
+                      required
+                      id="lastName"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('lastName')}
+                      control={control}
+                      {...register('lastName')}
+                      error={!!errors.lastName}
+                      helperText={errors && errors.lastName && errors.lastName.message}
+                    />
+                    <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
+                    <TextField
+                      id="Email"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('email')}
+                      control={control}
+                      {...register('email')}
+                      error={!!errors.email}
+                      helperText={errors && errors.email && errors.email.message}
+                    />
 
-                <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
-                <TextField
-                  id="country"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('country')}
-                  control={control}
-                  {...register('country')}
-                  error={!!errors.country}
-                />
-                <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
-                <TextField
-                  id="city"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('city')}
-                  control={control}
-                  {...register('city')}
-                  error={!!errors.city}
-                />
-                <CustomFormLabel htmlFor="postalAddress">
-                  {t('socialWorker.postalAddress')}
-                </CustomFormLabel>
-                <CustomTextField
-                  id="postalAddress"
-                  variant="outlined"
-                  multiline
-                  rows={4}
-                  size="small"
-                  sx={{ mb: 2 }}
-                  fullWidth
-                  onChange={handleChangeInput('postalAddress')}
-                  control={control}
-                  register={{ ...register('postalAddress') }}
-                />
-                <CustomFormLabel htmlFor="birthDate">{t('socialWorker.birthDate')}</CustomFormLabel>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DesktopDatePicker
-                    id="birthDate"
-                    inputFormat="MM/dd/yyyy"
-                    value={birthDate}
-                    onChange={handleDateChange}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
+                    <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
+                    <TextField
+                      id="country"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('country')}
+                      control={control}
+                      {...register('country')}
+                      error={!!errors.country}
+                      helperText={errors && errors.country && errors.country.message}
+                    />
+                    <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
+                    <TextField
+                      id="city"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('city')}
+                      control={control}
+                      {...register('city')}
+                      error={!!errors.city}
+                      helperText={errors && errors.city && errors.city.message}
+                    />
+                    <CustomFormLabel htmlFor="postalAddress">
+                      {t('socialWorker.postalAddress')}
+                    </CustomFormLabel>
+                    <CustomTextField
+                      id="postalAddress"
+                      variant="outlined"
+                      multiline
+                      rows={4}
+                      size="small"
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      onChange={handleChangeInput('postalAddress')}
+                      control={control}
+                      register={{ ...register('postalAddress') }}
+                      helperText={errors && errors.postalAddress && errors.postalAddress.message}
+                    />
+                    <CustomFormLabel htmlFor="birthDate">
+                      {t('socialWorker.birthDate')}
+                    </CustomFormLabel>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDatePicker
+                        id="birthDate"
+                        inputFormat="MM/dd/yyyy"
+                        value={birthDate}
+                        onChange={handleDateChange}
+                        renderInput={(params) => <TextField {...params} />}
+                        helperText={errors && errors.birthDate && errors.birthDate.message}
+                      />
+                    </LocalizationProvider>
 
-                <CustomFormLabel htmlFor="telegramId">
-                  {t('socialWorker.telegramId')}
-                </CustomFormLabel>
-                <OutlinedInput
-                  id="telegramId"
-                  startAdornment={<InputAdornment position="start">@</InputAdornment>}
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('telegramId')}
-                  control={control}
-                  {...register('telegramId')}
-                  error={!!errors.telegramId}
-                />
-                <CustomFormLabel htmlFor="idNumber">{t('socialWorker.idNumber')}</CustomFormLabel>
-                <TextField
-                  id="idNumber"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('idNumber')}
-                  control={control}
-                  {...register('idNumber')}
-                  error={!!errors.idNumber}
-                />
-                <CustomFormLabel htmlFor="idNumber">{t('socialWorker.ngoName')}</CustomFormLabel>
-                <TextField
-                  id="ngoName"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('ngoName')}
-                  control={control}
-                  {...register('ngoName')}
-                  error={!!errors.ngoName}
-                />
-                <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
-                  {t('socialWorker.typeId')}
-                </CustomFormLabel>
-                <CustomSelect
-                  labelId="demo-controlled-open-select-label"
-                  id="demo-controlled-open-select"
-                  label="Age"
-                  onChange={handleChangeInput('typeId')}
-                  register={{ ...register('typeId') }}
-                >
-                  <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
-                  <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
-                  <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
-                  <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
-                  <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
-                  <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
-                </CustomSelect>
-                <CustomFormLabel htmlFor="phoneNumber">
-                  {t('socialWorker.phoneNumber')}
-                </CustomFormLabel>
-                <TextField
-                  id="phoneNumber"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('phoneNumber')}
-                  control={control}
-                  {...register('phoneNumber')}
-                  error={!!errors.phoneNumber}
-                />
-                <CustomFormLabel htmlFor="emergencyPhoneNumber">
-                  {t('socialWorker.emergencyPhoneNumber')}
-                </CustomFormLabel>
-                <TextField
-                  id="emergencyPhoneNumber"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('emergencyPhoneNumber')}
-                  control={control}
-                  {...register('emergencyPhoneNumber')}
-                  error={!!errors.emergencyPhoneNumber}
-                />
-                <CustomFormLabel htmlFor="userName">{t('socialWorker.userName')}</CustomFormLabel>
-                <TextField
-                  id="userName"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  sx={{ mb: 1 }}
-                  onChange={handleChangeInput('userName')}
-                  control={control}
-                  {...register('userName')}
-                  error={!!errors.userName}
-                />
+                    <CustomFormLabel htmlFor="telegramId">
+                      {t('socialWorker.telegramId')}
+                    </CustomFormLabel>
+                    <OutlinedInput
+                      id="telegramId"
+                      startAdornment={<InputAdornment position="start">@</InputAdornment>}
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('telegramId')}
+                      control={control}
+                      {...register('telegramId')}
+                      error={!!errors.telegramId}
+                    />
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.telegramId && errors.telegramId.message}
+                    </FormHelperText>
+                    <CustomFormLabel htmlFor="idNumber">
+                      {t('socialWorker.idNumber')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="idNumber"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('idNumber')}
+                      control={control}
+                      {...register('idNumber')}
+                      error={!!errors.idNumber}
+                      helperText={errors && errors.lastName && errors.lastName.message}
+                    />
+                    <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
+                      {t('socialWorker.ngoName')}
+                    </CustomFormLabel>
+                    <CustomSelect
+                      labelId="ngoId-controlled-open-select-label"
+                      id="ngoId-controlled-open-select"
+                      defaultValue={ngoList[1].id}
+                      onChange={handleChangeInput('ngoId')}
+                      register={{ ...register('ngoId') }}
+                      control={control}
+                      error={!!errors.ngoId}
+                    >
+                      {ngoList &&
+                        Object.keys(ngoList).map((key) => (
+                          <MenuItem key={key} value={ngoList[key].id}>
+                            {ngoList[key].name}
+                          </MenuItem>
+                        ))}
+                    </CustomSelect>
+                    <CustomFormLabel id="typeId-controlled-open-select-label" htmlFor="typeId">
+                      {t('socialWorker.typeId')}
+                    </CustomFormLabel>
+                    <CustomSelect
+                      labelId="typeId-controlled-open-select-label"
+                      id="typeId-controlled-open-select"
+                      defaultValue={4}
+                      onChange={handleChangeInput('typeId')}
+                      control={control}
+                      register={{ ...register('typeId') }}
+                    >
+                      <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
+                      <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
+                      {/* <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem> */}
+                      <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
+                      <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
+                      <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
+                    </CustomSelect>
+                    <CustomFormLabel htmlFor="phoneNumber">
+                      {t('socialWorker.phoneNumber')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="phoneNumber"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('phoneNumber')}
+                      control={control}
+                      {...register('phoneNumber')}
+                      error={!!errors.phoneNumber}
+                      helperText={errors && errors.phoneNumber && errors.phoneNumber.message}
+                    />
+                    <CustomFormLabel htmlFor="emergencyPhoneNumber">
+                      {t('socialWorker.emergencyPhoneNumber')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="emergencyPhoneNumber"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('emergencyPhoneNumber')}
+                      control={control}
+                      {...register('emergencyPhoneNumber')}
+                      error={!!errors.emergencyPhoneNumber}
+                      helperText={
+                        errors && errors.emergencyPhoneNumber && errors.emergencyPhoneNumber.message
+                      }
+                    />
+                    <CustomFormLabel htmlFor="userName">
+                      {t('socialWorker.userName')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="userName"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('userName')}
+                      control={control}
+                      {...register('userName')}
+                      error={!!errors.userName}
+                      helperText={errors && errors.userName && errors.userName.message}
+                    />
 
-                <Button
-                  color="primary"
-                  type="submit"
-                  onClick={handleSubmit(onSubmit)}
-                  variant="contained"
-                  sx={{ mt: 4 }}
-                >
-                  {t('socialWorker.button.update')}
-                </Button>
-              </form>
-            </Card>
-          </Grid>
-        </Grid>
+                    <FormControlLabel
+                      sx={{ width: '100%' }}
+                      control={
+                        <Switch
+                          id="isCoordinator"
+                          variant="outlined"
+                          checked={coordChecked}
+                          onChange={handleChangeCoord}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                      }
+                      label={
+                        <Grid>
+                          <Box
+                            sx={{
+                              display: 'inline-block',
+                              backgroundColor:
+                                coordChecked === true
+                                  ? (theme) => theme.palette.success.main
+                                  : (theme) => theme.palette.error.main,
+                              borderRadius: '100%',
+                              height: '10px',
+                              width: '10px',
+                            }}
+                          />
+                          {'  '}
+                          <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
+                            {t('socialWorker.isCoordinator')}
+                          </Typography>
+                        </Grid>
+                      }
+                    />
+                    <Button
+                      color="primary"
+                      type="submit"
+                      onClick={handleSubmit(onSubmit)}
+                      variant="contained"
+                      sx={{ mt: 4 }}
+                    >
+                      {t('socialWorker.button.update')}
+                    </Button>
+                  </form>
+                </Card>
+              </Grid>
+            </Grid>
 
-        {/* Social Worker Image */}
-        <Dialog
-          open={openImageDialog}
-          onClose={handleImageClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogContent>
-            <Box>
-              <UploadIdImage
-                uploadImage={uploadImage}
-                handleImageClose={handleImageClose}
-                setFinalImageFile={setFinalImageFile}
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleImageClose}>Close</Button>
-          </DialogActions>
-        </Dialog>
-        {/* Social Worker ID Image */}
-        <Dialog
-          open={openIdImageDialog}
-          onClose={handleIdImageClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogContent>
-            <Box>
-              <UploadIdImage
-                uploadImage={uploadIdImage}
-                handleImageClose={handleIdImageClose}
-                setFinalImageFile={setFinalIdImageFile}
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleImageClose}>Close</Button>
-          </DialogActions>
-        </Dialog>
-        <Grid>
-          {(successSwUpdate || errorSwUpdate) && (
-            <Message
-              severity={successSwUpdate ? 'success' : 'error'}
-              variant="filled"
-              backError={errorSwUpdate}
-              sx={{ width: '100%' }}
+            {/* Social Worker Image */}
+            <Dialog
+              open={openImageDialog}
+              onClose={handleImageClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
             >
-              {t('socialWorker.updated')}
-            </Message>
-          )}
-        </Grid>
-      </>
+              <DialogContent>
+                <Box>
+                  <UploadIdImage
+                    uploadImage={uploadImage}
+                    handleImageClose={handleImageClose}
+                    setFinalImageFile={setFinalImageFile}
+                  />
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleImageClose}>Close</Button>
+              </DialogActions>
+            </Dialog>
+            {/* Social Worker ID Image */}
+            <Dialog
+              open={openIdImageDialog}
+              onClose={handleIdImageClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <Box>
+                  <UploadIdImage
+                    uploadImage={uploadIdImage}
+                    handleImageClose={handleIdImageClose}
+                    setFinalImageFile={setFinalIdImageFile}
+                  />
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleImageClose}>Close</Button>
+              </DialogActions>
+            </Dialog>
+            <Grid>
+              {(successSwUpdate || errorSwUpdate) && (
+                <Message
+                  severity={successSwUpdate ? 'success' : 'error'}
+                  variant="filled"
+                  backError={errorSwUpdate}
+                  sx={{ width: '100%' }}
+                >
+                  {t('socialWorker.updated')}
+                </Message>
+              )}
+            </Grid>
+          </>
+        )
+      )}
     </PageContainer>
   );
 };
 
-export default SocialWorkerProfileEdit;
+export default SocialWorkerAdd;

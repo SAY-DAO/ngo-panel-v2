@@ -517,10 +517,12 @@
     "download": "Download Report"
   },
   "socialWorker": {
-    "isActive": "Status",
+    "isActive": "Active Status",
+    "isCoordinator": "Coordinator Status",
     "update": "Edit",
     "updated": "Successfully Updated!",
     "titleEdit": "Edit Details",
+    "titleAdd": "Add Details",
     "generatedCode": "Code",
     "name": "First Name",
     "lastName": "Last Name",

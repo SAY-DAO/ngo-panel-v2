@@ -312,7 +312,6 @@ const SocialWorkerTable = ({ swList }) => {
   };
 
   const handleClick = (event, firstName) => {
-    console.log(event.target);
     const selectedIndex = selected.indexOf(firstName);
     let newSelected = [];
 

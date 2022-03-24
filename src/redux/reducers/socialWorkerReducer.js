@@ -16,6 +16,9 @@ import {
   UPDATE_SW_REQUEST,
   UPDATE_SW_SUCCESS,
   UPDATE_SW_FAIL,
+  ADD_SW_REQUEST,
+  ADD_SW_SUCCESS,
+  ADD_SW_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const swDetailsReducer = (state = { success: false }, action) => {
@@ -81,6 +84,19 @@ export const swUpdateReducer = (state = { success: false }, action) => {
     case UPDATE_SW_SUCCESS:
       return { loading: false, success: true, updated: action.payload };
     case UPDATE_SW_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const swAddReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case ADD_SW_REQUEST:
+      return { loading: true };
+    case ADD_SW_SUCCESS:
+      return { loading: false, success: true, added: action.payload };
+    case ADD_SW_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

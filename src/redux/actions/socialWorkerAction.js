@@ -15,6 +15,9 @@ import {
   UPDATE_SW_SUCCESS,
   UPDATE_SW_FAIL,
   UPDATE_SW_REQUEST,
+  ADD_SW_REQUEST,
+  ADD_SW_SUCCESS,
+  ADD_SW_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
@@ -101,7 +104,6 @@ export const fetchSocialWorkersList = () => async (dispatch, getState) => {
 
 export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
   try {
-    console.log(id, status);
     dispatch({ type: UPDATE_SW_IS_ACTIVE_REQUEST });
     const {
       userLogin: { userInfo },
@@ -148,6 +150,92 @@ export const updateSw = (values) => async (dispatch, getState) => {
 
     const formData = new FormData();
 
+    if (values.isCoordinator != null) {
+      formData.set('isCoordinator', values.isCoordinator);
+    }
+    if (values.firstName) {
+      formData.set('firstName', values.firstName);
+    }
+    if (values.lastName) {
+      formData.set('lastName', values.lastName);
+    }
+    if (values.email) {
+      formData.set('email', values.email);
+    }
+    if (values.country) {
+      formData.set('country', values.country);
+    }
+    if (values.city) {
+      formData.set('city', values.city);
+    }
+    if (values.phoneNumber) {
+      formData.set('phoneNumber', values.phoneNumber);
+    }
+    if (values.emergePhone) {
+      formData.set('emergePhone', values.emergePhone);
+    }
+    if (values.postalAddress) {
+      formData.set('postalAddress', values.postalAddress);
+    }
+    if (values.userName) {
+      formData.set('userName', values.userName);
+    }
+    if (values.telegramId) {
+      formData.set('telegramId', values.telegramId);
+    }
+    if (values.typeId) {
+      formData.set('typeId', values.typeId);
+    }
+    if (values.idCardFile) {
+      formData.set('idCardUrl', values.idCardFile);
+    }
+    if (values.idNumber) {
+      formData.set('idNumber', values.idNumber);
+    }
+    if (values.ngoId) {
+      formData.set('ngoId', values.ngoId);
+    }
+    if (values.avatarFile) {
+      formData.set('avatarUrl', values.avatarFile);
+    }
+    if (values.birthDate) {
+      formData.set('birthDate', Date.parse(values.birthDate));
+    }
+
+    const { data } = await publicApi.patch(`/socialworkers/${values.id}`, formData, config);
+
+    dispatch({
+      type: UPDATE_SW_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_SW_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
+export const AddSw = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ADD_SW_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const formData = new FormData();
+    formData.set('gender', false);
+
+    if (values.isCoordinator != null) {
+      formData.set('isCoordinator', values.isCoordinator);
+    }
     if (values.firstName) {
       formData.set('firstName', values.firstName);
     }
@@ -194,18 +282,18 @@ export const updateSw = (values) => async (dispatch, getState) => {
       formData.set('avatarUrl', values.avatarFile);
     }
     if (values.birthDate) {
-      formData.set('birthDate', values.birthDate);
+      formData.set('birthDate', Date.parse(values.birthDate));
     }
 
-    const { data } = await publicApi.patch(`/socialworkers/${values.id}`, formData, config);
+    const { data } = await publicApi.post(`/socialworkers/`, formData, config);
 
     dispatch({
-      type: UPDATE_SW_SUCCESS,
+      type: ADD_SW_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: UPDATE_SW_FAIL,
+      type: ADD_SW_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
     });
   }

@@ -1,7 +1,7 @@
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full-layout/loadable/Loadable';
-import SocialWorkerProfileEdit from '../pages/socialWorker/SocialWorkerProfileEdit';
+import SocialWorkerEdit from '../pages/socialWorker/SocialWorkerEdit';
 import SocialWorkerAdd from '../pages/socialWorker/SocialWorkerAdd';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
@@ -23,7 +23,7 @@ const Router = [
       { path: '/', element: <Navigate to="/dashboards/starter" /> },
       { path: '/dashboards/starter', exact: true, element: <Dashboard /> },
       { path: '/sw/list', exact: true, element: <SocialWorkersList /> },
-      { path: '/sw/edit/:id', exact: true, element: <SocialWorkerProfileEdit /> },
+      { path: '/sw/edit/:id', exact: true, element: <SocialWorkerEdit /> },
       { path: '/sw/add', exact: true, element: <SocialWorkerAdd /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],

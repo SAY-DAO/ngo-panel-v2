@@ -22,3 +22,8 @@ export const UPDATE_SW_REQUEST = 'UPDATE_SW_REQUEST';
 export const UPDATE_SW_SUCCESS = 'UPDATE_SW_SUCCESS';
 export const UPDATE_SW_FAIL = 'UPDATE_SW_FAIL';
 export const UPDATE_SW_RESET = 'UPDATE_SW_RESET';
+
+export const ADD_SW_REQUEST = 'ADD_SW_REQUEST';
+export const ADD_SW_SUCCESS = 'ADD_SW_SUCCESS';
+export const ADD_SW_FAIL = 'ADD_SW_FAIL';
+export const ADD_SW_RESET = 'ADD_SW_RESET';

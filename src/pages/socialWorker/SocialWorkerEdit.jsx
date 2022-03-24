@@ -42,11 +42,11 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
+import { fetchNgoList } from '../../redux/actions/NgoAction';
 
-const SocialWorkerProfileEdit = () => {
+const SocialWorkerEdit = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  // const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
@@ -57,7 +57,8 @@ const SocialWorkerProfileEdit = () => {
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
   const [uploadIdImage, setUploadIdImage] = useState(location.state && location.state.newIdImage);
   const [open, setOpen] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [activeChecked, setActiveChecked] = useState(false);
+  const [coordChecked, setCoordChecked] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
   const [values, setValues] = React.useState({
     firstName: '',
@@ -73,7 +74,7 @@ const SocialWorkerProfileEdit = () => {
     typeId: 0,
     idCardFile: '',
     idNumber: '',
-    ngoName: '',
+    ngoId: '',
     avatarFile: '',
   });
   // const [openSelect, setOpenSelect] = useState(false);
@@ -88,23 +89,40 @@ const SocialWorkerProfileEdit = () => {
   const { status } = swStatusUpdate;
 
   const swUpdate = useSelector((state) => state.swUpdate);
-  const { success: successSwUpdate, error: errorSwUpdate } = swUpdate;
+  const { success: successSwUpdate, loading: loadingSwUpdate, error: errorSwUpdate } = swUpdate;
+
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
 
   useEffect(() => {
     dispatch(fetchSocialWorkerById(id));
-  }, [dispatch, status]);
+    if (!successNgoList) {
+      dispatch(fetchNgoList());
+    }
+  }, [status, successSwUpdate]);
 
+  // isActive
   useEffect(() => {
     if (result && result.isActive) {
-      setBirthDate(result.birthDate);
-      setChecked(true);
+      setActiveChecked(true);
     } else {
-      setChecked(false);
+      setActiveChecked(false);
+    }
+  }, [successSwById]);
+
+  // isCoordinator
+  useEffect(() => {
+    if (result && result.isCoordinator) {
+      setCoordChecked(true);
+    } else {
+      setCoordChecked(false);
     }
   }, [successSwById]);
 
   useEffect(() => {
     if (result) {
+      setBirthDate(result.birthDate);
+
       setValues({
         ...values,
         firstName: result.firstName,
@@ -120,17 +138,35 @@ const SocialWorkerProfileEdit = () => {
         typeId: result.typeId,
         idCardFile: result.idCardUrl,
         idNumber: result.idNumber,
-        ngoName: result.ngoName,
+        ngoId: result.ngoId,
         avatarFile: result.avatarUrl,
       });
     }
   }, [dispatch, result, userInfo]);
 
-  const handleChange = () => {
-    if (checked && result.isActive) {
+  const handleChangeActive = () => {
+    if (activeChecked && result.isActive) {
       dispatch(updateSwIsActive(result.id, 'deactivate'));
-    } else if (!checked && !result.isActive) {
+    } else if (!activeChecked && !result.isActive) {
       dispatch(updateSwIsActive(result.id, 'activate'));
+    }
+  };
+
+  const handleChangeCoord = () => {
+    if (coordChecked && result.isCoordinator) {
+      dispatch(
+        updateSw({
+          id,
+          isCoordinator: false,
+        }),
+      );
+    } else if (!coordChecked && !result.isCoordinator) {
+      dispatch(
+        updateSw({
+          id,
+          isCoordinator: true,
+        }),
+      );
     }
   };
 
@@ -138,7 +174,7 @@ const SocialWorkerProfileEdit = () => {
     firstName: Yup.string().required('Please enter your first name'),
     lastName: Yup.string().required('Please enter your last name'),
     country: Yup.string().required('Please enter your country'),
-    city: Yup.string().required('Please enter your city'),
+    ngoId: Yup.string().required('Please enter your NGO'),
     // province: Yup.string().required('Please enter your city'),
     // phoneNumber: Yup.string().required('Please enter your phone number'),
     // postalCode: Yup.string().required('Please enter your postal code'),
@@ -187,7 +223,7 @@ const SocialWorkerProfileEdit = () => {
         typeId: data.typeId,
         idCardFile: finalIdImageFile,
         idNumber: data.idNumber,
-        ngoName: data.ngoName,
+        ngoId: data.ngoId,
         avatarFile: finalImageFile,
         birthDate,
       }),
@@ -222,37 +258,17 @@ const SocialWorkerProfileEdit = () => {
     setBirthDate(newValue);
   };
 
-  // const handleSelectClose = () => {
-  //   setOpenSelect(false);
-  // };
-
-  // const handleSelectOpen = () => {
-  //   setOpenSelect(true);
-  // };
-
   const onImageChange = (e) => {
-    // if (location.state && location.state.newIdImage) {
-    //   setUploadIdImage(location.state.newIdImage);
-    // }
     if (e.target.files[0]) {
       setUploadImage(e.target.files[0]);
       handleImageClickOpen();
-      // navigate(`/sw/edit/upload`, {
-      //   state: { imageUpload: e.target.files[0], id },
-      // });
     }
   };
 
   const onIdImageChange = (e) => {
-    // if (location.state && location.state.newImage) {
-    //   setUploadImage(location.state.newImage);
-    // }
     if (e.target.files[0]) {
       setUploadIdImage(e.target.files[0]);
       handleIdImageClickOpen();
-      // navigate(`/sw/edit/upload`, {
-      //   state: { idImageUpload: e.target.files[0], id },
-      // });
     }
   };
 
@@ -267,22 +283,25 @@ const SocialWorkerProfileEdit = () => {
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-  const shapeStyles = { bgcolor: 'darkGrey', width: 80, height: 50 };
+  const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
   const rectangle = (
     <Box component="span" sx={shapeStyles}>
       <div className="upload__image-wrapper">
         <Button
           sx={{
             position: 'relative',
-            width: '100%',
+            border: '1px dashed white',
+            width: 80,
+            minHeight: 50,
           }}
           onClick={handleClickOpen}
         >
           <img
-            alt=""
+            alt="ID"
             width="80%"
             style={{
               maxHeight: 50,
+              bgcolor: 'white',
             }}
             src={
               finalIdImageFile
@@ -304,41 +323,23 @@ const SocialWorkerProfileEdit = () => {
           onChange={onIdImageChange}
         />
 
-        <IconButton
-          name="upload-id-image"
-          id="upload-id-image"
-          color="primary"
-          component="div"
-          sx={{
-            position: 'absolute',
-            bottom: '-10px',
-            left: '60px',
-          }}
-        >
-          <AddCircleOutlineIcon
-            color="primary"
-            fontSize="small"
-            sx={{
-              borderRadius: '20%',
-              backgroundColor: 'primary.light',
-            }}
-          />
-        </IconButton>
-        <IconButton
-          onClick={handleRemoveIdImage}
-          color="secondary"
-          sx={{
-            position: 'absolute',
-            bottom: '-10px',
-            left: '25px',
-          }}
-        >
+        <IconButton onClick={handleRemoveIdImage} color="secondary">
           <RemoveCircleOutlineIcon
             color="secondary"
-            fontSize="small"
+            fontSize="medium"
             sx={{
               borderRadius: '20%',
               backgroundColor: 'white',
+            }}
+          />
+        </IconButton>
+        <IconButton name="upload-id-image" id="upload-id-image" color="primary" component="div">
+          <AddCircleOutlineIcon
+            color="primary"
+            fontSize="medium"
+            sx={{
+              borderRadius: '20%',
+              backgroundColor: 'primary.light',
             }}
           />
         </IconButton>
@@ -348,20 +349,21 @@ const SocialWorkerProfileEdit = () => {
 
   return (
     <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
-      {loadingSwById ? (
+      {loadingSwById || loadingNgoAll || loadingSwUpdate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        result && (
+        result &&
+        ngoList && (
           <>
-            {/*  when uploaded route to editing studio */}
             <Breadcrumb title="Edit page" subtitle="Social Worker" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Badge
                     overlap="circular"
+                    sx={{ margin: 'auto' }}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
                       <IconButton
@@ -369,13 +371,13 @@ const SocialWorkerProfileEdit = () => {
                         color="secondary"
                         sx={{
                           position: 'absolute',
-                          bottom: '-25px',
-                          right: '60px',
+                          bottom: '-5px',
+                          right: '65px',
                         }}
                       >
                         <RemoveCircleOutlineIcon
                           color="secondary"
-                          fontSize="small"
+                          fontSize="medium"
                           sx={{
                             borderRadius: '20%',
                             backgroundColor: 'white',
@@ -415,14 +417,15 @@ const SocialWorkerProfileEdit = () => {
                             component="div"
                             sx={{
                               position: 'absolute',
-                              bottom: '-20px',
-                              right: '25px',
+                              bottom: '0px',
+                              right: '0px',
                             }}
                           >
                             <AddCircleOutlineIcon
                               color="primary"
-                              fontSize="small"
+                              fontSize="medium"
                               sx={{
+                                zIndex: 10,
                                 borderRadius: '20%',
                                 backgroundColor: 'white',
                               }}
@@ -436,9 +439,7 @@ const SocialWorkerProfileEdit = () => {
                   <Typography variant="h2" sx={{ mt: 4 }}>
                     {result && `${result.firstName} ${result.lastName}`}
                   </Typography>
-                  <Typography variant="body2">
-                    Coordinator: {result && result.isCoordinator ? 'True' : 'False'}
-                  </Typography>
+
                   <Typography variant="body2"> Permission: {result && result.typeName}</Typography>
                   <FormControlLabel
                     control={
@@ -447,10 +448,9 @@ const SocialWorkerProfileEdit = () => {
                         id="isActive"
                         variant="outlined"
                         defaultValue={result.isActive}
-                        checked={checked}
-                        onChange={handleChange}
+                        checked={activeChecked}
+                        onChange={handleChangeActive}
                         inputProps={{ 'aria-label': 'controlled' }}
-                        label="hi"
                       />
                     }
                     label={
@@ -467,13 +467,46 @@ const SocialWorkerProfileEdit = () => {
                             width: '10px',
                           }}
                         />
-                        <Typography sx={{ display: 'inline-block' }}>
+                        {'  '}
+                        <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
                           {t('socialWorker.isActive')}
                         </Typography>
                       </Grid>
                     }
                   />
-
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        disabled={userInfo.id === result.id}
+                        id="isCoordinator"
+                        variant="outlined"
+                        defaultValue={result.isCoordinator}
+                        checked={coordChecked}
+                        onChange={handleChangeCoord}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    }
+                    label={
+                      <Grid>
+                        <Box
+                          sx={{
+                            display: 'inline-block',
+                            backgroundColor:
+                              result.isCoordinator === true
+                                ? (theme) => theme.palette.success.main
+                                : (theme) => theme.palette.error.main,
+                            borderRadius: '100%',
+                            height: '10px',
+                            width: '10px',
+                          }}
+                        />
+                        {'  '}
+                        <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
+                          {t('socialWorker.isCoordinator')}
+                        </Typography>
+                      </Grid>
+                    }
+                  />
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
                     {t('socialWorker.email')}
                   </Typography>
@@ -483,13 +516,11 @@ const SocialWorkerProfileEdit = () => {
                   </Typography>
                   <Typography variant="body2">{result && result.phoneNumber}</Typography>
                 </Card>
-                <Card>
+                <Card sx={{ p: 3, minHeight: 150 }}>
                   <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={6} sx={{ position: 'relative' }}>
-                      <Grid aria-label="id card">{rectangle}</Grid>
-                    </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sx={{ margin: 'auto', textAlign: 'center' }}>
                       <Typography variant="caption">ID #:{result.idNumber}</Typography>
+                      <Grid aria-label="id card">{rectangle}</Grid>
                     </Grid>
                   </Grid>
                 </Card>
@@ -629,21 +660,25 @@ const SocialWorkerProfileEdit = () => {
                       {...register('idNumber')}
                       error={!!errors.idNumber}
                     />
-                    <CustomFormLabel htmlFor="idNumber">
+                    <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
                       {t('socialWorker.ngoName')}
                     </CustomFormLabel>
-                    <TextField
-                      id="ngoName"
-                      variant="outlined"
-                      defaultValue={result.ngoName}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('ngoName')}
+                    <CustomSelect
+                      labelId="ngoId-controlled-open-select-label"
+                      id="ngoId-controlled-open-select"
+                      defaultValue={ngoList[result.ngoId].id}
+                      onChange={handleChangeInput('ngoId')}
+                      register={{ ...register('ngoId') }}
                       control={control}
-                      {...register('ngoName')}
-                      error={!!errors.ngoName}
-                    />
+                      error={!!errors.ngoId}
+                    >
+                      {ngoList &&
+                        Object.keys(ngoList).map((key) => (
+                          <MenuItem key={key} value={ngoList[key].id}>
+                            {ngoList[key].name}
+                          </MenuItem>
+                        ))}
+                    </CustomSelect>
                     <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
                       {t('socialWorker.typeId')}
                     </CustomFormLabel>
@@ -651,7 +686,6 @@ const SocialWorkerProfileEdit = () => {
                       labelId="demo-controlled-open-select-label"
                       id="demo-controlled-open-select"
                       defaultValue={result.typeId}
-                      label="Age"
                       onChange={handleChangeInput('typeId')}
                       register={{ ...register('typeId') }}
                     >
@@ -827,4 +861,4 @@ const SocialWorkerProfileEdit = () => {
   );
 };
 
-export default SocialWorkerProfileEdit;
+export default SocialWorkerEdit;

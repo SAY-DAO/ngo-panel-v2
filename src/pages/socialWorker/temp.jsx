@@ -44,7 +44,7 @@ import {
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 
-const SocialWorkerProfileEdit = () => {
+const SocialWorkerEdit = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { t } = useTranslation();
@@ -599,4 +599,4 @@ const SocialWorkerProfileEdit = () => {
   );
 };
 
-export default SocialWorkerProfileEdit;
+export default SocialWorkerEdit;
