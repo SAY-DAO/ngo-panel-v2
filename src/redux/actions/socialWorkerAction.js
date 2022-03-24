@@ -171,8 +171,8 @@ export const updateSw = (values) => async (dispatch, getState) => {
     if (values.phoneNumber) {
       formData.set('phoneNumber', values.phoneNumber);
     }
-    if (values.emergePhone) {
-      formData.set('emergePhone', values.emergePhone);
+    if (values.emergencyPhoneNumber) {
+      formData.set('emergencyPhoneNumber', values.emergencyPhoneNumber);
     }
     if (values.postalAddress) {
       formData.set('postalAddress', values.postalAddress);
@@ -254,8 +254,8 @@ export const AddSw = (values) => async (dispatch, getState) => {
     if (values.phoneNumber) {
       formData.set('phoneNumber', values.phoneNumber);
     }
-    if (values.emergePhone) {
-      formData.set('emergePhone', values.emergePhone);
+    if (values.emergencyPhoneNumber) {
+      formData.set('emergencyPhoneNumber', values.emergencyPhoneNumber);
     }
     if (values.postalAddress) {
       formData.set('postalAddress', values.postalAddress);
@@ -275,8 +275,8 @@ export const AddSw = (values) => async (dispatch, getState) => {
     if (values.idNumber) {
       formData.set('idNumber', values.idNumber);
     }
-    if (values.ngoName) {
-      formData.set('ngoName', values.ngoName);
+    if (values.ngoId) {
+      formData.set('ngoId', values.ngoId);
     }
     if (values.avatarFile) {
       formData.set('avatarUrl', values.avatarFile);
@@ -285,6 +285,7 @@ export const AddSw = (values) => async (dispatch, getState) => {
       formData.set('birthDate', Date.parse(values.birthDate));
     }
 
+    console.log(values);
     const { data } = await publicApi.post(`/socialworkers/`, formData, config);
 
     dispatch({

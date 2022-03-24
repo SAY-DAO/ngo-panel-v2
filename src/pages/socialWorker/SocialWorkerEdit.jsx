@@ -19,6 +19,7 @@ import {
   OutlinedInput,
   IconButton,
   MenuItem,
+  FormHelperText,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -26,10 +27,10 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
+import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+// import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -66,7 +67,7 @@ const SocialWorkerEdit = () => {
     country: '',
     city: '',
     phoneNumber: '',
-    emergePhone: '',
+    emergencyPhoneNumber: '',
     postalAddress: '',
     email: '',
     userName: '',
@@ -77,7 +78,6 @@ const SocialWorkerEdit = () => {
     ngoId: '',
     avatarFile: '',
   });
-  // const [openSelect, setOpenSelect] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -95,7 +95,9 @@ const SocialWorkerEdit = () => {
   const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
 
   useEffect(() => {
-    dispatch(fetchSocialWorkerById(id));
+    if (!successSwById) {
+      dispatch(fetchSocialWorkerById(id));
+    }
     if (!successNgoList) {
       dispatch(fetchNgoList());
     }
@@ -175,14 +177,13 @@ const SocialWorkerEdit = () => {
     lastName: Yup.string().required('Please enter your last name'),
     country: Yup.string().required('Please enter your country'),
     ngoId: Yup.string().required('Please enter your NGO'),
-    // province: Yup.string().required('Please enter your city'),
     // phoneNumber: Yup.string().required('Please enter your phone number'),
     // postalCode: Yup.string().required('Please enter your postal code'),
     // postalAddress: Yup.string().required('Please enter your postalAddress'),
-    // username: Yup.string()
-    //   .required('Username is required')
-    //   .min(6, 'Username must be at least 6 characters')
-    //   .max(20, 'Username must not exceed 20 characters'),
+    userName: Yup.string()
+      .required('Username is required')
+      .min(6, 'Username must be at least 6 characters')
+      .max(20, 'Username must not exceed 20 characters'),
     // email: Yup.string().required('Email is required').email('Email is invalid'),
     // password: Yup.string()
     //   .required('Password is required')
@@ -216,7 +217,7 @@ const SocialWorkerEdit = () => {
         country: data.country,
         city: data.city,
         phoneNumber: data.phoneNumber,
-        data: values.emergencyPhoneNumber,
+        emergencyPhoneNumber: data.emergencyPhoneNumber,
         postalAddress: data.postalAddress,
         userName: data.userName,
         telegramId: data.telegramId,
@@ -272,13 +273,13 @@ const SocialWorkerEdit = () => {
     }
   };
 
-  const handleRemoveImage = () => {
-    console.log('remove');
-  };
+  // const handleRemoveImage = () => {
+  //   console.log('remove');
+  // };
 
-  const handleRemoveIdImage = () => {
-    console.log('remove');
-  };
+  // const handleRemoveIdImage = () => {
+  //   console.log('remove');
+  // };
 
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -290,7 +291,7 @@ const SocialWorkerEdit = () => {
         <Button
           sx={{
             position: 'relative',
-            border: '1px dashed white',
+            border: '1px dashed lightGrey',
             width: 80,
             minHeight: 50,
           }}
@@ -323,23 +324,21 @@ const SocialWorkerEdit = () => {
           onChange={onIdImageChange}
         />
 
-        <IconButton onClick={handleRemoveIdImage} color="secondary">
+        {/* <IconButton onClick={handleRemoveIdImage} color="secondary">
           <RemoveCircleOutlineIcon
             color="secondary"
             fontSize="medium"
             sx={{
               borderRadius: '20%',
-              backgroundColor: 'white',
             }}
           />
-        </IconButton>
+        </IconButton> */}
         <IconButton name="upload-id-image" id="upload-id-image" color="primary" component="div">
           <AddCircleOutlineIcon
             color="primary"
             fontSize="medium"
             sx={{
               borderRadius: '20%',
-              backgroundColor: 'primary.light',
             }}
           />
         </IconButton>
@@ -366,74 +365,50 @@ const SocialWorkerEdit = () => {
                     sx={{ margin: 'auto' }}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                      <IconButton
-                        onClick={handleRemoveImage}
-                        color="secondary"
-                        sx={{
-                          position: 'absolute',
-                          bottom: '-5px',
-                          right: '65px',
-                        }}
-                      >
-                        <RemoveCircleOutlineIcon
-                          color="secondary"
-                          fontSize="medium"
+                      <div className="upload__image-wrapper">
+                        <Grid
                           sx={{
-                            borderRadius: '20%',
-                            backgroundColor: 'white',
+                            position: 'relative',
                           }}
-                        />
-                      </IconButton>
+                        >
+                          <label htmlFor="upload-image">
+                            <input
+                              accept="image/*"
+                              id="upload-image"
+                              type="file"
+                              style={{ display: 'none' }}
+                              onChange={onImageChange}
+                            />
+
+                            <IconButton
+                              name="upload-image"
+                              id="upload-image"
+                              color="primary"
+                              component="div"
+                            >
+                              <AddCircleOutlineIcon
+                                color="primary"
+                                fontSize="medium"
+                                sx={{
+                                  zIndex: 10,
+                                  borderRadius: '20%',
+                                }}
+                              />
+                            </IconButton>
+                          </label>
+                        </Grid>
+                      </div>
                     }
                   >
-                    <div className="upload__image-wrapper">
-                      <Grid
-                        sx={{
-                          position: 'relative',
-                        }}
-                      >
-                        <Avatar
-                          alt="user photo"
-                          sx={{ width: 110, height: 110 }}
-                          src={
-                            finalImageFile
-                              ? URL.createObjectURL(finalImageFile) // image preview
-                              : values.avatarFile
-                          }
-                        />
-                        <label htmlFor="upload-image">
-                          <input
-                            accept="image/*"
-                            id="upload-image"
-                            type="file"
-                            style={{ display: 'none' }}
-                            onChange={onImageChange}
-                          />
-
-                          <IconButton
-                            name="upload-image"
-                            id="upload-image"
-                            color="primary"
-                            component="div"
-                            sx={{
-                              position: 'absolute',
-                              bottom: '0px',
-                              right: '0px',
-                            }}
-                          >
-                            <AddCircleOutlineIcon
-                              color="primary"
-                              fontSize="medium"
-                              sx={{
-                                zIndex: 10,
-                                borderRadius: '20%',
-                                backgroundColor: 'white',
-                              }}
-                            />
-                          </IconButton>
-                        </label>
-                      </Grid>
-                    </div>
+                    <Avatar
+                      alt="user photo"
+                      sx={{ width: 110, height: 110 }}
+                      src={
+                        finalImageFile
+                          ? URL.createObjectURL(finalImageFile) // image preview
+                          : values.avatarFile
+                      }
+                    />
                   </Badge>
 
                   <Typography variant="h2" sx={{ mt: 4 }}>
@@ -575,31 +550,31 @@ const SocialWorkerEdit = () => {
                     />
 
                     <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
-                    <TextField
-                      id="country"
-                      variant="outlined"
-                      defaultValue={result.country}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
+                    <CustomSelect
+                      labelId="country-controlled-open-select-label"
+                      id="country-controlled-open-select"
+                      defaultValue={result.country || 1}
                       onChange={handleChangeInput('country')}
                       control={control}
-                      {...register('country')}
-                      error={!!errors.country}
-                    />
+                      register={{ ...register('country') }}
+                    >
+                      <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
+                    </CustomSelect>
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.country && errors.country.message}
+                    </FormHelperText>
                     <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
-                    <TextField
-                      id="city"
-                      variant="outlined"
-                      defaultValue={result.city}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
+                    <CustomSelect
+                      labelId="city-controlled-open-select-label"
+                      id="city-controlled-open-select"
+                      defaultValue={result.city || 1}
                       onChange={handleChangeInput('city')}
                       control={control}
-                      {...register('city')}
-                      error={!!errors.city}
-                    />
+                      register={{ ...register('city') }}
+                    >
+                      <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
+                    </CustomSelect>
+
                     <CustomFormLabel htmlFor="postalAddress">
                       {t('socialWorker.postalAddress')}
                     </CustomFormLabel>
@@ -741,8 +716,11 @@ const SocialWorkerEdit = () => {
                       {...register('userName')}
                       error={!!errors.userName}
                     />
-
-                    <Button
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.userName && errors.userName.message}
+                    </FormHelperText>
+                    <LoadingButton
+                      loading={loadingSwUpdate}
                       color="primary"
                       type="submit"
                       onClick={handleSubmit(onSubmit)}
@@ -750,7 +728,7 @@ const SocialWorkerEdit = () => {
                       sx={{ mt: 4 }}
                     >
                       {t('socialWorker.button.update')}
-                    </Button>
+                    </LoadingButton>
                   </form>
                 </Card>
               </Grid>
@@ -847,10 +825,11 @@ const SocialWorkerEdit = () => {
                 <Message
                   severity={successSwUpdate ? 'success' : 'error'}
                   variant="filled"
+                  input="addSw"
                   backError={errorSwUpdate}
                   sx={{ width: '100%' }}
                 >
-                  {t('socialWorker.updated')}
+                  {successSwUpdate && t('socialWorker.updated')}
                 </Message>
               )}
             </Grid>

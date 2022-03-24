@@ -556,6 +556,12 @@
       "SAY_SUPERVISOR": "SAY Supervisor",
       "ADMIN": "Admin",
       "USER": "User"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
     }
   }
 }

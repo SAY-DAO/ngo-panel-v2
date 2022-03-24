@@ -22,11 +22,11 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/lab';
+import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -43,7 +43,6 @@ import { fetchNgoList } from '../../redux/actions/NgoAction';
 const SocialWorkerAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { id } = useParams();
   const { t } = useTranslation();
 
   const [coordChecked, setCoordChecked] = useState(false);
@@ -60,21 +59,20 @@ const SocialWorkerAdd = () => {
     country: '',
     city: '',
     phoneNumber: '',
-    emergePhone: '',
+    emergencyPhoneNumber: '',
     postalAddress: '',
     email: '',
-    userName: '',
     telegramId: '',
     typeId: 0,
     idCardFile: '',
     idNumber: '',
-    ngoName: '',
+    ngoId: '',
     avatarFile: '',
     isCoordinator: false,
   });
 
-  const swUpdate = useSelector((state) => state.swUpdate);
-  const { success: successSwUpdate, error: errorSwUpdate } = swUpdate;
+  const swAdd = useSelector((state) => state.swAdd);
+  const { success: successAddUpdate, loading: loadingAddSw, error: errorAddUpdate } = swAdd;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
@@ -95,10 +93,6 @@ const SocialWorkerAdd = () => {
     emergencyPhoneNumber: Yup.string().required('Please enter your emergency phone'),
     email: Yup.string().required('Please enter your email'),
     telegramId: Yup.string().required('Please enter your telegram handle'),
-    // username: Yup.string()
-    //   .required('Username is required')
-    //   .min(6, 'Username must be at least 6 characters')
-    //   .max(20, 'Username must not exceed 20 characters'),
     // email: Yup.string().required('Email is required').email('Email is invalid'),
     // password: Yup.string()
     //   .required('Password is required')
@@ -125,21 +119,19 @@ const SocialWorkerAdd = () => {
     await sleep(300);
     dispatch(
       AddSw({
-        id,
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
         country: data.country,
         city: data.city,
         phoneNumber: data.phoneNumber,
-        data: values.emergencyPhoneNumber,
+        emergencyPhoneNumber: data.emergencyPhoneNumber,
         postalAddress: data.postalAddress,
-        userName: data.userName,
         telegramId: data.telegramId,
         typeId: data.typeId,
         idCardFile: finalIdImageFile,
         idNumber: data.idNumber,
-        ngoName: data.ngoName,
+        ngoId: data.ngoId,
         avatarFile: finalImageFile,
         birthDate,
         isCoordinator: values.isCoordinator,
@@ -205,7 +197,7 @@ const SocialWorkerAdd = () => {
     });
   };
 
-  console.log(errors);
+  console.log(errorAddUpdate && errorAddUpdate.data[0].msg);
 
   const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
   const rectangle = (
@@ -213,7 +205,7 @@ const SocialWorkerAdd = () => {
       <div className="upload__image-wrapper">
         <Button
           sx={{
-            border: '1px dashed white',
+            border: '1px dashed lightGrey',
             width: 80,
             minHeight: 50,
           }}
@@ -251,7 +243,6 @@ const SocialWorkerAdd = () => {
             fontSize="medium"
             sx={{
               borderRadius: '20%',
-              backgroundColor: 'white',
             }}
           />
         </IconButton>
@@ -261,7 +252,6 @@ const SocialWorkerAdd = () => {
             fontSize="medium"
             sx={{
               borderRadius: '20%',
-              backgroundColor: 'primary.light',
             }}
           />
         </IconButton>
@@ -300,7 +290,6 @@ const SocialWorkerAdd = () => {
                           fontSize="small"
                           sx={{
                             borderRadius: '20%',
-                            backgroundColor: 'white',
                           }}
                         />
                       </IconButton>
@@ -347,7 +336,6 @@ const SocialWorkerAdd = () => {
                               sx={{
                                 zIndex: 10,
                                 borderRadius: '20%',
-                                backgroundColor: 'white',
                               }}
                             />
                           </IconButton>
@@ -415,31 +403,33 @@ const SocialWorkerAdd = () => {
                     />
 
                     <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
-                    <TextField
-                      id="country"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
+                    <CustomSelect
+                      labelId="country-controlled-open-select-label"
+                      id="country-controlled-open-select"
+                      defaultValue={1}
                       onChange={handleChangeInput('country')}
                       control={control}
-                      {...register('country')}
-                      error={!!errors.country}
-                      helperText={errors && errors.country && errors.country.message}
-                    />
+                      register={{ ...register('country') }}
+                    >
+                      <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
+                    </CustomSelect>
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.country && errors.country.message}
+                    </FormHelperText>
                     <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
-                    <TextField
-                      id="city"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
+                    <CustomSelect
+                      labelId="city-controlled-open-select-label"
+                      id="city-controlled-open-select"
+                      defaultValue={1}
                       onChange={handleChangeInput('city')}
                       control={control}
-                      {...register('city')}
-                      error={!!errors.city}
-                      helperText={errors && errors.city && errors.city.message}
-                    />
+                      register={{ ...register('city') }}
+                    >
+                      <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
+                    </CustomSelect>
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.city && errors.city.message}
+                    </FormHelperText>
                     <CustomFormLabel htmlFor="postalAddress">
                       {t('socialWorker.postalAddress')}
                     </CustomFormLabel>
@@ -572,22 +562,6 @@ const SocialWorkerAdd = () => {
                         errors && errors.emergencyPhoneNumber && errors.emergencyPhoneNumber.message
                       }
                     />
-                    <CustomFormLabel htmlFor="userName">
-                      {t('socialWorker.userName')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="userName"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('userName')}
-                      control={control}
-                      {...register('userName')}
-                      error={!!errors.userName}
-                      helperText={errors && errors.userName && errors.userName.message}
-                    />
-
                     <FormControlLabel
                       sx={{ width: '100%' }}
                       control={
@@ -620,7 +594,8 @@ const SocialWorkerAdd = () => {
                         </Grid>
                       }
                     />
-                    <Button
+                    <LoadingButton
+                      loading={loadingAddSw}
                       color="primary"
                       type="submit"
                       onClick={handleSubmit(onSubmit)}
@@ -628,7 +603,7 @@ const SocialWorkerAdd = () => {
                       sx={{ mt: 4 }}
                     >
                       {t('socialWorker.button.update')}
-                    </Button>
+                    </LoadingButton>
                   </form>
                 </Card>
               </Grid>
@@ -675,14 +650,15 @@ const SocialWorkerAdd = () => {
               </DialogActions>
             </Dialog>
             <Grid>
-              {(successSwUpdate || errorSwUpdate) && (
+              {(successAddUpdate || errorAddUpdate) && (
                 <Message
-                  severity={successSwUpdate ? 'success' : 'error'}
+                  severity={successAddUpdate ? 'success' : 'error'}
                   variant="filled"
-                  backError={errorSwUpdate}
+                  input="addSw"
+                  backError={errorAddUpdate}
                   sx={{ width: '100%' }}
                 >
-                  {t('socialWorker.updated')}
+                  {successAddUpdate && t('socialWorker.updated')}
                 </Message>
               )}
             </Grid>
