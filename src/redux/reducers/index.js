@@ -8,6 +8,7 @@ import {
   swByIdReducer,
   swUpdateReducer,
   swAddReducer,
+  swMigrateReducer,
 } from './socialWorkerReducer';
 import { userLoginReducer } from './userReducer';
 
@@ -22,4 +23,5 @@ export default combineReducers({
   swStatusUpdate: swUpdateIsActiveReducer,
   swUpdate: swUpdateReducer,
   swAdd: swAddReducer,
+  swMigrate: swMigrateReducer,
 });

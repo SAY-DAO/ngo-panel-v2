@@ -40,6 +40,16 @@ import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchNgoList } from '../../redux/actions/NgoAction';
 
+const BCrumb = [
+  {
+    to: '/sw/list',
+    title: 'Social Workers List',
+  },
+  {
+    title: 'Add',
+  },
+];
+
 const SocialWorkerAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -261,6 +271,9 @@ const SocialWorkerAdd = () => {
 
   return (
     <PageContainer title="Social Worker Add" description="this is Social Worker Add page">
+      {/* breadcrumb */}
+      <Breadcrumb items={BCrumb} />
+      {/* end breadcrumb */}
       {loadingNgoAll ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />

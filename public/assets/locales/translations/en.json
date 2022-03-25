@@ -521,6 +521,7 @@
     "isCoordinator": "Coordinator Status",
     "update": "Edit",
     "updated": "Successfully Updated!",
+    "migrated": "Successfully Migrated!",
     "titleEdit": "Edit Details",
     "titleAdd": "Add Details",
     "generatedCode": "Code",
@@ -546,7 +547,8 @@
     "needCount": "Needs Count",
     "lastLoginDate": "Last Log",
     "button": {
-      "update": "Update"
+      "update": "Update",
+      "migrate": "Migrate"
     },
     "roles": {
       "SUPER_ADMIN": "Super Admin",

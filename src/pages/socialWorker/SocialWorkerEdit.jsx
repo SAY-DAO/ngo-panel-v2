@@ -45,6 +45,16 @@ import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchNgoList } from '../../redux/actions/NgoAction';
 
+const BCrumb = [
+  {
+    to: '/sw/list',
+    title: 'Social Workers List',
+  },
+  {
+    title: 'Edit',
+  },
+];
+
 const SocialWorkerEdit = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -273,14 +283,6 @@ const SocialWorkerEdit = () => {
     }
   };
 
-  // const handleRemoveImage = () => {
-  //   console.log('remove');
-  // };
-
-  // const handleRemoveIdImage = () => {
-  //   console.log('remove');
-  // };
-
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -323,16 +325,6 @@ const SocialWorkerEdit = () => {
           }}
           onChange={onIdImageChange}
         />
-
-        {/* <IconButton onClick={handleRemoveIdImage} color="secondary">
-          <RemoveCircleOutlineIcon
-            color="secondary"
-            fontSize="medium"
-            sx={{
-              borderRadius: '20%',
-            }}
-          />
-        </IconButton> */}
         <IconButton name="upload-id-image" id="upload-id-image" color="primary" component="div">
           <AddCircleOutlineIcon
             color="primary"
@@ -348,6 +340,9 @@ const SocialWorkerEdit = () => {
 
   return (
     <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
+      {/* breadcrumb */}
+      <Breadcrumb items={BCrumb} />
+      {/* end breadcrumb */}
       {loadingSwById || loadingNgoAll || loadingSwUpdate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />

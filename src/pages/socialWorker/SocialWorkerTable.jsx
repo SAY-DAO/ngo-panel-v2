@@ -355,7 +355,7 @@ const SocialWorkerTable = ({ swList }) => {
   return (
     <PageContainer title="Social Worker Table" description="this is Social Worker Table page">
       {/* breadcrumb */}
-      <Breadcrumb title="Social Workers List" items={BCrumb} />
+      <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
       <Card>
         <CardContent>

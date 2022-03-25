@@ -19,6 +19,10 @@ import {
   ADD_SW_REQUEST,
   ADD_SW_SUCCESS,
   ADD_SW_FAIL,
+  SW_LIST_RESET,
+  MIGRATE_CHILDREN_REQUEST,
+  MIGRATE_CHILDREN_SUCCESS,
+  MIGRATE_CHILDREN_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const swDetailsReducer = (state = { success: false }, action) => {
@@ -59,6 +63,8 @@ export const swListReducer = (state = { success: false }, action) => {
       return { loading: false, success: true, swList: action.payload };
     case SW_LIST_FAIL:
       return { loading: false, error: action.payload };
+    case SW_LIST_RESET:
+      return {};
     default:
       return state;
   }
@@ -71,6 +77,19 @@ export const swUpdateIsActiveReducer = (state = { success: false }, action) => {
     case UPDATE_SW_IS_ACTIVE_SUCCESS:
       return { loading: false, success: true, status: action.payload };
     case UPDATE_SW_IS_ACTIVE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const swMigrateReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case MIGRATE_CHILDREN_REQUEST:
+      return { loading: true };
+    case MIGRATE_CHILDREN_SUCCESS:
+      return { loading: false, success: true, migrate: action.payload };
+    case MIGRATE_CHILDREN_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

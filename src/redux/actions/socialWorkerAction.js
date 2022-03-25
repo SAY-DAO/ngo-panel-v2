@@ -18,6 +18,9 @@ import {
   ADD_SW_REQUEST,
   ADD_SW_SUCCESS,
   ADD_SW_FAIL,
+  MIGRATE_CHILDREN_FAIL,
+  MIGRATE_CHILDREN_SUCCESS,
+  MIGRATE_CHILDREN_REQUEST,
 } from '../constants/socialWorkerConstants';
 
 export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
@@ -129,6 +132,40 @@ export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_SW_IS_ACTIVE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
+export const migrateSwChildren = (fromId, toId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: MIGRATE_CHILDREN_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const formData = new FormData();
+    formData.set('destinationSocialWorkerId', parseInt(toId, 10));
+
+    const { data } = await publicApi.post(
+      `/socialworkers/${fromId}/children/migrate`,
+      formData,
+      config,
+    );
+
+    dispatch({
+      type: MIGRATE_CHILDREN_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: MIGRATE_CHILDREN_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
     });
   }

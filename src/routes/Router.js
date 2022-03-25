@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full-layout/loadable/Loadable';
 import SocialWorkerEdit from '../pages/socialWorker/SocialWorkerEdit';
 import SocialWorkerAdd from '../pages/socialWorker/SocialWorkerAdd';
+import SocialWorkerMigrate from '../pages/socialWorker/SocialWorkerMigrate';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank-layout/BlankLayout')));
@@ -25,6 +26,7 @@ const Router = [
       { path: '/sw/list', exact: true, element: <SocialWorkersList /> },
       { path: '/sw/edit/:id', exact: true, element: <SocialWorkerEdit /> },
       { path: '/sw/add', exact: true, element: <SocialWorkerAdd /> },
+      { path: '/sw/migrate', exact: true, element: <SocialWorkerMigrate /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
