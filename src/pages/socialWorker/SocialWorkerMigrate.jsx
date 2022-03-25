@@ -1,4 +1,4 @@
-import { Autocomplete, Card, CircularProgress, Grid, IconButton, TextField } from '@mui/material';
+import { Autocomplete, Card, CircularProgress, Grid, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import { useDispatch, useSelector } from 'react-redux';
@@ -171,9 +171,7 @@ export default function SocialWorkerMigrate() {
           <Grid item>
             <LoadingButton onClick={handleMigrate} variant="contained">
               {t('socialWorker.button.migrate')}
-              <IconButton>
-                <ChildCareIcon fontSize="small" />
-              </IconButton>
+              <ChildCareIcon fontSize="small" />
             </LoadingButton>
           </Grid>
           <Grid item>
