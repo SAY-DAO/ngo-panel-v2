@@ -215,7 +215,7 @@ export const updateSw = (values) => async (dispatch, getState) => {
       formData.set('postalAddress', values.postalAddress);
     }
     if (values.userName) {
-      formData.set('userName', values.userName);
+      formData.set('username', values.userName);
     }
     if (values.telegramId) {
       formData.set('telegramId', values.telegramId);
@@ -298,7 +298,7 @@ export const AddSw = (values) => async (dispatch, getState) => {
       formData.set('postalAddress', values.postalAddress);
     }
     if (values.userName) {
-      formData.set('userName', values.userName);
+      formData.set('username', values.userName);
     }
     if (values.telegramId) {
       formData.set('telegramId', values.telegramId);

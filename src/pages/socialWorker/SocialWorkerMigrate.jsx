@@ -170,8 +170,7 @@ export default function SocialWorkerMigrate() {
         >
           <Grid item>
             <LoadingButton onClick={handleMigrate} variant="contained">
-              {t('socialWorker.button.migrate')}
-              <ChildCareIcon fontSize="small" />
+              {t('socialWorker.button.migrate')} <ChildCareIcon fontSize="small" />
             </LoadingButton>
           </Grid>
           <Grid item>

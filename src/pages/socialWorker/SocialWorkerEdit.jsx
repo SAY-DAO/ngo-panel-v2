@@ -44,6 +44,7 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchNgoList } from '../../redux/actions/NgoAction';
+import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 
 const BCrumb = [
   {
@@ -239,6 +240,7 @@ const SocialWorkerEdit = () => {
         birthDate,
       }),
     );
+    dispatch({ type: SW_BY_ID_RESET });
   };
 
   // dialog
