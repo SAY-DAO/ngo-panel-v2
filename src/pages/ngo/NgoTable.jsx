@@ -73,105 +73,92 @@ function EnhancedTableHead(props) {
       id: 'isActive',
       numeric: false,
       disablePadding: true,
-      label: t('socialWorker.isActive'),
+      label: t('ngo.isActive'),
     },
     {
       id: 'update',
       numeric: false,
       disablePadding: true,
-      label: t('socialWorker.update'),
+      label: t('ngo.update'),
     },
     {
-      id: 'lastName',
+      id: 'name',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.nameAndEmail'),
-    },
-    {
-      id: 'generatedCode',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.generatedCode'),
+      label: t('ngo.name'),
     },
 
-    {
-      id: 'username',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.userName'),
-    },
-
-    {
-      id: 'typeName',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.typeName'),
-    },
-    {
-      id: 'ngoName',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.ngoName'),
-    },
-    {
-      id: 'idNumber',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.idNumber'),
-    },
-    {
-      id: 'idCardUrl',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.idCardUrl'),
-    },
-    {
-      id: 'birthDate',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.birthDate'),
-    },
     {
       id: 'phoneNumber',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.phoneNumber'),
-    },
-    {
-      id: 'emergencyPhoneNumber',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.emergencyPhoneNumber'),
-    },
-    {
-      id: 'telegramId',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.telegramId'),
+      label: t('ngo.phoneNumber'),
     },
     {
       id: 'postalAddress',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.address'),
+      label: t('ngo.postalAddress'),
     },
     {
-      id: 'childCount',
+      id: 'country',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.childCount'),
+      label: t('ngo.country'),
     },
     {
-      id: 'needCount',
+      id: 'city',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.needCount'),
+      label: t('ngo.city'),
     },
     {
-      id: 'lastLoginDate',
+      id: 'childrenCount',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.lastLoginDate'),
+      label: t('ngo.childrenCount'),
+    },
+    {
+      id: 'currentChildrenCount',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.currentChildrenCount'),
+    },
+    {
+      id: 'socialWorkerCount',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.socialWorkerCount'),
+    },
+    {
+      id: 'currentSocialWorkerCount',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.currentSocialWorkerCount'),
+    },
+    {
+      id: 'registerDate',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.registerDate'),
+    },
+    {
+      id: 'created',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.created'),
+    },
+    {
+      id: 'updated',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.updated'),
+    },
+    {
+      id: 'website',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.website'),
     },
   ];
   return (
@@ -279,10 +266,10 @@ const BCrumb = [
   },
 ];
 
-const SocialWorkerTable = ({ swList }) => {
+const NgoTable = ({ ngoList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  console.log(ngoList);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
@@ -298,7 +285,7 @@ const SocialWorkerTable = ({ swList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = swList.map((n) => n.firstName);
+      const newSelecteds = ngoList.map((n) => n.firstName);
       setSelected(newSelecteds);
       return;
     }
@@ -340,12 +327,12 @@ const SocialWorkerTable = ({ swList }) => {
 
   const handleEdit = (row) => {
     dispatch({ type: SW_BY_ID_RESET });
-    navigate(`/sw/edit/${row.id}`);
+    navigate(`/ngo/edit/${row.id}`);
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
   return (
     <PageContainer title="Social Worker Table" description="this is Social Worker Table page">
       {/* breadcrumb */}
@@ -368,10 +355,10 @@ const SocialWorkerTable = ({ swList }) => {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={swList.length}
+                    rowCount={ngoList.length}
                   />
                   <TableBody>
-                    {stableSort(swList, getComparator(order, orderBy))
+                    {stableSort(ngoList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.firstName);
@@ -433,8 +420,8 @@ const SocialWorkerTable = ({ swList }) => {
                             <TableCell>
                               <Box display="flex" alignItems="center">
                                 <Avatar
-                                  src={row.avatarUrl}
-                                  alt="sw photo"
+                                  src={row.logoUrl}
+                                  alt="ngo logo"
                                   width="35"
                                   sx={{
                                     borderRadius: '100%',
@@ -446,76 +433,69 @@ const SocialWorkerTable = ({ swList }) => {
                                   }}
                                 >
                                   <Typography variant="h6" fontWeight="600">
-                                    {row.firstName} {row.lastName}
+                                    {row.name}
                                   </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                    {row.email}
+                                  <Typography color="textSecondary" variant="h6" fontWeight="600">
+                                    {row.emailAddress}
                                   </Typography>
                                 </Box>
                               </Box>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                {row.generatedCode}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.username}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.typeName}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.ngoName}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.idNumber}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.idCardUrl && <Link href={row.idCardUrl}>Link</Link>}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.birthDate}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              <Typography color="textSecondary" variant="h6" fontWeight="600">
                                 {row.phoneNumber}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.emergencyPhoneNumber}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.telegramId}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              <Typography color="textSecondary" variant="body1" fontWeight="600">
                                 {row.postalAddress}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography variant="h6">{row.childCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.needCount}</Typography>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.country}
+                              </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.lastLoginDate}
+                                {row.city}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.childrenCount}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.currentChildrenCount}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.socialWorkerCount}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.currentSocialWorkerCount}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.registerDate}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.created}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.updated}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.website && <Link href={row.website}>Link</Link>}
                               </Typography>
                             </TableCell>
                           </TableRow>
@@ -536,7 +516,7 @@ const SocialWorkerTable = ({ swList }) => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={swList.length}
+                count={ngoList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -554,8 +534,8 @@ const SocialWorkerTable = ({ swList }) => {
   );
 };
 
-export default SocialWorkerTable;
+export default NgoTable;
 
-SocialWorkerTable.propTypes = {
-  swList: PropTypes.array.isRequired,
+NgoTable.propTypes = {
+  ngoList: PropTypes.array.isRequired,
 };

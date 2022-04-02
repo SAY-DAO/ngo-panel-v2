@@ -3,7 +3,7 @@ import { Box, MenuItem, Typography, Avatar, Divider, Card, CardActions } from '@
 import FeatherIcon from 'feather-icons-react';
 
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileDropdown = () => {
   const navigate = useNavigate();

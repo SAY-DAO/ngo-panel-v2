@@ -76,7 +76,11 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                           }),
                         }}
                       >
-                        <FeatherIcon icon={item.icon} width="20" height="20" />
+                        {typeof item.icon === 'string' ? (
+                          <FeatherIcon icon={item.icon} width="20" height="20" />
+                        ) : (
+                          item.icon
+                        )}
                       </ListItemIcon>
                       <ListItemText>{item.title}</ListItemText>
                       {index === open || pathWithoutLastPart === item.href ? (

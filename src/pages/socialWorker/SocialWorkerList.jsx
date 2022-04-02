@@ -5,7 +5,7 @@ import PageContainer from '../../components/container/PageContainer';
 import SocialWorkerTable from './SocialWorkerTable';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 
-const SocialWorkersList = () => {
+const SocialWorkerList = () => {
   const dispatch = useDispatch();
 
   const swAll = useSelector((state) => state.swAll);
@@ -34,4 +34,4 @@ const SocialWorkersList = () => {
   );
 };
 
-export default SocialWorkersList;
+export default SocialWorkerList;

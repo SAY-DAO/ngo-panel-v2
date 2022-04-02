@@ -1,3 +1,8 @@
+import ChildCareIcon from '@mui/icons-material/ChildCare';
+import InterestsIcon from '@mui/icons-material/Interests';
+import HouseIcon from '@mui/icons-material/House';
+import React from 'react';
+
 const Menuitems = [
   {
     navlabel: true,
@@ -17,8 +22,26 @@ const Menuitems = [
     href: 'Apps',
   },
   {
+    title: 'My Page',
+    icon: 'user',
+    href: '/my-page',
+    collapse: true,
+    children: [
+      {
+        title: 'View',
+        icon: 'eye',
+        href: '/profile/view',
+      },
+      {
+        title: 'Edit',
+        icon: 'edit',
+        href: '/profile/edit',
+      },
+    ],
+  },
+  {
     title: 'Children',
-    icon: 'users',
+    icon: <ChildCareIcon />,
     href: '/children',
     collapse: true,
     children: [
@@ -36,7 +59,7 @@ const Menuitems = [
   },
   {
     title: 'Needs',
-    icon: 'users',
+    icon: <InterestsIcon />,
     href: '/needs',
     collapse: true,
     children: [
@@ -112,8 +135,21 @@ const Menuitems = [
   },
   {
     title: 'NGOs',
-    icon: 'pie-chart',
-    href: '/admin/ngos',
+    icon: <HouseIcon />,
+    href: '/ngo',
+    collapse: true,
+    children: [
+      {
+        title: 'List',
+        icon: 'list',
+        href: '/ngo/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/ngo/add',
+      },
+    ],
   },
 ];
 

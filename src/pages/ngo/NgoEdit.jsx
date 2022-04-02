@@ -33,21 +33,17 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import {
-  fetchSocialWorkerById,
-  updateSw,
-  updateSwIsActive,
-} from '../../redux/actions/socialWorkerAction';
+import { updateSw, updateSwIsActive } from '../../redux/actions/socialWorkerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/NgoAction';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
+import { fetchNgoById } from '../../redux/actions/NgoAction';
 
 const BCrumb = [
   {
-    to: '/sw/list',
+    to: '/ngo/list',
     title: 'Social Workers List',
   },
   {
@@ -55,7 +51,7 @@ const BCrumb = [
   },
 ];
 
-const SocialWorkerEdit = () => {
+const NgoEdit = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { id } = useParams();
@@ -93,17 +89,14 @@ const SocialWorkerEdit = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const swById = useSelector((state) => state.swById);
-  const { result, loading: loadingSwById, success: successSwById } = swById;
+  const ngoById = useSelector((state) => state.ngoById);
+  const { result, loading: loadingSwById, success: successSwById } = ngoById;
 
   const swStatusUpdate = useSelector((state) => state.swStatusUpdate);
   const { status } = swStatusUpdate;
 
   const swUpdate = useSelector((state) => state.swUpdate);
   const { success: successSwUpdate, loading: loadingSwUpdate, error: errorSwUpdate } = swUpdate;
-
-  const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
 
   useEffect(() => {
     if (!id) {
@@ -114,10 +107,7 @@ const SocialWorkerEdit = () => {
 
   useEffect(() => {
     if (!successSwById && (id || myId)) {
-      dispatch(fetchSocialWorkerById(id || myId));
-    }
-    if (!successNgoList) {
-      dispatch(fetchNgoList());
+      dispatch(fetchNgoById(id || myId));
     }
   }, [status, successSwUpdate, id, myId]);
 
@@ -352,13 +342,12 @@ const SocialWorkerEdit = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {(!id && !myId) || loadingSwById || loadingNgoAll || loadingSwUpdate ? (
+      {(!id && !myId) || loadingSwById || loadingSwUpdate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        result &&
-        ngoList && (
+        result && (
           <>
             <Breadcrumb title="Edit page" subtitle="Social Worker" />
             <Grid container spacing={0}>
@@ -639,25 +628,6 @@ const SocialWorkerEdit = () => {
                       {...register('idNumber')}
                       error={!!errors.idNumber}
                     />
-                    <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
-                      {t('socialWorker.ngoName')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="ngoId-controlled-open-select-label"
-                      id="ngoId-controlled-open-select"
-                      defaultValue={ngoList[result.ngoId].id}
-                      onChange={handleChangeInput('ngoId')}
-                      register={{ ...register('ngoId') }}
-                      control={control}
-                      error={!!errors.ngoId}
-                    >
-                      {ngoList &&
-                        Object.keys(ngoList).map((key) => (
-                          <MenuItem key={key} value={ngoList[key].id}>
-                            {ngoList[key].name}
-                          </MenuItem>
-                        ))}
-                    </CustomSelect>
                     <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
                       {t('socialWorker.typeId')}
                     </CustomFormLabel>
@@ -844,4 +814,4 @@ const SocialWorkerEdit = () => {
   );
 };
 
-export default SocialWorkerEdit;
+export default NgoEdit;

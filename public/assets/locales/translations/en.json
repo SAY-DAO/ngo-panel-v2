@@ -517,7 +517,7 @@
     "download": "Download Report"
   },
   "socialWorker": {
-    "isActive": "Active Status",
+    "isActive": "Status",
     "isCoordinator": "Coordinator Status",
     "update": "Edit",
     "updated": "Successfully Updated!",
@@ -565,5 +565,24 @@
     "countries": {
       "one": "Iran"
     }
+  },
+  "ngo": {
+    "isActive": "Status",
+    "update": "Edit",
+    "childrenCount": "Children Count",
+    "country": "Country",
+    "city": "City",
+    "currentChildrenCount": "Current Children Count",
+    "socialWorkerCount": "SW Count",
+    "currentSocialWorkerCount": "Current SW Count",
+    "emailAddress": "Email",
+    "id": "Id",
+    "name": "Name",
+    "phoneNumber": "Phone Number",
+    "postalAddress": "Address",
+    "registerDate": "Registered",
+    "created": "Created",
+    "updated": "Updated",
+    "website": "website"
   }
 }
