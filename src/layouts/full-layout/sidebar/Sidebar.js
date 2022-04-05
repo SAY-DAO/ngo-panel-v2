@@ -149,7 +149,11 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                           ...(pathDirect === item.href && { color: 'white' }),
                         }}
                       >
-                        <FeatherIcon icon={item.icon} width="20" height="20" />
+                        {typeof item.icon === 'string' ? (
+                          <FeatherIcon icon={item.icon} width="20" height="20" />
+                        ) : (
+                          item.icon
+                        )}{' '}
                       </ListItemIcon>
                       <ListItemText onClick={onSidebarClose}>{item.title}</ListItemText>
                     </ListItem>

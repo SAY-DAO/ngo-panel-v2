@@ -12,14 +12,12 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Switch,
-  FormControlLabel,
   TextField,
-  InputAdornment,
-  OutlinedInput,
   IconButton,
   MenuItem,
   FormHelperText,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -27,24 +25,22 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { updateSw, updateSwIsActive } from '../../redux/actions/socialWorkerAction';
+import { updateNgo, fetchNgoById, updateNgoIsActive } from '../../redux/actions/NgoAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
-import { fetchNgoById } from '../../redux/actions/NgoAction';
+import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 
 const BCrumb = [
   {
     to: '/ngo/list',
-    title: 'Social Workers List',
+    title: 'NGOs List',
   },
   {
     title: 'Edit',
@@ -57,131 +53,76 @@ const NgoEdit = () => {
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const [myId, setMyId] = useState();
+  const [activeChecked, setActiveChecked] = useState(false);
   const [finalImageFile, setFinalImageFile] = useState();
-  const [finalIdImageFile, setFinalIdImageFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [openIdImageDialog, setOpenIdImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [uploadIdImage, setUploadIdImage] = useState(location.state && location.state.newIdImage);
-  const [open, setOpen] = useState(false);
-  const [activeChecked, setActiveChecked] = useState(false);
-  const [coordChecked, setCoordChecked] = useState(false);
-  const [birthDate, setBirthDate] = useState(new Date());
   const [values, setValues] = React.useState({
-    firstName: '',
-    lastName: '',
+    name: '',
+    website: '',
     country: '',
     city: '',
     phoneNumber: '',
-    emergencyPhoneNumber: '',
     postalAddress: '',
-    email: '',
-    userName: '',
-    telegramId: '',
-    typeId: 0,
-    idCardFile: '',
-    idNumber: '',
-    ngoId: '',
-    avatarFile: '',
+    emailAddress: '',
+    logoUrl: '',
   });
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const ngoById = useSelector((state) => state.ngoById);
-  const { result, loading: loadingSwById, success: successSwById } = ngoById;
+  const { result, loading: loadingNgoById, success: successNgoById } = ngoById;
 
-  const swStatusUpdate = useSelector((state) => state.swStatusUpdate);
-  const { status } = swStatusUpdate;
+  const ngoStatusUpdate = useSelector((state) => state.ngoStatusUpdate);
+  const { status } = ngoStatusUpdate;
 
-  const swUpdate = useSelector((state) => state.swUpdate);
-  const { success: successSwUpdate, loading: loadingSwUpdate, error: errorSwUpdate } = swUpdate;
-
-  useEffect(() => {
-    if (!id) {
-      // when .../profile/edit
-      setMyId(userInfo.id);
-    }
-  }, [id, myId]);
+  const ngoUpdate = useSelector((state) => state.ngoUpdate);
+  const { success: successNgoUpdate, loading: loadingNgoUpdate, error: errorNgoUpdate } = ngoUpdate;
 
   useEffect(() => {
-    if (!successSwById && (id || myId)) {
-      dispatch(fetchNgoById(id || myId));
+    if ((!successNgoById && id) || status) {
+      dispatch(fetchNgoById(id));
     }
-  }, [status, successSwUpdate, id, myId]);
+  }, [status, successNgoUpdate, id]);
 
   // isActive
   useEffect(() => {
     if (result && result.isActive) {
       setActiveChecked(true);
+      console.log(result);
     } else {
       setActiveChecked(false);
     }
-  }, [successSwById]);
-
-  // isCoordinator
-  useEffect(() => {
-    if (result && result.isCoordinator) {
-      setCoordChecked(true);
-    } else {
-      setCoordChecked(false);
-    }
-  }, [successSwById]);
+  }, [successNgoById, status]);
 
   useEffect(() => {
     if (result) {
-      setBirthDate(result.birthDate);
-
       setValues({
         ...values,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
+        name: result.name,
+        website: result.website,
+        emailAddress: result.emailAddress,
         country: result.country,
         city: result.city,
         phoneNumber: result.phoneNumber,
-        emergencyPhoneNumber: result.emergencyPhoneNumber,
         postalAddress: result.postalAddress,
-        userName: result.username,
-        telegramId: result.telegramId,
-        typeId: result.typeId,
-        idCardFile: result.idCardUrl,
-        idNumber: result.idNumber,
-        ngoId: result.ngoId,
-        avatarFile: result.avatarUrl,
+        logoUrl: result.logoUrl,
       });
     }
   }, [dispatch, result, userInfo]);
 
   const handleChangeActive = () => {
     if (activeChecked && result.isActive) {
-      dispatch(updateSwIsActive(result.id, 'deactivate'));
+      dispatch(updateNgoIsActive(result.id, 'deactivate'));
     } else if (!activeChecked && !result.isActive) {
-      dispatch(updateSwIsActive(result.id, 'activate'));
-    }
-  };
-
-  const handleChangeCoord = () => {
-    if (coordChecked && result.isCoordinator) {
-      dispatch(
-        updateSw({
-          id: id || myId,
-          isCoordinator: false,
-        }),
-      );
-    } else if (!coordChecked && !result.isCoordinator) {
-      dispatch(
-        updateSw({
-          id: id || myId,
-          isCoordinator: true,
-        }),
-      );
+      dispatch(updateNgoIsActive(result.id, 'activate'));
     }
   };
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('Please enter your first name'),
+    name: Yup.string().required('Please enter your first name'),
     lastName: Yup.string().required('Please enter your last name'),
     country: Yup.string().required('Please enter your country'),
     ngoId: Yup.string().required('Please enter your NGO'),
@@ -192,7 +133,7 @@ const NgoEdit = () => {
       .required('Username is required')
       .min(6, 'Username must be at least 6 characters')
       .max(20, 'Username must not exceed 20 characters'),
-    // email: Yup.string().required('Email is required').email('Email is invalid'),
+    // emailAddress: Yup.string().required('Email is required').emailAddress('Email is invalid'),
     // password: Yup.string()
     //   .required('Password is required')
     //   .min(6, 'Password must be at least 6 characters')
@@ -217,35 +158,19 @@ const NgoEdit = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      updateSw({
-        id: id || myId,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
+      updateNgo({
+        id,
+        name: data.name,
+        emailAddress: data.emailAddress,
         country: data.country,
         city: data.city,
         phoneNumber: data.phoneNumber,
-        emergencyPhoneNumber: data.emergencyPhoneNumber,
         postalAddress: data.postalAddress,
-        userName: data.userName,
-        telegramId: data.telegramId,
-        typeId: data.typeId,
-        idCardFile: finalIdImageFile,
-        idNumber: data.idNumber,
-        ngoId: data.ngoId,
-        avatarFile: finalImageFile,
-        birthDate,
+        website: data.website,
+        logoUrl: finalImageFile,
       }),
     );
-    dispatch({ type: SW_BY_ID_RESET });
-  };
-
-  // dialog
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
+    dispatch({ type: NGO_BY_ID_RESET });
   };
 
   // dialog image
@@ -256,16 +181,8 @@ const NgoEdit = () => {
     setOpenImageDialog(false);
   };
 
-  // dialog id image
-  const handleIdImageClickOpen = () => {
-    setOpenIdImageDialog(true);
-  };
   const handleIdImageClose = () => {
     setOpenIdImageDialog(false);
-  };
-
-  const handleDateChange = (newValue) => {
-    setBirthDate(newValue);
   };
 
   const onImageChange = (e) => {
@@ -275,81 +192,23 @@ const NgoEdit = () => {
     }
   };
 
-  const onIdImageChange = (e) => {
-    if (e.target.files[0]) {
-      setUploadIdImage(e.target.files[0]);
-      handleIdImageClickOpen();
-    }
-  };
-
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-  const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
-  const rectangle = (
-    <Box component="span" sx={shapeStyles}>
-      <div className="upload__image-wrapper">
-        <Button
-          sx={{
-            position: 'relative',
-            border: '1px dashed lightGrey',
-            width: 80,
-            minHeight: 50,
-          }}
-          onClick={handleClickOpen}
-        >
-          <img
-            alt="ID"
-            width="80%"
-            style={{
-              maxHeight: 50,
-              bgcolor: 'white',
-            }}
-            src={
-              finalIdImageFile
-                ? URL.createObjectURL(finalIdImageFile) // image preview
-                : values.idCardFile
-            }
-          />
-        </Button>
-      </div>
-      <label htmlFor="upload-id-image">
-        <input
-          accept="image/*"
-          id="upload-id-image"
-          type="file"
-          style={{
-            display: 'none',
-            left: '60px',
-          }}
-          onChange={onIdImageChange}
-        />
-        <IconButton name="upload-id-image" id="upload-id-image" color="primary" component="div">
-          <AddCircleOutlineIcon
-            color="primary"
-            fontSize="medium"
-            sx={{
-              borderRadius: '20%',
-            }}
-          />
-        </IconButton>
-      </label>
-    </Box>
-  );
 
   return (
-    <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
+    <PageContainer title="NGO Edit" description="this is NGO Edit page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {(!id && !myId) || loadingSwById || loadingSwUpdate ? (
+      {!id || loadingNgoById || loadingNgoUpdate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
         result && (
           <>
-            <Breadcrumb title="Edit page" subtitle="Social Worker" />
+            <Breadcrumb title="Edit page" subtitle="NGO" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
@@ -399,16 +258,14 @@ const NgoEdit = () => {
                       src={
                         finalImageFile
                           ? URL.createObjectURL(finalImageFile) // image preview
-                          : values.avatarFile
+                          : values.logoUrl
                       }
                     />
                   </Badge>
 
                   <Typography variant="h2" sx={{ mt: 4 }}>
-                    {result && `${result.firstName} ${result.lastName}`}
+                    {result && `${result.name}`}
                   </Typography>
-
-                  <Typography variant="body2"> Permission: {result && result.typeName}</Typography>
                   <FormControlLabel
                     control={
                       <Switch
@@ -437,112 +294,55 @@ const NgoEdit = () => {
                         />
                         {'  '}
                         <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                          {t('socialWorker.isActive')}
-                        </Typography>
-                      </Grid>
-                    }
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        disabled={userInfo.id === result.id}
-                        id="isCoordinator"
-                        variant="outlined"
-                        defaultValue={result.isCoordinator}
-                        checked={coordChecked}
-                        onChange={handleChangeCoord}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                      />
-                    }
-                    label={
-                      <Grid>
-                        <Box
-                          sx={{
-                            display: 'inline-block',
-                            backgroundColor:
-                              result.isCoordinator === true
-                                ? (theme) => theme.palette.success.main
-                                : (theme) => theme.palette.error.main,
-                            borderRadius: '100%',
-                            height: '10px',
-                            width: '10px',
-                          }}
-                        />
-                        {'  '}
-                        <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                          {t('socialWorker.isCoordinator')}
+                          {t('ngo.isActive')}
                         </Typography>
                       </Grid>
                     }
                   />
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('socialWorker.email')}
+                    {t('ngo.emailAddress')}
                   </Typography>
-                  <Typography variant="body2">{result && result.email}</Typography>
+                  <Typography variant="body2">{result && result.emailAddress}</Typography>
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('socialWorker.phoneNumber')}
+                    {t('ngo.phoneNumber')}
                   </Typography>
                   <Typography variant="body2">{result && result.phoneNumber}</Typography>
-                </Card>
-                <Card sx={{ p: 3, minHeight: 150 }}>
-                  <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={12} sx={{ margin: 'auto', textAlign: 'center' }}>
-                      <Typography variant="caption">ID #:{result.idNumber}</Typography>
-                      <Grid aria-label="id card">{rectangle}</Grid>
-                    </Grid>
-                  </Grid>
                 </Card>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                    {t('socialWorker.titleEdit')}
+                    {t('ngo.titleEdit')}
                   </Typography>
                   <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
+                    <CustomFormLabel htmlFor="name">NGO Name</CustomFormLabel>
                     <TextField
                       required
-                      id="firstName"
+                      id="name"
                       variant="outlined"
-                      defaultValue={result.firstName}
+                      defaultValue={result.name}
                       fullWidth
                       size="small"
-                      onChange={handleChangeInput('firstName')}
+                      onChange={handleChangeInput('name')}
                       control={control}
-                      {...register('firstName')}
-                      error={!!errors.firstName}
+                      {...register('name')}
+                      error={!!errors.name}
                     />
-                    <CustomFormLabel htmlFor="lastName">
-                      {t('socialWorker.lastName')}
-                    </CustomFormLabel>
-                    <TextField
-                      required
-                      id="lastName"
-                      variant="outlined"
-                      defaultValue={result.lastName}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('lastName')}
-                      control={control}
-                      {...register('lastName')}
-                      error={!!errors.lastName}
-                    />
-                    <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="Email">{t('ngo.emailAddress')}</CustomFormLabel>
                     <TextField
                       id="Email"
                       variant="outlined"
-                      defaultValue={result.email}
+                      defaultValue={result.emailAddress}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('email')}
+                      onChange={handleChangeInput('emailAddress')}
                       control={control}
-                      {...register('email')}
-                      error={!!errors.email}
+                      {...register('emailAddress')}
+                      error={!!errors.emailAddress}
                     />
 
-                    <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
@@ -551,12 +351,12 @@ const NgoEdit = () => {
                       control={control}
                       register={{ ...register('country') }}
                     >
-                      <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
+                      <MenuItem value={1}>{t('ngo.countries.one')}</MenuItem>
                     </CustomSelect>
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                       {errors && errors.country && errors.country.message}
                     </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
                     <CustomSelect
                       labelId="city-controlled-open-select-label"
                       id="city-controlled-open-select"
@@ -565,11 +365,11 @@ const NgoEdit = () => {
                       control={control}
                       register={{ ...register('city') }}
                     >
-                      <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
+                      <MenuItem value={1}>{t('ngo.cities.one')}</MenuItem>
                     </CustomSelect>
 
                     <CustomFormLabel htmlFor="postalAddress">
-                      {t('socialWorker.postalAddress')}
+                      {t('ngo.postalAddress')}
                     </CustomFormLabel>
                     <CustomTextField
                       id="postalAddress"
@@ -584,70 +384,7 @@ const NgoEdit = () => {
                       control={control}
                       register={{ ...register('postalAddress') }}
                     />
-                    <CustomFormLabel htmlFor="birthDate">
-                      {t('socialWorker.birthDate')}
-                    </CustomFormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DesktopDatePicker
-                        id="birthDate"
-                        inputFormat="MM/dd/yyyy"
-                        value={birthDate}
-                        onChange={handleDateChange}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-
-                    <CustomFormLabel htmlFor="telegramId">
-                      {t('socialWorker.telegramId')}
-                    </CustomFormLabel>
-                    <OutlinedInput
-                      id="telegramId"
-                      startAdornment={<InputAdornment position="start">@</InputAdornment>}
-                      variant="outlined"
-                      defaultValue={result.telegramId}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('telegramId')}
-                      control={control}
-                      {...register('telegramId')}
-                      error={!!errors.telegramId}
-                    />
-                    <CustomFormLabel htmlFor="idNumber">
-                      {t('socialWorker.idNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="idNumber"
-                      variant="outlined"
-                      defaultValue={result.idNumber}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('idNumber')}
-                      control={control}
-                      {...register('idNumber')}
-                      error={!!errors.idNumber}
-                    />
-                    <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
-                      {t('socialWorker.typeId')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="demo-controlled-open-select-label"
-                      id="demo-controlled-open-select"
-                      defaultValue={result.typeId}
-                      onChange={handleChangeInput('typeId')}
-                      register={{ ...register('typeId') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
-                      <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
-                      <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
-                      <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
-                    </CustomSelect>
-                    <CustomFormLabel htmlFor="phoneNumber">
-                      {t('socialWorker.phoneNumber')}
-                    </CustomFormLabel>
+                    <CustomFormLabel htmlFor="phoneNumber">{t('ngo.phoneNumber')}</CustomFormLabel>
                     <TextField
                       id="phoneNumber"
                       variant="outlined"
@@ -660,94 +397,24 @@ const NgoEdit = () => {
                       {...register('phoneNumber')}
                       error={!!errors.phoneNumber}
                     />
-                    <CustomFormLabel htmlFor="emergencyPhoneNumber">
-                      {t('socialWorker.emergencyPhoneNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="emergencyPhoneNumber"
-                      variant="outlined"
-                      defaultValue={result.emergencyPhoneNumber}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('emergencyPhoneNumber')}
-                      control={control}
-                      {...register('emergencyPhoneNumber')}
-                      error={!!errors.emergencyPhoneNumber}
-                    />
-                    <CustomFormLabel htmlFor="userName">
-                      {t('socialWorker.userName')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="userName"
-                      variant="outlined"
-                      defaultValue={result.username}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('userName')}
-                      control={control}
-                      {...register('userName')}
-                      error={!!errors.userName}
-                    />
+
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                       {errors && errors.userName && errors.userName.message}
                     </FormHelperText>
                     <LoadingButton
-                      loading={loadingSwUpdate}
+                      loading={loadingNgoUpdate}
                       color="primary"
                       type="submit"
                       onClick={handleSubmit(onSubmit)}
                       variant="contained"
                       sx={{ mt: 4 }}
                     >
-                      {t('socialWorker.button.update')}
+                      {t('ngo.button.update')}
                     </LoadingButton>
                   </form>
                 </Card>
               </Grid>
             </Grid>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
-                {result && `${result.firstName} ${result.lastName}`}
-              </DialogTitle>
-              <DialogContent>
-                <Box
-                  sx={{
-                    position: 'relative',
-                    overflow: 'scroll',
-                    width: 400,
-                    height: 300,
-                    backgroundColor: 'primary.dark',
-                    '&:hover': {
-                      backgroundColor: 'primary.main',
-                      opacity: [0.9, 0.8, 0.7],
-                    },
-                  }}
-                >
-                  <img
-                    alt="social worker ID"
-                    src={
-                      (finalIdImageFile && URL.createObjectURL(finalIdImageFile)) ||
-                      result.idCardUrl
-                    }
-                    style={{
-                      position: 'absolute',
-                      padding: '2px',
-                    }}
-                    width="100%"
-                  />
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
-              </DialogActions>
-            </Dialog>
             {/* Social Worker Image */}
             <Dialog
               open={openImageDialog}
@@ -756,7 +423,7 @@ const NgoEdit = () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
-                {result && `${result.firstName} ${result.lastName}`}
+                {result && `${result.name} ${result.lastName}`}
               </DialogTitle>
               <DialogContent>
                 <Box>
@@ -779,31 +446,22 @@ const NgoEdit = () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
-                {result && `${result.firstName} ${result.lastName}`}
+                {result && `${result.name} ${result.lastName}`}
               </DialogTitle>
-              <DialogContent>
-                <Box>
-                  <UploadIdImage
-                    uploadImage={uploadIdImage}
-                    handleImageClose={handleIdImageClose}
-                    setFinalImageFile={setFinalIdImageFile}
-                  />
-                </Box>
-              </DialogContent>
               <DialogActions>
                 <Button onClick={handleImageClose}>Close</Button>
               </DialogActions>
             </Dialog>
             <Grid>
-              {(successSwUpdate || errorSwUpdate) && (
+              {(successNgoUpdate || errorNgoUpdate) && (
                 <Message
-                  severity={successSwUpdate ? 'success' : 'error'}
+                  severity={successNgoUpdate ? 'success' : 'error'}
                   variant="filled"
-                  input="addSw"
-                  backError={errorSwUpdate}
+                  input="addNgo"
+                  backError={errorNgoUpdate}
                   sx={{ width: '100%' }}
                 >
-                  {successSwUpdate && t('socialWorker.updated')}
+                  {successNgoUpdate && t('ngo.updated')}
                 </Message>
               )}
             </Grid>

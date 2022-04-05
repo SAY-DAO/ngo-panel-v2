@@ -18,14 +18,6 @@ const NgoList = () => {
     dispatch(fetchNgoList());
   }, [dispatch]);
 
-  const ahmad = [];
-  if (ngoList) {
-    console.log(ngoList);
-    for (const key in ngoList) {
-      ahmad.push(ngoList[key]);
-    }
-  }
-
   return (
     <>
       {loading ? (
@@ -36,7 +28,7 @@ const NgoList = () => {
         success && (
           <PageContainer title="Login" description="this is Login page">
             <Grid>
-              <NgoTable ngoList={ahmad} />
+              <NgoTable ngoList={ngoList} />
             </Grid>
           </PageContainer>
         )

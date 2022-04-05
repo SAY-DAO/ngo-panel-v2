@@ -32,7 +32,7 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
+import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -326,7 +326,7 @@ const NgoTable = ({ ngoList }) => {
   };
 
   const handleEdit = (row) => {
-    dispatch({ type: SW_BY_ID_RESET });
+    dispatch({ type: NGO_BY_ID_RESET });
     navigate(`/ngo/edit/${row.id}`);
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;

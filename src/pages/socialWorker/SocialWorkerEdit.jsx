@@ -113,7 +113,7 @@ const SocialWorkerEdit = () => {
   }, [id, myId]);
 
   useEffect(() => {
-    if (!successSwById && (id || myId)) {
+    if ((!successSwById && (id || myId)) || status) {
       dispatch(fetchSocialWorkerById(id || myId));
     }
     if (!successNgoList) {

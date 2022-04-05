@@ -1,6 +1,8 @@
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import InterestsIcon from '@mui/icons-material/Interests';
 import HouseIcon from '@mui/icons-material/House';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import HiveIcon from '@mui/icons-material/Hive';
 import React from 'react';
 
 const Menuitems = [
@@ -76,14 +78,8 @@ const Menuitems = [
     ],
   },
   {
-    navlabel: true,
-    subheader: 'MY REPORTS',
-    icon: 'mdi mdi-dots-horizontal',
-    href: 'Reports',
-  },
-  {
     title: 'Reports',
-    icon: 'users',
+    icon: <MenuBookIcon />,
     href: '/reports',
     collapse: true,
     children: [
@@ -130,7 +126,7 @@ const Menuitems = [
   },
   {
     title: 'Catagories',
-    icon: 'pie-chart',
+    icon: <HiveIcon />,
     href: '/admin/catagories',
   },
   {

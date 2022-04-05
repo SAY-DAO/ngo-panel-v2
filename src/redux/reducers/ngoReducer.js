@@ -7,6 +7,12 @@ import {
   NGO_LIST_REQUEST,
   NGO_LIST_RESET,
   NGO_LIST_SUCCESS,
+  UPDATE_NGO_FAIL,
+  UPDATE_NGO_IS_ACTIVE_FAIL,
+  UPDATE_NGO_IS_ACTIVE_REQUEST,
+  UPDATE_NGO_IS_ACTIVE_SUCCESS,
+  UPDATE_NGO_REQUEST,
+  UPDATE_NGO_SUCCESS,
 } from '../constants/ngoConstants';
 
 export const ngoByIdReducer = (state = { success: false }, action) => {
@@ -34,6 +40,32 @@ export const ngoListReducer = (state = { success: false }, action) => {
       return { loading: false, error: action.payload };
     case NGO_LIST_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const ngoUpdateIsActiveReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case UPDATE_NGO_IS_ACTIVE_REQUEST:
+      return { loading: true };
+    case UPDATE_NGO_IS_ACTIVE_SUCCESS:
+      return { loading: false, success: true, status: action.payload };
+    case UPDATE_NGO_IS_ACTIVE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const ngoUpdateReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case UPDATE_NGO_REQUEST:
+      return { loading: true };
+    case UPDATE_NGO_SUCCESS:
+      return { loading: false, success: true, updated: action.payload };
+    case UPDATE_NGO_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

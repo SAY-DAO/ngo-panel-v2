@@ -569,6 +569,7 @@
   "ngo": {
     "isActive": "Status",
     "update": "Edit",
+    "titleEdit": "Edit Details",
     "childrenCount": "Children Count",
     "country": "Country",
     "city": "City",
@@ -583,6 +584,15 @@
     "registerDate": "Registered",
     "created": "Created",
     "updated": "Updated",
-    "website": "website"
+    "website": "website",
+    "button": {
+      "update": "Update"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
   }
 }

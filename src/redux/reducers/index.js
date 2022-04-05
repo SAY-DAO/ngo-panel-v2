@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import CustomizerReducer from './customizerReducer';
-import { ngoByIdReducer, ngoListReducer } from './ngoReducer';
+import { ngoByIdReducer, ngoListReducer, ngoUpdateIsActiveReducer, ngoUpdateReducer } from './ngoReducer';
 import {
   swDetailsReducer,
   swUpdateIsActiveReducer,
@@ -21,7 +21,9 @@ export default combineReducers({
   ngoById: ngoByIdReducer,
   ngoAll: ngoListReducer,
   swStatusUpdate: swUpdateIsActiveReducer,
+  ngoStatusUpdate: ngoUpdateIsActiveReducer,
   swUpdate: swUpdateReducer,
+  ngoUpdate: ngoUpdateReducer,
   swAdd: swAddReducer,
   swMigrate: swMigrateReducer,
 });
