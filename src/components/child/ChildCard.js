@@ -5,11 +5,7 @@ import CardTemplate from '../base-card/CardTemplate';
 
 const ChildCard = () => (
   <CardTemplate style={{ height: 290 }} pathTo="/ChildPage">
-    <CardMedia
-      component="img"
-      src="https://sayapp.company/files/1-child/1-avatar_0010010001.png"
-      title="child name"
-    />
+    <CardMedia component="img" src="#" title="child name" />
     <CardContent sx={{ width: '100%' }}>
       <Typography variant="h6" align="center" paragraph>
         Child name
