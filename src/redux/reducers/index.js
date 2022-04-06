@@ -1,6 +1,12 @@
 import { combineReducers } from 'redux';
+import countryListReducer from './countryReducer';
 import CustomizerReducer from './customizerReducer';
-import { ngoByIdReducer, ngoListReducer, ngoUpdateIsActiveReducer, ngoUpdateReducer } from './ngoReducer';
+import {
+  ngoByIdReducer,
+  ngoListReducer,
+  ngoUpdateIsActiveReducer,
+  ngoUpdateReducer,
+} from './ngoReducer';
 import {
   swDetailsReducer,
   swUpdateIsActiveReducer,
@@ -14,6 +20,7 @@ import { userLoginReducer } from './userReducer';
 
 export default combineReducers({
   CustomizerReducer,
+  countryList: countryListReducer,
   userLogin: userLoginReducer,
   swDetails: swDetailsReducer,
   swById: swByIdReducer,

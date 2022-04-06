@@ -21,6 +21,7 @@ const SocialWorkerProfile = Loadable(
 );
 const NgoList = Loadable(lazy(() => import('../pages/ngo/NgoList')));
 const NgoEdit = Loadable(lazy(() => import('../pages/ngo/NgoEdit')));
+const NgoAdd = Loadable(lazy(() => import('../pages/ngo/NgoAdd')));
 
 /* ****Routes***** */
 
@@ -39,7 +40,7 @@ const Router = [
       { path: '/sw/migrate', exact: true, element: <SocialWorkerMigrate /> },
       { path: '/ngo/list', exact: true, element: <NgoList /> },
       { path: '/ngo/edit/:id', exact: true, element: <NgoEdit /> },
-      // { path: '/ngo/add', exact: true, element: <SocialWorkerAdd /> },
+      { path: '/ngo/add', exact: true, element: <NgoAdd /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

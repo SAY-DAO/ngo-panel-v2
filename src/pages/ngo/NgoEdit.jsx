@@ -30,7 +30,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { updateNgo, fetchNgoById, updateNgoIsActive } from '../../redux/actions/NgoAction';
+import { updateNgo, fetchNgoById, updateNgoIsActive } from '../../redux/actions/ngoAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
@@ -91,7 +91,6 @@ const NgoEdit = () => {
   useEffect(() => {
     if (result && result.isActive) {
       setActiveChecked(true);
-      console.log(result);
     } else {
       setActiveChecked(false);
     }
@@ -123,25 +122,10 @@ const NgoEdit = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Please enter your first name'),
-    lastName: Yup.string().required('Please enter your last name'),
     country: Yup.string().required('Please enter your country'),
-    ngoId: Yup.string().required('Please enter your NGO'),
-    // phoneNumber: Yup.string().required('Please enter your phone number'),
-    // postalCode: Yup.string().required('Please enter your postal code'),
-    // postalAddress: Yup.string().required('Please enter your postalAddress'),
-    userName: Yup.string()
-      .required('Username is required')
-      .min(6, 'Username must be at least 6 characters')
-      .max(20, 'Username must not exceed 20 characters'),
-    // emailAddress: Yup.string().required('Email is required').emailAddress('Email is invalid'),
-    // password: Yup.string()
-    //   .required('Password is required')
-    //   .min(6, 'Password must be at least 6 characters')
-    //   .max(40, 'Password must not exceed 40 characters'),
-    // confirmPassword: Yup.string()
-    //   .required('Confirm Password is required')
-    //   .oneOf([Yup.ref('password'), null], 'Confirm Password does not match'),
-    acceptTerms: Yup.bool(),
+    phoneNumber: Yup.string().required('Please enter your phone number'),
+    postalAddress: Yup.string().required('Please enter your postalAddress'),
+    emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
   });
 
   const {
@@ -341,17 +325,20 @@ const NgoEdit = () => {
                       {...register('emailAddress')}
                       error={!!errors.emailAddress}
                     />
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.emailAddress && errors.emailAddress.message}
+                    </FormHelperText>
 
                     <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
-                      defaultValue={result.country || 1}
+                      defaultValue={1}
                       onChange={handleChangeInput('country')}
                       control={control}
                       register={{ ...register('country') }}
                     >
-                      <MenuItem value={1}>{t('ngo.countries.one')}</MenuItem>
+                      <MenuItem value={result.country || 1}>{t('ngo.countries.one')}</MenuItem>
                     </CustomSelect>
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                       {errors && errors.country && errors.country.message}
@@ -397,12 +384,8 @@ const NgoEdit = () => {
                       {...register('phoneNumber')}
                       error={!!errors.phoneNumber}
                     />
-
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.userName && errors.userName.message}
-                    </FormHelperText>
                     <LoadingButton
-                      loading={loadingNgoUpdate}
+                      // loading={loadingNgoUpdate}
                       color="primary"
                       type="submit"
                       onClick={handleSubmit(onSubmit)}

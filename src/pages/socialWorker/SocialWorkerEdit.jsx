@@ -42,7 +42,7 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/NgoAction';
+import { fetchNgoList } from '../../redux/actions/ngoAction';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 
 const BCrumb = [
@@ -106,14 +106,14 @@ const SocialWorkerEdit = () => {
   const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
 
   useEffect(() => {
-    if (!id) {
+    if (!id && userInfo) {
       // when .../profile/edit
       setMyId(userInfo.id);
     }
   }, [id, myId]);
 
   useEffect(() => {
-    if ((!successSwById && (id || myId)) || status) {
+    if ((!successSwById && (id || myId)) || status || successSwUpdate) {
       dispatch(fetchSocialWorkerById(id || myId));
     }
     if (!successNgoList) {
@@ -358,6 +358,7 @@ const SocialWorkerEdit = () => {
         </Grid>
       ) : (
         result &&
+        result.ngoId &&
         ngoList && (
           <>
             <Breadcrumb title="Edit page" subtitle="Social Worker" />
@@ -645,7 +646,7 @@ const SocialWorkerEdit = () => {
                     <CustomSelect
                       labelId="ngoId-controlled-open-select-label"
                       id="ngoId-controlled-open-select"
-                      defaultValue={ngoList[result.ngoId].id}
+                      defaultValue={result.ngoId}
                       onChange={handleChangeInput('ngoId')}
                       register={{ ...register('ngoId') }}
                       control={control}

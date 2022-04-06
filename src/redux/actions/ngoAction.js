@@ -114,17 +114,14 @@ export const updateNgo = (values) => async (dispatch, getState) => {
 
     const formData = new FormData();
 
-    if (values.isCoordinator != null) {
-      formData.set('isCoordinator', values.isCoordinator);
-    }
     if (values.firstName) {
-      formData.set('firstName', values.firstName);
+      formData.set('name', values.name);
     }
     if (values.lastName) {
       formData.set('lastName', values.lastName);
     }
-    if (values.email) {
-      formData.set('email', values.email);
+    if (values.emailAddress) {
+      formData.set('emailAddress', values.emailAddress);
     }
     if (values.country) {
       formData.set('country', values.country);
@@ -135,39 +132,18 @@ export const updateNgo = (values) => async (dispatch, getState) => {
     if (values.phoneNumber) {
       formData.set('phoneNumber', values.phoneNumber);
     }
-    if (values.emergencyPhoneNumber) {
-      formData.set('emergencyPhoneNumber', values.emergencyPhoneNumber);
-    }
     if (values.postalAddress) {
       formData.set('postalAddress', values.postalAddress);
     }
-    if (values.userName) {
-      formData.set('username', values.userName);
-    }
-    if (values.telegramId) {
-      formData.set('telegramId', values.telegramId);
-    }
-    if (values.typeId) {
-      formData.set('typeId', values.typeId);
-    }
-    if (values.idCardFile) {
-      formData.set('idCardUrl', values.idCardFile);
-    }
-    if (values.idNumber) {
-      formData.set('idNumber', values.idNumber);
-    }
-    if (values.ngoId) {
-      formData.set('ngoId', values.ngoId);
-    }
-    if (values.avatarFile) {
-      formData.set('avatarUrl', values.avatarFile);
-    }
-    if (values.birthDate) {
-      formData.set('birthDate', Date.parse(values.birthDate));
+    if (values.website) {
+      formData.set('website', values.website);
     }
 
-    const { data } = await publicApi.patch(`/socialworkers/${values.id}`, formData, config);
+    if (values.finalImageFile) {
+      formData.set('logoUrl', values.finalImageFile);
+    }
 
+    const { data } = await publicApi.patch(`/ngo/update/ngoId=${values.id}`, formData, config);
     dispatch({
       type: UPDATE_NGO_SUCCESS,
       payload: data,

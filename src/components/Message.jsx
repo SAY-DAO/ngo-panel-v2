@@ -66,8 +66,13 @@ export default function Message({
         return t(contents.sthIsWrong);
       }
 
-      if (backError.status === 400 && input === 'addSw') {
+      if (backError.status === 400 && backError.data[0] && input === 'addSw') {
+        console.log(backError);
         return `${backError.data[0].loc[0]} ${backError.data[0].msg}`;
+      }
+      if (backError.status === 400 && backError.data && input === 'addSw') {
+        console.log(backError);
+        return `${backError.data.message}`;
       }
       if (backError.status === 400 && input === 'register') {
         return t(contents.sthIsWrong);

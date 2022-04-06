@@ -38,7 +38,7 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/NgoAction';
+import { fetchNgoList } from '../../redux/actions/ngoAction';
 
 const BCrumb = [
   {
@@ -191,10 +191,6 @@ const SocialWorkerAdd = () => {
     console.log('remove');
   };
 
-  const handleChangeInput = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
   const handleChangeCoord = () => {
     if (coordChecked) {
       setCoordChecked(false);
@@ -206,8 +202,6 @@ const SocialWorkerAdd = () => {
       isCoordinator: coordChecked,
     });
   };
-
-  console.log(errorAddUpdate && errorAddUpdate.data[0].msg);
 
   const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
   const rectangle = (
@@ -379,7 +373,6 @@ const SocialWorkerAdd = () => {
                       variant="outlined"
                       fullWidth
                       size="small"
-                      onChange={handleChangeInput('firstName')}
                       control={control}
                       {...register('firstName')}
                       error={!!errors.firstName}
@@ -395,7 +388,6 @@ const SocialWorkerAdd = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('lastName')}
                       control={control}
                       {...register('lastName')}
                       error={!!errors.lastName}
@@ -408,7 +400,6 @@ const SocialWorkerAdd = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('email')}
                       control={control}
                       {...register('email')}
                       error={!!errors.email}
@@ -420,7 +411,6 @@ const SocialWorkerAdd = () => {
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
                       defaultValue={1}
-                      onChange={handleChangeInput('country')}
                       control={control}
                       register={{ ...register('country') }}
                     >
@@ -434,7 +424,6 @@ const SocialWorkerAdd = () => {
                       labelId="city-controlled-open-select-label"
                       id="city-controlled-open-select"
                       defaultValue={1}
-                      onChange={handleChangeInput('city')}
                       control={control}
                       register={{ ...register('city') }}
                     >
@@ -454,7 +443,6 @@ const SocialWorkerAdd = () => {
                       size="small"
                       sx={{ mb: 2 }}
                       fullWidth
-                      onChange={handleChangeInput('postalAddress')}
                       control={control}
                       register={{ ...register('postalAddress') }}
                       helperText={errors && errors.postalAddress && errors.postalAddress.message}
@@ -483,7 +471,6 @@ const SocialWorkerAdd = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('telegramId')}
                       control={control}
                       {...register('telegramId')}
                       error={!!errors.telegramId}
@@ -500,7 +487,6 @@ const SocialWorkerAdd = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('idNumber')}
                       control={control}
                       {...register('idNumber')}
                       error={!!errors.idNumber}
@@ -513,7 +499,6 @@ const SocialWorkerAdd = () => {
                       labelId="ngoId-controlled-open-select-label"
                       id="ngoId-controlled-open-select"
                       defaultValue={ngoList[1].id}
-                      onChange={handleChangeInput('ngoId')}
                       register={{ ...register('ngoId') }}
                       control={control}
                       error={!!errors.ngoId}
@@ -532,7 +517,6 @@ const SocialWorkerAdd = () => {
                       labelId="typeId-controlled-open-select-label"
                       id="typeId-controlled-open-select"
                       defaultValue={4}
-                      onChange={handleChangeInput('typeId')}
                       control={control}
                       register={{ ...register('typeId') }}
                     >
@@ -552,7 +536,6 @@ const SocialWorkerAdd = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('phoneNumber')}
                       control={control}
                       {...register('phoneNumber')}
                       error={!!errors.phoneNumber}
@@ -567,7 +550,6 @@ const SocialWorkerAdd = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('emergencyPhoneNumber')}
                       control={control}
                       {...register('emergencyPhoneNumber')}
                       error={!!errors.emergencyPhoneNumber}

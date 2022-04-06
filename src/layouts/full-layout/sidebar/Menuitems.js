@@ -3,6 +3,7 @@ import InterestsIcon from '@mui/icons-material/Interests';
 import HouseIcon from '@mui/icons-material/House';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import HiveIcon from '@mui/icons-material/Hive';
+import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
 const Menuitems = [
@@ -102,7 +103,25 @@ const Menuitems = [
     href: 'Reports',
   },
   {
-    title: 'Social Worker',
+    title: 'NGOs',
+    icon: <HouseIcon />,
+    href: '/ngo',
+    collapse: true,
+    children: [
+      {
+        title: 'List',
+        icon: 'list',
+        href: '/ngo/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/ngo/add',
+      },
+    ],
+  },
+  {
+    title: 'Social Workers',
     icon: 'users',
     href: '/sws',
     collapse: true,
@@ -128,22 +147,35 @@ const Menuitems = [
     title: 'Catagories',
     icon: <HiveIcon />,
     href: '/admin/catagories',
-  },
-  {
-    title: 'NGOs',
-    icon: <HouseIcon />,
-    href: '/ngo',
     collapse: true,
     children: [
       {
         title: 'List',
         icon: 'list',
-        href: '/ngo/list',
+        href: '/categories/list',
       },
       {
         title: 'Add',
         icon: 'plus',
-        href: '/ngo/add',
+        href: '/categories/add',
+      },
+    ],
+  },
+  {
+    title: 'Countries',
+    icon: <PublicIcon />,
+    href: '/admin/countries',
+    collapse: true,
+    children: [
+      {
+        title: 'List',
+        icon: 'list',
+        href: '/countries/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/countries/add',
       },
     ],
   },
