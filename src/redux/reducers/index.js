@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import countryListReducer from './countryReducer';
 import CustomizerReducer from './customizerReducer';
 import {
+  ngoAddReducer,
   ngoByIdReducer,
   ngoListReducer,
   ngoUpdateIsActiveReducer,
@@ -24,13 +25,14 @@ export default combineReducers({
   userLogin: userLoginReducer,
   swDetails: swDetailsReducer,
   swById: swByIdReducer,
-  swAll: swListReducer,
-  ngoById: ngoByIdReducer,
-  ngoAll: ngoListReducer,
   swStatusUpdate: swUpdateIsActiveReducer,
-  ngoStatusUpdate: ngoUpdateIsActiveReducer,
+  swAll: swListReducer,
   swUpdate: swUpdateReducer,
-  ngoUpdate: ngoUpdateReducer,
   swAdd: swAddReducer,
   swMigrate: swMigrateReducer,
+  ngoStatusUpdate: ngoUpdateIsActiveReducer,
+  ngoById: ngoByIdReducer,
+  ngoAll: ngoListReducer,
+  ngoUpdate: ngoUpdateReducer,
+  ngoAdd: ngoAddReducer,
 });

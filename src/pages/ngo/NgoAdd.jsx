@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Avatar,
@@ -29,12 +28,13 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { AddSw } from '../../redux/actions/socialWorkerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
+import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
+import { AddNgo } from '../../redux/actions/ngoAction';
 
 const BCrumb = [
   {
@@ -54,16 +54,6 @@ const NgoAdd = () => {
   const [finalImageFile, setFinalImageFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [values, setValues] = React.useState({
-    name: '',
-    website: '',
-    country: '',
-    city: '',
-    phoneNumber: '',
-    postalAddress: '',
-    emailAddress: '',
-    logoUrl: '',
-  });
 
   const swAdd = useSelector((state) => state.swAdd);
   const { success: successAddUpdate, loading: loadingAddSw, error: errorAddUpdate } = swAdd;
@@ -92,47 +82,41 @@ const NgoAdd = () => {
   // country
   useEffect(() => {
     if (!successCountryList) {
+      dispatch({ type: COUNTRY_LIST_RESET });
       dispatch(fetchCountryList());
-      dispatch(fetchStateList(watch('country')));
     }
   }, [successCountryList]);
 
   // state
   useEffect(() => {
-    if (successCountryList && watch('country')) {
-      console.log(watch('country'));
+    if (countries && watch('country')) {
+      console.log('watch');
       dispatch(fetchStateList(watch('country')));
     }
-  }, [watch('country')]);
+  }, [watch('country'), countries]);
 
   // city
   useEffect(() => {
-    if (successCountryList && watch('state')) {
-      console.log(watch('state'));
+    if (countries && states && watch('state')) {
       dispatch(fetchCityList(watch('state')));
     }
-  }, [watch('state')]);
+  }, [watch('state'), countries, states]);
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      AddSw({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
+      AddNgo({
+        name: data.name,
+        website: data.website,
+        emailAddress: data.emailAddress,
         country: data.country,
-        city: data.city,
+        // state: data.state,
+        // city: data.city,
         phoneNumber: data.phoneNumber,
-        emergencyPhoneNumber: data.emergencyPhoneNumber,
         postalAddress: data.postalAddress,
-        telegramId: data.telegramId,
-        typeId: data.typeId,
-        idNumber: data.idNumber,
-        ngoId: data.ngoId,
-        avatarFile: finalImageFile,
-        isCoordinator: values.isCoordinator,
+        logoUrl: finalImageFile,
       }),
     );
   };
@@ -201,12 +185,12 @@ const NgoAdd = () => {
                       }}
                     >
                       <Avatar
-                        alt="user photo"
+                        alt="ngo logo"
                         sx={{ width: 110, height: 110 }}
                         src={
                           finalImageFile
                             ? URL.createObjectURL(finalImageFile) // image preview
-                            : values.avatarFile
+                            : null
                         }
                       />
                       <label htmlFor="upload-image">
@@ -263,7 +247,7 @@ const NgoAdd = () => {
                   />
                   <CustomFormLabel htmlFor="Email">{t('ngo.emailAddress')}</CustomFormLabel>
                   <TextField
-                    id="Email"
+                    id="emailAddress"
                     variant="outlined"
                     fullWidth
                     size="small"
@@ -275,7 +259,17 @@ const NgoAdd = () => {
                   <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                     {errors && errors.emailAddress && errors.emailAddress.message}
                   </FormHelperText>
-
+                  <CustomFormLabel htmlFor="Website">{t('ngo.website')}</CustomFormLabel>
+                  <TextField
+                    id="website"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    sx={{ mb: 1 }}
+                    control={control}
+                    {...register('website')}
+                    error={!!errors.website}
+                  />
                   <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
                   <CustomSelect
                     labelId="country-controlled-open-select-label"
@@ -291,30 +285,45 @@ const NgoAdd = () => {
                         </MenuItem>
                       ))}
                   </CustomSelect>
-                  <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                    {errors && errors.country && errors.country.message}
-                  </FormHelperText>
-                  <CustomFormLabel htmlFor="state">{t('ngo.state')}</CustomFormLabel>
+                  {countries && states && (
+                    <>
+                      <CustomFormLabel htmlFor="state">{t('ngo.state')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="state-controlled-open-select-label"
+                        id="state-controlled-open-select"
+                        defaultValue={states && states[0].id}
+                        control={control}
+                        register={{ ...register('state') }}
+                      >
+                        {states.map((state) => (
+                          <MenuItem key={state.id} value={state.id}>
+                            {state.name}
+                          </MenuItem>
+                        ))}
+                      </CustomSelect>
+                    </>
+                  )}
+                  {countries && states && cities && (
+                    <>
+                      <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="city-controlled-open-select-label"
+                        id="city-controlled-open-select"
+                        defaultValue={cities && cities[0].id}
+                        control={control}
+                        register={{ ...register('city') }}
+                      >
+                        {cities.map((city) => (
+                          <MenuItem key={city.id} value={city.id}>
+                            {city.name}
+                          </MenuItem>
+                        ))}
+                      </CustomSelect>
+                    </>
+                  )}
+                  {/* <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
                   <CustomSelect
-                    labelId="state-controlled-open-select-label"
-                    id="state-controlled-open-select"
-                    control={control}
-                    register={{ ...register('state') }}
-                  >
-                    {countries &&
-                      states &&
-                      states.map((state) => (
-                        <MenuItem key={state.id} value={state.id}>
-                          {state.name}
-                        </MenuItem>
-                      ))}
-                  </CustomSelect>
-                  <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
-                  <CustomSelect
-                    labelId="city-controlled-open-select-label"
-                    id="city-controlled-open-select"
-                    control={control}
-                    register={{ ...register('city') }}
+                 
                   >
                     {cities &&
                       states &&
@@ -323,7 +332,7 @@ const NgoAdd = () => {
                           {city.name}
                         </MenuItem>
                       ))}
-                  </CustomSelect>
+                  </CustomSelect> */}
 
                   <CustomFormLabel htmlFor="postalAddress">
                     {t('ngo.postalAddress')}

@@ -171,19 +171,12 @@ export const AddNgo = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
-    formData.set('gender', false);
 
-    if (values.isCoordinator != null) {
-      formData.set('isCoordinator', values.isCoordinator);
-    }
-    if (values.firstName) {
-      formData.set('firstName', values.firstName);
-    }
     if (values.lastName) {
-      formData.set('lastName', values.lastName);
+      formData.set('name', values.name);
     }
     if (values.email) {
-      formData.set('email', values.email);
+      formData.set('emailAddress', values.emailAddress);
     }
     if (values.country) {
       formData.set('country', values.country);
@@ -194,40 +187,20 @@ export const AddNgo = (values) => async (dispatch, getState) => {
     if (values.phoneNumber) {
       formData.set('phoneNumber', values.phoneNumber);
     }
-    if (values.emergencyPhoneNumber) {
-      formData.set('emergencyPhoneNumber', values.emergencyPhoneNumber);
+    if (values.website) {
+      formData.set('website', values.website);
     }
     if (values.postalAddress) {
       formData.set('postalAddress', values.postalAddress);
     }
-    if (values.userName) {
-      formData.set('username', values.userName);
-    }
-    if (values.telegramId) {
-      formData.set('telegramId', values.telegramId);
-    }
-    if (values.typeId) {
-      formData.set('typeId', values.typeId);
-    }
-    if (values.idCardFile) {
-      formData.set('idCardUrl', values.idCardFile);
-    }
-    if (values.idNumber) {
-      formData.set('idNumber', values.idNumber);
-    }
-    if (values.ngoId) {
-      formData.set('ngoId', values.ngoId);
-    }
-    if (values.avatarFile) {
-      formData.set('avatarUrl', values.avatarFile);
-    }
-    if (values.birthDate) {
-      formData.set('birthDate', Date.parse(values.birthDate));
-    }
 
+    if (values.logoUrl) {
+      formData.set('logoUrl', values.logoUrl);
+    }
+    console.log('hala');
     console.log(values);
-    const { data } = await publicApi.post(`/socialworkers/`, formData, config);
 
+    const { data } = await publicApi.post(`/ngo/add`, formData, config);
     dispatch({
       type: ADD_NGO_SUCCESS,
       payload: data,

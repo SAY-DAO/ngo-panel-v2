@@ -323,7 +323,6 @@ export const AddSw = (values) => async (dispatch, getState) => {
       formData.set('birthDate', Date.parse(values.birthDate));
     }
 
-    console.log(values);
     const { data } = await publicApi.post(`/socialworkers/`, formData, config);
 
     dispatch({

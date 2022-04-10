@@ -94,12 +94,12 @@ function EnhancedTableHead(props) {
       disablePadding: false,
       label: t('ngo.phoneNumber'),
     },
-    {
-      id: 'postalAddress',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.postalAddress'),
-    },
+    // {
+    //   id: 'postalAddress',
+    //   numeric: false,
+    //   disablePadding: false,
+    //   label: t('ngo.postalAddress'),
+    // },
     {
       id: 'country',
       numeric: false,
@@ -446,11 +446,11 @@ const NgoTable = ({ ngoList }) => {
                                 {row.phoneNumber}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="600">
                                 {row.postalAddress}
                               </Typography>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.country}

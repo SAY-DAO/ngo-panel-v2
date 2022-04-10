@@ -1,4 +1,7 @@
 import {
+  ADD_NGO_FAIL,
+  ADD_NGO_REQUEST,
+  ADD_NGO_SUCCESS,
   NGO_BY_ID_FAIL,
   NGO_BY_ID_REQUEST,
   NGO_BY_ID_RESET,
@@ -65,6 +68,19 @@ export const ngoUpdateReducer = (state = { success: false }, action) => {
     case UPDATE_NGO_SUCCESS:
       return { loading: false, success: true, updated: action.payload };
     case UPDATE_NGO_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const ngoAddReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case ADD_NGO_REQUEST:
+      return { loading: true };
+    case ADD_NGO_SUCCESS:
+      return { loading: false, success: true, added: action.payload };
+    case ADD_NGO_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

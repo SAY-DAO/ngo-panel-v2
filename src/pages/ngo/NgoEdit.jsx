@@ -125,7 +125,10 @@ const NgoEdit = () => {
     country: Yup.string().required('Please enter your country'),
     phoneNumber: Yup.string().required('Please enter your phone number'),
     postalAddress: Yup.string().required('Please enter your postalAddress'),
-    emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
+    emailAddress: Yup.string()
+      // .min(3, 'must be at least 3 characters long')
+      .email('Please enter your email')
+      .required('Email is required'),
   });
 
   const {
