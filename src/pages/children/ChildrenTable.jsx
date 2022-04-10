@@ -266,10 +266,9 @@ const BCrumb = [
   },
 ];
 
-const NgoTable = ({ ngoList }) => {
+const ChildrenTable = ({ ngoList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
@@ -534,8 +533,8 @@ const NgoTable = ({ ngoList }) => {
   );
 };
 
-export default NgoTable;
+export default ChildrenTable;
 
-NgoTable.propTypes = {
+ChildrenTable.propTypes = {
   ngoList: PropTypes.array.isRequired,
 };

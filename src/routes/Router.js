@@ -22,7 +22,9 @@ const SocialWorkerProfile = Loadable(
 const NgoList = Loadable(lazy(() => import('../pages/ngo/NgoList')));
 const NgoEdit = Loadable(lazy(() => import('../pages/ngo/NgoEdit')));
 const NgoAdd = Loadable(lazy(() => import('../pages/ngo/NgoAdd')));
-
+const ChildrenList = Loadable(lazy(() => import('../pages/children/ChildrenList')));
+const ChildrenEdit = Loadable(lazy(() => import('../pages/children/ChildrenEdit')));
+const ChildrenAdd = Loadable(lazy(() => import('../pages/children/ChildrenAdd')));
 /* ****Routes***** */
 
 const Router = [
@@ -41,6 +43,9 @@ const Router = [
       { path: '/ngo/list', exact: true, element: <NgoList /> },
       { path: '/ngo/edit/:id', exact: true, element: <NgoEdit /> },
       { path: '/ngo/add', exact: true, element: <NgoAdd /> },
+      { path: '/children/list', exact: true, element: <ChildrenList /> },
+      { path: '/children/edit/:id', exact: true, element: <ChildrenEdit /> },
+      { path: '/children/add', exact: true, element: <ChildrenAdd /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

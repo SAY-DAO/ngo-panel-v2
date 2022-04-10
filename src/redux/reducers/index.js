@@ -17,6 +17,12 @@ import {
   swAddReducer,
   swMigrateReducer,
 } from './socialWorkerReducer';
+import {
+  childAddReducer,
+  childByIdReducer,
+  childListReducer,
+  childUpdateReducer,
+} from './childrenReducer';
 import { userLoginReducer } from './userReducer';
 
 export default combineReducers({
@@ -35,4 +41,8 @@ export default combineReducers({
   ngoAll: ngoListReducer,
   ngoUpdate: ngoUpdateReducer,
   ngoAdd: ngoAddReducer,
+  childById: childByIdReducer,
+  childAll: childListReducer,
+  childUpdate: childUpdateReducer,
+  childAdd: childAddReducer,
 });
