@@ -11,6 +11,7 @@ import {
   swMigrateReducer,
 } from './socialWorkerReducer';
 import { userLoginReducer } from './userReducer';
+import { childListReducer } from './childReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -24,4 +25,5 @@ export default combineReducers({
   swUpdate: swUpdateReducer,
   swAdd: swAddReducer,
   swMigrate: swMigrateReducer,
+  childAll: childListReducer,
 });
