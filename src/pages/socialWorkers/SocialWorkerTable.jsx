@@ -347,7 +347,7 @@ const SocialWorkerTable = ({ swList }) => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swList.length) : 0;
   return (
-    <PageContainer title="Social Worker Table" description="this is Social Worker Table page">
+    <PageContainer title="Social Worker Table">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}

@@ -23,7 +23,7 @@ const SocialWorkerList = () => {
         </Grid>
       ) : (
         success && (
-          <PageContainer title="Login" description="this is Login page">
+          <PageContainer title="SW" description="this is SW page">
             <Grid>
               <SocialWorkerTable swList={swList} />
             </Grid>
