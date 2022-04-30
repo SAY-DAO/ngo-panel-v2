@@ -26,7 +26,7 @@ const NgoList = () => {
         </Grid>
       ) : (
         success && (
-          <PageContainer title="Login" description="this is Login page">
+          <PageContainer>
             <Grid>
               <NgoTable ngoList={ngoList} />
             </Grid>

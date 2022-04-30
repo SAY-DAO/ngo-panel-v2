@@ -94,12 +94,6 @@ function EnhancedTableHead(props) {
       disablePadding: false,
       label: t('ngo.phoneNumber'),
     },
-    // {
-    //   id: 'postalAddress',
-    //   numeric: false,
-    //   disablePadding: false,
-    //   label: t('ngo.postalAddress'),
-    // },
     {
       id: 'country',
       numeric: false,
@@ -262,7 +256,7 @@ const BCrumb = [
     title: 'Home',
   },
   {
-    title: 'Social Worker Table',
+    title: 'NGOs Table',
   },
 ];
 
@@ -335,7 +329,7 @@ const NgoTable = ({ ngoList }) => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
   return (
-    <PageContainer title="Social Worker Table" description="this is Social Worker Table page">
+    <PageContainer title="NGO Table" description="this is NGO page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
@@ -459,11 +453,6 @@ const NgoTable = ({ ngoList }) => {
                                 {row.phoneNumber}
                               </Typography>
                             </TableCell>
-                            {/* <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="600">
-                                {row.postalAddress}
-                              </Typography>
-                            </TableCell> */}
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.city.countryName}
