@@ -38,8 +38,8 @@ import { AddNgo } from '../../redux/actions/ngoAction';
 
 const BCrumb = [
   {
-    to: '/sw/list',
-    title: 'Social Workers List',
+    to: '/child/list',
+    title: 'Children List',
   },
   {
     title: 'Add',

@@ -39,8 +39,8 @@ import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 
 const BCrumb = [
   {
-    to: '/ngo/list',
-    title: 'NGOs List',
+    to: '/child/list',
+    title: 'Children List',
   },
   {
     title: 'Edit',

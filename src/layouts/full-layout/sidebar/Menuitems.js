@@ -63,18 +63,18 @@ const Menuitems = [
   {
     title: 'Needs',
     icon: <InterestsIcon />,
-    href: '/needs',
+    href: '/need',
     collapse: true,
     children: [
       {
         title: 'List',
         icon: 'list',
-        href: '/needs/list',
+        href: '/need/list',
       },
       {
         title: 'Add',
         icon: 'edit',
-        href: '/needs/add',
+        href: '/need/add',
       },
     ],
   },

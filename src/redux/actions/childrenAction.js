@@ -17,26 +17,27 @@ import {
   UPDATE_CHILD_SUCCESS,
 } from '../constants/childrenConstants';
 
-export const fetchChildById = (id) => async (dispatch, getState) => {
+export const fetchMyChildById = (childId) => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_BY_ID_REQUEST });
+
     const {
       userLogin: { userInfo },
     } = getState();
-
     const config = {
       headers: {
         'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
+        Authorization: userInfo && userInfo.accessToken,
       },
     };
-    const { data } = await publicApi.get(`/ngo/ngoId=${id}`, config);
+    const { data } = await publicApi.get(`/child/childId=${childId}&confirm=1`, config);
 
     dispatch({
       type: CHILD_BY_ID_SUCCESS,
       payload: data,
     });
   } catch (e) {
+    // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_BY_ID_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
@@ -44,32 +45,35 @@ export const fetchChildById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const fetchChildList = () => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CHILD_LIST_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
+export const fetchChildList =
+  ({ ngoId }) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: CHILD_LIST_REQUEST });
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-    const { data } = await publicApi.get(`/ngo/all`, config);
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+        },
+      };
+      // [0]for not confirmed children only, [1]for confirmed children only, [2]for both confirmed and not confirmed children
+      const { data } = await publicApi.get(`/child/all/confirm=${2}?ngo_id=${ngoId}`, config);
 
-    dispatch({
-      type: CHILD_LIST_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    dispatch({
-      type: CHILD_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
-    });
-  }
-};
+      dispatch({
+        type: CHILD_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: CHILD_LIST_FAIL,
+        payload: e.response && e.response.status ? e.response : e.message,
+      });
+    }
+  };
 
 export const updateChildIsActive = (id, status) => async (dispatch, getState) => {
   try {

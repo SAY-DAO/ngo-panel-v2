@@ -10,21 +10,24 @@ const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 
 /* ****Pages***** */
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
-const SocialWorkerList = Loadable(lazy(() => import('../pages/socialWorker/SocialWorkerList')));
-const SocialWorkerEdit = Loadable(lazy(() => import('../pages/socialWorker/SocialWorkerEdit')));
-const SocialWorkerAdd = Loadable(lazy(() => import('../pages/socialWorker/SocialWorkerAdd')));
+const SocialWorkerList = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerList')));
+const SocialWorkerEdit = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerEdit')));
+const SocialWorkerAdd = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerAdd')));
 const SocialWorkerMigrate = Loadable(
-  lazy(() => import('../pages/socialWorker/SocialWorkerMigrate')),
+  lazy(() => import('../pages/socialWorkers/SocialWorkerMigrate')),
 );
 const SocialWorkerProfile = Loadable(
-  lazy(() => import('../pages/socialWorker/SocialWorkerProfile')),
+  lazy(() => import('../pages/socialWorkers/SocialWorkerProfile')),
 );
-const NgoList = Loadable(lazy(() => import('../pages/ngo/NgoList')));
-const NgoEdit = Loadable(lazy(() => import('../pages/ngo/NgoEdit')));
-const NgoAdd = Loadable(lazy(() => import('../pages/ngo/NgoAdd')));
+const NgoList = Loadable(lazy(() => import('../pages/ngos/NgoList')));
+const NgoEdit = Loadable(lazy(() => import('../pages/ngos/NgoEdit')));
+const NgoAdd = Loadable(lazy(() => import('../pages/ngos/NgoAdd')));
 const ChildrenList = Loadable(lazy(() => import('../pages/children/ChildrenList')));
 const ChildrenEdit = Loadable(lazy(() => import('../pages/children/ChildrenEdit')));
 const ChildrenAdd = Loadable(lazy(() => import('../pages/children/ChildrenAdd')));
+const NeedList = Loadable(lazy(() => import('../pages/needs/NeedList')));
+const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
+const NeedAdd = Loadable(lazy(() => import('../pages/needs/NeedAdd')));
 /* ****Routes***** */
 
 const Router = [
@@ -46,6 +49,9 @@ const Router = [
       { path: '/children/list', exact: true, element: <ChildrenList /> },
       { path: '/children/edit/:id', exact: true, element: <ChildrenEdit /> },
       { path: '/children/add', exact: true, element: <ChildrenAdd /> },
+      { path: '/need/list', exact: true, element: <NeedList /> },
+      { path: '/need/edit/:id', exact: true, element: <NeedEdit /> },
+      { path: '/need/add', exact: true, element: <NeedAdd /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

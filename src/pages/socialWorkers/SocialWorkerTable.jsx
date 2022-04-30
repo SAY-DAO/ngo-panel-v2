@@ -275,7 +275,7 @@ const BCrumb = [
     title: 'Home',
   },
   {
-    title: 'Social Worker Table',
+    title: 'Social Workers Table',
   },
 ];
 
