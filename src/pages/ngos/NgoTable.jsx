@@ -270,6 +270,7 @@ const NgoTable = ({ ngoList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  console.log(ngoList);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
@@ -442,7 +443,19 @@ const NgoTable = ({ ngoList }) => {
                               </Box>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="600">
+                              <Typography
+                                color="textSecondary"
+                                variant="h6"
+                                fontWeight="600"
+                                sx={{
+                                  maxWidth: '400px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  width: '160px',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
                                 {row.phoneNumber}
                               </Typography>
                             </TableCell>
@@ -453,12 +466,12 @@ const NgoTable = ({ ngoList }) => {
                             </TableCell> */}
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.country}
+                                {row.city.countryName}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city}
+                                {row.city.name}
                               </Typography>
                             </TableCell>
                             <TableCell>
