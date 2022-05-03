@@ -597,7 +597,7 @@
     }
   },
   "need": {
-    "action": "Action",
+    "unpayable": "Payable",
     "update": "Edit",
     "imageUrl": "Icon",
     "childSayName": "SAY Name",
@@ -607,7 +607,8 @@
     "paid": "Paid",
     "progress": "Progress",
     "status": "Status",
-    "link": "Retailer",
+    "link": "Link",
+    "affiliateLinkUrl": "Aff. Link",
     "type_name": "Type",
     "isUrgent": "Urgent",
     "information": "Additional Info",

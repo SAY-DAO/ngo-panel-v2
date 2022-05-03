@@ -287,7 +287,7 @@ const SocialWorkerTable = ({ swList }) => {
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
+  const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleRequestSort = (event, property) => {
