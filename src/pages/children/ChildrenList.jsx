@@ -9,12 +9,13 @@ const ChildrenList = () => {
   const dispatch = useDispatch();
 
   const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, loading, success } = ngoAll;
+  const { result, loading, success } = ngoAll;
 
   useEffect(() => {
     dispatch(fetchNgoList());
   }, [dispatch]);
 
+  const ngoList = result ? Object.values(result) : [];
   return (
     <>
       {loading ? (
