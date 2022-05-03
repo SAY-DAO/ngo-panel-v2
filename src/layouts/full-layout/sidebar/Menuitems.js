@@ -1,3 +1,11 @@
+import ChildCareIcon from '@mui/icons-material/ChildCare';
+import InterestsIcon from '@mui/icons-material/Interests';
+import HouseIcon from '@mui/icons-material/House';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import HiveIcon from '@mui/icons-material/Hive';
+import PublicIcon from '@mui/icons-material/Public';
+import React from 'react';
+
 const Menuitems = [
   {
     navlabel: true,
@@ -17,15 +25,33 @@ const Menuitems = [
     href: 'Apps',
   },
   {
+    title: 'My Page',
+    icon: 'user',
+    href: '/my-page',
+    collapse: true,
+    children: [
+      {
+        title: 'View',
+        icon: 'eye',
+        href: '/profile/view',
+      },
+      {
+        title: 'Edit',
+        icon: 'edit',
+        href: '/profile/edit',
+      },
+    ],
+  },
+  {
     title: 'Children',
-    icon: 'users',
+    icon: <ChildCareIcon />,
     href: '/children',
     collapse: true,
     children: [
       {
         title: 'List',
         icon: 'list',
-        href: '/children/mine',
+        href: '/children/list',
       },
       {
         title: 'Add',
@@ -36,31 +62,25 @@ const Menuitems = [
   },
   {
     title: 'Needs',
-    icon: 'users',
-    href: '/needs',
+    icon: <InterestsIcon />,
+    href: '/need',
     collapse: true,
     children: [
       {
         title: 'List',
         icon: 'list',
-        href: '/needs/list',
+        href: '/need/list',
       },
       {
         title: 'Add',
         icon: 'edit',
-        href: '/needs/add',
+        href: '/need/add',
       },
     ],
   },
   {
-    navlabel: true,
-    subheader: 'MY REPORTS',
-    icon: 'mdi mdi-dots-horizontal',
-    href: 'Reports',
-  },
-  {
     title: 'Reports',
-    icon: 'users',
+    icon: <MenuBookIcon />,
     href: '/reports',
     collapse: true,
     children: [
@@ -83,7 +103,25 @@ const Menuitems = [
     href: 'Reports',
   },
   {
-    title: 'Social Worker',
+    title: 'NGOs',
+    icon: <HouseIcon />,
+    href: '/ngo',
+    collapse: true,
+    children: [
+      {
+        title: 'List',
+        icon: 'list',
+        href: '/ngo/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/ngo/add',
+      },
+    ],
+  },
+  {
+    title: 'Social Workers',
     icon: 'users',
     href: '/sws',
     collapse: true,
@@ -91,24 +129,55 @@ const Menuitems = [
       {
         title: 'List',
         icon: 'list',
-        href: '/admin/sws/list',
+        href: '/sw/list',
       },
       {
         title: 'Add',
-        icon: 'edit',
-        href: '/admin/sws/add',
+        icon: 'plus',
+        href: '/sw/add',
+      },
+      {
+        title: 'Migrate',
+        icon: 'shuffle',
+        href: '/sw/migrate',
       },
     ],
   },
   {
     title: 'Catagories',
-    icon: 'pie-chart',
+    icon: <HiveIcon />,
     href: '/admin/catagories',
+    collapse: true,
+    children: [
+      {
+        title: 'List',
+        icon: 'list',
+        href: '/categories/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/categories/add',
+      },
+    ],
   },
   {
-    title: 'NGOs',
-    icon: 'pie-chart',
-    href: '/admin/ngos',
+    title: 'Countries',
+    icon: <PublicIcon />,
+    href: '/admin/countries',
+    collapse: true,
+    children: [
+      {
+        title: 'List',
+        icon: 'list',
+        href: '/countries/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/countries/add',
+      },
+    ],
   },
 ];
 

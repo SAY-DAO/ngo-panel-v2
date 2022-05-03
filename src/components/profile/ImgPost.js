@@ -14,8 +14,7 @@ import {
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import CommentsCard from './CommentsCard';
-import img1 from '../../assets/images/users/user2.jpg';
-import img2 from '../../assets/images/backgrounds/post-img.jpg';
+import img1 from '../../assets/images/user2.svg';
 
 const options = ['Action', 'Another Action', 'Something else here'];
 
@@ -151,7 +150,7 @@ const ImgPost = () => {
           </Typography>
         </CardContent>
 
-        <img srcSet={`${img2} 1x, ${img2} 2x`} alt={img2} width="100%" />
+        <img srcSet={`${img1} 1x, ${img1} 2x`} alt={img1} width="100%" />
         <Box
           sx={{
             display: {

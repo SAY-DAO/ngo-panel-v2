@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, CardContent, Typography, Button, Link, Tooltip } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import BasePost from './BasePost';
-import img1 from '../../assets/images/users/user2.jpg';
+import img1 from '../../assets/images/user2.svg';
 
 const TypographyPost = () => (
   <BasePost img={img1} username="Julia Roberts" time="38 minutes ago">

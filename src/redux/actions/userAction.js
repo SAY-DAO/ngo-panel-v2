@@ -64,7 +64,6 @@ export const register = (userName, password, theKey, value, otp) => async (dispa
 
 export const login = (userName, password) => async (dispatch) => {
   try {
-    console.log('huh?');
     dispatch({ type: USER_LOGIN_REQUEST });
     const config = {
       headers: {
@@ -139,7 +138,7 @@ export const resetPassword = (password) => async (dispatch, getState) => {
     const config = {
       headers: {
         'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.accessToken,
+        Authorization: userInfo && userInfo.access_token,
       },
     };
 
@@ -172,7 +171,7 @@ export const userEditProfile =
       const config = {
         headers: {
           'Content-type': 'application/json',
-          Authorization: userInfo && userInfo.accessToken,
+          Authorization: userInfo && userInfo.access_token,
         },
       };
 

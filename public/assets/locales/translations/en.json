@@ -515,5 +515,112 @@
     "address": "4th Floor, No 22, Azarshahr St, Iranshahr St, Karimkhan Zand St, Tehran, Iran",
     "phoneNumber": "Tel: <1>0 2 1 - 2 2 3 4 7 8 1 4</1>",
     "download": "Download Report"
+  },
+  "socialWorker": {
+    "isActive": "Status",
+    "isCoordinator": "Coordinator Status",
+    "update": "Edit",
+    "updated": "Successfully Updated!",
+    "migrated": "Successfully Migrated!",
+    "titleEdit": "Edit Details",
+    "titleAdd": "Add Details",
+    "generatedCode": "Code",
+    "name": "First Name",
+    "lastName": "Last Name",
+    "nameAndEmail": "Name & Email",
+    "userName": "User Name",
+    "avatarUrl": "Avatar",
+    "typeName": "Type",
+    "ngoName": "NGO",
+    "idNumber": "ID Number",
+    "idCardUrl": "ID Image",
+    "country": "Country",
+    "city": "City",
+    "typeId": "User Permission",
+    "birthDate": "Birthday",
+    "phoneNumber": "Phone Number",
+    "emergencyPhoneNumber": "Urgent Phone",
+    "email": "Email",
+    "telegramId": "Telegram ID",
+    "postalAddress": "Address",
+    "childCount": "Children Count",
+    "needCount": "Needs Count",
+    "lastLoginDate": "Last Log",
+    "button": {
+      "update": "Update",
+      "migrate": "Migrate"
+    },
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "SOCIAL_WORKER": "Social Worker",
+      "COORDINATOR": "Coordinator",
+      "NGO_SUPERVISOR": "NGO Supervisor",
+      "SAY_SUPERVISOR": "SAY Supervisor",
+      "ADMIN": "Admin",
+      "USER": "User"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
+  },
+  "ngo": {
+    "isActive": "Status",
+    "update": "Edit",
+    "titleEdit": "Edit Details",
+    "childrenCount": "Children Count",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "currentChildrenCount": "Current Children Count",
+    "socialWorkerCount": "SW Count",
+    "currentSocialWorkerCount": "Current SW Count",
+    "emailAddress": "Email",
+    "id": "Id",
+    "name": "Name",
+    "phoneNumber": "Phone Number",
+    "postalAddress": "Address",
+    "registerDate": "Registered",
+    "created": "Created",
+    "updated": "Updated",
+    "website": "website",
+    "button": {
+      "update": "Update"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
+  },
+  "need": {
+    "unpayable": "Payable",
+    "update": "Edit",
+    "imageUrl": "Icon",
+    "childSayName": "SAY Name",
+    "name": "Need Name",
+    "title": "Title",
+    "cost": "Cost",
+    "paid": "Paid",
+    "progress": "Progress",
+    "status": "Status",
+    "link": "Link",
+    "affiliateLinkUrl": "Aff. Link",
+    "type_name": "Type",
+    "isUrgent": "Urgent",
+    "information": "Additional Info",
+    "details": "Social Worker Notes",
+    "category": "Category",
+    "description": "Description",
+    "created": "Created At",
+    "isConfirmed": "Confirm",
+    "confirmUser": "Confirmed By",
+    "confirmDate": "Confirmed At",
+    "updated": " Last Edit",
+    "doneAt": "Done At",
+    "child_delivery_date": "Delivery To Child"
   }
 }

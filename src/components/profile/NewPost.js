@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
-import img1 from '../../assets/images/users/user2.jpg';
+import img1 from '../../assets/images/user2.svg';
 
 const NewPost = () => (
   <Card

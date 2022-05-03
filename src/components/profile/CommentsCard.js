@@ -1,9 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button, Avatar, Link, Divider, Tooltip } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
-import img1 from '../../assets/images/users/1.jpg';
-import img2 from '../../assets/images/users/2.jpg';
-import img3 from '../../assets/images/users/3.jpg';
+import img1 from '../../assets/images/user2.svg';
 
 const LinkStyles1 = {
   ml: {
@@ -43,7 +41,7 @@ const CommentsCard = () => (
       }}
     >
       <Avatar
-        src={img2}
+        src={img1}
         sx={{
           width: '50px',
           height: '50px',
@@ -152,7 +150,7 @@ const CommentsCard = () => (
       }}
     >
       <Avatar
-        src={img3}
+        src={img1}
         sx={{
           width: '50px',
           height: '50px',

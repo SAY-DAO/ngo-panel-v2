@@ -1,8 +1,7 @@
 import React from 'react';
 import { Grid, Box, Card, CardContent, Typography, Button, Avatar } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
-import profilecover from '../../assets/images/backgrounds/profilebg.jpg';
-import userimg from '../../assets/images/users/user2.jpg';
+import cover from '../../assets/images/cover.jpg';
 
 const CoverCard = () => (
   <Card
@@ -10,7 +9,7 @@ const CoverCard = () => (
       padding: '0',
     }}
   >
-    <img srcSet={`${profilecover} 1x, ${profilecover} 2x`} alt={profilecover} width="100%" />
+    <img srcSet={`${cover} 1x, ${cover} 2x`} alt={cover} width="100%" />
     <CardContent
       sx={{
         pt: '24px',
@@ -190,8 +189,8 @@ const CoverCard = () => (
                 }}
               >
                 <Avatar
-                  src={userimg}
-                  alt={userimg}
+                  src={cover}
+                  alt={cover}
                   sx={{
                     borderRadius: '50%',
                     width: '96px',

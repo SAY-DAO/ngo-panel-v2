@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 
 import { Select, MenuItem, InputBase } from '@mui/material';
@@ -18,7 +18,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 const ThemeSelect = () => {
-  const [age, setAge] = React.useState('10');
+  const [age, setAge] = useState('10');
 
   const handleChange = (event) => {
     setAge(event.target.value);
