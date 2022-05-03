@@ -595,5 +595,32 @@
     "countries": {
       "one": "Iran"
     }
+  },
+  "need": {
+    "unpayable": "Payable",
+    "update": "Edit",
+    "imageUrl": "Icon",
+    "childSayName": "SAY Name",
+    "name": "Need Name",
+    "title": "Title",
+    "cost": "Cost",
+    "paid": "Paid",
+    "progress": "Progress",
+    "status": "Status",
+    "link": "Link",
+    "affiliateLinkUrl": "Aff. Link",
+    "type_name": "Type",
+    "isUrgent": "Urgent",
+    "information": "Additional Info",
+    "details": "Social Worker Notes",
+    "category": "Category",
+    "description": "Description",
+    "created": "Created At",
+    "isConfirmed": "Confirm",
+    "confirmUser": "Confirmed By",
+    "confirmDate": "Confirmed At",
+    "updated": " Last Edit",
+    "doneAt": "Done At",
+    "child_delivery_date": "Delivery To Child"
   }
 }

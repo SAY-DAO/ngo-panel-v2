@@ -287,7 +287,7 @@ const SocialWorkerTable = ({ swList }) => {
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
+  const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleRequestSort = (event, property) => {
@@ -347,7 +347,7 @@ const SocialWorkerTable = ({ swList }) => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swList.length) : 0;
   return (
-    <PageContainer title="Social Worker Table" description="this is Social Worker Table page">
+    <PageContainer title="Social Worker Table">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}

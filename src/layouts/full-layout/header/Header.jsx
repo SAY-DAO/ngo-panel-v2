@@ -39,16 +39,16 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     }
   }, [successLogin]);
 
+  useEffect(() => {
+    if (!successSwDetails) {
+      dispatch(fetchSocialWorkerProfile());
+    }
+  }, [successSwDetails]);
+
   // if mot active log out
   useEffect(() => {
     if (successSwDetails && !swInfo.isActive) {
       dispatch(logout());
-    }
-  }, [successSwDetails]);
-
-  useEffect(() => {
-    if (!successSwDetails) {
-      dispatch(fetchSocialWorkerProfile());
     }
   }, [successSwDetails]);
 

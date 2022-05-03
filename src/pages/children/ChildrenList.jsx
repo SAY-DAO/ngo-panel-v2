@@ -1,6 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable guard-for-in */
-/* eslint-disable array-callback-return */
 import React, { useEffect } from 'react';
 import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +23,7 @@ const ChildrenList = () => {
         </Grid>
       ) : (
         success && (
-          <PageContainer title="Login" description="this is Login page">
+          <PageContainer title="Children" description="this is Children page">
             <Grid>
               <ChildrenTable ngoList={ngoList} />
             </Grid>
