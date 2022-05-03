@@ -19,3 +19,10 @@ export const childListReducer = (state = { success: false }, action) => {
       return state;
   }
 };
+
+export const childByIdReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};

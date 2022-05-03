@@ -3,6 +3,9 @@ import {
   CHILD_LIST_REQUEST,
   CHILD_LIST_SUCCESS,
   CHILD_LIST_FAIL,
+  CHILD_BY_ID_REQUEST,
+  // CHILD_BY_ID_SUCCESS,
+  CHILD_BY_ID_FAIL,
 } from '../constants/childConstant';
 
 export const fetchChildList = () => async (dispatch, getState) => {
@@ -27,6 +30,20 @@ export const fetchChildList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: CHILD_LIST_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
+export const fetchChildById = () => async (dispatch) => {
+  try {
+    dispatch({ type: CHILD_BY_ID_REQUEST });
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
+  } catch (e) {
+    dispatch({
+      type: CHILD_BY_ID_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
     });
   }

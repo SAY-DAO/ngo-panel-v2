@@ -43,7 +43,7 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/NgoAction';
+import { fetchNgoList } from '../../redux/actions/ngoAction';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 
 const BCrumb = [

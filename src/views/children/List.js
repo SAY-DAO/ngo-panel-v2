@@ -7,16 +7,19 @@ import { fetchChildList } from '../../redux/actions/childAction';
 
 const ChildrenList = () => {
   const dispatch = useDispatch();
-  const { checkResult, loading, success } = useSelector((state) => state.fetchChildList);
+  const childrenAll = useSelector((state) => state.fetchChildList);
+  const { childList, loading, success } = childrenAll;
   useEffect(() => {
     dispatch(fetchChildList());
   }, [dispatch]);
+
+  console.log(childrenAll);
 
   return (
     <PageContainer>
       <ChildCard />
     </PageContainer>
   );
-};
+};;;
 
 export default ChildrenList;
