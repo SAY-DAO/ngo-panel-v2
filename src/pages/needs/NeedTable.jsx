@@ -40,6 +40,8 @@ import PageContainer from '../../components/container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { fetchChildList, fetchChildNeeds } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
+import LinearNeedStats from '../../components/analytics/LinearNeedStats';
+import PieChart from '../../components/container/PieChart';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -477,7 +479,7 @@ const NeedTable = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <Autocomplete
             id="asynchronous-ngo"
@@ -553,10 +555,22 @@ const NeedTable = () => {
         successChildren &&
         successChildrenNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
+            <Grid container direction="row">
+              <Grid item xs={6}>
+                <LinearNeedStats
+                  needsArray={theNeeds.needs}
+                  totalNeeds={parseInt(theNeeds.total_count, 10)}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <PieChart />
+              </Grid>
+            </Grid>
+
             <CardContent>
               <Box>
                 <Paper sx={{ mb: 2 }}>
-                  <EnhancedTableToolbar numSelected={selected.length} />
+                  {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
                   <TableContainer>
                     <Table
                       sx={{ minWidth: 750 }}
@@ -655,7 +669,7 @@ const NeedTable = () => {
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
-                                  <Tooltip title={row.title} placement="top-end">
+                                  <Tooltip title={row.title ? row.title : ''} placement="top-end">
                                     <Typography
                                       color="textSecondary"
                                       variant="body1"
@@ -737,13 +751,24 @@ const NeedTable = () => {
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
-                                  <Typography
-                                    color="textSecondary"
-                                    variant="body1"
-                                    fontWeight="400"
+                                  <Tooltip
+                                    title={row.details ? row.details : ''}
+                                    placement="top-end"
                                   >
-                                    {row.details}
-                                  </Typography>
+                                    <Typography
+                                      variant="h6"
+                                      sx={{
+                                        maxWidth: '400px',
+                                        textOverflow: 'ellipsis',
+                                        overflow: 'hidden',
+                                        width: '160px',
+                                        height: '1.2em',
+                                        whiteSpace: 'nowrap',
+                                      }}
+                                    >
+                                      {row.details}
+                                    </Typography>
+                                  </Tooltip>
                                 </TableCell>
                                 <TableCell>
                                   <Typography
@@ -755,7 +780,10 @@ const NeedTable = () => {
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
-                                  <Tooltip title={row.description} placement="top-end">
+                                  <Tooltip
+                                    title={row.description ? row.description : ''}
+                                    placement="top-end"
+                                  >
                                     <Typography
                                       variant="h6"
                                       sx={{
