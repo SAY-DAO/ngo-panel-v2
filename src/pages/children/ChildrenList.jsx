@@ -1,38 +1,125 @@
-import React, { useEffect } from 'react';
-import { CircularProgress, Grid } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { CircularProgress, Grid, Autocomplete, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+
 import PageContainer from '../../components/container/PageContainer';
+import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
+
+import { fetchChildList } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
-import ChildrenTable from './ChildrenTable';
+// import ChildrenTable from './ChildrenTable';
+
+const BCrumb = [
+  {
+    to: '/',
+    title: 'Home',
+  },
+  {
+    title: 'Children Table',
+  },
+];
 
 const ChildrenList = () => {
   const dispatch = useDispatch();
 
+  const [openNgo, setOpenNgo] = useState(false);
+  const [optionsNgo, setOptionsNgo] = useState([]);
+  const loadingNgo = openNgo && optionsNgo.length === 0;
+
+  const [ngoId, setNgoId] = useState();
+
   const ngoAll = useSelector((state) => state.ngoAll);
-  const { result, loading, success } = ngoAll;
+  const { ngoList, success: successNgoList } = ngoAll;
+  // const ngoListArr = ngoList ? Object.values(ngoList) : [];
 
+  const childAll = useSelector((state) => state.childAll);
+  const { childList, success: successChildren } = childAll;
+  console.log(childList, successChildren, ngoId);
+
+  // children
   useEffect(() => {
-    dispatch(fetchNgoList());
-  }, [dispatch]);
+    if (ngoId) {
+      dispatch(fetchChildList({ ngoId }));
+    }
+  }, [ngoId]);
 
-  const ngoList = result ? Object.values(result) : [];
+  // Autocomplete ngo
+  useEffect(() => {
+    let active = true;
+    if (!loadingNgo) {
+      return undefined;
+    }
+    if (active && successNgoList) {
+      setOptionsNgo([...ngoList]);
+    }
+    return () => {
+      active = false;
+    };
+  }, [loadingNgo, successNgoList]);
+
+  // ngo open
+  useEffect(() => {
+    if (!openNgo) {
+      setOptionsNgo([]);
+    } else {
+      dispatch(fetchNgoList());
+    }
+  }, [openNgo]);
+
   return (
     <>
-      {loading ? (
+      {/* {loading ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        success && (
-          <PageContainer title="Children" description="this is Children page">
-            <Grid>
-              <ChildrenTable ngoList={ngoList} />
-            </Grid>
-          </PageContainer>
-        )
-      )}
+        success &&
+        ngoListArr && ( */}
+      <PageContainer title="Children" description="this is Children page">
+        {/* breadcrumb */}
+        <Breadcrumb items={BCrumb} />
+        {/* end breadcrumb */}
+        <Grid container spacing={2}>
+          <Grid item>
+            <Autocomplete
+              id="asynchronous-ngo"
+              sx={{ width: 300 }}
+              open={openNgo}
+              onOpen={() => {
+                setOpenNgo(true);
+              }}
+              onClose={() => {
+                setOpenNgo(false);
+              }}
+              onChange={(e, value) => setNgoId(value && value.id)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) => `${option.id} - ${option.name}`}
+              options={optionsNgo}
+              loading={loadingNgo}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ngo"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+          </Grid>
+          {/* <ChildrenTable ngoList={ngoListArr} /> */}
+        </Grid>
+      </PageContainer>
+      {/* )
+      )} */}
     </>
   );
-};
+};;
 
 export default ChildrenList;

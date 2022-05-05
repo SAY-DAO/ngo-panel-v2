@@ -284,7 +284,7 @@ const ChildrenTable = ({ ngoList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = ngoList.map((n) => n.firstName);
+      const newSelecteds = ngoList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -360,13 +360,13 @@ const ChildrenTable = ({ ngoList }) => {
                     {stableSort(ngoList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
-                        const isItemSelected = isSelected(row.firstName);
+                        const isItemSelected = isSelected(row.name);
                         const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
                           <TableRow
                             hover
-                            onClick={(event) => handleClick(event, row.firstName)}
+                            onClick={(event) => handleClick(event, row.name)}
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}
@@ -395,7 +395,7 @@ const ChildrenTable = ({ ngoList }) => {
                                     width: '10px',
                                   }}
                                 />
-                                <Typography
+                                {/* <Typography
                                   color="textSecondary"
                                   variant="body1"
                                   fontWeight="400"
@@ -404,7 +404,7 @@ const ChildrenTable = ({ ngoList }) => {
                                   }}
                                 >
                                   {row.status}
-                                </Typography>
+                                </Typography> */}
                               </Box>
                             </TableCell>
                             <TableCell>
@@ -455,11 +455,11 @@ const ChildrenTable = ({ ngoList }) => {
                                 {row.country}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.city}
                               </Typography>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>
                               <Typography variant="h6">{row.childrenCount}</Typography>
                             </TableCell>
