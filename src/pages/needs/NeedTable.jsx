@@ -33,7 +33,6 @@ import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useNavigate } from 'react-router-dom';
-import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
@@ -41,7 +40,7 @@ import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { fetchChildList, fetchChildNeeds } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
-import PieChart from '../../components/container/PieChart';
+import PieChart from '../../components/analytics/PieChart';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -72,12 +71,18 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
 
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   const headCells = [
+    {
+      id: 'id',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.id'),
+    },
     {
       id: 'isConfirmed',
       numeric: false,
@@ -233,16 +238,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <CustomCheckbox
-            color="primary"
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputprops={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -272,12 +267,9 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
 };
 
 const EnhancedTableToolbar = (props) => {
@@ -339,6 +331,8 @@ const NeedTable = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [needsData, setNeedsData] = useState();
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('isConfirmed');
   const [selected, setSelected] = useState([]);
@@ -378,6 +372,34 @@ const NeedTable = () => {
       dispatch(fetchChildNeeds(childId));
     }
   }, [childId]);
+
+  // sort needs
+  // urgent ==> index 0
+  // growth 0 ==> index 1
+  // joy 1 ==> index 2
+  // health 2 ==> index 3
+  // surroundings 3 ==> index 4
+  // isDone ==> index 5
+  // isConfirmed ==> index 6
+  // unpayable ==> index 7
+  useEffect(() => {
+    if (successChildrenNeeds) {
+      const needData = [[], [], [], [], [], [], [], []];
+      for (let i = 0; i < theNeeds.needs.length; i += 1) {
+        if (theNeeds.needs[i].isUrgent) {
+          needData[0].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].isDone) {
+          needData[5].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].isConfirmed) {
+          needData[6].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].unpayable) {
+          needData[7].push(theNeeds.needs[i]);
+        }
+        needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
+      }
+      setNeedsData(needData);
+    }
+  }, [childId, successChildrenNeeds]);
 
   // Autocomplete ngo
   useEffect(() => {
@@ -433,6 +455,20 @@ const NeedTable = () => {
     }
     setSelected([]);
   };
+
+  // sort children by isConfirmed
+  useEffect(() => {
+    if (theNeeds) {
+      // ✅ true values first
+      const trueFirst = childList.children.sort(
+        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
+      );
+
+      // 👇️ [{bool: true}, {bool: true}, {bool: false}, {bool: false}]
+      console.log('trueFirst');
+      console.log(trueFirst);
+    }
+  }, [theNeeds]);
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -526,7 +562,23 @@ const NeedTable = () => {
             }}
             onChange={(e, value) => setChildId(value && value.id)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) => `${option.id} - ${option.sayName}`}
+            getOptionLabel={(option) =>
+              option.isConfirmed
+                ? `${option.id} - ${option.sayName}`
+                : `${option.id} - ${option.sayName}`
+            }
+            renderOption={(props, option) => (
+              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                {option.isConfirmed ? (
+                  `${option.id} - ${option.sayName}`
+                ) : (
+                  <>
+                    <FeatherIcon icon="check" width="18" />
+                    <Typography>{`${option.id} - ${option.sayName} `}</Typography>
+                  </>
+                )}
+              </Box>
+            )}
             options={successNgoList && ngoId ? options : []}
             loading={loading}
             renderInput={(params) => (
@@ -552,18 +604,23 @@ const NeedTable = () => {
           <CircularProgress />
         </Grid>
       ) : (
+        needsData &&
         successChildren &&
         successChildrenNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
             <Grid container direction="row">
-              <Grid item xs={6}>
+              <Grid item xs={12} md={4}>
                 <LinearNeedStats
-                  needsArray={theNeeds.needs}
+                  needsData={needsData}
                   totalNeeds={parseInt(theNeeds.total_count, 10)}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <PieChart />
+              <Grid item xs={12} md={8}>
+                <PieChart
+                  donaNeeds={needsData[5]}
+                  allNeeds={theNeeds.needs}
+                  totalNeeds={parseInt(theNeeds.total_count, 10)}
+                />
               </Grid>
             </Grid>
 
@@ -588,9 +645,9 @@ const NeedTable = () => {
                       <TableBody>
                         {stableSort(theNeeds.needs, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                          .map((row, index) => {
+                          .map((row) => {
                             const isItemSelected = isSelected(row.name);
-                            const labelId = `enhanced-table-checkbox-${index}`;
+                            const labelId = `${row.id}`;
 
                             return (
                               <TableRow
@@ -603,13 +660,9 @@ const NeedTable = () => {
                                 selected={isItemSelected}
                               >
                                 <TableCell padding="checkbox">
-                                  <CustomCheckbox
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputprops={{
-                                      'aria-labelledby': labelId,
-                                    }}
-                                  />
+                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                    {labelId}
+                                  </Typography>
                                 </TableCell>
                                 <TableCell>
                                   <Switch
@@ -623,7 +676,7 @@ const NeedTable = () => {
                                     <Box
                                       sx={{
                                         backgroundColor:
-                                          row.unpayable === true
+                                          row.unpayable === false
                                             ? (theme) => theme.palette.success.main
                                             : (theme) => theme.palette.error.main,
                                         borderRadius: '100%',
