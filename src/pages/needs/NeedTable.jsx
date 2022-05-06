@@ -33,13 +33,14 @@ import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useNavigate } from 'react-router-dom';
-import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { fetchChildList, fetchChildNeeds } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
+import LinearNeedStats from '../../components/analytics/LinearNeedStats';
+import PieChart from '../../components/analytics/PieChart';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -70,12 +71,18 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
 
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   const headCells = [
+    {
+      id: 'id',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.id'),
+    },
     {
       id: 'isConfirmed',
       numeric: false,
@@ -231,16 +238,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <CustomCheckbox
-            color="primary"
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputprops={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -270,12 +267,9 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
 };
 
 const EnhancedTableToolbar = (props) => {
@@ -337,12 +331,13 @@ const NeedTable = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [needsData, setNeedsData] = useState();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('isConfirmed');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [ngoId, setNgoId] = useState();
   const [childId, setChildId] = useState();
@@ -377,6 +372,34 @@ const NeedTable = () => {
     }
   }, [childId]);
 
+  // sort needs
+  // urgent ==> index 0
+  // growth 0 ==> index 1
+  // joy 1 ==> index 2
+  // health 2 ==> index 3
+  // surroundings 3 ==> index 4
+  // isDone ==> index 5
+  // isConfirmed ==> index 6
+  // unpayable ==> index 7
+  useEffect(() => {
+    if (successChildrenNeeds) {
+      const needData = [[], [], [], [], [], [], [], []];
+      for (let i = 0; i < theNeeds.needs.length; i += 1) {
+        if (theNeeds.needs[i].isUrgent) {
+          needData[0].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].isDone) {
+          needData[5].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].isConfirmed) {
+          needData[6].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].unpayable) {
+          needData[7].push(theNeeds.needs[i]);
+        }
+        needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
+      }
+      setNeedsData(needData);
+    }
+  }, [childId, successChildrenNeeds]);
+
   // Autocomplete ngo
   useEffect(() => {
     let active = true;
@@ -407,7 +430,11 @@ const NeedTable = () => {
       return undefined;
     }
     if (active && successChildren) {
-      setOptions([...childList.children]);
+      // sort children
+      const sortedChildren = childList.children.sort(
+        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
+      );
+      setOptions([...sortedChildren]);
     }
     return () => {
       active = false;
@@ -422,6 +449,7 @@ const NeedTable = () => {
       dispatch(fetchChildList({ ngoId }));
     }
   }, [open, openNgo, ngoId]);
+
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -477,7 +505,7 @@ const NeedTable = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <Autocomplete
             id="asynchronous-ngo"
@@ -524,7 +552,26 @@ const NeedTable = () => {
             }}
             onChange={(e, value) => setChildId(value && value.id)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) => `${option.id} - ${option.sayName}`}
+            getOptionLabel={(option) =>
+              option.isConfirmed
+                ? `${option.id} - ${option.sayName}`
+                : `${option.id} - ${option.sayName}`
+            }
+            renderOption={(props, option) => (
+              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                {option.isConfirmed ? (
+                  <>
+                    <FeatherIcon color="green" icon="check" width="18" />
+                    <Typography>{`${option.id} - ${option.sayName}`}</Typography>
+                  </>
+                ) : (
+                  <>
+                    <FeatherIcon color="red" icon="x" width="18" />
+                    <Typography>{`${option.id} - ${option.sayName} `}</Typography>
+                  </>
+                )}
+              </Box>
+            )}
             options={successNgoList && ngoId ? options : []}
             loading={loading}
             renderInput={(params) => (
@@ -550,18 +597,37 @@ const NeedTable = () => {
           <CircularProgress />
         </Grid>
       ) : (
+        needsData &&
         successChildren &&
         successChildrenNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
+            <Grid container direction="row">
+              <Grid item xs={12} md={4}>
+                <LinearNeedStats
+                  needsData={needsData}
+                  totalNeeds={parseInt(theNeeds.total_count, 10)}
+                />
+              </Grid>
+              <Grid item xs={12} md={8}>
+                <PieChart
+                  donaNeeds={needsData[5]}
+                  allNeeds={theNeeds.needs}
+                  totalNeeds={parseInt(theNeeds.total_count, 10)}
+                />
+              </Grid>
+            </Grid>
+
             <CardContent>
               <Box>
                 <Paper sx={{ mb: 2 }}>
-                  <EnhancedTableToolbar numSelected={selected.length} />
-                  <TableContainer>
+                  {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
+                  <TableContainer sx={{ maxHeight: 850 }}>
                     <Table
                       sx={{ minWidth: 750 }}
                       aria-labelledby="tableTitle"
                       size={dense ? 'small' : 'medium'}
+                      stickyHeader
+                      aria-label="sticky table"
                     >
                       <EnhancedTableHead
                         numSelected={selected.length}
@@ -574,9 +640,9 @@ const NeedTable = () => {
                       <TableBody>
                         {stableSort(theNeeds.needs, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                          .map((row, index) => {
+                          .map((row) => {
                             const isItemSelected = isSelected(row.name);
-                            const labelId = `enhanced-table-checkbox-${index}`;
+                            const labelId = `${row.id}`;
 
                             return (
                               <TableRow
@@ -589,13 +655,9 @@ const NeedTable = () => {
                                 selected={isItemSelected}
                               >
                                 <TableCell padding="checkbox">
-                                  <CustomCheckbox
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputprops={{
-                                      'aria-labelledby': labelId,
-                                    }}
-                                  />
+                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                    {labelId}
+                                  </Typography>
                                 </TableCell>
                                 <TableCell>
                                   <Switch
@@ -609,7 +671,7 @@ const NeedTable = () => {
                                     <Box
                                       sx={{
                                         backgroundColor:
-                                          row.unpayable === true
+                                          row.unpayable === false
                                             ? (theme) => theme.palette.success.main
                                             : (theme) => theme.palette.error.main,
                                         borderRadius: '100%',
@@ -655,7 +717,7 @@ const NeedTable = () => {
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
-                                  <Tooltip title={row.title} placement="top-end">
+                                  <Tooltip title={row.title ? row.title : ''} placement="top-end">
                                     <Typography
                                       color="textSecondary"
                                       variant="body1"
@@ -737,13 +799,24 @@ const NeedTable = () => {
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
-                                  <Typography
-                                    color="textSecondary"
-                                    variant="body1"
-                                    fontWeight="400"
+                                  <Tooltip
+                                    title={row.details ? row.details : ''}
+                                    placement="top-end"
                                   >
-                                    {row.details}
-                                  </Typography>
+                                    <Typography
+                                      variant="h6"
+                                      sx={{
+                                        maxWidth: '400px',
+                                        textOverflow: 'ellipsis',
+                                        overflow: 'hidden',
+                                        width: '160px',
+                                        height: '1.2em',
+                                        whiteSpace: 'nowrap',
+                                      }}
+                                    >
+                                      {row.details}
+                                    </Typography>
+                                  </Tooltip>
                                 </TableCell>
                                 <TableCell>
                                   <Typography
@@ -755,7 +828,10 @@ const NeedTable = () => {
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
-                                  <Tooltip title={row.description} placement="top-end">
+                                  <Tooltip
+                                    title={row.description ? row.description : ''}
+                                    placement="top-end"
+                                  >
                                     <Typography
                                       variant="h6"
                                       sx={{

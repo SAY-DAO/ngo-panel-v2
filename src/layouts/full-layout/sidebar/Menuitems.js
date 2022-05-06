@@ -13,17 +13,7 @@ const Menuitems = [
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
   },
-  {
-    title: 'Analytical',
-    icon: 'pie-chart',
-    href: '/dashboards/analytical',
-  },
-  {
-    navlabel: true,
-    subheader: 'MY PANEL',
-    icon: 'mdi mdi-dots-horizontal',
-    href: 'Apps',
-  },
+
   {
     title: 'My Page',
     icon: 'user',
