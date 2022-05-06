@@ -10,7 +10,6 @@ const LinearNeedStats = ({ needsData, totalNeeds }) => {
   const [stats, setStats] = useState();
 
   useEffect(() => {
-    console.log(needsData);
     if (needsData) {
       setStats([
         {

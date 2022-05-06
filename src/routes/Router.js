@@ -9,7 +9,6 @@ const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 
 /* ****Pages***** */
-const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
 const SocialWorkerList = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerList')));
 const SocialWorkerEdit = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerEdit')));
 const SocialWorkerAdd = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerAdd')));
@@ -35,8 +34,7 @@ const Router = [
     path: '/',
     element: <FullLayout />,
     children: [
-      { path: '/', element: <Navigate to="/dashboards/starter" /> },
-      { path: '/dashboards/starter', exact: true, element: <Dashboard /> },
+      { path: '/', element: <Navigate to="/profile/view" /> },
       { path: '/profile/view', exact: true, element: <SocialWorkerProfile /> },
       { path: '/profile/edit', exact: true, element: <SocialWorkerEdit /> },
       { path: '/sw/list', exact: true, element: <SocialWorkerList /> },

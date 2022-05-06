@@ -332,13 +332,12 @@ const NeedTable = () => {
   const navigate = useNavigate();
 
   const [needsData, setNeedsData] = useState();
-
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('isConfirmed');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [ngoId, setNgoId] = useState();
   const [childId, setChildId] = useState();
@@ -431,7 +430,11 @@ const NeedTable = () => {
       return undefined;
     }
     if (active && successChildren) {
-      setOptions([...childList.children]);
+      // sort children
+      const sortedChildren = childList.children.sort(
+        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
+      );
+      setOptions([...sortedChildren]);
     }
     return () => {
       active = false;
@@ -447,6 +450,7 @@ const NeedTable = () => {
     }
   }, [open, openNgo, ngoId]);
 
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = theNeeds.needs.map((n) => n.name);
@@ -455,20 +459,6 @@ const NeedTable = () => {
     }
     setSelected([]);
   };
-
-  // sort children by isConfirmed
-  useEffect(() => {
-    if (theNeeds) {
-      // ✅ true values first
-      const trueFirst = childList.children.sort(
-        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
-      );
-
-      // 👇️ [{bool: true}, {bool: true}, {bool: false}, {bool: false}]
-      console.log('trueFirst');
-      console.log(trueFirst);
-    }
-  }, [theNeeds]);
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -570,10 +560,13 @@ const NeedTable = () => {
             renderOption={(props, option) => (
               <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                 {option.isConfirmed ? (
-                  `${option.id} - ${option.sayName}`
+                  <>
+                    <FeatherIcon color="green" icon="check" width="18" />
+                    <Typography>{`${option.id} - ${option.sayName}`}</Typography>
+                  </>
                 ) : (
                   <>
-                    <FeatherIcon icon="check" width="18" />
+                    <FeatherIcon color="red" icon="x" width="18" />
                     <Typography>{`${option.id} - ${option.sayName} `}</Typography>
                   </>
                 )}
@@ -628,11 +621,13 @@ const NeedTable = () => {
               <Box>
                 <Paper sx={{ mb: 2 }}>
                   {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-                  <TableContainer>
+                  <TableContainer sx={{ maxHeight: 850 }}>
                     <Table
                       sx={{ minWidth: 750 }}
                       aria-labelledby="tableTitle"
                       size={dense ? 'small' : 'medium'}
+                      stickyHeader
+                      aria-label="sticky table"
                     >
                       <EnhancedTableHead
                         numSelected={selected.length}
