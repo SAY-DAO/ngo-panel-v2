@@ -30,8 +30,6 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
-import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import PageContainer from '../../components/container/PageContainer';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 
 function descendingComparator(a, b, orderBy) {
@@ -256,17 +254,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'Children Table',
-  },
-];
-
-const ChildrenTable = ({ ngoList }) => {
+const ChildrenTable = ({ childList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [order, setOrder] = useState('asc');
@@ -284,7 +272,7 @@ const ChildrenTable = ({ ngoList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = ngoList.map((n) => n.name);
+      const newSelecteds = childList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -331,71 +319,67 @@ const ChildrenTable = ({ ngoList }) => {
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - childList.length) : 0;
   return (
-    <PageContainer>
-      {/* breadcrumb */}
-      <Breadcrumb items={BCrumb} />
-      {/* end breadcrumb */}
-      <Card>
-        <CardContent>
-          <Box>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={dense ? 'small' : 'medium'}
-                >
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={ngoList.length}
-                  />
-                  <TableBody>
-                    {stableSort(ngoList, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row.name);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+    <Card>
+      <CardContent>
+        <Box>
+          <Paper sx={{ width: '100%', mb: 2 }}>
+            <EnhancedTableToolbar numSelected={selected.length} />
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size={dense ? 'small' : 'medium'}
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={childList.length}
+                />
+                <TableBody>
+                  {stableSort(childList, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) => handleClick(event, row.name)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.id}
-                            selected={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <CustomCheckbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputprops={{
-                                  'aria-labelledby': labelId,
+                      return (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.name)}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.id}
+                          selected={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <CustomCheckbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputprops={{
+                                'aria-labelledby': labelId,
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Box display="flex" alignItems="center">
+                              <Box
+                                sx={{
+                                  backgroundColor:
+                                    row.isActive === true
+                                      ? (theme) => theme.palette.success.main
+                                      : (theme) => theme.palette.error.main,
+                                  borderRadius: '100%',
+                                  height: '10px',
+                                  width: '10px',
                                 }}
                               />
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Box
-                                  sx={{
-                                    backgroundColor:
-                                      row.isActive === true
-                                        ? (theme) => theme.palette.success.main
-                                        : (theme) => theme.palette.error.main,
-                                    borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
-                                  }}
-                                />
-                                {/* <Typography
+                              {/* <Typography
                                   color="textSecondary"
                                   variant="body1"
                                   fontWeight="400"
@@ -405,136 +389,135 @@ const ChildrenTable = ({ ngoList }) => {
                                 >
                                   {row.status}
                                 </Typography> */}
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={() => handleEdit(row)}
-                                color="primary"
-                                aria-label="update social worker"
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => handleEdit(row)}
+                              color="primary"
+                              aria-label="update social worker"
+                            >
+                              <EditOutlinedIcon />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>
+                            <Box display="flex" alignItems="center">
+                              <Avatar
+                                src={row.logoUrl}
+                                alt="ngo logo"
+                                width="35"
+                                sx={{
+                                  borderRadius: '100%',
+                                }}
+                              />
+                              <Box
+                                sx={{
+                                  ml: 2,
+                                }}
                               >
-                                <EditOutlinedIcon />
-                              </IconButton>
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Avatar
-                                  src={row.logoUrl}
-                                  alt="ngo logo"
-                                  width="35"
-                                  sx={{
-                                    borderRadius: '100%',
-                                  }}
-                                />
-                                <Box
-                                  sx={{
-                                    ml: 2,
-                                  }}
-                                >
-                                  <Typography variant="h6" fontWeight="600">
-                                    {row.name}
-                                  </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                    {row.emailAddress}
-                                  </Typography>
-                                </Box>
+                                <Typography variant="h6" fontWeight="600">
+                                  {row.name}
+                                </Typography>
+                                <Typography color="textSecondary" variant="h6" fontWeight="600">
+                                  {row.emailAddress}
+                                </Typography>
                               </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                {row.phoneNumber}
-                              </Typography>
-                            </TableCell>
-                            {/* <TableCell>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="h6" fontWeight="600">
+                              {row.phoneNumber}
+                            </Typography>
+                          </TableCell>
+                          {/* <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="600">
                                 {row.postalAddress}
                               </Typography>
                             </TableCell> */}
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.country}
-                              </Typography>
-                            </TableCell>
-                            {/* <TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.country}
+                            </Typography>
+                          </TableCell>
+                          {/* <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.city}
                               </Typography>
                             </TableCell> */}
-                            <TableCell>
-                              <Typography variant="h6">{row.childrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.currentChildrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.socialWorkerCount}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.currentSocialWorkerCount}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.registerDate}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.created}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.updated}
-                              </Typography>
-                            </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">{row.childrenCount}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">{row.currentChildrenCount}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.socialWorkerCount}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.currentSocialWorkerCount}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.registerDate}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.created}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.updated}
+                            </Typography>
+                          </TableCell>
 
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.website && <Link href={row.website}>Link</Link>}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {emptyRows > 0 && (
-                      <TableRow
-                        style={{
-                          height: (dense ? 33 : 53) * emptyRows,
-                        }}
-                      >
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={ngoList.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Paper>
-            <FormControlLabel
-              control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.website && <Link href={row.website}>Link</Link>}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: (dense ? 33 : 53) * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={childList.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
             />
-          </Box>
-        </CardContent>
-      </Card>
-    </PageContainer>
+          </Paper>
+          <FormControlLabel
+            control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
+            label="Dense padding"
+          />
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 
 export default ChildrenTable;
 
 ChildrenTable.propTypes = {
-  ngoList: PropTypes.array.isRequired,
+  childList: PropTypes.array.isRequired,
 };

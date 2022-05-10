@@ -7,7 +7,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 
 import { fetchChildList } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
-// import ChildrenTable from './ChildrenTable';
+import ChildrenTable from './ChildrenTable';
 
 const BCrumb = [
   {
@@ -33,7 +33,7 @@ const ChildrenList = () => {
   // const ngoListArr = ngoList ? Object.values(ngoList) : [];
 
   const childAll = useSelector((state) => state.childAll);
-  const { childList, success: successChildren } = childAll;
+  const { childList, loading: loadingChildList, success: successChildren } = childAll;
   console.log(childList, successChildren, ngoId);
 
   // children
@@ -67,58 +67,53 @@ const ChildrenList = () => {
   }, [openNgo]);
 
   return (
-    <>
-      {/* {loading ? (
-        <Grid sx={{ textAlign: 'center' }}>
-          <CircularProgress />
+    <PageContainer title="Children" description="this is Children page">
+      {/* breadcrumb */}
+      <Breadcrumb items={BCrumb} />
+      {/* end breadcrumb */}
+      <Grid container flexDirection="column" flexWrap="nowrap" spacing={2}>
+        <Grid item>
+          <Autocomplete
+            id="asynchronous-ngo"
+            sx={{ width: 300 }}
+            open={openNgo}
+            onOpen={() => {
+              setOpenNgo(true);
+            }}
+            onClose={() => {
+              setOpenNgo(false);
+            }}
+            onChange={(e, value) => setNgoId(value && value.id)}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            getOptionLabel={(option) => `${option.id} - ${option.name}`}
+            options={optionsNgo}
+            loading={loadingNgo}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Ngo"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+          />
         </Grid>
-      ) : (
-        success &&
-        ngoListArr && ( */}
-      <PageContainer title="Children" description="this is Children page">
-        {/* breadcrumb */}
-        <Breadcrumb items={BCrumb} />
-        {/* end breadcrumb */}
-        <Grid container spacing={2}>
-          <Grid item>
-            <Autocomplete
-              id="asynchronous-ngo"
-              sx={{ width: 300 }}
-              open={openNgo}
-              onOpen={() => {
-                setOpenNgo(true);
-              }}
-              onClose={() => {
-                setOpenNgo(false);
-              }}
-              onChange={(e, value) => setNgoId(value && value.id)}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => `${option.id} - ${option.name}`}
-              options={optionsNgo}
-              loading={loadingNgo}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Ngo"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {loadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
-              )}
-            />
-          </Grid>
-          {/* <ChildrenTable ngoList={ngoListArr} /> */}
+        <Grid item>
+          {loadingChildList ? (
+            <CircularProgress />
+          ) : (
+            successChildren && <ChildrenTable childList={childList.children} />
+          )}
         </Grid>
-      </PageContainer>
-      {/* )
-      )} */}
-    </>
+      </Grid>
+    </PageContainer>
   );
 };;
 
