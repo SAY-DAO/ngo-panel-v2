@@ -30,11 +30,10 @@ const ChildrenList = () => {
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
-  // const ngoListArr = ngoList ? Object.values(ngoList) : [];
 
   const childAll = useSelector((state) => state.childAll);
   const { childList, loading: loadingChildList, success: successChildren } = childAll;
-  console.log(childList, successChildren, ngoId);
+  console.log(childList, successChildren, ngoId, ngoList);
 
   // children
   useEffect(() => {

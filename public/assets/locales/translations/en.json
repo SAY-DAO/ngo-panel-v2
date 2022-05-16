@@ -671,5 +671,60 @@
       "s3": "Money transferred to the NGO",
       "s4": "Delivery to child"
     }
+  },
+  "child": {
+    "existenceStatus": "Status",
+    "generatedCode": "Child Code",
+    "awakeAvatarUrl": "Awake Avatar",
+    "sleptAvatarUrl": "Slept Avatar",
+    "voiceUrl": "Child Voice",
+    "firstName": {
+      "en": "English First Name",
+      "fa": "Persian First Name"
+    },
+    "lastName": {
+      "en": "English Last Name",
+      "fa": "Persian Last Name"
+    },
+    "sayname": {
+      "en": "English SAY Name",
+      "fa": "Persian SAY Name"
+    },
+    "doneNeedsCount": "Done Needs Count",
+    "spentCredit": "Spent",
+    "age": "Age",
+    "gender": {
+      "title": "Gender",
+      "male": "Male",
+      "female": "Female"
+    },
+    "bio": {
+      "en": "English Bio",
+      "fa": "Persian Bio"
+    },
+    "bioSummary": {
+      "en": "English Bio Summary",
+      "fa": "Persian Bio Summary"
+    },
+    "birthPlace": "Birth Place",
+    "nationality": "Nationality",
+    "familyCount": "Family Count",
+    "sayFamilyCount": "SAY Family Count",
+    "education": "Education",
+    "housingStatus": "Housing Status",
+    "socialWorker": "Social Worker"
+  },
+  "common": {
+    "update": "Edit",
+    "phoneNumber": "Phone Number",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "postalAddress": "Address",
+    "updated": " Last Edit",
+    "created": "Created At",
+    "confirmUser": "Confirmed By",
+    "confirmDate": "Confirmed At",
+    "isConfirmed": "Confirm"
   }
 }

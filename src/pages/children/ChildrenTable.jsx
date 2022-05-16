@@ -20,7 +20,7 @@ import {
   CardContent,
   Typography,
   Avatar,
-  Link,
+  Switch,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
@@ -68,95 +68,259 @@ function EnhancedTableHead(props) {
 
   const headCells = [
     {
-      id: 'isActive',
+      id: 'existence_status',
       numeric: false,
       disablePadding: true,
-      label: t('ngo.isActive'),
+      paragraph: false,
+      label: t('child.existenceStatus'),
+    },
+    {
+      id: 'isConfirmed',
+      numeric: false,
+      disablePadding: true,
+      paragraph: false,
+      label: t('common.isConfirmed'),
     },
     {
       id: 'update',
       numeric: false,
       disablePadding: true,
-      label: t('ngo.update'),
+      paragraph: false,
+      label: t('common.update'),
     },
     {
-      id: 'name',
+      id: 'generatedCode',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.name'),
+      paragraph: false,
+      label: t('child.generatedCode'),
     },
 
     {
-      id: 'phoneNumber',
+      id: 'awakeAvatarUrl',
+      numeric: false,
+      disablePadding: true,
+      paragraph: false,
+      label: t('child.awakeAvatarUrl'),
+    },
+
+    {
+      id: 'sleptAvatarUrl',
+      numeric: false,
+      disablePadding: true,
+      paragraph: false,
+      label: t('child.sleptAvatarUrl'),
+    },
+    {
+      id: 'voiceUrl',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.phoneNumber'),
+      paragraph: false,
+      label: t('child.voiceUrl'),
     },
-    // {
-    //   id: 'postalAddress',
-    //   numeric: false,
-    //   disablePadding: false,
-    //   label: t('ngo.postalAddress'),
-    // },
+    {
+      id: 'firstName_translations.en',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.firstName.en'),
+    },
+    {
+      id: 'lastName_translations.en',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.lastName.en'),
+    },
+    {
+      id: 'firstName_translations.fa',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.firstName.fa'),
+    },
+    {
+      id: 'lastName_translations.fa',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.lastName.fa'),
+    },
+    {
+      id: 'sayname_translations.en',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.sayname.en'),
+    },
+    {
+      id: 'sayname_translations.fa',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.sayname.fa'),
+    },
+    {
+      id: 'done_needs_count',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.doneNeedsCount'),
+    },
+    {
+      id: 'spent_credit',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.spentCredit'),
+    },
+    {
+      id: 'birthDate',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.age'),
+    },
+    {
+      id: 'gender',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.gender.title'),
+    },
+    {
+      id: 'bio_translations.en',
+      numeric: false,
+      disablePadding: false,
+      paragraph: true,
+      label: t('child.bio.en'),
+    },
+    {
+      id: 'bio_summary_translations.en',
+      numeric: false,
+      disablePadding: false,
+      paragraph: true,
+      label: t('child.bioSummary.en'),
+    },
+    {
+      id: 'bio_translations.fa',
+      numeric: false,
+      disablePadding: false,
+      paragraph: true,
+      label: t('child.bio.fa'),
+    },
+    {
+      id: 'bio_summary_translations.fa',
+      numeric: false,
+      disablePadding: false,
+      paragraph: true,
+      label: t('child.bioSummary.fa'),
+    },
     {
       id: 'country',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.country'),
+      paragraph: false,
+      label: t('common.country'),
     },
     {
       id: 'city',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.city'),
+      paragraph: false,
+      label: t('common.city'),
     },
     {
-      id: 'childrenCount',
+      id: 'birthPlace',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.childrenCount'),
+      paragraph: false,
+      label: t('child.birthPlace'),
     },
     {
-      id: 'currentChildrenCount',
+      id: 'nationality',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.currentChildrenCount'),
+      paragraph: false,
+      label: t('child.nationality'),
     },
     {
-      id: 'socialWorkerCount',
+      id: 'familyCount',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.socialWorkerCount'),
+      paragraph: false,
+      label: t('child.familyCount'),
     },
     {
-      id: 'currentSocialWorkerCount',
+      id: 'sayFamilyCount',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.currentSocialWorkerCount'),
+      paragraph: false,
+      label: t('child.sayFamilyCount'),
     },
     {
-      id: 'registerDate',
+      id: 'education',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.registerDate'),
+      paragraph: false,
+      label: t('child.education'),
+    },
+    {
+      id: 'housingStatus',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.housingStatus'),
+    },
+    {
+      id: 'id_social_worker',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('child.socialWorker'),
+    },
+    {
+      id: 'phoneNumber',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('common.phoneNumber'),
+    },
+    {
+      id: 'address',
+      numeric: false,
+      disablePadding: false,
+      paragraph: true,
+      label: t('common.postalAddress'),
+    },
+    {
+      id: 'confirmUser',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('common.confirmUser'),
+    },
+
+    {
+      id: 'confirmDate',
+      numeric: false,
+      disablePadding: false,
+      paragraph: false,
+      label: t('common.confirmDate'),
     },
     {
       id: 'created',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.created'),
+      paragraph: false,
+      label: t('common.created'),
     },
     {
       id: 'updated',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.updated'),
-    },
-    {
-      id: 'website',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.website'),
+      paragraph: false,
+      label: t('common.updated'),
     },
   ];
   return (
@@ -178,6 +342,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            // sx={{ width:  }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -254,7 +419,25 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
+const calculateAge = (dob1) => {
+  const today = new Date();
+  const birthDate = new Date(dob1); // create a date object directly from `dob1` argument
+  let ageNow = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    ageNow--;
+  }
+  return ageNow;
+};
+
+const getGender = (x) => {
+  const gender = x ? 'child.gender.male' : 'child.gender.female';
+
+  return gender;
+};
+
 const ChildrenTable = ({ childList }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [order, setOrder] = useState('asc');
@@ -371,7 +554,7 @@ const ChildrenTable = ({ childList }) => {
                               <Box
                                 sx={{
                                   backgroundColor:
-                                    row.isActive === true
+                                    row.existence_status === 1
                                       ? (theme) => theme.palette.success.main
                                       : (theme) => theme.palette.error.main,
                                   borderRadius: '100%',
@@ -392,6 +575,13 @@ const ChildrenTable = ({ childList }) => {
                             </Box>
                           </TableCell>
                           <TableCell>
+                            <Switch
+                              checked={row.isConfirmed}
+                              // onChange={handleChange}
+                              inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                          </TableCell>
+                          <TableCell>
                             <IconButton
                               onClick={() => handleEdit(row)}
                               color="primary"
@@ -401,68 +591,209 @@ const ChildrenTable = ({ childList }) => {
                             </IconButton>
                           </TableCell>
                           <TableCell>
-                            <Box display="flex" alignItems="center">
-                              <Avatar
-                                src={row.logoUrl}
-                                alt="ngo logo"
-                                width="35"
-                                sx={{
-                                  borderRadius: '100%',
-                                }}
-                              />
-                              <Box
-                                sx={{
-                                  ml: 2,
-                                }}
-                              >
-                                <Typography variant="h6" fontWeight="600">
-                                  {row.name}
-                                </Typography>
-                                <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                  {row.emailAddress}
-                                </Typography>
-                              </Box>
-                            </Box>
+                            <Typography variant="h6">{row.generatedCode}</Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography color="textSecondary" variant="h6" fontWeight="600">
-                              {row.phoneNumber}
+                            <Avatar src={row.awakeAvatarUrl} alt="Awake Avatar" width="35" />
+                          </TableCell>
+                          <TableCell>
+                            <Avatar src={row.sleptAvatarUrl} alt="Slept Avatar" width="35" />
+                          </TableCell>
+                          <TableCell>{/* VOICE */}</TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="600">
+                              {row.firstName_translations.en}
                             </Typography>
                           </TableCell>
-                          {/* <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="600">
-                                {row.postalAddress}
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="600">
+                              {row.lastName_translations.en}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="600">
+                              {row.firstName_translations.fa}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="600">
+                              {row.lastName_translations.fa}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="600">
+                              {row.sayname_translations.en}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="600">
+                              {row.sayname_translations.fa}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">{row.done_needs_count}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">
+                              {row.spent_credit.toLocaleString()}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">{calculateAge(row.birthDate)}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {t(getGender(row.gender))}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip title={row.bio_translations.en} placement="top-end">
+                              <Typography
+                                color="textSecondary"
+                                variant="body1"
+                                fontWeight="400"
+                                sx={{
+                                  maxWidth: '400px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  width: '200px',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                {row.bio_translations.en}
                               </Typography>
-                            </TableCell> */}
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip title={row.bio_summary_translations.en} placement="top-end">
+                              <Typography
+                                color="textSecondary"
+                                variant="body1"
+                                fontWeight="400"
+                                sx={{
+                                  maxWidth: '400px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  width: '200px',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                {row.bio_summary_translations.en}
+                              </Typography>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip
+                              title={row.bio_translations.fa}
+                              placement="top-end"
+                              componentsProps={{ popper: { sx: { direction: 'rtl' } } }}
+                            >
+                              <Typography
+                                color="textSecondary"
+                                variant="body1"
+                                fontWeight="400"
+                                sx={{
+                                  maxWidth: '400px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  width: '200px',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                  direction: 'rtl',
+                                }}
+                              >
+                                {row.bio_translations.fa}
+                              </Typography>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip
+                              title={row.bio_summary_translations.fa}
+                              placement="top-end"
+                              componentsProps={{ popper: { sx: { direction: 'rtl' } } }}
+                            >
+                              <Typography
+                                color="textSecondary"
+                                variant="body1"
+                                fontWeight="400"
+                                sx={{
+                                  maxWidth: '400px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  width: '200px',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                  direction: 'rtl',
+                                }}
+                              >
+                                {row.bio_summary_translations.fa}
+                              </Typography>
+                            </Tooltip>
+                          </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
                               {row.country}
                             </Typography>
                           </TableCell>
-                          {/* <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city}
-                              </Typography>
-                            </TableCell> */}
-                          <TableCell>
-                            <Typography variant="h6">{row.childrenCount}</Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="h6">{row.currentChildrenCount}</Typography>
-                          </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.socialWorkerCount}
+                              {row.city}
                             </Typography>
                           </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.currentSocialWorkerCount}
+                              {row.birthPlace}
                             </Typography>
                           </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.registerDate}
+                              {row.nationality}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">{row.familyCount}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">{row.sayFamilyCount}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.education}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.housingStatus}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.id_social_worker}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="h6">{row.phoneNumber}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              color="textSecondary"
+                              variant="body1"
+                              fontWeight="400"
+                              sx={{ width: 200 }}
+                            >
+                              {row.address}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.confirmUser}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              {row.confirmDate}
                             </Typography>
                           </TableCell>
                           <TableCell>
@@ -473,12 +804,6 @@ const ChildrenTable = ({ childList }) => {
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
                               {row.updated}
-                            </Typography>
-                          </TableCell>
-
-                          <TableCell>
-                            <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.website && <Link href={row.website}>Link</Link>}
                             </Typography>
                           </TableCell>
                         </TableRow>
