@@ -28,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import MuiAudioPlayer from 'mui-audio-player-plus';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
@@ -99,7 +100,7 @@ function EnhancedTableHead(props) {
     {
       id: 'awakeAvatarUrl',
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       paragraph: false,
       label: t('child.awakeAvatarUrl'),
     },
@@ -107,7 +108,7 @@ function EnhancedTableHead(props) {
     {
       id: 'sleptAvatarUrl',
       numeric: false,
-      disablePadding: true,
+      disablePadding: false,
       paragraph: false,
       label: t('child.sleptAvatarUrl'),
     },
@@ -455,19 +456,19 @@ const ChildrenTable = ({ childList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = childList.map((n) => n.name);
+      const newSelecteds = childList.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, firstName) => {
-    const selectedIndex = selected.indexOf(firstName);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, firstName);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -499,7 +500,7 @@ const ChildrenTable = ({ childList }) => {
     dispatch({ type: NGO_BY_ID_RESET });
     navigate(`/ngo/edit/${row.id}`);
   };
-  const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - childList.length) : 0;
@@ -527,13 +528,13 @@ const ChildrenTable = ({ childList }) => {
                   {stableSort(childList, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const isItemSelected = isSelected(row.name);
+                      const isItemSelected = isSelected(row.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
                       return (
                         <TableRow
                           hover
-                          onClick={(event) => handleClick(event, row.name)}
+                          onClick={(event) => handleClick(event, row.id)}
                           role="checkbox"
                           aria-checked={isItemSelected}
                           tabIndex={-1}
@@ -562,16 +563,6 @@ const ChildrenTable = ({ childList }) => {
                                   width: '10px',
                                 }}
                               />
-                              {/* <Typography
-                                  color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
-                                  sx={{
-                                    ml: 1,
-                                  }}
-                                >
-                                  {row.status}
-                                </Typography> */}
                             </Box>
                           </TableCell>
                           <TableCell>
@@ -594,12 +585,28 @@ const ChildrenTable = ({ childList }) => {
                             <Typography variant="h6">{row.generatedCode}</Typography>
                           </TableCell>
                           <TableCell>
-                            <Avatar src={row.awakeAvatarUrl} alt="Awake Avatar" width="35" />
+                            <Avatar
+                              src={row.awakeAvatarUrl}
+                              alt="Awake Avatar"
+                              sx={{ width: 50, height: 50 }}
+                            />
                           </TableCell>
                           <TableCell>
-                            <Avatar src={row.sleptAvatarUrl} alt="Slept Avatar" width="35" />
+                            <Avatar
+                              src={row.sleptAvatarUrl}
+                              alt="Slept Avatar"
+                              sx={{ width: 50, height: 50 }}
+                            />
                           </TableCell>
-                          <TableCell>{/* VOICE */}</TableCell>
+                          <TableCell>
+                            <MuiAudioPlayer
+                              id="inline-timeline"
+                              display="timeline"
+                              containerWidth={300}
+                              inline
+                              src={row.voiceUrl}
+                            />
+                          </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="600">
                               {row.firstName_translations.en}
