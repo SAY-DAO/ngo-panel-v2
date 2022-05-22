@@ -741,12 +741,18 @@ const ChildrenTable = ({ childList }) => {
                           </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.country}
+                              {/* TODO: city/country api should connect */}
+                              {Number(row.country) === 98 ? 'Iran' : ''}
                             </Typography>
                           </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.city}
+                              {/* TODO: city/country api should connect */}
+                              {Number(row.city) === 1
+                                ? 'Tehran'
+                                : Number(row.city) === 2
+                                ? 'Karaj'
+                                : ''}
                             </Typography>
                           </TableCell>
                           <TableCell>
@@ -756,7 +762,12 @@ const ChildrenTable = ({ childList }) => {
                           </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.nationality}
+                              {/* TODO: city/country api should connect */}
+                              {Number(row.nationality) === 98
+                                ? 'Iranian'
+                                : Number(row.nationality) === 93
+                                ? 'Afghan'
+                                : ''}
                             </Typography>
                           </TableCell>
                           <TableCell>
@@ -772,7 +783,13 @@ const ChildrenTable = ({ childList }) => {
                           </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.housingStatus}
+                              {row.housingStatus === '0'
+                                ? 'Homeless'
+                                : row.housingStatus === '1'
+                                ? 'Has Home'
+                                : row.housingStatus === '2'
+                                ? 'Maintenance Centers'
+                                : ''}
                             </Typography>
                           </TableCell>
                           <TableCell>
