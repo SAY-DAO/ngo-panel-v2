@@ -6,15 +6,9 @@ import {
   CHILD_BY_ID_FAIL,
   CHILD_BY_ID_REQUEST,
   CHILD_BY_ID_SUCCESS,
-  CHILD_EXAMPLE_NEEDS_FAIL,
-  CHILD_EXAMPLE_NEEDS_REQUEST,
-  CHILD_EXAMPLE_NEEDS_SUCCESS,
   CHILD_LIST_FAIL,
   CHILD_LIST_REQUEST,
   CHILD_LIST_SUCCESS,
-  CHILD_NEEDS_FAIL,
-  CHILD_NEEDS_REQUEST,
-  CHILD_NEEDS_SUCCESS,
   UPDATE_CHILD_FAIL,
   UPDATE_CHILD_IS_ACTIVE_FAIL,
   UPDATE_CHILD_IS_ACTIVE_REQUEST,
@@ -22,62 +16,6 @@ import {
   UPDATE_CHILD_REQUEST,
   UPDATE_CHILD_SUCCESS,
 } from '../constants/childrenConstants';
-
-export const fetchExampleNeeds = () => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CHILD_EXAMPLE_NEEDS_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-    const { data } = await publicApi.get(`/preneeds`, config);
-
-    dispatch({
-      type: CHILD_EXAMPLE_NEEDS_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    // check for generic and custom message to return using ternary statement
-    dispatch({
-      type: CHILD_EXAMPLE_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
-    });
-  }
-};
-
-export const fetchChildNeeds = (childId) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CHILD_NEEDS_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-    const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
-
-    dispatch({
-      type: CHILD_NEEDS_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    // check for generic and custom message to return using ternary statement
-    dispatch({
-      type: CHILD_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
-    });
-  }
-};
 
 export const fetchMyChildById = (childId) => async (dispatch, getState) => {
   try {

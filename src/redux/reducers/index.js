@@ -16,16 +16,22 @@ import {
   swUpdateReducer,
   swAddReducer,
   swMigrateReducer,
-  swNeedListReducer,
 } from './socialWorkerReducer';
 import {
   childAddReducer,
   childByIdReducer,
   childListReducer,
-  childNeedsReducer,
   childUpdateReducer,
 } from './childrenReducer';
 import { userLoginReducer } from './userReducer';
+import {
+  childNeedsReducer,
+  childOneNeedReducer,
+  exampleNeedsReducer,
+  needAddReducer,
+  needUpdateReducer,
+  swNeedListReducer,
+} from './needReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -44,8 +50,12 @@ export default combineReducers({
   ngoAll: ngoListReducer,
   ngoUpdate: ngoUpdateReducer,
   ngoAdd: ngoAddReducer,
+  childExampleNeeds: exampleNeedsReducer,
   childNeeds: childNeedsReducer,
+  childOneNeed: childOneNeedReducer,
   childById: childByIdReducer,
+  needUpdate: needUpdateReducer,
+  needAdd: needAddReducer,
   childAll: childListReducer,
   childUpdate: childUpdateReducer,
   childAdd: childAddReducer,

@@ -13,25 +13,12 @@ const Menuitems = [
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
   },
-
   {
     title: 'My Page',
     icon: 'user',
-    href: '/my-page',
-    collapse: true,
-    children: [
-      {
-        title: 'View',
-        icon: 'eye',
-        href: '/profile/view',
-      },
-      {
-        title: 'Edit',
-        icon: 'edit',
-        href: '/profile/edit',
-      },
-    ],
+    href: '/profile/view',
   },
+
   {
     title: 'Children',
     icon: <ChildCareIcon />,

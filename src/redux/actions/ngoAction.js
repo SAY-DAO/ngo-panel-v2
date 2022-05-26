@@ -197,8 +197,6 @@ export const AddNgo = (values) => async (dispatch, getState) => {
     if (values.logoUrl) {
       formData.set('logoUrl', values.logoUrl);
     }
-    console.log('hala');
-    console.log(values);
 
     const { data } = await publicApi.post(`/ngo/add`, formData, config);
     dispatch({

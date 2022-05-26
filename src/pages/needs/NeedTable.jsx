@@ -37,10 +37,11 @@ import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
-import { fetchChildList, fetchChildNeeds } from '../../redux/actions/childrenAction';
+import { fetchChildList } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import PieChart from '../../components/analytics/PieChart';
+import { fetchChildNeeds } from '../../redux/actions/needsAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -450,7 +451,6 @@ const NeedTable = () => {
     }
   }, [open, openNgo, ngoId]);
 
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = theNeeds.needs.map((n) => n.name);
@@ -495,7 +495,7 @@ const NeedTable = () => {
 
   const handleEdit = (row) => {
     dispatch({ type: SW_BY_ID_RESET });
-    navigate(`/needs/edit/${row.id}`);
+    navigate(`/need/edit/${row.id}`);
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.

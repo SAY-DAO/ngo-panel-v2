@@ -12,8 +12,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Switch,
-  FormControlLabel,
   TextField,
   InputAdornment,
   OutlinedInput,
@@ -27,33 +25,59 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import {
-  fetchSocialWorkerById,
-  updateSw,
-  updateSwIsActive,
-} from '../../redux/actions/socialWorkerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
-import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
+import { fetchChildOneNeed, updateNeed } from '../../redux/actions/needsAction';
+import { CHILD_ONE_NEED_RESET } from '../../redux/constants/needConstant';
 
 const BCrumb = [
   {
-    to: '/sw/list',
+    to: '/need/list',
     title: 'Needs List',
   },
   {
     title: 'Edit',
   },
 ];
+// child_id *
+// sw_id
+// imageUrl
+// name_translations  name_fa name_en
+// description_translations desc_fa desc_en
+// category *
+// isUrgent *
+// cost *
+// type *
+// link
+// affiliateLinkUrl
+// doing_duration
+// details
+// informations
+
+// "name": "Need Name",
+// "cost": "Cost",
+// "link": "Link",
+// "affiliateLinkUrl": "Aff. Link",
+// "type_name": "Type",
+// "isUrgent": "Urgent",
+// "information": "Additional Info",
+// "details": "Social Worker Notes",
+// "category": "Category",
+// "description": "Description",
+// "created": "Created At",
+// "isConfirmed": "Confirm",
+// "confirmUser": "Confirmed By",
+// "confirmDate": "Confirmed At",
+// "updated": " Last Edit",
+// "doneAt": "Done At",
+// "child_delivery_date": "Delivery To Child"
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
@@ -61,17 +85,9 @@ const NeedEdit = () => {
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const [myId, setMyId] = useState();
   const [finalImageFile, setFinalImageFile] = useState();
-  const [finalIdImageFile, setFinalIdImageFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
-  const [openIdImageDialog, setOpenIdImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [uploadIdImage, setUploadIdImage] = useState(location.state && location.state.newIdImage);
-  const [open, setOpen] = useState(false);
-  const [activeChecked, setActiveChecked] = useState(false);
-  const [coordChecked, setCoordChecked] = useState(false);
-  const [birthDate, setBirthDate] = useState(new Date());
   const [values, setValues] = React.useState({
     firstName: '',
     lastName: '',
@@ -93,124 +109,53 @@ const NeedEdit = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const swById = useSelector((state) => state.swById);
-  const { result, loading: loadingSwById, success: successSwById } = swById;
-
-  const swStatusUpdate = useSelector((state) => state.swStatusUpdate);
-  const { status } = swStatusUpdate;
+  const childOneNeed = useSelector((state) => state.childOneNeed);
+  const { oneNeed, loading: loadingOneNeed, success: successOneNeed } = childOneNeed;
 
   const swUpdate = useSelector((state) => state.swUpdate);
   const { success: successSwUpdate, loading: loadingSwUpdate, error: errorSwUpdate } = swUpdate;
 
-  const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
-
   useEffect(() => {
-    if (!id && userInfo) {
-      // when .../profile/edit
-      setMyId(userInfo.id);
+    if (!successOneNeed && id) {
+      dispatch(fetchChildOneNeed(id));
     }
-  }, [id, myId]);
+  }, [id]);
 
+  // isConfirmed
   useEffect(() => {
-    if ((!successSwById && (id || myId)) || status || successSwUpdate) {
-      dispatch(fetchSocialWorkerById(id || myId));
-    }
-    if (!successNgoList) {
-      dispatch(fetchNgoList());
-    }
-  }, [status, successSwUpdate, id, myId]);
-
-  // isActive
-  useEffect(() => {
-    if (result && result.isActive) {
-      setActiveChecked(true);
+    if (oneNeed && oneNeed.isActive) {
+      setConfirmChecked(true);
     } else {
-      setActiveChecked(false);
+      setConfirmChecked(false);
     }
-  }, [successSwById]);
-
-  // isCoordinator
-  useEffect(() => {
-    if (result && result.isCoordinator) {
-      setCoordChecked(true);
-    } else {
-      setCoordChecked(false);
-    }
-  }, [successSwById]);
+  }, [successOneNeed]);
 
   useEffect(() => {
-    if (result) {
-      setBirthDate(result.birthDate);
-
+    if (oneNeed) {
       setValues({
         ...values,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        email: result.email,
-        country: result.country,
-        city: result.city,
-        phoneNumber: result.phoneNumber,
-        emergencyPhoneNumber: result.emergencyPhoneNumber,
-        postalAddress: result.postalAddress,
-        userName: result.username,
-        telegramId: result.telegramId,
-        typeId: result.typeId,
-        idCardFile: result.idCardUrl,
-        idNumber: result.idNumber,
-        ngoId: result.ngoId,
-        avatarFile: result.avatarUrl,
+        name: oneNeed.name,
+        website: oneNeed.website,
+        emailAddress: oneNeed.emailAddress,
+        country: oneNeed.country,
+        city: oneNeed.city,
+        phoneNumber: oneNeed.phoneNumber,
+        postalAddress: oneNeed.postalAddress,
+        logoUrl: oneNeed.logoUrl,
       });
     }
-  }, [dispatch, result, userInfo]);
+  }, [dispatch, oneNeed, userInfo]);
 
-  const handleChangeActive = () => {
-    if (activeChecked && result.isActive) {
-      dispatch(updateSwIsActive(result.id, 'deactivate'));
-    } else if (!activeChecked && !result.isActive) {
-      dispatch(updateSwIsActive(result.id, 'activate'));
-    }
-  };
-
-  const handleChangeCoord = () => {
-    if (coordChecked && result.isCoordinator) {
-      dispatch(
-        updateSw({
-          id: id || myId,
-          isCoordinator: false,
-        }),
-      );
-    } else if (!coordChecked && !result.isCoordinator) {
-      dispatch(
-        updateSw({
-          id: id || myId,
-          isCoordinator: true,
-        }),
-      );
-    }
-  };
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('Please enter your first name'),
-    lastName: Yup.string().required('Please enter your last name'),
+    name: Yup.string().required('Please enter your first name'),
     country: Yup.string().required('Please enter your country'),
-    ngoId: Yup.string().required('Please enter your NGO'),
-    // phoneNumber: Yup.string().required('Please enter your phone number'),
-    // postalCode: Yup.string().required('Please enter your postal code'),
-    // postalAddress: Yup.string().required('Please enter your postalAddress'),
-    userName: Yup.string()
-      .required('Username is required')
-      .min(6, 'Username must be at least 6 characters')
-      .max(20, 'Username must not exceed 20 characters'),
-    // email: Yup.string().required('Email is required').email('Email is invalid'),
-    // password: Yup.string()
-    //   .required('Password is required')
-    //   .min(6, 'Password must be at least 6 characters')
-    //   .max(40, 'Password must not exceed 40 characters'),
-    // confirmPassword: Yup.string()
-    //   .required('Confirm Password is required')
-    //   .oneOf([Yup.ref('password'), null], 'Confirm Password does not match'),
-    acceptTerms: Yup.bool(),
+    phoneNumber: Yup.string().required('Please enter your phone number'),
+    postalAddress: Yup.string().required('Please enter your postalAddress'),
+    emailAddress: Yup.string()
+      // .min(3, 'must be at least 3 characters long')
+      .email('Please enter your email')
+      .required('Email is required'),
   });
 
   const {
@@ -227,35 +172,19 @@ const NeedEdit = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      updateSw({
-        id: id || myId,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
+      updateNeed({
+        id,
+        name: data.name,
+        emailAddress: data.emailAddress,
         country: data.country,
         city: data.city,
         phoneNumber: data.phoneNumber,
-        emergencyPhoneNumber: data.emergencyPhoneNumber,
         postalAddress: data.postalAddress,
-        userName: data.userName,
-        telegramId: data.telegramId,
-        typeId: data.typeId,
-        idCardFile: finalIdImageFile,
-        idNumber: data.idNumber,
-        ngoId: data.ngoId,
-        avatarFile: finalImageFile,
-        birthDate,
+        website: data.website,
+        logoUrl: finalImageFile,
       }),
     );
-    dispatch({ type: SW_BY_ID_RESET });
-  };
-
-  // dialog
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
+    dispatch({ type: CHILD_ONE_NEED_RESET });
   };
 
   // dialog image
@@ -266,18 +195,6 @@ const NeedEdit = () => {
     setOpenImageDialog(false);
   };
 
-  // dialog id image
-  const handleIdImageClickOpen = () => {
-    setOpenIdImageDialog(true);
-  };
-  const handleIdImageClose = () => {
-    setOpenIdImageDialog(false);
-  };
-
-  const handleDateChange = (newValue) => {
-    setBirthDate(newValue);
-  };
-
   const onImageChange = (e) => {
     if (e.target.files[0]) {
       setUploadImage(e.target.files[0]);
@@ -285,85 +202,24 @@ const NeedEdit = () => {
     }
   };
 
-  const onIdImageChange = (e) => {
-    if (e.target.files[0]) {
-      setUploadIdImage(e.target.files[0]);
-      handleIdImageClickOpen();
-    }
-  };
-
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-  const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
-  const rectangle = (
-    <Box component="span" sx={shapeStyles}>
-      <div className="upload__image-wrapper">
-        <Button
-          sx={{
-            position: 'relative',
-            border: '1px dashed lightGrey',
-            width: 80,
-            minHeight: 50,
-          }}
-          onClick={handleClickOpen}
-        >
-          <img
-            alt="ID"
-            width="80%"
-            style={{
-              maxHeight: 50,
-              bgcolor: 'white',
-            }}
-            src={
-              finalIdImageFile
-                ? URL.createObjectURL(finalIdImageFile) // image preview
-                : values.idCardFile
-            }
-          />
-        </Button>
-      </div>
-      <label htmlFor="upload-id-image">
-        <input
-          accept="image/*"
-          id="upload-id-image"
-          type="file"
-          style={{
-            display: 'none',
-            left: '60px',
-          }}
-          onChange={onIdImageChange}
-        />
-        <IconButton name="upload-id-image" id="upload-id-image" color="primary" component="div">
-          <AddCircleOutlineIcon
-            color="primary"
-            fontSize="medium"
-            sx={{
-              borderRadius: '20%',
-            }}
-          />
-        </IconButton>
-      </label>
-    </Box>
-  );
-
   return (
-    <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
+    <PageContainer title="Need Edit" description="this is Need Edit page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {(!id && !myId) || loadingSwById || loadingNgoAll || loadingSwUpdate ? (
+      {!id || loadingOneNeed || loadingSwUpdate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        result &&
-        result.ngoId &&
-        ngoList && (
+        oneNeed && (
           <>
-            <Breadcrumb title="Edit page" subtitle="Social Worker" />
+            <Breadcrumb title="Edit page" subtitle="Need" />
             <Grid container spacing={0}>
-              <Grid item lg={4} md={12} xs={12}>
+              <Grid item lg={12} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Badge
                     overlap="circular"
@@ -417,92 +273,17 @@ const NeedEdit = () => {
                   </Badge>
 
                   <Typography variant="h2" sx={{ mt: 4 }}>
-                    {result && `${result.firstName} ${result.lastName}`}
+                    {oneNeed && `${oneNeed.name}`}
                   </Typography>
 
-                  <Typography variant="body2"> Permission: {result && result.typeName}</Typography>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        disabled={userInfo.id === result.id}
-                        id="isActive"
-                        variant="outlined"
-                        defaultValue={result.isActive}
-                        checked={activeChecked}
-                        onChange={handleChangeActive}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                      />
-                    }
-                    label={
-                      <Grid>
-                        <Box
-                          sx={{
-                            display: 'inline-block',
-                            backgroundColor:
-                              result.isActive === true
-                                ? (theme) => theme.palette.success.main
-                                : (theme) => theme.palette.error.main,
-                            borderRadius: '100%',
-                            height: '10px',
-                            width: '10px',
-                          }}
-                        />
-                        {'  '}
-                        <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                          {t('socialWorker.isActive')}
-                        </Typography>
-                      </Grid>
-                    }
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        disabled={userInfo.id === result.id}
-                        id="isCoordinator"
-                        variant="outlined"
-                        defaultValue={result.isCoordinator}
-                        checked={coordChecked}
-                        onChange={handleChangeCoord}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                      />
-                    }
-                    label={
-                      <Grid>
-                        <Box
-                          sx={{
-                            display: 'inline-block',
-                            backgroundColor:
-                              result.isCoordinator === true
-                                ? (theme) => theme.palette.success.main
-                                : (theme) => theme.palette.error.main,
-                            borderRadius: '100%',
-                            height: '10px',
-                            width: '10px',
-                          }}
-                        />
-                        {'  '}
-                        <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                          {t('socialWorker.isCoordinator')}
-                        </Typography>
-                      </Grid>
-                    }
-                  />
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
                     {t('socialWorker.email')}
                   </Typography>
-                  <Typography variant="body2">{result && result.email}</Typography>
+                  <Typography variant="body2">{oneNeed && oneNeed.email}</Typography>
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
                     {t('socialWorker.phoneNumber')}
                   </Typography>
-                  <Typography variant="body2">{result && result.phoneNumber}</Typography>
-                </Card>
-                <Card sx={{ p: 3, minHeight: 150 }}>
-                  <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={12} sx={{ margin: 'auto', textAlign: 'center' }}>
-                      <Typography variant="caption">ID #:{result.idNumber}</Typography>
-                      <Grid aria-label="id card">{rectangle}</Grid>
-                    </Grid>
-                  </Grid>
+                  <Typography variant="body2">{oneNeed && oneNeed.phoneNumber}</Typography>
                 </Card>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
@@ -516,7 +297,7 @@ const NeedEdit = () => {
                       required
                       id="firstName"
                       variant="outlined"
-                      defaultValue={result.firstName}
+                      defaultValue={oneNeed.firstName}
                       fullWidth
                       size="small"
                       onChange={handleChangeInput('firstName')}
@@ -531,7 +312,7 @@ const NeedEdit = () => {
                       required
                       id="lastName"
                       variant="outlined"
-                      defaultValue={result.lastName}
+                      defaultValue={oneNeed.lastName}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
@@ -544,7 +325,7 @@ const NeedEdit = () => {
                     <TextField
                       id="Email"
                       variant="outlined"
-                      defaultValue={result.email}
+                      defaultValue={oneNeed.email}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
@@ -558,7 +339,7 @@ const NeedEdit = () => {
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
-                      defaultValue={result.country || 1}
+                      defaultValue={oneNeed.country || 1}
                       onChange={handleChangeInput('country')}
                       control={control}
                       register={{ ...register('country') }}
@@ -572,7 +353,7 @@ const NeedEdit = () => {
                     <CustomSelect
                       labelId="city-controlled-open-select-label"
                       id="city-controlled-open-select"
-                      defaultValue={result.city || 1}
+                      defaultValue={oneNeed.city || 1}
                       onChange={handleChangeInput('city')}
                       control={control}
                       register={{ ...register('city') }}
@@ -588,7 +369,7 @@ const NeedEdit = () => {
                       variant="outlined"
                       multiline
                       rows={4}
-                      defaultValue={result.postalAddress}
+                      defaultValue={oneNeed.postalAddress}
                       size="small"
                       sx={{ mb: 2 }}
                       fullWidth
@@ -599,15 +380,6 @@ const NeedEdit = () => {
                     <CustomFormLabel htmlFor="birthDate">
                       {t('socialWorker.birthDate')}
                     </CustomFormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DesktopDatePicker
-                        id="birthDate"
-                        inputFormat="MM/dd/yyyy"
-                        value={birthDate}
-                        onChange={handleDateChange}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
 
                     <CustomFormLabel htmlFor="telegramId">
                       {t('socialWorker.telegramId')}
@@ -616,7 +388,7 @@ const NeedEdit = () => {
                       id="telegramId"
                       startAdornment={<InputAdornment position="start">@</InputAdornment>}
                       variant="outlined"
-                      defaultValue={result.telegramId}
+                      defaultValue={oneNeed.telegramId}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
@@ -631,7 +403,7 @@ const NeedEdit = () => {
                     <TextField
                       id="idNumber"
                       variant="outlined"
-                      defaultValue={result.idNumber}
+                      defaultValue={oneNeed.idNumber}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
@@ -640,32 +412,14 @@ const NeedEdit = () => {
                       {...register('idNumber')}
                       error={!!errors.idNumber}
                     />
-                    <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
-                      {t('socialWorker.ngoName')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="ngoId-controlled-open-select-label"
-                      id="ngoId-controlled-open-select"
-                      defaultValue={result.ngoId}
-                      onChange={handleChangeInput('ngoId')}
-                      register={{ ...register('ngoId') }}
-                      control={control}
-                      error={!!errors.ngoId}
-                    >
-                      {ngoList &&
-                        Object.keys(ngoList).map((key) => (
-                          <MenuItem key={key} value={ngoList[key].id}>
-                            {ngoList[key].name}
-                          </MenuItem>
-                        ))}
-                    </CustomSelect>
+
                     <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
                       {t('socialWorker.typeId')}
                     </CustomFormLabel>
                     <CustomSelect
                       labelId="demo-controlled-open-select-label"
                       id="demo-controlled-open-select"
-                      defaultValue={result.typeId}
+                      defaultValue={oneNeed.typeId}
                       onChange={handleChangeInput('typeId')}
                       register={{ ...register('typeId') }}
                     >
@@ -682,7 +436,7 @@ const NeedEdit = () => {
                     <TextField
                       id="phoneNumber"
                       variant="outlined"
-                      defaultValue={result.phoneNumber}
+                      defaultValue={oneNeed.phoneNumber}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
@@ -697,7 +451,7 @@ const NeedEdit = () => {
                     <TextField
                       id="emergencyPhoneNumber"
                       variant="outlined"
-                      defaultValue={result.emergencyPhoneNumber}
+                      defaultValue={oneNeed.emergencyPhoneNumber}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
@@ -712,7 +466,7 @@ const NeedEdit = () => {
                     <TextField
                       id="userName"
                       variant="outlined"
-                      defaultValue={result.username}
+                      defaultValue={oneNeed.username}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
@@ -738,48 +492,7 @@ const NeedEdit = () => {
                 </Card>
               </Grid>
             </Grid>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
-                {result && `${result.firstName} ${result.lastName}`}
-              </DialogTitle>
-              <DialogContent>
-                <Box
-                  sx={{
-                    position: 'relative',
-                    overflow: 'scroll',
-                    width: 400,
-                    height: 300,
-                    backgroundColor: 'primary.dark',
-                    '&:hover': {
-                      backgroundColor: 'primary.main',
-                      opacity: [0.9, 0.8, 0.7],
-                    },
-                  }}
-                >
-                  <img
-                    alt="social worker ID"
-                    src={
-                      (finalIdImageFile && URL.createObjectURL(finalIdImageFile)) ||
-                      result.idCardUrl
-                    }
-                    style={{
-                      position: 'absolute',
-                      padding: '2px',
-                    }}
-                    width="100%"
-                  />
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
-              </DialogActions>
-            </Dialog>
-            {/* Social Worker Image */}
+            {/* Need Icon */}
             <Dialog
               open={openImageDialog}
               onClose={handleImageClose}
@@ -787,7 +500,7 @@ const NeedEdit = () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
-                {result && `${result.firstName} ${result.lastName}`}
+                {oneNeed && `${oneNeed.firstName} ${oneNeed.lastName}`}
               </DialogTitle>
               <DialogContent>
                 <Box>
@@ -795,29 +508,6 @@ const NeedEdit = () => {
                     uploadImage={uploadImage}
                     handleImageClose={handleImageClose}
                     setFinalImageFile={setFinalImageFile}
-                  />
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
-              </DialogActions>
-            </Dialog>
-            {/* Social Worker ID Image */}
-            <Dialog
-              open={openIdImageDialog}
-              onClose={handleIdImageClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
-                {result && `${result.firstName} ${result.lastName}`}
-              </DialogTitle>
-              <DialogContent>
-                <Box>
-                  <UploadIdImage
-                    uploadImage={uploadIdImage}
-                    handleImageClose={handleIdImageClose}
-                    setFinalImageFile={setFinalIdImageFile}
                   />
                 </Box>
               </DialogContent>

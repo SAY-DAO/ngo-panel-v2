@@ -10,10 +10,6 @@ import {
   CHILD_LIST_REQUEST,
   CHILD_LIST_RESET,
   CHILD_LIST_SUCCESS,
-  CHILD_NEEDS_FAIL,
-  CHILD_NEEDS_REQUEST,
-  CHILD_NEEDS_RESET,
-  CHILD_NEEDS_SUCCESS,
   UPDATE_CHILD_FAIL,
   UPDATE_CHILD_IS_ACTIVE_FAIL,
   UPDATE_CHILD_IS_ACTIVE_REQUEST,
@@ -21,21 +17,6 @@ import {
   UPDATE_CHILD_REQUEST,
   UPDATE_CHILD_SUCCESS,
 } from '../constants/childrenConstants';
-
-export const childNeedsReducer = (state = {}, action) => {
-  switch (action.type) {
-    case CHILD_NEEDS_REQUEST:
-      return { loading: true, success: false };
-    case CHILD_NEEDS_SUCCESS:
-      return { loading: false, success: true, theNeeds: action.payload };
-    case CHILD_NEEDS_FAIL:
-      return { loading: false, error: action.payload };
-    case CHILD_NEEDS_RESET:
-      return {};
-    default:
-      return state;
-  }
-};
 
 export const childByIdReducer = (state = { success: false }, action) => {
   switch (action.type) {
