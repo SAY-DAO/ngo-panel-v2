@@ -121,14 +121,6 @@ const NeedEdit = () => {
     }
   }, [id]);
 
-  // isConfirmed
-  useEffect(() => {
-    if (oneNeed && oneNeed.isActive) {
-      setConfirmChecked(true);
-    } else {
-      setConfirmChecked(false);
-    }
-  }, [successOneNeed]);
 
   useEffect(() => {
     if (oneNeed) {
