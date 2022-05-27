@@ -36,7 +36,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await publicApi.get(`/preneeds`, config);
+    const { data } = await publicApi.get(`/preneeds/`, config);
 
     dispatch({
       type: CHILD_EXAMPLE_NEEDS_SUCCESS,

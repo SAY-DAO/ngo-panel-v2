@@ -1,44 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Card,
   Grid,
   Typography,
   Button,
+  CircularProgress,
   Badge,
   Dialog,
   Box,
   DialogContent,
   DialogActions,
   TextField,
-  InputAdornment,
-  OutlinedInput,
   IconButton,
-  MenuItem,
-  FormHelperText,
-  CircularProgress,
-  FormControlLabel,
-  Switch,
+  Autocomplete,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { AddSw } from '../../redux/actions/socialWorkerAction';
 import Message from '../../components/Message';
-import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
-import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
+import { updateNeed, fetchExampleNeeds } from '../../redux/actions/needsAction';
+import { CHILD_ONE_NEED_RESET } from '../../redux/constants/needConstant';
+import { fetchChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
 
 const BCrumb = [
   {
@@ -49,69 +41,145 @@ const BCrumb = [
     title: 'Add',
   },
 ];
+// child_id *
+// sw_id
+// imageUrl
+// name_translations  name_fa name_en
+// description_translations desc_fa desc_en
+// category *
+// isUrgent *
+// cost *
+// type *
+// link
+// affiliateLinkUrl
+// doing_duration
+// details
+// informations
+
+// "name": "Need Name",
+// "cost": "Cost",
+// "link": "Link",
+// "affiliateLinkUrl": "Aff. Link",
+// "type_name": "Type",
+// "isUrgent": "Urgent",
+// "information": "Additional Info",
+// "details": "Social Worker Notes",
+// "category": "Category",
+// "description": "Description",
+// "created": "Created At",
+// "isConfirmed": "Confirm",
+// "confirmUser": "Confirmed By",
+// "confirmDate": "Confirmed At",
+// "updated": " Last Edit",
+// "doneAt": "Done At",
+// "child_delivery_date": "Delivery To Child"
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const { id } = useParams();
   const { t } = useTranslation();
 
-  const [coordChecked, setCoordChecked] = useState(false);
+  const [openPreNeed, setOpenPreNeed] = useState(false);
+  const [optionsPreNeed, setOptionsPreNeed] = useState([]);
+  const isLoadingPreNeed = openPreNeed && optionsPreNeed.length === 0;
+  const [theNeed, setTheNeed] = useState();
+
+  const [openChildren, setOpenChildren] = useState(false);
+  const [optionsChildren, setOptionsChildren] = useState([]);
+  const isLoadingChildren = openChildren && optionsChildren.length === 0;
+  const [childId, setChildId] = useState();
+
   const [finalImageFile, setFinalImageFile] = useState();
-  const [finalIdImageFile, setFinalIdImageFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
-  const [openIdImageDialog, setOpenIdImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [uploadIdImage, setUploadIdImage] = useState(location.state && location.state.newIdImage);
-  const [birthDate, setBirthDate] = useState(new Date());
   const [values, setValues] = React.useState({
-    firstName: '',
-    lastName: '',
-    country: '',
-    city: '',
-    phoneNumber: '',
-    emergencyPhoneNumber: '',
-    postalAddress: '',
-    email: '',
-    telegramId: '',
-    typeId: 0,
-    idCardFile: '',
-    idNumber: '',
-    ngoId: '',
-    avatarFile: '',
-    isCoordinator: false,
+    name: '',
   });
+  const needAdd = useSelector((state) => state.needAdd);
+  const { success: successAddNeed, loading: loadingAddNeed, error: errorAddNeed } = needAdd;
 
-  const swAdd = useSelector((state) => state.swAdd);
-  const { success: successAddUpdate, loading: loadingAddSw, error: errorAddUpdate } = swAdd;
+  const childById = useSelector((state) => state.childById);
+  const { result, loading: loadingChild, success: successChild } = childById;
 
-  const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
+  const childAll = useSelector((state) => state.childAll);
+  const { myChildren, loading: loadingChildren, success: successChildren } = childAll;
+
+  const childExampleNeeds = useSelector((state) => state.childExampleNeeds);
+  const { exampleNeeds, success: successNeedEx } = childExampleNeeds;
+
+  // Autocomplete my Children
+  useEffect(() => {
+    let active = true;
+    if (!isLoadingChildren) {
+      return undefined;
+    }
+    if (active && successChildren) {
+      // sort myChildren
+      const sortedChildren = myChildren.children.sort(
+        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
+      );
+      setOptionsChildren([...sortedChildren]);
+    }
+    return () => {
+      active = false;
+    };
+  }, [isLoadingChildren, successChildren, childId]);
+
+  // child open
+  useEffect(() => {
+    if (!openChildren) {
+      setOptionsChildren([]);
+    } else if (openChildren) {
+      dispatch(fetchChildList());
+    }
+  }, [openChildren, setOpenChildren, childId]);
+
+  // Autocomplete pre need
+  useEffect(() => {
+    let active = true;
+    if (!isLoadingPreNeed) {
+      return undefined;
+    }
+    if (active && successNeedEx) {
+      // sort myChildren
+      const sortedNeeds = exampleNeeds.sort(
+        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
+      );
+      setOptionsPreNeed([...sortedNeeds]);
+    }
+    return () => {
+      active = false;
+    };
+  }, [isLoadingPreNeed, successNeedEx]);
+
+  // preNeed open
+  useEffect(() => {
+    if (!openPreNeed) {
+      setOptionsPreNeed([]);
+    } else if (openPreNeed) {
+      dispatch(fetchExampleNeeds());
+    }
+  }, [openPreNeed]);
+
+  // theChild
+  useEffect(() => {
+    if (childId) {
+      dispatch(fetchMyChildById(childId));
+    }
+  }, [childId]);
 
   useEffect(() => {
-    if (!successNgoList) {
-      dispatch(fetchNgoList());
+    if (successNeedEx && theNeed) {
+      setValues({
+        ...values,
+        name: theNeed.name,
+      });
     }
-  }, []);
+  }, [successNeedEx, theNeed]);
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('Please enter your first name'),
-    lastName: Yup.string().required('Please enter your last name'),
-    ngoId: Yup.string().required('Please enter your NGO'),
-    typeId: Yup.string().required('Please enter permission'),
-    idNumber: Yup.string().required('Please enter your ID number'),
-    phoneNumber: Yup.string().required('Please enter your phone number'),
-    emergencyPhoneNumber: Yup.string().required('Please enter your emergency phone'),
-    email: Yup.string().required('Please enter your email'),
-    telegramId: Yup.string().required('Please enter your telegram handle'),
-    // email: Yup.string().required('Email is required').email('Email is invalid'),
-    // password: Yup.string()
-    //   .required('Password is required')
-    //   .min(6, 'Password must be at least 6 characters')
-    //   .max(40, 'Password must not exceed 40 characters'),
-    // confirmPassword: Yup.string()
-    //   .required('Confirm Password is required')
-    //   .oneOf([Yup.ref('password'), null], 'Confirm Password does not match'),
-    acceptTerms: Yup.bool(),
+    name: Yup.string().required('Please enter needs name'),
   });
 
   const {
@@ -121,6 +189,10 @@ const NeedAdd = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      name: values.name,
+    },
+    mode: 'onChange',
   });
 
   const onSubmit = async (data) => {
@@ -128,25 +200,19 @@ const NeedAdd = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      AddSw({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
+      updateNeed({
+        id,
+        name: data.name,
+        emailAddress: data.emailAddress,
         country: data.country,
         city: data.city,
         phoneNumber: data.phoneNumber,
-        emergencyPhoneNumber: data.emergencyPhoneNumber,
         postalAddress: data.postalAddress,
-        telegramId: data.telegramId,
-        typeId: data.typeId,
-        idCardFile: finalIdImageFile,
-        idNumber: data.idNumber,
-        ngoId: data.ngoId,
-        avatarFile: finalImageFile,
-        birthDate,
-        isCoordinator: values.isCoordinator,
+        website: data.website,
+        logoUrl: finalImageFile,
       }),
     );
+    dispatch({ type: CHILD_ONE_NEED_RESET });
   };
 
   // dialog image
@@ -157,18 +223,6 @@ const NeedAdd = () => {
     setOpenImageDialog(false);
   };
 
-  // dialog id image
-  const handleIdImageClickOpen = () => {
-    setOpenIdImageDialog(true);
-  };
-  const handleIdImageClose = () => {
-    setOpenIdImageDialog(false);
-  };
-
-  const handleDateChange = (newValue) => {
-    setBirthDate(newValue);
-  };
-
   const onImageChange = (e) => {
     if (e.target.files[0]) {
       setUploadImage(e.target.files[0]);
@@ -176,489 +230,229 @@ const NeedAdd = () => {
     }
   };
 
-  const onIdImageChange = (e) => {
-    if (e.target.files[0]) {
-      setUploadIdImage(e.target.files[0]);
-      handleIdImageClickOpen();
-    }
-  };
-
-  const handleRemoveImage = () => {
-    console.log('remove');
-  };
-
-  const handleRemoveIdImage = () => {
-    console.log('remove');
-  };
-
-  const handleChangeCoord = () => {
-    if (coordChecked) {
-      setCoordChecked(false);
-    } else if (!coordChecked) {
-      setCoordChecked(true);
-    }
-    setValues({
-      ...values,
-      isCoordinator: coordChecked,
-    });
-  };
-
-  const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
-  const rectangle = (
-    <Box component="span" sx={shapeStyles}>
-      <div className="upload__image-wrapper">
-        <Button
-          sx={{
-            border: '1px dashed lightGrey',
-            width: 80,
-            minHeight: 50,
-          }}
-        >
-          <img
-            alt=""
-            width="80%"
-            style={{
-              maxHeight: 50,
-              bgcolor: 'white',
-            }}
-            src={
-              finalIdImageFile
-                ? URL.createObjectURL(finalIdImageFile) // image preview
-                : values.idCardFile
-            }
-          />
-        </Button>
-      </div>
-      <label htmlFor="upload-id-image">
-        <input
-          accept="image/*"
-          id="upload-id-image"
-          type="file"
-          style={{
-            display: 'none',
-            left: '60px',
-          }}
-          onChange={onIdImageChange}
-        />
-
-        <IconButton onClick={handleRemoveIdImage} color="secondary">
-          <RemoveCircleOutlineIcon
-            color="secondary"
-            fontSize="medium"
-            sx={{
-              borderRadius: '20%',
-            }}
-          />
-        </IconButton>
-        <IconButton name="upload-id-image" id="upload-id-image" color="primary" component="div">
-          <AddCircleOutlineIcon
-            color="primary"
-            fontSize="medium"
-            sx={{
-              borderRadius: '20%',
-            }}
-          />
-        </IconButton>
-      </label>
-    </Box>
-  );
-
   return (
-    <PageContainer title="Social Worker Add" description="this is Social Worker Add page">
+    <PageContainer title="Need Add" description="this is Need Add page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {loadingNgoAll ? (
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item>
+          <Autocomplete
+            id="asynchronous-myChildren"
+            sx={{ width: 300 }}
+            open={openChildren}
+            onOpen={() => {
+              setOpenChildren(true);
+            }}
+            onClose={() => {
+              setOpenChildren(false);
+            }}
+            onChange={(e, value) => setChildId(value && value.id)}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            getOptionLabel={(option) => `${option.id} - ${option.sayName}`}
+            options={optionsChildren}
+            loading={isLoadingChildren}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="My Children"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {isLoadingChildren ? <CircularProgress color="inherit" size={20} /> : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+          />
+        </Grid>
+      </Grid>
+      {loadingChild || loadingChildren ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        successNgoList && (
-          <>
-            <Breadcrumb title="Add page" subtitle="Social Worker" />
-            <Grid container spacing={0}>
-              <Grid item lg={4} md={12} xs={12}>
-                <Card sx={{ p: 3, textAlign: 'center' }}>
-                  <Badge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    badgeContent={
-                      <IconButton
-                        onClick={handleRemoveImage}
-                        color="secondary"
-                        sx={{
-                          position: 'absolute',
-                          bottom: '-5px',
-                          right: '65px',
-                        }}
-                      >
-                        <RemoveCircleOutlineIcon
-                          color="secondary"
-                          fontSize="small"
-                          sx={{
-                            borderRadius: '20%',
-                          }}
-                        />
-                      </IconButton>
-                    }
-                  >
-                    <div className="upload__image-wrapper">
-                      <Grid
-                        sx={{
-                          position: 'relative',
-                        }}
+        <>
+          {successChild && childId && (
+            <>
+              <Grid container spacing={0}>
+                <Grid item lg={4} md={12} xs={12}>
+                  <Card sx={{ p: 3 }}>
+                    <Grid container spacing={0}>
+                      <Badge
+                        sx={{ margin: 'auto' }}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        badgeContent={
+                          <Badge
+                            sx={{ margin: 'auto' }}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                            overlap="circular"
+                            badgeContent={
+                              <div className="upload__image-wrapper">
+                                <Grid
+                                  sx={{
+                                    position: 'relative',
+                                  }}
+                                >
+                                  <label htmlFor="upload-image">
+                                    <input
+                                      accept="image/*"
+                                      id="upload-image"
+                                      type="file"
+                                      style={{ display: 'none' }}
+                                      onChange={onImageChange}
+                                    />
+
+                                    <IconButton
+                                      name="upload-image"
+                                      id="upload-image"
+                                      color="primary"
+                                      component="div"
+                                    >
+                                      <AddCircleOutlineIcon
+                                        color="primary"
+                                        fontSize="medium"
+                                        sx={{
+                                          zIndex: 10,
+                                          borderRadius: '20%',
+                                        }}
+                                      />
+                                    </IconButton>
+                                  </label>
+                                </Grid>
+                              </div>
+                            }
+                          >
+                            <Avatar
+                              variant="circle"
+                              alt="user photo"
+                              src={
+                                finalImageFile
+                                  ? URL.createObjectURL(finalImageFile) // image preview
+                                  : null
+                              }
+                            >
+                              <Typography sx={{ padding: 1 }}>Icon</Typography>
+                            </Avatar>
+                          </Badge>
+                        }
                       >
                         <Avatar
+                          variant="square"
                           alt="user photo"
                           sx={{ width: 110, height: 110 }}
-                          src={
-                            finalImageFile
-                              ? URL.createObjectURL(finalImageFile) // image preview
-                              : values.avatarFile
-                          }
+                          src={result.avatarUrl}
                         />
-                        <label htmlFor="upload-image">
-                          <input
-                            accept="image/*"
-                            id="upload-image"
-                            type="file"
-                            style={{ display: 'none' }}
-                            onChange={onImageChange}
-                          />
-
-                          <IconButton
-                            name="upload-image"
-                            id="upload-image"
-                            color="primary"
-                            component="div"
-                            sx={{
-                              position: 'absolute',
-                              bottom: '0px',
-                              right: '0px',
-                            }}
-                          >
-                            <AddCircleOutlineIcon
-                              color="primary"
-                              fontSize="small"
-                              sx={{
-                                zIndex: 10,
-                                borderRadius: '20%',
-                              }}
-                            />
-                          </IconButton>
-                        </label>
-                      </Grid>
-                    </div>
-                  </Badge>
-                </Card>
-                <Card sx={{ p: 3, minHeight: 150 }}>
-                  <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={6} sx={{ position: 'relative', textAlign: 'center' }}>
-                      <Typography variant="caption"> {t('socialWorker.idCardUrl')}</Typography>
-                      <Grid aria-label="id card">{rectangle}</Grid>
+                      </Badge>
                     </Grid>
-                  </Grid>
-                </Card>
-              </Grid>
-              <Grid item lg={8} md={12} xs={12}>
-                <Card sx={{ p: 3 }}>
-                  <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                    {t('socialWorker.titleAdd')}
-                  </Typography>
-                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
-                    <TextField
-                      required
-                      id="firstName"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      control={control}
-                      {...register('firstName')}
-                      error={!!errors.firstName}
-                      helperText={errors && errors.firstName && errors.firstName.message}
-                    />
-                    <CustomFormLabel htmlFor="lastName">
-                      {t('socialWorker.lastName')}
-                    </CustomFormLabel>
-                    <TextField
-                      required
-                      id="lastName"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('lastName')}
-                      error={!!errors.lastName}
-                      helperText={errors && errors.lastName && errors.lastName.message}
-                    />
-                    <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
-                    <TextField
-                      id="Email"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('email')}
-                      error={!!errors.email}
-                      helperText={errors && errors.email && errors.email.message}
-                    />
-
-                    <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
-                    <CustomSelect
-                      labelId="country-controlled-open-select-label"
-                      id="country-controlled-open-select"
-                      defaultValue={1}
-                      control={control}
-                      register={{ ...register('country') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
-                    </CustomSelect>
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.country && errors.country.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
-                    <CustomSelect
-                      labelId="city-controlled-open-select-label"
-                      id="city-controlled-open-select"
-                      defaultValue={1}
-                      control={control}
-                      register={{ ...register('city') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
-                    </CustomSelect>
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.city && errors.city.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="postalAddress">
-                      {t('socialWorker.postalAddress')}
-                    </CustomFormLabel>
-                    <CustomTextField
-                      id="postalAddress"
-                      variant="outlined"
-                      multiline
-                      rows={4}
-                      size="small"
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      control={control}
-                      register={{ ...register('postalAddress') }}
-                      helperText={errors && errors.postalAddress && errors.postalAddress.message}
-                    />
-                    <CustomFormLabel htmlFor="birthDate">
-                      {t('socialWorker.birthDate')}
-                    </CustomFormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DesktopDatePicker
-                        id="birthDate"
-                        inputFormat="MM/dd/yyyy"
-                        value={birthDate}
-                        onChange={handleDateChange}
-                        renderInput={(params) => <TextField {...params} />}
-                        helperText={errors && errors.birthDate && errors.birthDate.message}
-                      />
-                    </LocalizationProvider>
-
-                    <CustomFormLabel htmlFor="telegramId">
-                      {t('socialWorker.telegramId')}
-                    </CustomFormLabel>
-                    <OutlinedInput
-                      id="telegramId"
-                      startAdornment={<InputAdornment position="start">@</InputAdornment>}
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('telegramId')}
-                      error={!!errors.telegramId}
-                    />
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.telegramId && errors.telegramId.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="idNumber">
-                      {t('socialWorker.idNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="idNumber"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('idNumber')}
-                      error={!!errors.idNumber}
-                      helperText={errors && errors.lastName && errors.lastName.message}
-                    />
-                    <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
-                      {t('socialWorker.ngoName')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="ngoId-controlled-open-select-label"
-                      id="ngoId-controlled-open-select"
-                      defaultValue={ngoList[1].id}
-                      register={{ ...register('ngoId') }}
-                      control={control}
-                      error={!!errors.ngoId}
-                    >
-                      {ngoList &&
-                        Object.keys(ngoList).map((key) => (
-                          <MenuItem key={key} value={ngoList[key].id}>
-                            {ngoList[key].name}
-                          </MenuItem>
-                        ))}
-                    </CustomSelect>
-                    <CustomFormLabel id="typeId-controlled-open-select-label" htmlFor="typeId">
-                      {t('socialWorker.typeId')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="typeId-controlled-open-select-label"
-                      id="typeId-controlled-open-select"
-                      defaultValue={4}
-                      control={control}
-                      register={{ ...register('typeId') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
-                      <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
-                      {/* <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem> */}
-                      <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
-                    </CustomSelect>
-                    <CustomFormLabel htmlFor="phoneNumber">
-                      {t('socialWorker.phoneNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="phoneNumber"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('phoneNumber')}
-                      error={!!errors.phoneNumber}
-                      helperText={errors && errors.phoneNumber && errors.phoneNumber.message}
-                    />
-                    <CustomFormLabel htmlFor="emergencyPhoneNumber">
-                      {t('socialWorker.emergencyPhoneNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="emergencyPhoneNumber"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('emergencyPhoneNumber')}
-                      error={!!errors.emergencyPhoneNumber}
-                      helperText={
-                        errors && errors.emergencyPhoneNumber && errors.emergencyPhoneNumber.message
-                      }
-                    />
-                    <FormControlLabel
-                      sx={{ width: '100%' }}
-                      control={
-                        <Switch
-                          id="isCoordinator"
-                          variant="outlined"
-                          checked={coordChecked}
-                          onChange={handleChangeCoord}
-                          inputProps={{ 'aria-label': 'controlled' }}
-                        />
-                      }
-                      label={
-                        <Grid>
-                          <Box
-                            sx={{
-                              display: 'inline-block',
-                              backgroundColor:
-                                coordChecked === true
-                                  ? (theme) => theme.palette.success.main
-                                  : (theme) => theme.palette.error.main,
-                              borderRadius: '100%',
-                              height: '10px',
-                              width: '10px',
+                  </Card>
+                </Grid>
+                <Grid item lg={8} md={12} xs={12}>
+                  <Card sx={{ p: 3 }}>
+                    <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
+                      {t('socialWorker.titleAdd')}
+                    </Typography>
+                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                      <Autocomplete
+                        id="asynchronous-myChildren"
+                        open={openPreNeed}
+                        onOpen={() => {
+                          setOpenPreNeed(true);
+                        }}
+                        onClose={() => {
+                          setOpenPreNeed(false);
+                        }}
+                        onChange={(e, value) => setTheNeed(value)}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        getOptionLabel={(option) =>
+                          `${option.id} - ${option.name} - ${option.title}`
+                        }
+                        options={optionsPreNeed}
+                        loading={isLoadingPreNeed}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label={t('need.preNeed')}
+                            InputProps={{
+                              ...params.InputProps,
+                              endAdornment: (
+                                <>
+                                  {isLoadingPreNeed ? (
+                                    <CircularProgress color="inherit" size={20} />
+                                  ) : null}
+                                  {params.InputProps.endAdornment}
+                                </>
+                              ),
                             }}
                           />
-                          {'  '}
-                          <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                            {t('socialWorker.isCoordinator')}
-                          </Typography>
-                        </Grid>
-                      }
-                    />
-                    <LoadingButton
-                      loading={loadingAddSw}
-                      color="primary"
-                      type="submit"
-                      onClick={handleSubmit(onSubmit)}
-                      variant="contained"
-                      sx={{ mt: 4 }}
-                    >
-                      {t('socialWorker.button.update')}
-                    </LoadingButton>
-                  </form>
-                </Card>
-              </Grid>
-            </Grid>
+                        )}
+                      />
+                      <CustomFormLabel htmlFor="name">Need Name</CustomFormLabel>
+                      <TextField
+                        required
+                        id="name"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        control={control}
+                        value={values.name}
+                        {...register('name')}
+                        error={!!errors.name}
+                      />
 
-            {/* Social Worker Image */}
-            <Dialog
-              open={openImageDialog}
-              onClose={handleImageClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogContent>
-                <Box>
-                  <UploadIdImage
-                    uploadImage={uploadImage}
-                    handleImageClose={handleImageClose}
-                    setFinalImageFile={setFinalImageFile}
-                  />
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
-              </DialogActions>
-            </Dialog>
-            {/* Social Worker ID Image */}
-            <Dialog
-              open={openIdImageDialog}
-              onClose={handleIdImageClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogContent>
-                <Box>
-                  <UploadIdImage
-                    uploadImage={uploadIdImage}
-                    handleImageClose={handleIdImageClose}
-                    setFinalImageFile={setFinalIdImageFile}
-                  />
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
-              </DialogActions>
-            </Dialog>
-            <Grid>
-              {(successAddUpdate || errorAddUpdate) && (
-                <Message
-                  severity={successAddUpdate ? 'success' : 'error'}
-                  variant="filled"
-                  input="addSw"
-                  backError={errorAddUpdate}
-                  sx={{ width: '100%' }}
-                >
-                  {successAddUpdate && t('socialWorker.updated')}
-                </Message>
-              )}
-            </Grid>
-          </>
-        )
+                      <LoadingButton
+                        loading={loadingAddNeed}
+                        color="primary"
+                        type="submit"
+                        onClick={handleSubmit(onSubmit)}
+                        variant="contained"
+                        sx={{ mt: 4 }}
+                      >
+                        {t('socialWorker.button.update')}
+                      </LoadingButton>
+                    </form>
+                  </Card>
+                </Grid>
+              </Grid>
+              {/* Need Icon */}
+              <Dialog
+                open={openImageDialog}
+                onClose={handleImageClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogContent>
+                  <Box>
+                    <UploadIdImage
+                      uploadImage={uploadImage}
+                      handleImageClose={handleImageClose}
+                      setFinalImageFile={setFinalImageFile}
+                    />
+                  </Box>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleImageClose}>Close</Button>
+                </DialogActions>
+              </Dialog>
+              <Grid>
+                {(successAddNeed || errorAddNeed) && (
+                  <Message
+                    severity={successAddNeed ? 'success' : 'error'}
+                    variant="filled"
+                    input="addSw"
+                    backError={errorAddNeed}
+                    sx={{ width: '100%' }}
+                  >
+                    {successAddNeed && t('socialWorker.updated')}
+                  </Message>
+                )}
+              </Grid>
+            </>
+          )}
+        </>
       )}
     </PageContainer>
   );

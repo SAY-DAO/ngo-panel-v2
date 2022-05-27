@@ -56,7 +56,7 @@ const NgoAdd = () => {
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
 
   const swAdd = useSelector((state) => state.swAdd);
-  const { success: successAddUpdate, loading: loadingAddSw, error: errorAddUpdate } = swAdd;
+  const { success: successAddSW, loading: loadingAddSw, error: errorAddSW } = swAdd;
 
   const countryList = useSelector((state) => state.countryList);
   const { countries, states, cities, success: successCountryList } = countryList;
@@ -396,15 +396,15 @@ const NgoAdd = () => {
             </DialogActions>
           </Dialog>
           <Grid>
-            {(successAddUpdate || errorAddUpdate) && (
+            {(successAddSW || errorAddSW) && (
               <Message
-                severity={successAddUpdate ? 'success' : 'error'}
+                severity={successAddSW ? 'success' : 'error'}
                 variant="filled"
                 input="addSw"
-                backError={errorAddUpdate}
+                backError={errorAddSW}
                 sx={{ width: '100%' }}
               >
-                {successAddUpdate && t('socialWorker.updated')}
+                {successAddSW && t('socialWorker.updated')}
               </Message>
             )}
           </Grid>

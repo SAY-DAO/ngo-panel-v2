@@ -37,7 +37,7 @@ import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
-import { fetchChildList } from '../../redux/actions/childrenAction';
+import { fetchChildrenByNgo } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import PieChart from '../../components/analytics/PieChart';
@@ -354,8 +354,8 @@ const NeedTable = () => {
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, loading: loadingChildrenNeeds, success: successChildrenNeeds } = childNeeds;
 
-  const childAll = useSelector((state) => state.childAll);
-  const { childList, success: successChildren } = childAll;
+  const childrenByNgo = useSelector((state) => state.childrenByNgo);
+  const { childList, success: successChildren } = childrenByNgo;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
@@ -447,7 +447,7 @@ const NeedTable = () => {
     if (!open || openNgo) {
       setOptions([]);
     } else if (open || !openNgo) {
-      dispatch(fetchChildList({ ngoId }));
+      dispatch(fetchChildrenByNgo({ ngoId }));
     }
   }, [open, openNgo, ngoId]);
 
