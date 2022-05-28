@@ -14,12 +14,11 @@ import {
   TextField,
   IconButton,
   Autocomplete,
-  MenuItem,
   FormControlLabel,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -30,12 +29,21 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import Message from '../../components/Message';
 import UploadIdImage from '../../components/UploadImage';
-import { updateNeed, fetchExampleNeeds, fetchChildOneNeed } from '../../redux/actions/needsAction';
-import { CHILD_ONE_NEED_RESET } from '../../redux/constants/needConstant';
+import {
+  updateNeed,
+  fetchExampleNeeds,
+  fetchChildOneNeed,
+  fetchChildNeeds,
+} from '../../redux/actions/needsAction';
+import {
+  CHILD_EXAMPLE_NEEDS_RESET,
+  CHILD_ONE_NEED_RESET,
+} from '../../redux/constants/needConstant';
 import { fetchChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
+import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 
 const BCrumb = [
   {
@@ -54,6 +62,7 @@ const NeedAdd = () => {
 
   const [isAffChecked, setIsAffChecked] = useState(false);
   const [isUrgentChecked, setIsUrgentChecked] = useState(false);
+  const [needsData, setNeedsData] = useState();
 
   const [openPreNeed, setOpenPreNeed] = useState(false);
   const [optionsPreNeed, setOptionsPreNeed] = useState([]);
@@ -82,14 +91,24 @@ const NeedAdd = () => {
   const { exampleNeeds, success: successNeedEx } = childExampleNeeds;
 
   const childOneNeed = useSelector((state) => state.childOneNeed);
-  const { oneNeed, loading: loadingOneNeed, success: successOneNeed } = childOneNeed;
+  const { oneNeed } = childOneNeed;
+
+  const childNeeds = useSelector((state) => state.childNeeds);
+  const { theNeeds, success: successChildrenNeeds } = childNeeds;
 
   // one need
   useEffect(() => {
-    if (!successOneNeed && theNeed && theNeed.id) {
+    if (theNeed && theNeed.id) {
       dispatch(fetchChildOneNeed(theNeed.id));
     }
   }, [theNeed]);
+
+  // needs
+  useEffect(() => {
+    if (childId) {
+      dispatch(fetchChildNeeds(childId));
+    }
+  }, [childId]);
 
   // Autocomplete my Children
   useEffect(() => {
@@ -143,6 +162,9 @@ const NeedAdd = () => {
     } else if (openPreNeed) {
       dispatch(fetchExampleNeeds());
     }
+    return () => {
+      dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
+    };
   }, [openPreNeed]);
 
   // theChild
@@ -152,10 +174,44 @@ const NeedAdd = () => {
     }
   }, [childId]);
 
-  //
+  // sort needs
+  // urgent ==> index 0
+  // growth 0 ==> index 1
+  // joy 1 ==> index 2
+  // health 2 ==> index 3
+  // surroundings 3 ==> index 4
+  // isDone ==> index 5
+  // isConfirmed ==> index 6
+  // unpayable ==> index 7
+  useEffect(() => {
+    if (successChildrenNeeds) {
+      const needData = [[], [], [], [], [], [], [], []];
+      for (let i = 0; i < theNeeds.needs.length; i += 1) {
+        if (theNeeds.needs[i].isUrgent) {
+          needData[0].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].isDone) {
+          needData[5].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].isConfirmed) {
+          needData[6].push(theNeeds.needs[i]);
+        } else if (theNeeds.needs[i].unpayable) {
+          needData[7].push(theNeeds.needs[i]);
+        }
+        needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
+      }
+      setNeedsData(needData);
+    }
+  }, [childId, successChildrenNeeds]);
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Please enter needs name'),
+    name_fa: Yup.string().required('Please enter needs name'),
+    name_en: Yup.string().required('Please enter needs name'),
+    cost: Yup.number().required('Please enter needs cost'),
+    type: Yup.string().required('Please enter needs name'),
+    doing_duration: Yup.number().required('Please enter estimated finishing time'),
+    category: Yup.string().required('Please enter needs category'),
+    link: Yup.string().url().required('Please enter needs link'),
+    imageUrl: Yup.string().required('Please choose an icon'),
+    // isUrgentDesc: Yup.string().required('Please enter urgency details'),
   });
 
   const {
@@ -166,14 +222,23 @@ const NeedAdd = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
-    mode: 'onChange',
   });
 
   useEffect(() => {
-    if (successNeedEx && theNeed) {
-      setValue('name_fa', theNeed.cost.toLocaleString());
+    if (successNeedEx && oneNeed) {
+      setValue('name_fa', oneNeed.name_translations.fa);
+      setValue('name_en', oneNeed.name_translations.en);
+      setValue('type', oneNeed.type);
+      setValue('category', oneNeed.category);
+      setValue('isUrgent', oneNeed.isUrgent);
+      setValue('desc_fa', oneNeed.description_translations.fa);
+      setValue('desc_en', oneNeed.description_translations.en);
+      setValue('details', oneNeed.details); // social worker note on app
+      setValue('link', oneNeed.link);
+      setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
+      setValue('imageUrl', oneNeed.imageUrl);
     }
-  }, [successNeedEx, theNeed]);
+  }, [successNeedEx, oneNeed]);
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -206,11 +271,10 @@ const NeedAdd = () => {
     if (e.target.files[0]) {
       setUploadImage(e.target.files[0]);
       handleImageClickOpen();
+      if (e.target.files[0].name) {
+        setValue('imageUrl', e.target.files[0].name);
+      }
     }
-  };
-
-  const handleChangeInput = () => () => {
-    // setValues({ ...values, [prop]: event.target.value });
   };
 
   const handleAffChange = (e) => {
@@ -230,7 +294,7 @@ const NeedAdd = () => {
         <Grid item>
           <Autocomplete
             id="asynchronous-myChildren"
-            sx={{ width: 300 }}
+            sx={{ width: 400 }}
             open={openChildren}
             onOpen={() => {
               setOpenChildren(true);
@@ -240,7 +304,9 @@ const NeedAdd = () => {
             }}
             onChange={(e, value) => setChildId(value && value.id)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) => `${option.id} - ${option.sayName}`}
+            getOptionLabel={(option) =>
+              `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
+            }
             options={optionsChildren}
             loading={isLoadingChildren}
             renderInput={(params) => (
@@ -271,7 +337,7 @@ const NeedAdd = () => {
             <>
               <Grid container spacing={0}>
                 <Grid item lg={4} md={12} xs={12}>
-                  <Card sx={{ p: 3 }}>
+                  <Card sx={{ pb: 6 }}>
                     <Grid container spacing={0}>
                       <Badge
                         sx={{ margin: 'auto' }}
@@ -319,12 +385,18 @@ const NeedAdd = () => {
                           >
                             <Avatar
                               variant="circle"
-                              alt="user photo"
+                              alt="icon image"
                               src={
                                 finalImageFile
                                   ? URL.createObjectURL(finalImageFile) // image preview
-                                  : null
+                                  : oneNeed && oneNeed.imageUrl
                               }
+                              sx={{
+                                backgroundColor: 'white',
+                                width: 50,
+                                height: 50,
+                                boxShadow: '0px 7px 30px 0px',
+                              }}
                             >
                               <Typography sx={{ padding: 1 }}>Icon</Typography>
                             </Avatar>
@@ -332,7 +404,7 @@ const NeedAdd = () => {
                         }
                       >
                         <Avatar
-                          variant="square"
+                          variant="circle"
                           alt="user photo"
                           sx={{ width: 110, height: 110 }}
                           src={result.avatarUrl}
@@ -340,15 +412,31 @@ const NeedAdd = () => {
                       </Badge>
                     </Grid>
                   </Card>
+                  <Card sx={{ p: 1 }}>
+                    <Grid item xs={12}>
+                      {needsData && successChildrenNeeds ? (
+                        <Grid item xs={12}>
+                          <LinearNeedStats
+                            needsData={needsData}
+                            totalNeeds={parseInt(theNeeds.total_count, 10)}
+                          />
+                        </Grid>
+                      ) : (
+                        <Grid sx={{ textAlign: 'center' }}>
+                          <CircularProgress />
+                        </Grid>
+                      )}
+                    </Grid>
+                  </Card>
                 </Grid>
                 <Grid item lg={8} md={12} xs={12}>
                   <Card sx={{ p: 3 }}>
                     <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                      {t('socialWorker.titleAdd')}
+                      {t('need.titleAdd')}
                     </Typography>
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
                       <Autocomplete
-                        id="asynchronous-myChildren"
+                        id="asynchronous-preNeed"
                         open={openPreNeed}
                         onOpen={() => {
                           setOpenPreNeed(true);
@@ -397,7 +485,6 @@ const NeedAdd = () => {
                             size="small"
                             control={control}
                             {...register('name_fa', { required: true })}
-                            error={!!errors.name_fa}
                           />
                         </Grid>
                         <Grid item xs={6}>
@@ -426,35 +513,34 @@ const NeedAdd = () => {
                         <Grid item xs={3}>
                           <CustomFormLabel htmlFor="type">{t('need.type_name')}</CustomFormLabel>
                           <CustomSelect
-                            sx={{ width: '100%' }}
+                            native
+                            sx={{ width: '100%', color: 'gray' }}
                             labelId="type-controlled-open-select-label"
                             id="type-controlled-open-select"
-                            defaultValue={1}
-                            onChange={handleChangeInput('type')}
                             control={control}
-                            register={{ ...register('type') }}
+                            register={{ ...register('type', { required: true }) }}
                           >
-                            <MenuItem value={0}>{t('need.types.service')}</MenuItem>
-                            <MenuItem value={1}>{t('need.types.product')}</MenuItem>
+                            <option value={0}>{t('need.types.service')}</option>
+                            <option value={1}>{t('need.types.product')}</option>
                           </CustomSelect>
                         </Grid>
                         <Grid item xs={3}>
                           <CustomFormLabel htmlFor="category">{t('need.category')}</CustomFormLabel>
                           <CustomSelect
-                            sx={{ width: '100%' }}
+                            native
+                            sx={{ width: '100%', color: 'gray' }}
                             labelId="category-controlled-open-select-label"
                             id="category-controlled-open-select"
-                            defaultValue={1}
-                            onChange={handleChangeInput('category')}
                             control={control}
-                            register={{ ...register('category') }}
+                            register={{ ...register('category', { required: true }) }}
                           >
-                            <MenuItem value={0}>{t('need.categories.growth')}</MenuItem>
-                            <MenuItem value={1}>{t('need.categories.joy')}</MenuItem>
-                            <MenuItem value={2}>{t('need.categories.health')}</MenuItem>
-                            <MenuItem value={3}>{t('need.categories.surroundings')}</MenuItem>
+                            <option value={0}>{t('need.categories.growth')}</option>
+                            <option value={1}>{t('need.categories.joy')}</option>
+                            <option value={2}>{t('need.categories.health')}</option>
+                            <option value={3}>{t('need.categories.surroundings')}</option>
                           </CustomSelect>
                         </Grid>
+
                         <Grid item xs={3}>
                           <CustomFormLabel htmlFor="cost">{t('need.cost')}</CustomFormLabel>
                           <TextField
@@ -598,6 +684,7 @@ const NeedAdd = () => {
                         id="doing_duration"
                         variant="outlined"
                         fullWidth
+                        type="number"
                         size="small"
                         control={control}
                         {...register('doing_duration', { required: true })}
@@ -623,8 +710,66 @@ const NeedAdd = () => {
                         variant="contained"
                         sx={{ mt: 4 }}
                       >
-                        {t('socialWorker.button.update')}
+                        {t('need.button.add')}
                       </LoadingButton>
+                      <ul>
+                        {errors && errors.name_fa && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.name_fa?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.name_en && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.name_en?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.cost && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.cost?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.type && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.type?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.category && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.category?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.imageUrl && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.imageUrl?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.link && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.link?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.doing_duration && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.doing_duration?.message}
+                            </Typography>
+                          </li>
+                        )}
+                      </ul>
                     </form>
                   </Card>
                 </Grid>

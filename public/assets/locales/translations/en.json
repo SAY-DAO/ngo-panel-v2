@@ -598,6 +598,8 @@
   },
   "need": {
     "id": "id",
+    "titleEdit": "Edit Need Details",
+    "titleAdd": "Add Need Details",
     "unpayable": "Payable",
     "update": "Edit",
     "imageUrl": "Icon",
@@ -642,6 +644,10 @@
     "doneAt": "Done At",
     "child_delivery_date": "Delivery To Child",
     "preNeed": "Template",
-    "doing_duration": "Days to complete"
+    "doing_duration": "Days to complete",
+    "button": {
+      "update": "Update",
+      "add": "Add Need"
+    }
   }
 }
