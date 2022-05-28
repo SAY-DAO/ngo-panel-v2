@@ -14,6 +14,8 @@ import {
   TextField,
   IconButton,
   Autocomplete,
+  MenuItem,
+  FormControlLabel,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -28,9 +30,12 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import Message from '../../components/Message';
 import UploadIdImage from '../../components/UploadImage';
-import { updateNeed, fetchExampleNeeds } from '../../redux/actions/needsAction';
+import { updateNeed, fetchExampleNeeds, fetchChildOneNeed } from '../../redux/actions/needsAction';
 import { CHILD_ONE_NEED_RESET } from '../../redux/constants/needConstant';
 import { fetchChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
+import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
+import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
+import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 
 const BCrumb = [
   {
@@ -41,44 +46,14 @@ const BCrumb = [
     title: 'Add',
   },
 ];
-// child_id *
-// sw_id
-// imageUrl
-// name_translations  name_fa name_en
-// description_translations desc_fa desc_en
-// category *
-// isUrgent *
-// cost *
-// type *
-// link
-// affiliateLinkUrl
-// doing_duration
-// details
-// informations
-
-// "name": "Need Name",
-// "cost": "Cost",
-// "link": "Link",
-// "affiliateLinkUrl": "Aff. Link",
-// "type_name": "Type",
-// "isUrgent": "Urgent",
-// "information": "Additional Info",
-// "details": "Social Worker Notes",
-// "category": "Category",
-// "description": "Description",
-// "created": "Created At",
-// "isConfirmed": "Confirm",
-// "confirmUser": "Confirmed By",
-// "confirmDate": "Confirmed At",
-// "updated": " Last Edit",
-// "doneAt": "Done At",
-// "child_delivery_date": "Delivery To Child"
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { id } = useParams();
   const { t } = useTranslation();
+
+  const [isAffChecked, setIsAffChecked] = useState(false);
+  const [isUrgentChecked, setIsUrgentChecked] = useState(false);
 
   const [openPreNeed, setOpenPreNeed] = useState(false);
   const [optionsPreNeed, setOptionsPreNeed] = useState([]);
@@ -93,9 +68,7 @@ const NeedAdd = () => {
   const [finalImageFile, setFinalImageFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [values, setValues] = React.useState({
-    name: '',
-  });
+
   const needAdd = useSelector((state) => state.needAdd);
   const { success: successAddNeed, loading: loadingAddNeed, error: errorAddNeed } = needAdd;
 
@@ -107,6 +80,16 @@ const NeedAdd = () => {
 
   const childExampleNeeds = useSelector((state) => state.childExampleNeeds);
   const { exampleNeeds, success: successNeedEx } = childExampleNeeds;
+
+  const childOneNeed = useSelector((state) => state.childOneNeed);
+  const { oneNeed, loading: loadingOneNeed, success: successOneNeed } = childOneNeed;
+
+  // one need
+  useEffect(() => {
+    if (!successOneNeed && theNeed && theNeed.id) {
+      dispatch(fetchChildOneNeed(theNeed.id));
+    }
+  }, [theNeed]);
 
   // Autocomplete my Children
   useEffect(() => {
@@ -142,7 +125,7 @@ const NeedAdd = () => {
       return undefined;
     }
     if (active && successNeedEx) {
-      // sort myChildren
+      // sort my children
       const sortedNeeds = exampleNeeds.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
@@ -169,31 +152,28 @@ const NeedAdd = () => {
     }
   }, [childId]);
 
-  useEffect(() => {
-    if (successNeedEx && theNeed) {
-      setValues({
-        ...values,
-        name: theNeed.name,
-      });
-    }
-  }, [successNeedEx, theNeed]);
+  //
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Please enter needs name'),
   });
 
   const {
+    setValue,
     register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      name: values.name,
-    },
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    if (successNeedEx && theNeed) {
+      setValue('name_fa', theNeed.cost.toLocaleString());
+    }
+  }, [successNeedEx, theNeed]);
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -201,7 +181,6 @@ const NeedAdd = () => {
     await sleep(300);
     dispatch(
       updateNeed({
-        id,
         name: data.name,
         emailAddress: data.emailAddress,
         country: data.country,
@@ -228,6 +207,18 @@ const NeedAdd = () => {
       setUploadImage(e.target.files[0]);
       handleImageClickOpen();
     }
+  };
+
+  const handleChangeInput = () => () => {
+    // setValues({ ...values, [prop]: event.target.value });
+  };
+
+  const handleAffChange = (e) => {
+    setIsAffChecked(e.target.checked);
+  };
+
+  const handleUrgentChange = (e) => {
+    setIsUrgentChecked(e.target.checked);
   };
 
   return (
@@ -390,19 +381,240 @@ const NeedAdd = () => {
                           />
                         )}
                       />
-                      <CustomFormLabel htmlFor="name">Need Name</CustomFormLabel>
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="flex-end"
+                        spacing={2}
+                      >
+                        <Grid item xs={6}>
+                          <CustomFormLabel htmlFor="name_fa">{t('need.name.fa')}</CustomFormLabel>
+                          <TextField
+                            id="name_fa"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            control={control}
+                            {...register('name_fa', { required: true })}
+                            error={!!errors.name_fa}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <CustomFormLabel htmlFor="name_en">{t('need.name.en')}</CustomFormLabel>
+                          <TextField
+                            id="name_en"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            control={control}
+                            {...register('name_en', { required: true })}
+                            error={!!errors.name_en}
+                          />
+                        </Grid>
+                      </Grid>
+
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="flex-end"
+                        mb={2}
+                        mt={2}
+                        spacing={2}
+                      >
+                        <Grid item xs={3}>
+                          <CustomFormLabel htmlFor="type">{t('need.type_name')}</CustomFormLabel>
+                          <CustomSelect
+                            sx={{ width: '100%' }}
+                            labelId="type-controlled-open-select-label"
+                            id="type-controlled-open-select"
+                            defaultValue={1}
+                            onChange={handleChangeInput('type')}
+                            control={control}
+                            register={{ ...register('type') }}
+                          >
+                            <MenuItem value={0}>{t('need.types.service')}</MenuItem>
+                            <MenuItem value={1}>{t('need.types.product')}</MenuItem>
+                          </CustomSelect>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <CustomFormLabel htmlFor="category">{t('need.category')}</CustomFormLabel>
+                          <CustomSelect
+                            sx={{ width: '100%' }}
+                            labelId="category-controlled-open-select-label"
+                            id="category-controlled-open-select"
+                            defaultValue={1}
+                            onChange={handleChangeInput('category')}
+                            control={control}
+                            register={{ ...register('category') }}
+                          >
+                            <MenuItem value={0}>{t('need.categories.growth')}</MenuItem>
+                            <MenuItem value={1}>{t('need.categories.joy')}</MenuItem>
+                            <MenuItem value={2}>{t('need.categories.health')}</MenuItem>
+                            <MenuItem value={3}>{t('need.categories.surroundings')}</MenuItem>
+                          </CustomSelect>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <CustomFormLabel htmlFor="cost">{t('need.cost')}</CustomFormLabel>
+                          <TextField
+                            sx={{ width: '100%' }}
+                            id="cost"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            control={control}
+                            {...register('cost', { required: true })}
+                            error={!!errors.cost}
+                          />
+                        </Grid>
+                        <Grid item xs={3}>
+                          <FormControlLabel
+                            control={
+                              <CustomCheckbox
+                                color="primary"
+                                checked={isUrgentChecked}
+                                onChange={handleUrgentChange}
+                              />
+                            }
+                            label={`${t('need.isUrgent')}?`}
+                          />
+                        </Grid>
+                      </Grid>
+                      {isUrgentChecked && (
+                        <>
+                          <CustomFormLabel htmlFor="isUrgentDesc">
+                            {t('need.isUrgentDesc')}
+                          </CustomFormLabel>
+                          <CustomTextField
+                            id="isUrgentDesc"
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            size="small"
+                            sx={{ mb: 2 }}
+                            fullWidth
+                            control={control}
+                            register={{ ...register('isUrgentDesc') }}
+                          />
+                        </>
+                      )}
+
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="flex-end"
+                        spacing={2}
+                      >
+                        <Grid item xs={6}>
+                          <CustomFormLabel htmlFor="desc_fa">
+                            {t('need.descriptions.fa')}
+                          </CustomFormLabel>
+                          <CustomTextField
+                            id="desc_fa"
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            size="small"
+                            sx={{ mb: 2 }}
+                            fullWidth
+                            control={control}
+                            register={{ ...register('desc_fa') }}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <CustomFormLabel htmlFor="desc_en">
+                            {t('need.descriptions.en')}
+                          </CustomFormLabel>
+                          <CustomTextField
+                            id="desc_en"
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            size="small"
+                            sx={{ mb: 2 }}
+                            fullWidth
+                            control={control}
+                            register={{ ...register('desc_en') }}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="flex-end"
+                        spacing={2}
+                        mb={2}
+                      >
+                        <Grid item xs={6}>
+                          <CustomFormLabel htmlFor="link">{t('need.link')}</CustomFormLabel>
+                          <TextField
+                            id="link"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            control={control}
+                            {...register('link', { required: true })}
+                            error={!!errors.link}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <FormControlLabel
+                            control={
+                              <CustomCheckbox
+                                color="primary"
+                                checked={isAffChecked}
+                                onChange={handleAffChange}
+                              />
+                            }
+                            label={`${t('need.affiliateLinkUrl')}?`}
+                          />
+                        </Grid>
+                      </Grid>
+
+                      {isAffChecked && (
+                        <>
+                          <CustomFormLabel htmlFor="affiliateLinkUrl">
+                            {t('need.affiliateLinkUrl')}
+                          </CustomFormLabel>
+                          <TextField
+                            id="affiliateLinkUrl"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            control={control}
+                            {...register('affiliateLinkUrl', { required: true })}
+                            error={!!errors.affiliateLinkUrl}
+                          />
+                        </>
+                      )}
+                      <CustomFormLabel htmlFor="doing_duration">
+                        {t('need.doing_duration')}
+                      </CustomFormLabel>
                       <TextField
-                        required
-                        id="name"
+                        id="doing_duration"
                         variant="outlined"
                         fullWidth
                         size="small"
                         control={control}
-                        value={values.name}
-                        {...register('name')}
-                        error={!!errors.name}
+                        {...register('doing_duration', { required: true })}
+                        error={!!errors.doing_duration}
                       />
-
+                      <CustomFormLabel htmlFor="details">{t('need.details')}</CustomFormLabel>
+                      <CustomTextField
+                        id="details"
+                        variant="outlined"
+                        multiline
+                        rows={4}
+                        size="small"
+                        sx={{ mb: 2 }}
+                        fullWidth
+                        control={control}
+                        register={{ ...register('details') }}
+                      />
                       <LoadingButton
                         loading={loadingAddNeed}
                         color="primary"

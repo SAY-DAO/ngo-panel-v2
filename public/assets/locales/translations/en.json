@@ -602,7 +602,10 @@
     "update": "Edit",
     "imageUrl": "Icon",
     "childSayName": "SAY Name",
-    "name": "Need Name",
+    "name": {
+      "fa": "Farsi Name (fa)",
+      "en": "English Name (en)"
+    },
     "title": "Title",
     "cost": "Cost",
     "paid": "Paid",
@@ -611,11 +614,26 @@
     "link": "Link",
     "affiliateLinkUrl": "Aff. Link",
     "type_name": "Type",
+    "types": {
+      "service": "service",
+      "product": "product"
+    },
     "isUrgent": "Urgent",
+    "isUrgentDesc": "Urgency details",
     "information": "Additional Info",
     "details": "Social Worker Notes",
     "category": "Category",
+    "categories": {
+      "growth": "growth",
+      "joy": "joy",
+      "health": "health",
+      "surroundings": "surroundings"
+    },
     "description": "Description",
+    "descriptions": {
+      "fa": "Farsi Description (fa)",
+      "en": "English Description (en)"
+    },
     "created": "Created At",
     "isConfirmed": "Confirm",
     "confirmUser": "Confirmed By",
@@ -623,6 +641,7 @@
     "updated": " Last Edit",
     "doneAt": "Done At",
     "child_delivery_date": "Delivery To Child",
-    "preNeed": "Template"
+    "preNeed": "Template",
+    "doing_duration": "Days to complete"
   }
 }

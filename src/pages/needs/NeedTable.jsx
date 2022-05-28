@@ -118,7 +118,7 @@ function EnhancedTableHead(props) {
       id: 'name',
       numeric: false,
       disablePadding: false,
-      label: t('need.name'),
+      label: t('need.name.en'),
     },
     {
       id: 'title',
