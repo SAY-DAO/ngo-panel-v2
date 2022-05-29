@@ -101,6 +101,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: true,
       label: t('need.childSayName'),
+      width: '150px',
     },
     {
       id: 'update',
@@ -119,12 +120,14 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.name.en'),
+      width: '200px',
     },
     {
       id: 'title',
       numeric: false,
       disablePadding: false,
       label: t('need.title'),
+      width: '200px',
     },
 
     {
@@ -168,12 +171,14 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.information'),
+      width: '200px',
     },
     {
       id: 'details',
       numeric: false,
       disablePadding: false,
       label: t('need.details'),
+      width: '250px',
     },
     {
       id: 'category',
@@ -186,6 +191,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.description'),
+      width: '200px',
     },
     {
       id: 'link',
@@ -198,42 +204,49 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.affiliateLinkUrl'),
+      width: '150px',
     },
     {
       id: 'created',
       numeric: false,
       disablePadding: false,
       label: t('need.created'),
+      width: '200px',
     },
     {
       id: 'confirmUser',
       numeric: false,
       disablePadding: false,
       label: t('need.confirmUser'),
+      width: '200px',
     },
     {
       id: 'confirmDate',
       numeric: false,
       disablePadding: false,
       label: t('need.confirmDate'),
+      width: '200px',
     },
     {
       id: 'updated',
       numeric: false,
       disablePadding: false,
       label: t('need.updated'),
+      width: '150px',
     },
     {
       id: 'doneAt',
       numeric: false,
       disablePadding: false,
       label: t('need.doneAt'),
+      width: '150px',
     },
     {
       id: 'child_delivery_date',
       numeric: false,
       disablePadding: false,
       label: t('need.child_delivery_date'),
+      width: '200px',
     },
   ];
   return (
@@ -245,6 +258,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ minWidth: headCell.width }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}

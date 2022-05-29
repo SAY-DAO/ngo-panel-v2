@@ -605,10 +605,10 @@
     "imageUrl": "Icon",
     "childSayName": "SAY Name",
     "name": {
-      "fa": "Farsi Name (fa)",
-      "en": "English Name (en)"
+      "fa": "Need Name (fa)",
+      "en": "Need Name (en)"
     },
-    "title": "Title",
+    "title": "E-commerce Title",
     "cost": "Cost",
     "paid": "Paid",
     "progress": "Progress",

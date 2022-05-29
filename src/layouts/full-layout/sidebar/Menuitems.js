@@ -61,9 +61,9 @@ const Menuitems = [
     collapse: true,
     children: [
       {
-        title: 'Done',
+        title: 'Paid List',
         icon: 'list',
-        href: '/reports/needs/done',
+        href: '/report/needs/paid',
       },
       {
         title: 'Paid',

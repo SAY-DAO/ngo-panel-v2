@@ -27,6 +27,8 @@ const ChildrenAdd = Loadable(lazy(() => import('../pages/children/ChildrenAdd'))
 const NeedList = Loadable(lazy(() => import('../pages/needs/NeedList')));
 const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
 const NeedAdd = Loadable(lazy(() => import('../pages/needs/NeedAdd')));
+const ReportList = Loadable(lazy(() => import('../pages/reports/ReportStatus')));
+
 /* ****Routes***** */
 
 const Router = [
@@ -50,6 +52,8 @@ const Router = [
       { path: '/need/list', exact: true, element: <NeedList /> },
       { path: '/need/edit/:childId/:needId', exact: true, element: <NeedEdit /> },
       { path: '/need/add', exact: true, element: <NeedAdd /> },
+      { path: '/report/needs/paid', exact: true, element: <ReportList /> },
+
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
