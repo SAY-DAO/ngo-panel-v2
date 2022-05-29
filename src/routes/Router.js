@@ -48,7 +48,7 @@ const Router = [
       { path: '/children/edit/:id', exact: true, element: <ChildrenEdit /> },
       { path: '/children/add', exact: true, element: <ChildrenAdd /> },
       { path: '/need/list', exact: true, element: <NeedList /> },
-      { path: '/need/edit/:id', exact: true, element: <NeedEdit /> },
+      { path: '/need/edit/:childId/:needId', exact: true, element: <NeedEdit /> },
       { path: '/need/add', exact: true, element: <NeedAdd /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],

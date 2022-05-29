@@ -32,12 +32,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
-import { fetchChildrenByNgo } from '../../redux/actions/childrenAction';
+import { fetchChildrenByNgo, fetchMyChildById } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import PieChart from '../../components/analytics/PieChart';
@@ -97,6 +97,12 @@ function EnhancedTableHead(props) {
       label: t('need.unpayable'),
     },
     {
+      id: 'sayName',
+      numeric: false,
+      disablePadding: true,
+      label: t('need.childSayName'),
+    },
+    {
       id: 'update',
       numeric: false,
       disablePadding: true,
@@ -107,12 +113,6 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.imageUrl'),
-    },
-    {
-      id: 'childSayName',
-      numeric: false,
-      disablePadding: true,
-      label: t('need.childSayName'),
     },
     {
       id: 'name',
@@ -158,7 +158,7 @@ function EnhancedTableHead(props) {
       label: t('need.type_name'),
     },
     {
-      id: 'urgent',
+      id: 'isUrgent',
       numeric: false,
       disablePadding: false,
       label: t('need.isUrgent'),
@@ -331,6 +331,8 @@ const BCrumb = [
 const NeedTable = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const theChildId = location.state;
 
   const [needsData, setNeedsData] = useState();
   const [order, setOrder] = useState('asc');
@@ -338,7 +340,7 @@ const NeedTable = () => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [ngoId, setNgoId] = useState();
   const [childId, setChildId] = useState();
@@ -360,6 +362,9 @@ const NeedTable = () => {
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
 
+  const childById = useSelector((state) => state.childById);
+  const { result, success: successChild } = childById;
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -368,10 +373,10 @@ const NeedTable = () => {
 
   // needs
   useEffect(() => {
-    if (childId) {
-      dispatch(fetchChildNeeds(childId));
+    if (childId || (result && result.id)) {
+      dispatch(fetchChildNeeds(childId || result.id));
     }
-  }, [childId]);
+  }, [childId, result]);
 
   // sort needs
   // urgent ==> index 0
@@ -451,21 +456,28 @@ const NeedTable = () => {
     }
   }, [open, openNgo, ngoId]);
 
+  // when click on Breadcrumb use the state to retrieve the child
+  useEffect(() => {
+    if (!childId && theChildId) {
+      dispatch(fetchMyChildById(theChildId));
+    }
+  }, [theChildId]);
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = theNeeds.needs.map((n) => n.name);
+      const newSelecteds = theNeeds.needs.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -495,7 +507,7 @@ const NeedTable = () => {
 
   const handleEdit = (row) => {
     dispatch({ type: SW_BY_ID_RESET });
-    navigate(`/need/edit/${row.id}`);
+    navigate(`/need/edit/${childId || (result && result.id)}/${row.id}`);
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -598,7 +610,7 @@ const NeedTable = () => {
         </Grid>
       ) : (
         needsData &&
-        successChildren &&
+        (successChildren || successChild) &&
         successChildrenNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
             <Grid container direction="row">
@@ -641,13 +653,13 @@ const NeedTable = () => {
                         {stableSort(theNeeds.needs, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
-                            const isItemSelected = isSelected(row.name);
+                            const isItemSelected = isSelected(row.id);
                             const labelId = `${row.id}`;
 
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row.name)}
+                                onClick={(event) => handleClick(event, row.id)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
@@ -682,6 +694,15 @@ const NeedTable = () => {
                                   </Box>
                                 </TableCell>
                                 <TableCell>
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    fontWeight="400"
+                                  >
+                                    {row.childSayName || (result && result.sayName)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
                                   <IconButton
                                     onClick={() => handleEdit(row)}
                                     color="primary"
@@ -701,11 +722,6 @@ const NeedTable = () => {
                                       }}
                                     />
                                   </Box>
-                                </TableCell>
-                                <TableCell>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                    {row.childSayName}
-                                  </Typography>
                                 </TableCell>
                                 <TableCell>
                                   <Typography
@@ -786,7 +802,7 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.isUrgent ? 'true' : 'false'}
+                                    {`${row.isUrgent}`}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -867,7 +883,6 @@ const NeedTable = () => {
                                     )}
                                   </Typography>
                                 </TableCell>
-
                                 <TableCell>
                                   <Typography
                                     color="textSecondary"
@@ -877,7 +892,6 @@ const NeedTable = () => {
                                     {row.created}
                                   </Typography>
                                 </TableCell>
-
                                 <TableCell>
                                   <Typography
                                     color="textSecondary"

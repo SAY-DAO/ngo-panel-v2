@@ -3,7 +3,6 @@ import InterestsIcon from '@mui/icons-material/Interests';
 import HouseIcon from '@mui/icons-material/House';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import HiveIcon from '@mui/icons-material/Hive';
-import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
 const Menuitems = [
@@ -138,24 +137,6 @@ const Menuitems = [
       },
     ],
   },
-  {
-    title: 'Countries',
-    icon: <PublicIcon />,
-    href: '/admin/countries',
-    collapse: true,
-    children: [
-      {
-        title: 'List',
-        icon: 'list',
-        href: '/countries/list',
-      },
-      {
-        title: 'Add',
-        icon: 'plus',
-        href: '/countries/add',
-      },
-    ],
-  },
-];
+  ];
 
 export default Menuitems;
