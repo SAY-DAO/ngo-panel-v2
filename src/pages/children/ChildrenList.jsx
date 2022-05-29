@@ -108,7 +108,7 @@ const ChildrenList = () => {
           {loadingChildList ? (
             <CircularProgress />
           ) : (
-            successChildren && <ChildrenTable childList={childList.children} />
+            successChildren && ngoId && <ChildrenTable childList={childList.children} />
           )}
         </Grid>
       </Grid>
