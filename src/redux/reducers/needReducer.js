@@ -19,7 +19,23 @@ import {
   ADD_ONE_NEED_REQUEST,
   ADD_ONE_NEED_SUCCESS,
   ADD_ONE_NEED_FAIL,
+  ALL_NEEDS_REQUEST,
+  ALL_NEEDS_SUCCESS,
+  ALL_NEEDS_FAIL,
 } from '../constants/needConstant';
+
+export const allNeedsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ALL_NEEDS_REQUEST:
+      return { loading: true, success: false };
+    case ALL_NEEDS_SUCCESS:
+      return { loading: false, success: true, needs: action.payload };
+    case ALL_NEEDS_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
 
 export const exampleNeedsReducer = (state = {}, action) => {
   switch (action.type) {

@@ -20,10 +20,11 @@ import {
   CardContent,
   Typography,
   Grid,
-  Autocomplete,
-  TextField,
   CircularProgress,
   Collapse,
+  Autocomplete,
+  TextField,
+  Avatar,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,9 +36,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import { fetchChildrenByNgo, fetchMyChildById } from '../../redux/actions/childrenAction';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
-import { fetchChildNeeds } from '../../redux/actions/needsAction';
+import { fetchMyChildById } from '../../redux/actions/childrenAction';
+import { fetchAllNeeds, fetchSwNeedList } from '../../redux/actions/needsAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -87,18 +87,18 @@ function EnhancedTableHead(props) {
       label: t('need.id'),
     },
     {
+      id: 'img',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.img'),
+      width: '250px',
+    },
+    {
       id: 'sayName',
       numeric: false,
       disablePadding: true,
       label: t('need.childSayName'),
       width: '150px',
-    },
-    {
-      id: 'name',
-      numeric: false,
-      disablePadding: false,
-      label: t('need.name.en'),
-      width: '200px',
     },
     {
       id: 'title',
@@ -238,7 +238,6 @@ const ReportStatusTable = () => {
   const location = useLocation();
   const theChildId = location.state;
 
-  const [needsData, setNeedsData] = useState();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('isConfirmed');
   const [selected, setSelected] = useState([]);
@@ -246,28 +245,11 @@ const ReportStatusTable = () => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [ngoId, setNgoId] = useState();
-  const [childId, setChildId] = useState();
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
-  const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState([]);
-  const loading = open && options.length === 0;
-
-  const [openNgo, setOpenNgo] = useState(false);
-  const [optionsNgo, setOptionsNgo] = useState([]);
-  const loadingNgo = openNgo && optionsNgo.length === 0;
-
-  const childNeeds = useSelector((state) => state.childNeeds);
-  const { theNeeds, loading: loadingChildrenNeeds, success: successChildrenNeeds } = childNeeds;
-
-  const childrenByNgo = useSelector((state) => state.childrenByNgo);
-  const { childList, success: successChildren } = childrenByNgo;
-
-  const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, success: successNgoList } = ngoAll;
-
-  const childById = useSelector((state) => state.childById);
-  const { result, success: successChild } = childById;
+  const allNeeds = useSelector((state) => state.allNeeds);
+  const { needs, loading: loadingAllNeeds, success: successAllNeeds } = allNeeds;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -277,99 +259,24 @@ const ReportStatusTable = () => {
 
   // needs
   useEffect(() => {
-    if (childId || (result && result.id)) {
-      dispatch(fetchChildNeeds(childId || result.id));
-    }
-  }, [childId, result]);
-
-  // sort needs
-  // urgent ==> index 0
-  // growth 0 ==> index 1
-  // joy 1 ==> index 2
-  // health 2 ==> index 3
-  // surroundings 3 ==> index 4
-  // isDone ==> index 5
-  // isConfirmed ==> index 6
-  // unpayable ==> index 7
-  useEffect(() => {
-    if (successChildrenNeeds) {
-      const needData = [[], [], [], [], [], [], [], []];
-      for (let i = 0; i < theNeeds.needs.length; i += 1) {
-        if (theNeeds.needs[i].isUrgent) {
-          needData[0].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].isDone) {
-          needData[5].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].isConfirmed) {
-          needData[6].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].unpayable) {
-          needData[7].push(theNeeds.needs[i]);
-        }
-        needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
-      }
-      setNeedsData(needData);
-    }
-  }, [childId, successChildrenNeeds]);
-
-  // Autocomplete ngo
-  useEffect(() => {
-    let active = true;
-    if (!loadingNgo) {
-      return undefined;
-    }
-    if (active && successNgoList) {
-      setOptionsNgo([...ngoList]);
-    }
-    return () => {
-      active = false;
-    };
-  }, [loadingNgo, successNgoList]);
-
-  // ngo open
-  useEffect(() => {
-    if (!openNgo) {
-      setOptionsNgo([]);
+    // super admin
+    if (swInfo.typeId === 1) {
+      dispatch(fetchAllNeeds(true, 2, 1, 2));
     } else {
-      dispatch(fetchNgoList());
+      dispatch(fetchSwNeedList());
     }
-  }, [openNgo]);
-
-  // Autocomplete children
-  useEffect(() => {
-    let active = true;
-    if (!loading) {
-      return undefined;
-    }
-    if (active && successChildren) {
-      // sort children
-      const sortedChildren = childList.children.sort(
-        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
-      );
-      setOptions([...sortedChildren]);
-    }
-    return () => {
-      active = false;
-    };
-  }, [loading, successChildren, ngoId]);
-
-  // child open
-  useEffect(() => {
-    if (!open || openNgo) {
-      setOptions([]);
-    } else if (open || !openNgo) {
-      dispatch(fetchChildrenByNgo({ ngoId }));
-    }
-  }, [open, openNgo, ngoId]);
+  }, [swInfo]);
 
   // when click on Breadcrumb use the state to retrieve the child
   useEffect(() => {
-    if (!childId && theChildId) {
+    if (theChildId) {
       dispatch(fetchMyChildById(theChildId));
     }
   }, [theChildId]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = theNeeds.needs.map((n) => n.id);
+      const newSelecteds = needs.needs.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -420,12 +327,11 @@ const ReportStatusTable = () => {
       <>
         <TableRow
           hover
-          // onClick={(event) => handleClick(event, row.id)}
           role="checkbox"
           aria-checked={isItemSelected}
           tabIndex={-1}
           selected={isItemSelected}
-          sx={{ '& > *': { borderBottom: 'unset' } }}
+          sx={{ '& > *': { borderBottom: 'unset' }, height: '100px' }}
         >
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={() => setAccOpen(!accOpen)}>
@@ -435,10 +341,31 @@ const ReportStatusTable = () => {
           <TableCell component="th" scope="row">
             {row.id}
           </TableCell>
+          <TableCell>
+            <Box display="flex" alignItems="center">
+              <Avatar
+                src={row.img}
+                alt={row.img}
+                sx={{
+                  borderRadius: '10px',
+                  height: '70px',
+                  width: '90px',
+                }}
+              />
+              <Box
+                sx={{
+                  ml: 2,
+                }}
+              >
+                <Typography sx={{ color: 'gray' }} variant="h5" fontWeight="600">
+                  {row.name}
+                </Typography>
+              </Box>
+            </Box>
+          </TableCell>
           <TableCell component="th" scope="row">
             {row.childSayName}
           </TableCell>
-          <TableCell align="left">{row.name}</TableCell>
           <TableCell align="right">{row.title}</TableCell>
           <TableCell align="right">{row.paid}</TableCell>
           <TableCell align="right">{row.status}</TableCell>
@@ -447,8 +374,22 @@ const ReportStatusTable = () => {
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={accOpen} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
+              <Box sx={{ mb: 5 }}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  sx={{
+                    mt: 2,
+                    backgroundColor: (theme) => theme.palette.grey.A700,
+                    p: '5px 15px',
+                    color: (theme) =>
+                      `${
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.grey.A200
+                          : 'rgba(0, 0, 0, 0.87)'
+                      }`,
+                  }}
+                >
                   History
                 </Typography>
                 <Table size="small" aria-label="purchases">
@@ -460,20 +401,18 @@ const ReportStatusTable = () => {
                       <TableCell align="right">Total price ($)</TableCell>
                     </TableRow>
                   </TableHead>
-                  {/* <TableBody>
-                    {row.history.map((historyRow) => (
-                      <TableRow key={historyRow.date}>
-                        <TableCell component="th" scope="row">
-                          {historyRow.date}
-                        </TableCell>
-                        <TableCell>{historyRow.customerId}</TableCell>
-                        <TableCell align="right">{historyRow.amount}</TableCell>
-                        <TableCell align="right">
-                          {Math.round(historyRow.amount * row.price * 100) / 100}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody> */}
+                  <TableBody>
+                    <TableRow key={row.created}>
+                      <TableCell component="th" scope="row">
+                        {row.created}
+                      </TableCell>
+                      <TableCell>{row.created_by_id}</TableCell>
+                      <TableCell align="right">{row.cost}</TableCell>
+                      <TableCell align="right">
+                        {Math.round(row.cost * row.cost * 100) / 100}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
                 </Table>
               </Box>
             </Collapse>
@@ -492,123 +431,43 @@ const ReportStatusTable = () => {
       paid: PropTypes.number,
       status: PropTypes.number,
       type: PropTypes.number,
-      history: PropTypes.arrayOf(
-        PropTypes.shape({
-          amount: PropTypes.number,
-          customerId: PropTypes.string,
-          date: PropTypes.string,
-        }),
-      ),
+      img: PropTypes.string,
+      amount: PropTypes.number,
+      created_by_id: PropTypes.number,
+      created: PropTypes.string,
+      cost: PropTypes.number,
     }),
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - theNeeds.needs.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.needs.length) : 0;
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item>
-          <Autocomplete
-            id="asynchronous-ngo"
-            sx={{ width: 300 }}
-            open={openNgo}
-            onOpen={() => {
-              setOpenNgo(true);
-            }}
-            onClose={() => {
-              setOpenNgo(false);
-            }}
-            onChange={(e, value) => setNgoId(value && value.id)}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) => `${option.id} - ${option.name}`}
-            options={optionsNgo}
-            loading={loadingNgo}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Ngo"
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {loadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item>
-          <Autocomplete
-            id="asynchronous-children"
-            sx={{ width: 300 }}
-            open={open}
-            onOpen={() => {
-              setOpen(true);
-            }}
-            onClose={() => {
-              setOpen(false);
-            }}
-            onChange={(e, value) => setChildId(value && value.id)}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) =>
-              option.isConfirmed
-                ? `${option.id} - ${option.sayName}`
-                : `${option.id} - ${option.sayName}`
-            }
-            renderOption={(props, option) => (
-              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                {option.isConfirmed ? (
-                  <>
-                    <FeatherIcon color="green" icon="check" width="18" />
-                    <Typography>{`${option.id} - ${option.sayName}`}</Typography>
-                  </>
-                ) : (
-                  <>
-                    <FeatherIcon color="red" icon="x" width="18" />
-                    <Typography>{`${option.id} - ${option.sayName} `}</Typography>
-                  </>
-                )}
-              </Box>
-            )}
-            options={successNgoList && ngoId ? options : []}
-            loading={loading}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Children"
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-              />
-            )}
-          />
-        </Grid>
-      </Grid>
-      {loadingChildrenNeeds ? (
+      {loadingAllNeeds ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        needsData &&
-        (successChildren || successChild) &&
-        successChildrenNeeds && (
+        successAllNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
+            <Autocomplete
+              multiple
+              limitTags={2}
+              id="multiple-limit-tags"
+              options={needs.needs}
+              getOptionLabel={(option) => option.title}
+              defaultValue={[needs.needs[0], needs.needs[2]]}
+              renderInput={(params) => (
+                <TextField {...params} label="Filter" placeholder="Favorites" />
+              )}
+              sx={{ width: '500px' }}
+            />
             <CardContent>
               <Box>
                 <Paper sx={{ mb: 2 }}>
-                  {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
                   <TableContainer sx={{ maxHeight: 850 }}>
                     <Table
                       sx={{ minWidth: 750 }}
@@ -623,10 +482,10 @@ const ReportStatusTable = () => {
                         orderBy={orderBy}
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
-                        rowCount={theNeeds.needs.length}
+                        rowCount={needs.needs.length}
                       />
                       <TableBody>
-                        {stableSort(theNeeds.needs, getComparator(order, orderBy))
+                        {stableSort(needs.needs, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
                             return <Row key={row.id} row={row} />;
@@ -634,7 +493,7 @@ const ReportStatusTable = () => {
                         {emptyRows > 0 && (
                           <TableRow
                             style={{
-                              height: (dense ? 33 : 53) * emptyRows,
+                              height: (dense ? 33 : 80) * emptyRows,
                             }}
                           >
                             <TableCell colSpan={6} />
@@ -646,7 +505,7 @@ const ReportStatusTable = () => {
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={theNeeds.needs.length}
+                    count={needs.needs.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

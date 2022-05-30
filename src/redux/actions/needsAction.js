@@ -21,7 +21,40 @@ import {
   UPDATE_NEED_CONFIRM_REQUEST,
   UPDATE_NEED_CONFIRM_SUCCESS,
   UPDATE_NEED_CONFIRM_FAIL,
+  ALL_NEEDS_REQUEST,
+  ALL_NEEDS_SUCCESS,
+  ALL_NEEDS_FAIL,
 } from '../constants/needConstant';
+
+export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ALL_NEEDS_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        'X-TAKE': 100,
+      },
+    };
+    const { data } = await publicApi.get(
+      `/needs?isDone=${isDone}&ngoId=${ngoId}&type=${type}&status=${status}`,
+      config,
+    );
+
+    dispatch({
+      type: ALL_NEEDS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: ALL_NEEDS_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
 
 export const fetchExampleNeeds = () => async (dispatch, getState) => {
   try {

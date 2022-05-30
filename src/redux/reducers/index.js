@@ -26,6 +26,7 @@ import {
 } from './childrenReducer';
 import { userLoginReducer } from './userReducer';
 import {
+  allNeedsReducer,
   childNeedsReducer,
   childOneNeedReducer,
   exampleNeedsReducer,
@@ -51,6 +52,7 @@ export default combineReducers({
   ngoAll: ngoListReducer,
   ngoUpdate: ngoUpdateReducer,
   ngoAdd: ngoAddReducer,
+  allNeeds: allNeedsReducer,
   childExampleNeeds: exampleNeedsReducer,
   childNeeds: childNeedsReducer,
   childOneNeed: childOneNeedReducer,
