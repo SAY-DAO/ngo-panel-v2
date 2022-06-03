@@ -72,7 +72,7 @@ const SocialWorkerEdit = () => {
   const [activeChecked, setActiveChecked] = useState(false);
   const [coordChecked, setCoordChecked] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     firstName: '',
     lastName: '',
     country: '',

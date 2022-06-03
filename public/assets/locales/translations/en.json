@@ -479,6 +479,9 @@
     "s2": "Service delivery receipt"
   },
   "report": {
+    "history": {
+      "title": "History"
+    },
     "swId": "Social worker’s identification: SW-{{socialWorkerGeneratedCode}}",
     "dkc": "Order: DKC-{{dkc}}",
     "p2s2": {
@@ -636,7 +639,10 @@
       "fa": "Farsi Description (fa)",
       "en": "English Description (en)"
     },
-    "img": "E-commerce image",
+    "img": {
+      "service": "Image",
+      "product": "E-commerce image"
+    },
     "created": "Created At",
     "isConfirmed": "Confirm",
     "confirmUser": "Confirmed By",
@@ -649,6 +655,15 @@
     "button": {
       "update": "Update",
       "add": "Add Need"
+    },
+    "needStatus": {
+      "1": "Partial payment",
+      "2": "Complete payment",
+      "p3": "Purchased",
+      "p4": "Delivered to NGO",
+      "p5": "Delivered to child",
+      "s3": "Money transferred to the NGO",
+      "s4": "Delivery to child"
     }
   }
 }

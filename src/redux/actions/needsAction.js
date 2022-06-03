@@ -36,7 +36,7 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 100,
+        'X-TAKE': 100, // pagination
       },
     };
     const { data } = await publicApi.get(

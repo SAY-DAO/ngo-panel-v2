@@ -30,14 +30,13 @@ import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import { fetchMyChildById } from '../../redux/actions/childrenAction';
 import { fetchAllNeeds, fetchSwNeedList } from '../../redux/actions/needsAction';
+import { fetchNgoList } from '../../redux/actions/ngoAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -68,12 +67,13 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
 
-  const { order, orderBy, onRequestSort } = props;
+  const [headCells, setHeadCells] = useState();
+  const { order, orderBy, onRequestSort, typeId } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
-  const headCells = [
+  const headCellsProduct = [
     {
       id: '#',
       numeric: false,
@@ -90,7 +90,7 @@ function EnhancedTableHead(props) {
       id: 'img',
       numeric: false,
       disablePadding: false,
-      label: t('need.img'),
+      label: t('need.img.product'),
       width: '250px',
     },
     {
@@ -109,64 +109,85 @@ function EnhancedTableHead(props) {
     },
 
     {
-      id: 'paid',
+      id: 'status',
       numeric: false,
       disablePadding: false,
-      label: t('need.paid'),
+      label: t('need.status'),
     },
-
+  ];
+  const headCellsService = [
+    {
+      id: '#',
+      numeric: false,
+      disablePadding: false,
+      label: '',
+    },
+    {
+      id: 'id',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.id'),
+    },
+    {
+      id: 'img',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.img.service'),
+      width: '250px',
+    },
+    {
+      id: 'sayName',
+      numeric: false,
+      disablePadding: true,
+      label: t('need.childSayName'),
+      width: '150px',
+    },
+    
     {
       id: 'status',
       numeric: false,
       disablePadding: false,
       label: t('need.status'),
     },
-    {
-      id: 'type_name',
-      numeric: false,
-      disablePadding: false,
-      label: t('need.type_name'),
-    },
-    {
-      id: 'isUrgent',
-      numeric: false,
-      disablePadding: false,
-      label: t('need.isUrgent'),
-    },
-    {
-      id: 'category',
-      numeric: false,
-      disablePadding: false,
-      label: t('need.category'),
-    },
   ];
+
+  useEffect(() => {
+    if (typeId === 1) {
+      setHeadCells(headCellsProduct);
+    }
+    if (typeId === 0) {
+      setHeadCells(headCellsService);
+    }
+  }, [typeId]);
+
   return (
     <TableHead>
       <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ minWidth: headCell.width }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+        {headCells &&
+          headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? 'right' : 'left'}
+              padding={headCell.disablePadding ? 'none' : 'normal'}
+              sortDirection={orderBy === headCell.id ? order : false}
+              sx={{ minWidth: headCell.width }}
             >
-              <Typography variant="subtitle1" fontWeight="500">
-                {headCell.label}
-              </Typography>
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+              >
+                <Typography variant="subtitle1" fontWeight="500">
+                  {headCell.label}
+                </Typography>
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
       </TableRow>
     </TableHead>
   );
@@ -176,6 +197,7 @@ EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
+  typeId: PropTypes.number.isRequired,
 };
 
 const EnhancedTableToolbar = (props) => {
@@ -235,8 +257,17 @@ const BCrumb = [
 
 const ReportStatusTable = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
-  const theChildId = location.state;
+  const { t } = useTranslation();
+
+  const [ngoId, setNgoId] = useState();
+  const [typeId, setTypeId] = useState(1);
+  const [statusId, setStatusId] = useState(2);
+  const [optionStatus, setOptionStatus] = useState();
+
+  const [openType, setOpenType] = useState(false);
+  const [openNgo, setOpenNgo] = useState(false);
+  const [optionsNgo, setOptionsNgo] = useState([]);
+  const loadingNgo = openNgo && optionsNgo.length === 0;
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('isConfirmed');
@@ -251,28 +282,44 @@ const ReportStatusTable = () => {
   const allNeeds = useSelector((state) => state.allNeeds);
   const { needs, loading: loadingAllNeeds, success: successAllNeeds } = allNeeds;
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
-  // needs
+  // Autocomplete ngo
   useEffect(() => {
-    // super admin
-    if (swInfo.typeId === 1) {
-      dispatch(fetchAllNeeds(true, 2, 1, 2));
-    } else {
-      dispatch(fetchSwNeedList());
+    let active = true;
+    if (!loadingNgo) {
+      return undefined;
     }
-  }, [swInfo]);
+    if (active && successNgoList) {
+      setOptionsNgo([...ngoList]);
+    }
+    return () => {
+      active = false;
+    };
+  }, [loadingNgo, successNgoList]);
 
-  // when click on Breadcrumb use the state to retrieve the child
+  // ngo LIST
   useEffect(() => {
-    if (theChildId) {
-      dispatch(fetchMyChildById(theChildId));
+    dispatch(fetchNgoList());
+  }, []);
+
+  // for the very first load
+  useEffect(() => {
+    if (!ngoId && ngoList) setNgoId(ngoList[0].id);
+  }, [ngoList]);
+
+  // fetch needs
+  useEffect(() => {
+    if (successNgoList) {
+      // super admin
+      if (ngoId && swInfo.typeId === 1) {
+        dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
+      } else if (swInfo.typeId !== 1) {
+        dispatch(fetchSwNeedList());
+      }
     }
-  }, [theChildId]);
+  }, [ngoId, typeId, statusId, swInfo, successNgoList]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -283,25 +330,11 @@ const ReportStatusTable = () => {
     setSelected([]);
   };
 
-  // const handleClick = (event, id) => {
-  //   const selectedIndex = selected.indexOf(id);
-  //   let newSelected = [];
-
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, id);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(
-  //       selected.slice(0, selectedIndex),
-  //       selected.slice(selectedIndex + 1),
-  //     );
-  //   }
-
-  //   setSelected(newSelected);
-  // };
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -318,7 +351,7 @@ const ReportStatusTable = () => {
 
   function Row(props) {
     const { row } = props;
-    const [accOpen, setAccOpen] = React.useState(false);
+    const [accOpen, setAccOpen] = useState(false);
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
     const isItemSelected = isSelected(row.id);
@@ -366,10 +399,8 @@ const ReportStatusTable = () => {
           <TableCell component="th" scope="row">
             {row.childSayName}
           </TableCell>
-          <TableCell align="right">{row.title}</TableCell>
-          <TableCell align="right">{row.paid}</TableCell>
+          {typeId === 1 && <TableCell align="right">{row.title}</TableCell>}
           <TableCell align="right">{row.status}</TableCell>
-          <TableCell align="right">{row.type}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -390,19 +421,24 @@ const ReportStatusTable = () => {
                       }`,
                   }}
                 >
-                  History
+                  {t('report.history.title')}
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
+                      <TableCell>Status</TableCell>
                       <TableCell>Date</TableCell>
-                      <TableCell>Customer</TableCell>
+                      <TableCell>Social Worker</TableCell>
                       <TableCell align="right">Amount</TableCell>
                       <TableCell align="right">Total price ($)</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow key={row.created}>
+                    {/* 2 */}
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {t('need.needStatus.2')}
+                      </TableCell>
                       <TableCell component="th" scope="row">
                         {row.created}
                       </TableCell>
@@ -412,6 +448,50 @@ const ReportStatusTable = () => {
                         {Math.round(row.cost * row.cost * 100) / 100}
                       </TableCell>
                     </TableRow>
+                    {/* 3 */}
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {typeId === 1 ? t('need.needStatus.p3') : t('need.needStatus.s3')}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.created}
+                      </TableCell>
+                      <TableCell>{row.created_by_id}</TableCell>
+                      <TableCell align="right">{row.cost}</TableCell>
+                      <TableCell align="right">
+                        {Math.round(row.cost * row.cost * 100) / 100}
+                      </TableCell>
+                    </TableRow>
+                    {/* 4 */}
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {typeId === 1 ? t('need.needStatus.p4') : t('need.needStatus.s4')}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.created}
+                      </TableCell>
+                      <TableCell>{row.created_by_id}</TableCell>
+                      <TableCell align="right">{row.cost}</TableCell>
+                      <TableCell align="right">
+                        {Math.round(row.cost * row.cost * 100) / 100}
+                      </TableCell>
+                    </TableRow>
+                    {/* 5 */}
+                    {typeId === 1 && (
+                      <TableRow>
+                        <TableCell component="th" scope="row">
+                          {t('need.needStatus.p5')}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {row.created}
+                        </TableCell>
+                        <TableCell>{row.created_by_id}</TableCell>
+                        <TableCell align="right">{row.cost}</TableCell>
+                        <TableCell align="right">
+                          {Math.round(row.cost * row.cost * 100) / 100}
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </Box>
@@ -439,6 +519,49 @@ const ReportStatusTable = () => {
     }),
   };
 
+  /*   ---- PAYMENT-----
+  partial payment status = 1
+  complete payment status = 2
+
+  ---- PRODUCT -----
+  complete purchase for product status = 3
+  complete delivery for product to NGO status = 4
+  complete delivery to child status = 5
+
+  ----- SERVICE -----
+  complete money transfer to NGO for service status = 3
+  complete delivery to child for service status = 4
+ */
+
+  const optionsType = [
+    { id: 1, title: 'Product' },
+    { id: 0, title: 'Service' },
+  ];
+
+  const optionsProduct = [
+    { id: 1, title: t('need.needStatus.1') },
+    { id: 2, title: t('need.needStatus.2') },
+    { id: 3, title: t('need.needStatus.p3') },
+    { id: 4, title: t('need.needStatus.p4') },
+    { id: 5, title: t('need.needStatus.p5') },
+  ];
+
+  const optionsService = [
+    { id: 1, title: t('need.needStatus.1') },
+    { id: 2, title: t('need.needStatus.2') },
+    { id: 3, title: t('need.needStatus.s3') },
+    { id: 4, title: t('need.needStatus.s4') },
+  ];
+
+  useEffect(() => {
+    if (typeId === 1) {
+      setOptionStatus(optionsProduct);
+    }
+    if (typeId === 0) {
+      setOptionStatus(optionsService);
+    }
+  }, [typeId, openType]);
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.needs.length) : 0;
   return (
@@ -446,25 +569,79 @@ const ReportStatusTable = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {loadingAllNeeds ? (
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={3}>
+          {ngoList && (
+            <Autocomplete
+              defaultValue={ngoList[0]}
+              id="asynchronous-ngo"
+              open={openNgo}
+              onOpen={() => {
+                setOpenNgo(true);
+              }}
+              onClose={() => {
+                setOpenNgo(false);
+              }}
+              onChange={(e, value) => setNgoId(value && value.id)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) => `${option.id} - ${option.name}`}
+              options={optionsNgo}
+              loading={loadingNgo}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ngo"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+          )}
+        </Grid>
+        <Grid item xs={3}>
+          <Autocomplete
+            defaultValue={optionsType[0]}
+            id="type"
+            open={openType}
+            onOpen={() => setOpenType(true) && setOptionStatus()}
+            onClose={() => {
+              setOpenType(false);
+            }}
+            onChange={(e, value) => setTypeId(value && value.id)}
+            getOptionLabel={(option) => `${option.title}`}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            options={optionsType}
+            renderInput={(params) => <TextField {...params} label="Service/Product" />}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          {optionsType && optionStatus && (
+            <Autocomplete
+              defaultValue={optionStatus[1]}
+              id="status"
+              onChange={(e, value) => setStatusId(value && value.id)}
+              getOptionLabel={(option) => `${option.id} - ${option.title}`}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              options={optionStatus}
+              renderInput={(params) => <TextField {...params} label="Status" />}
+            />
+          )}
+        </Grid>
+      </Grid>
+      {loadingAllNeeds || loadingNgoList ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
         successAllNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
-            <Autocomplete
-              multiple
-              limitTags={2}
-              id="multiple-limit-tags"
-              options={needs.needs}
-              getOptionLabel={(option) => option.title}
-              defaultValue={[needs.needs[0], needs.needs[2]]}
-              renderInput={(params) => (
-                <TextField {...params} label="Filter" placeholder="Favorites" />
-              )}
-              sx={{ width: '500px' }}
-            />
             <CardContent>
               <Box>
                 <Paper sx={{ mb: 2 }}>
@@ -483,6 +660,7 @@ const ReportStatusTable = () => {
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
                         rowCount={needs.needs.length}
+                        typeId={typeId}
                       />
                       <TableBody>
                         {stableSort(needs.needs, getComparator(order, orderBy))

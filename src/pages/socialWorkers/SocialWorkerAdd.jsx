@@ -63,7 +63,7 @@ const SocialWorkerAdd = () => {
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
   const [uploadIdImage, setUploadIdImage] = useState(location.state && location.state.newIdImage);
   const [birthDate, setBirthDate] = useState(new Date());
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     firstName: '',
     lastName: '',
     country: '',

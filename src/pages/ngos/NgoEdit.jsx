@@ -58,7 +58,7 @@ const NgoEdit = () => {
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [openIdImageDialog, setOpenIdImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     name: '',
     website: '',
     country: '',
