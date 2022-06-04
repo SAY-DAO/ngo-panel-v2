@@ -28,15 +28,20 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
+import CircleIcon from '@mui/icons-material/Circle';
 import FeatherIcon from 'feather-icons-react';
+import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import { fetchAllNeeds, fetchSwNeedList } from '../../redux/actions/needsAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
+import convertor from '../../utils/persianToEnglish';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -107,14 +112,28 @@ function EnhancedTableHead(props) {
       label: t('need.title'),
       width: '200px',
     },
-
+    {
+      id: 'socialWorker',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.roles.SOCIAL_WORKER'),
+      width: '200px',
+    },
     {
       id: 'status',
       numeric: false,
       disablePadding: false,
       label: t('need.status'),
     },
+    {
+      id: 'paid',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.paid'),
+      width: '150px',
+    },
   ];
+
   const headCellsService = [
     {
       id: '#',
@@ -142,12 +161,24 @@ function EnhancedTableHead(props) {
       label: t('need.childSayName'),
       width: '150px',
     },
-    
+    {
+      id: 'socialWorker',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.socialWorker'),
+    },
     {
       id: 'status',
       numeric: false,
       disablePadding: false,
       label: t('need.status'),
+    },
+    {
+      id: 'paid',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.paid'),
+      width: '250px',
     },
   ];
 
@@ -399,8 +430,72 @@ const ReportStatusTable = () => {
           <TableCell component="th" scope="row">
             {row.childSayName}
           </TableCell>
-          {typeId === 1 && <TableCell align="right">{row.title}</TableCell>}
-          <TableCell align="right">{row.status}</TableCell>
+          {typeId === 1 && <TableCell align="center">{row.title}</TableCell>}
+          <TableCell align="center">{row.created_by_id}</TableCell>
+          <TableCell align="center">
+            <Box alignItems="center">
+              <IconButton aria-label="attachment" size="small">
+                <Avatar
+                  src={
+                    row.status === 2 // Complete payment
+                      ? '/image/hand-orange.svg'
+                      : row.status === 3 && typeId === 1 // Purchased Product
+                      ? '/image/package-orange.svg'
+                      : (row.status === 4 && typeId === 1) || (row.status === 3 && typeId === 0) // Sent product to NGO
+                      ? '/image/package-orange.svg'
+                      : '/image/child-orange.svg' // Delivered to Child
+                  }
+                  alt="icon"
+                  sx={{
+                    p: 1,
+                    m: 'auto',
+                    border: '1px solid #665a49',
+                    borderRadius: '50px',
+                    height: '40px',
+                    width: '40px',
+                  }}
+                />
+              </IconButton>
+              <Box>
+                <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
+                  {row.status === 2 ? (
+                    <>
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+                    </>
+                  ) : row.status === 3 && typeId === 1 ? (
+                    <>
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+                    </>
+                  ) : (row.status === 4 && typeId === 1) || (row.status === 3 && typeId === 0) ? (
+                    <>
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+                    </>
+                  ) : (
+                    <>
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
+                    </>
+                  )}
+                </Stack>
+              </Box>
+            </Box>
+          </TableCell>
+          <TableCell align="center">
+            <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
+              {row.paid.toLocaleString()} / {row.cost.toLocaleString()}
+            </Typography>
+          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -428,67 +523,114 @@ const ReportStatusTable = () => {
                     <TableRow>
                       <TableCell>Status</TableCell>
                       <TableCell>Date</TableCell>
-                      <TableCell>Social Worker</TableCell>
-                      <TableCell align="right">Amount</TableCell>
-                      <TableCell align="right">Total price ($)</TableCell>
+                      <TableCell align="right">Receipt</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {/* 2 */}
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {t('need.confirmDate')}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.confirmDate}
+                      </TableCell>
+                      <TableCell align="right">-</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {t('need.created')}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.created}
+                      </TableCell>
+                      <TableCell align="right"> - </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {t('need.updated')}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.updated}
+                      </TableCell>
+                      <TableCell align="right">-</TableCell>
+                    </TableRow>
+                    {/* 2   Complete payment	*/}
                     <TableRow>
                       <TableCell component="th" scope="row">
                         {t('need.needStatus.2')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {row.created}
+                        {row.doneAt}
                       </TableCell>
-                      <TableCell>{row.created_by_id}</TableCell>
-                      <TableCell align="right">{row.cost}</TableCell>
                       <TableCell align="right">
-                        {Math.round(row.cost * row.cost * 100) / 100}
+                        {row.bank_track_id &&
+                          parseInt(convertor(row.bank_track_id), 10)
+                            .toLocaleString('en-US')
+                            .replace(/,/g, '-')}
                       </TableCell>
                     </TableRow>
-                    {/* 3 */}
+                    {/* 3 Product delivered to NGO - Money transferred to the NGO */}
                     <TableRow>
                       <TableCell component="th" scope="row">
                         {typeId === 1 ? t('need.needStatus.p3') : t('need.needStatus.s3')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {row.created}
+                        {typeId === 1 ? row.purchase_date : row.ngo_delivery_date}
                       </TableCell>
-                      <TableCell>{row.created_by_id}</TableCell>
-                      <TableCell align="right">{row.cost}</TableCell>
                       <TableCell align="right">
-                        {Math.round(row.cost * row.cost * 100) / 100}
+                        {row.dkc &&
+                          parseInt(convertor(row.dkc), 10)
+                            .toLocaleString('en-US')
+                            .replace(/,/g, '-')}
+                        {typeId === 0 &&
+                          statusId > 2 &&
+                          row.bank_track_id &&
+                          parseInt(convertor(row.bank_track_id), 10)
+                            .toLocaleString('en-US')
+                            .replace(/,/g, '-')}
                       </TableCell>
                     </TableRow>
-                    {/* 4 */}
+                    {/* 4 Product delivered to NGO - service delivery to child */}
                     <TableRow>
                       <TableCell component="th" scope="row">
                         {typeId === 1 ? t('need.needStatus.p4') : t('need.needStatus.s4')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {row.created}
+                        {typeId === 1 ? row.ngo_delivery_date : row.child_delivery_date}
                       </TableCell>
-                      <TableCell>{row.created_by_id}</TableCell>
-                      <TableCell align="right">{row.cost}</TableCell>
                       <TableCell align="right">
-                        {Math.round(row.cost * row.cost * 100) / 100}
+                        {((typeId === 1 && statusId > 3) || (typeId === 0 && statusId > 3)) && (
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <IconButton aria-label="add" size="small">
+                              <AddCircleOutlineIcon fontSize="inherit" />
+                            </IconButton>
+                            <IconButton aria-label="attachment" size="small">
+                              <DocumentScannerIcon fontSize="inherit" />
+                            </IconButton>
+                          </Stack>
+                        )}
                       </TableCell>
                     </TableRow>
-                    {/* 5 */}
+                    {/* 5 product delivery to child */}
                     {typeId === 1 && (
                       <TableRow>
                         <TableCell component="th" scope="row">
                           {t('need.needStatus.p5')}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {row.created}
+                          {row.child_delivery_date}
                         </TableCell>
-                        <TableCell>{row.created_by_id}</TableCell>
-                        <TableCell align="right">{row.cost}</TableCell>
-                        <TableCell align="right">
-                          {Math.round(row.cost * row.cost * 100) / 100}
+                        <TableCell component="th" scope="row">
+                          {statusId > 4 && (
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                              <IconButton aria-label="delete" size="small">
+                                <AddCircleOutlineIcon fontSize="inherit" />
+                              </IconButton>
+                              <IconButton aria-label="delete" size="small">
+                                <DocumentScannerIcon fontSize="inherit" />
+                              </IconButton>
+                            </Stack>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -515,7 +657,15 @@ const ReportStatusTable = () => {
       amount: PropTypes.number,
       created_by_id: PropTypes.number,
       created: PropTypes.string,
+      updated: PropTypes.string,
+      confirmDate: PropTypes.string,
+      child_delivery_date: PropTypes.string,
+      ngo_delivery_date: PropTypes.string,
+      purchase_date: PropTypes.string,
+      doneAt: PropTypes.string,
       cost: PropTypes.number,
+      bank_track_id: PropTypes.string,
+      dkc: PropTypes.string,
     }),
   };
 
@@ -570,7 +720,7 @@ const ReportStatusTable = () => {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
       <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={3}>
+        <Grid item md={3} xs={12}>
           {ngoList && (
             <Autocomplete
               defaultValue={ngoList[0]}
@@ -605,7 +755,7 @@ const ReportStatusTable = () => {
             />
           )}
         </Grid>
-        <Grid item xs={3}>
+        <Grid item md={3} xs={12}>
           <Autocomplete
             defaultValue={optionsType[0]}
             id="type"
@@ -621,7 +771,7 @@ const ReportStatusTable = () => {
             renderInput={(params) => <TextField {...params} label="Service/Product" />}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item md={3} xs={12}>
           {optionsType && optionStatus && (
             <Autocomplete
               defaultValue={optionStatus[1]}

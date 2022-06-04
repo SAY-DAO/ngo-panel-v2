@@ -659,7 +659,7 @@
     "needStatus": {
       "1": "Partial payment",
       "2": "Complete payment",
-      "p3": "Purchased",
+      "p3": "Purchased product",
       "p4": "Delivered to NGO",
       "p5": "Delivered to child",
       "s3": "Money transferred to the NGO",
