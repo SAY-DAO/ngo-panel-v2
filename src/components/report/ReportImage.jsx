@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   IconButton,
@@ -47,6 +47,7 @@ export default function ReportImage({ row, statusId }) {
   const { success: successDelete } = receiptDelete;
 
   useEffect(() => {
+    console.log(statusId);
     if (finalImageFile) {
       dispatch(
         addReceiptToNeed({
@@ -101,16 +102,16 @@ export default function ReportImage({ row, statusId }) {
         <>
           <div className="upload__image-wrapper">
             <Grid>
-              <label htmlFor="upload-image">
+              <label htmlFor={statusId}>
                 <input
                   accept="image/*"
-                  id="upload-image"
+                  id={statusId}
                   type="file"
                   style={{ display: 'none' }}
                   onChange={onImageChange}
                 />
 
-                <IconButton name="upload-image" id="upload-image" color="primary" component="div">
+                <IconButton name={statusId} id={statusId} color="primary" component="div">
                   <AddCircleOutlineIcon
                     color="primary"
                     fontSize="small"
@@ -141,6 +142,7 @@ export default function ReportImage({ row, statusId }) {
                             sx={{ width: '100%' }}
                           />
                         }
+                        placement="left"
                       >
                         <Box
                           sx={{
@@ -197,3 +199,10 @@ export default function ReportImage({ row, statusId }) {
     </Stack>
   );
 }
+
+ReportImage.propTypes = {
+  row: PropTypes.shape({
+    id: PropTypes.number,
+  }),
+  statusId: PropTypes.number,
+};

@@ -95,12 +95,6 @@ export const addReceiptToNeed = (values) => async (dispatch, getState) => {
       formData.set('attachment', values.attachment);
     }
 
-    console.log('formData');
-    // eslint-disable-next-line no-restricted-syntax
-    for (const value of formData.values()) {
-      console.log(value);
-    }
-    console.log('formData');
     const { data } = await publicApi.post(`/needs/${values.needId}/receipts`, formData, config);
 
     dispatch({

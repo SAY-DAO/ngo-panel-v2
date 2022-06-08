@@ -169,7 +169,7 @@ export default function UploadIdImage({
             }}
           />
         ) : (
-          <IconButton onClick={onClickSave}>
+          <IconButton onClick={(e) => onClickSave(e)}>
             <DoneIcon
               sx={{
                 color: isDisabled ? 'gray' : 'green',
