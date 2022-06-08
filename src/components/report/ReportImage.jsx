@@ -85,7 +85,6 @@ export default function ReportImage({ row, statusId }) {
   };
 
   const handleDeleteDialog = (needId, receiptId) => {
-    console.log(needId, receiptId);
     setOpenDelete(true);
     setDialogValues({
       needId,
@@ -93,7 +92,7 @@ export default function ReportImage({ row, statusId }) {
     });
   };
   return (
-    <Stack direction="row" alignItems="center" spacing={1}>
+    <Stack direction="row">
       {loadingReceiptList || loadingAdd ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress size={10} />
@@ -126,52 +125,51 @@ export default function ReportImage({ row, statusId }) {
           </div>
 
           {receipts &&
-            receipts.map((receipt) => (
-              <PopupState key={receipt.id} variant="popover" popupId="demo-popup-menu">
-                {(popupState) => (
-                  <>
-                    <Tooltip
-                      arrow
-                      title={
-                        <CardMedia
-                          component="img"
-                          image={receipt.attachment}
-                          alt="large"
-                          sx={{ width: '100%' }}
-                        />
-                      }
-                    >
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          textAlign: 'center',
-                        }}
+            receipts
+              .filter((receipt) => receipt.needStatus === statusId)
+              .map((receipt) => (
+                <PopupState key={receipt.id} variant="popover" popupId="demo-popup-menu">
+                  {(popupState) => (
+                    <>
+                      <Tooltip
+                        arrow
+                        title={
+                          <CardMedia
+                            component="img"
+                            image={receipt.attachment}
+                            alt="large"
+                            sx={{ width: '100%' }}
+                          />
+                        }
                       >
-                        <>
-                          <IconButton {...bindTrigger(popupState)}>
-                            <Avatar
-                              alt="receipt"
-                              sx={{ width: 20, height: 20 }}
-                              src={receipt.attachment}
-                            />
-                            {receipt.id}
-                          </IconButton>
-                          <Menu {...bindMenu(popupState)}>
-                            {receipt.id}
-
-                            <MenuItem onClick={() => handleDeleteDialog(row.id, receipt.id)}>
-                              {t('button.delete')}
-                            </MenuItem>
-                            <MenuItem onClick={popupState.close}>{t('button.cancel')}</MenuItem>
-                          </Menu>
-                        </>
-                      </Box>
-                    </Tooltip>
-                  </>
-                )}
-              </PopupState>
-            ))}
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            textAlign: 'center',
+                          }}
+                        >
+                          <>
+                            <IconButton {...bindTrigger(popupState)}>
+                              <Avatar
+                                alt="receipt"
+                                sx={{ width: 20, height: 20 }}
+                                src={receipt.attachment}
+                              />
+                            </IconButton>
+                            <Menu {...bindMenu(popupState)}>
+                              <MenuItem onClick={() => handleDeleteDialog(row.id, receipt.id)}>
+                                {t('button.delete')}
+                              </MenuItem>
+                              <MenuItem onClick={popupState.close}>{t('button.cancel')}</MenuItem>
+                            </Menu>
+                          </>
+                        </Box>
+                      </Tooltip>
+                    </>
+                  )}
+                </PopupState>
+              ))}
         </>
       )}
       {/* Receipt Image */}

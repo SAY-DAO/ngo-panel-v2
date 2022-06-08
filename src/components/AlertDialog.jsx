@@ -33,8 +33,6 @@ export default function AlertDialog({ open, setOpen, dialogValues }) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {t('report.deleteModal.confirm')}
-            {dialogValues && dialogValues.needId}
-            {dialogValues && dialogValues.receiptId}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

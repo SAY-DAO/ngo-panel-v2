@@ -679,7 +679,7 @@ const ReportStatusTable = () => {
                       </TableCell>
                       <TableCell align="right">
                         {((typeId === 1 && statusId > 3) || (typeId === 0 && statusId > 3)) && (
-                          <ReportImage row={row} statusId={statusId} />
+                          <ReportImage row={row} statusId={4} />
                         )}
                       </TableCell>
                     </TableRow>
@@ -693,7 +693,7 @@ const ReportStatusTable = () => {
                           {row.child_delivery_date}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {statusId > 4 && <ReportImage row={row} statusId={statusId} />}
+                          {statusId > 4 && <ReportImage row={row} statusId={5} />}
                         </TableCell>
                       </TableRow>
                     )}
