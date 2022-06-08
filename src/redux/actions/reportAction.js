@@ -3,6 +3,9 @@ import {
   ADD_RECEIPT_FAIL,
   ADD_RECEIPT_REQUEST,
   ADD_RECEIPT_SUCCESS,
+  DELETE_RECEIPT_FAIL,
+  DELETE_RECEIPT_REQUEST,
+  DELETE_RECEIPT_SUCCESS,
   NEED_RECEIPT_LIST_FAIL,
   NEED_RECEIPT_LIST_REQUEST,
   NEED_RECEIPT_LIST_SUCCESS,
@@ -28,9 +31,35 @@ export const fetchNeedReceipts = (needId) => async (dispatch, getState) => {
       payload: data,
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: NEED_RECEIPT_LIST_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
+export const deleteReceipt = (needId, receiptId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_RECEIPT_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const { data } = await publicApi.delete(`/needs/${needId}/receipts/${receiptId}`, config);
+
+    dispatch({
+      type: DELETE_RECEIPT_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_RECEIPT_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
     });
   }

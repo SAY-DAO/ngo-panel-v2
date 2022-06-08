@@ -34,7 +34,7 @@ import {
   needUpdateReducer,
   swNeedListReducer,
 } from './needReducer';
-import { receiptAddReducer, receiptsListReducer } from './reportReducer';
+import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -65,5 +65,6 @@ export default combineReducers({
   childUpdate: childUpdateReducer,
   childAdd: childAddReducer,
   receiptList: receiptsListReducer,
+  receiptDelete: receiptDeleteReducer,
   receiptAdd: receiptAddReducer,
 });

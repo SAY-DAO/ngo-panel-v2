@@ -240,6 +240,10 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     if (values.cost) {
       formData.set('cost', values.cost);
     }
+    // Can be set only in p3 (product status 3)
+    if (values.purchaseCost) {
+      formData.set('purchase_cost', values.purchaseCost);
+    }
     if (values.type) {
       formData.set('type', values.type);
     }

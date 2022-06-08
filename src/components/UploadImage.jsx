@@ -44,7 +44,6 @@ export default function UploadIdImage({
   handleImageClose,
   setFinalImageFile,
   customBorderRadius,
-  customFunction,
 }) {
   const { t } = useTranslation();
   // const navigate = useNavigate();
@@ -127,11 +126,6 @@ export default function UploadIdImage({
       setFinalImageFile(theFile);
       handleImageClose(); // close dialog
 
-      if (customFunction) {
-        // for a custom dispatch depending on the page (refer to ReportStatusTable component)
-        customFunction();
-      }
-      
       setIsLoading(false);
     }
   };

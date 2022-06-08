@@ -25,10 +25,6 @@ import {
   Autocomplete,
   TextField,
   Avatar,
-  Dialog,
-  DialogActions,
-  Button,
-  DialogContent,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,17 +34,14 @@ import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
-import { useLocation } from 'react-router-dom';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import { fetchAllNeeds, fetchSwNeedList } from '../../redux/actions/needsAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import convertor from '../../utils/persianToEnglish';
-import { addReceiptToNeed, fetchNeedReceipts } from '../../redux/actions/reportAction';
-import UploadIdImage from '../../components/UploadImage';
+import { fetchNeedReceipts } from '../../redux/actions/reportAction';
+import ReportImage from '../../components/report/ReportImage';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -172,7 +165,8 @@ function EnhancedTableHead(props) {
       id: 'socialWorker',
       numeric: false,
       disablePadding: false,
-      label: t('need.socialWorker'),
+      label: t('socialWorker.roles.SOCIAL_WORKER'),
+      width: '200px',
     },
     {
       id: 'status',
@@ -295,7 +289,6 @@ const BCrumb = [
 
 const ReportStatusTable = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
   const { t } = useTranslation();
 
   const [ngoId, setNgoId] = useState();
@@ -324,14 +317,60 @@ const ReportStatusTable = () => {
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
-  // Autocomplete ngo
+  /*   ---- PAYMENT-----
+  partial payment status = 1
+  complete payment status = 2
+
+  ---- PRODUCT -----
+  complete purchase for product status = 3
+  complete delivery for product to NGO status = 4
+  complete delivery to child status = 5
+
+  ----- SERVICE -----
+  complete money transfer to NGO for service status = 3
+  complete delivery to child for service status = 4
+ */
+
+  const optionsType = [
+    { id: 0, title: 'Service' },
+    { id: 1, title: 'Product' },
+  ];
+
+  const optionsProduct = [
+    { id: 1, title: t('need.needStatus.1') },
+    { id: 2, title: t('need.needStatus.2') },
+    { id: 3, title: t('need.needStatus.p3') },
+    { id: 4, title: t('need.needStatus.p4') },
+    { id: 5, title: t('need.needStatus.p5') },
+  ];
+
+  const optionsService = [
+    { id: 1, title: t('need.needStatus.1') },
+    { id: 2, title: t('need.needStatus.2') },
+    { id: 3, title: t('need.needStatus.s3') },
+    { id: 4, title: t('need.needStatus.s4') },
+  ];
+
+  // set Service or Product titles
   useEffect(() => {
+    if (typeId === 1) {
+      setOptionStatus(optionsProduct);
+    }
+    if (typeId === 0) {
+      setOptionStatus(optionsService);
+    }
+  }, [typeId, openType]);
+
+  // Autocomplete ngo
+  useEffect(async () => {
     let active = true;
     if (!loadingNgo) {
       return undefined;
     }
+
     if (active && successNgoList) {
-      setOptionsNgo([...ngoList]);
+      const activeNgoList = await ngoList.filter((ngo) => ngo.isActive);
+      setOptionsNgo([...activeNgoList]);
     }
     return () => {
       active = false;
@@ -345,7 +384,9 @@ const ReportStatusTable = () => {
 
   // for the very first load
   useEffect(() => {
-    if (!ngoId && ngoList) setNgoId(ngoList[0].id);
+    if (!ngoId && ngoList) {
+      setNgoId(ngoList.filter((ngo) => ngo.isActive)[0].id);
+    }
   }, [ngoList]);
 
   // fetch needs
@@ -388,53 +429,6 @@ const ReportStatusTable = () => {
     setDense(event.target.checked);
   };
 
-  // const handleRemoveImage = () => {
-  //   console.log('remove');
-  // };
-
-  /*   ---- PAYMENT-----
-  partial payment status = 1
-  complete payment status = 2
-
-  ---- PRODUCT -----
-  complete purchase for product status = 3
-  complete delivery for product to NGO status = 4
-  complete delivery to child status = 5
-
-  ----- SERVICE -----
-  complete money transfer to NGO for service status = 3
-  complete delivery to child for service status = 4
- */
-
-  const optionsType = [
-    { id: 0, title: 'Service' },
-    { id: 1, title: 'Product' },
-  ];
-
-  const optionsProduct = [
-    { id: 1, title: t('need.needStatus.1') },
-    { id: 2, title: t('need.needStatus.2') },
-    { id: 3, title: t('need.needStatus.p3') },
-    { id: 4, title: t('need.needStatus.p4') },
-    { id: 5, title: t('need.needStatus.p5') },
-  ];
-
-  const optionsService = [
-    { id: 1, title: t('need.needStatus.1') },
-    { id: 2, title: t('need.needStatus.2') },
-    { id: 3, title: t('need.needStatus.s3') },
-    { id: 4, title: t('need.needStatus.s4') },
-  ];
-
-  useEffect(() => {
-    if (typeId === 1) {
-      setOptionStatus(optionsProduct);
-    }
-    if (typeId === 0) {
-      setOptionStatus(optionsService);
-    }
-  }, [typeId, openType]);
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.needs.length) : 0;
 
@@ -442,37 +436,7 @@ const ReportStatusTable = () => {
     const { row } = props;
     const isSelected = (name) => selected.indexOf(name) !== -1;
     const [accOpen, setAccOpen] = useState(false);
-
-    const [finalImageFile, setFinalImageFile] = useState();
-    const [openImageDialog, setOpenImageDialog] = useState(false);
-    const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-
-    const receiptList = useSelector((state) => state.receiptList);
-    const { receipts, loading: loadingReceiptList } = receiptList;
-
-    const receiptAdd = useSelector((state) => state.receiptAdd);
-    const { loading: loadingAddReceipt } = receiptAdd;
-
     const isItemSelected = isSelected(row.id);
-
-    const handleAddReceipt = () => {
-      // setFinalImageFile();
-    };
-    useEffect(() => {
-      if (finalImageFile) {
-        dispatch(
-          addReceiptToNeed({
-            needId: row.id,
-            code: 1,
-            title: 'test',
-            needStatus: statusId,
-            description: 'tests',
-            attachment: finalImageFile,
-          }),
-        );
-        dispatch(fetchNeedReceipts(row.id));
-      }
-    }, [finalImageFile]);
 
     // fetch needs receipt when open accordion
     useEffect(() => {
@@ -480,21 +444,6 @@ const ReportStatusTable = () => {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
-
-    // dialog image
-    const handleImageClickOpen = () => {
-      setOpenImageDialog(true);
-    };
-    const handleImageClose = () => {
-      setOpenImageDialog(false);
-    };
-
-    const onImageChange = (e) => {
-      if (e.target.files[0]) {
-        setUploadImage(e.target.files[0]);
-        handleImageClickOpen();
-      }
-    };
 
     return (
       <>
@@ -672,10 +621,31 @@ const ReportStatusTable = () => {
                         {row.doneAt}
                       </TableCell>
                       <TableCell align="right">
-                        {row.bank_track_id &&
-                          parseInt(convertor(row.bank_track_id), 10)
-                            .toLocaleString('en-US')
-                            .replace(/,/g, '-')}
+                        {row.payments[0] && (
+                          <Tooltip
+                            title={row.payments.map((payment, index) => {
+                              if (payment.gateway_track_id) {
+                                return (
+                                  <Typography variant="subtitle2" key={payment.id}>{`${
+                                    index + 1
+                                  }: ${
+                                    payment.gateway_track_id
+                                  } - ${payment.total_amount.toLocaleString()}`}</Typography>
+                                );
+                              }
+                              return (
+                                <Typography variant="subtitle2" key={payment.id}>{`${
+                                  index + 1
+                                }: SAY- ${payment.total_amount.toLocaleString()}`}</Typography>
+                              );
+                            })}
+                            placement="top-end"
+                          >
+                            <Typography color="textSecondary" variant="body1">
+                              {row.payments.length} {t('need.payers')}
+                            </Typography>
+                          </Tooltip>
+                        )}
                       </TableCell>
                     </TableRow>
                     {/* 3 Product delivered to NGO - Money transferred to the NGO */}
@@ -709,62 +679,7 @@ const ReportStatusTable = () => {
                       </TableCell>
                       <TableCell align="right">
                         {((typeId === 1 && statusId > 3) || (typeId === 0 && statusId > 3)) && (
-                          <Stack direction="row" alignItems="center" spacing={1}>
-                            {loadingReceiptList || loadingAddReceipt ? (
-                              <Grid sx={{ textAlign: 'center' }}>
-                                <CircularProgress size={10} />
-                              </Grid>
-                            ) : (
-                              <>
-                                <div className="upload__image-wrapper">
-                                  <Grid>
-                                    <label htmlFor="upload-image">
-                                      <input
-                                        accept="image/*"
-                                        id="upload-image"
-                                        type="file"
-                                        style={{ display: 'none' }}
-                                        onChange={onImageChange}
-                                      />
-
-                                      <IconButton
-                                        name="upload-image"
-                                        id="upload-image"
-                                        color="primary"
-                                        component="div"
-                                      >
-                                        <AddCircleOutlineIcon
-                                          color="primary"
-                                          fontSize="small"
-                                          sx={{
-                                            zIndex: 10,
-                                            borderRadius: '20%',
-                                          }}
-                                        />
-                                      </IconButton>
-                                    </label>
-                                  </Grid>
-                                </div>
-                                {finalImageFile && (
-                                  <Avatar
-                                    alt="ngo logo"
-                                    sx={{ width: 20, height: 20 }}
-                                    src={
-                                      URL.createObjectURL(finalImageFile) // image preview
-                                    }
-                                  />
-                                )}
-                                {receipts &&
-                                  receipts.map((receipt) => (
-                                    <Avatar
-                                      alt="ngo logo"
-                                      sx={{ width: 20, height: 20 }}
-                                      src={receipt.attachment}
-                                    />
-                                  ))}
-                              </>
-                            )}
-                          </Stack>
+                          <ReportImage row={row} statusId={statusId} />
                         )}
                       </TableCell>
                     </TableRow>
@@ -778,16 +693,7 @@ const ReportStatusTable = () => {
                           {row.child_delivery_date}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {statusId > 4 && (
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                              <IconButton aria-label="delete" size="small">
-                                <AddCircleOutlineIcon fontSize="inherit" />
-                              </IconButton>
-                              <IconButton aria-label="delete" size="small">
-                                <DocumentScannerIcon fontSize="inherit" />
-                              </IconButton>
-                            </Stack>
-                          )}
+                          {statusId > 4 && <ReportImage row={row} statusId={statusId} />}
                         </TableCell>
                       </TableRow>
                     )}
@@ -797,28 +703,6 @@ const ReportStatusTable = () => {
             </Collapse>
           </TableCell>
         </TableRow>
-        {/* Receipt Image */}
-        <Dialog
-          open={openImageDialog}
-          onClose={handleImageClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogContent>
-            <Box>
-              <UploadIdImage
-                uploadImage={uploadImage}
-                handleImageClose={handleImageClose}
-                setFinalImageFile={setFinalImageFile}
-                customBorderRadius={1}
-                customFunction={handleAddReceipt}
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleImageClose}>Close</Button>
-          </DialogActions>
-        </Dialog>
       </>
     );
   }
@@ -845,6 +729,7 @@ const ReportStatusTable = () => {
       cost: PropTypes.number,
       bank_track_id: PropTypes.string,
       dkc: PropTypes.string,
+      payments: PropTypes.array,
     }),
   };
 
@@ -853,11 +738,11 @@ const ReportStatusTable = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item md={3} xs={12}>
-          {ngoList && (
+      {ngoList && (
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item md={3} xs={12}>
             <Autocomplete
-              defaultValue={ngoList[0]}
+              defaultValue={ngoList.filter((ngo) => ngo.isActive)[0]} // only active one
               id="asynchronous-ngo"
               open={openNgo}
               onOpen={() => {
@@ -887,44 +772,46 @@ const ReportStatusTable = () => {
                 />
               )}
             />
-          )}
-        </Grid>
-        <Grid item md={3} xs={12}>
-          <Autocomplete
-            defaultValue={optionsType[1]}
-            id="type"
-            open={openType}
-            onOpen={() => setOpenType(true) && setOptionStatus()}
-            onClose={() => {
-              setOpenType(false);
-            }}
-            onChange={(e, value) => setTypeId(value && value.id)}
-            getOptionLabel={(option) => `${option.title}`}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            options={optionsType}
-            renderInput={(params) => <TextField {...params} label="Service/Product" />}
-          />
-        </Grid>
-        <Grid item md={3} xs={12}>
-          {optionsType && optionStatus && (
+          </Grid>
+          <Grid item md={3} xs={12}>
             <Autocomplete
-              defaultValue={optionStatus[1]}
-              id="status"
-              onChange={(e, value) => setStatusId(value && value.id)}
-              getOptionLabel={(option) => `${option.id} - ${option.title}`}
+              defaultValue={optionsType[1]}
+              id="type"
+              open={openType}
+              onOpen={() => setOpenType(true) && setOptionStatus()}
+              onClose={() => {
+                setOpenType(false);
+              }}
+              onChange={(e, value) => setTypeId(value && value.id)}
+              getOptionLabel={(option) => `${option.title}`}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              options={optionStatus}
-              renderInput={(params) => <TextField {...params} label="Status" />}
+              options={optionsType}
+              renderInput={(params) => <TextField {...params} label="Service/Product" />}
             />
-          )}
+          </Grid>
+          <Grid item md={3} xs={12}>
+            {optionsType && optionStatus && (
+              <Autocomplete
+                defaultValue={optionStatus[1]}
+                id="status"
+                onChange={(e, value) => setStatusId(value && value.id)}
+                getOptionLabel={(option) => `${option.id} - ${option.title}`}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                options={optionStatus}
+                renderInput={(params) => <TextField {...params} label="Status" />}
+              />
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
+
       {loadingAllNeeds || loadingNgoList ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        successAllNeeds && (
+        successAllNeeds &&
+        needs.needs.length > 0 && (
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>

@@ -35,7 +35,8 @@
     },
     "timeout": "Retry",
     "continue": "Accept",
-    "cancel": "Decline"
+    "cancel": "Decline",
+    "delete": "Delete"
   },
   "helperText": {
     "userName": "Alphabets, numbers and dot",
@@ -482,6 +483,9 @@
     "history": {
       "title": "History"
     },
+    "deleteModal": {
+      "confirm": "Are you sure you want to delete?"
+    },
     "swId": "Social worker’s identification: SW-{{socialWorkerGeneratedCode}}",
     "dkc": "Order: DKC-{{dkc}}",
     "p2s2": {
@@ -520,6 +524,7 @@
     "download": "Download Report"
   },
   "socialWorker": {
+    "socialWorker": " socialWorker",
     "isActive": "Status",
     "isCoordinator": "Coordinator Status",
     "update": "Edit",
@@ -652,6 +657,7 @@
     "child_delivery_date": "Delivery To Child",
     "preNeed": "Template",
     "doing_duration": "Days to complete",
+    "payers": "Payer(s)",
     "button": {
       "update": "Update",
       "add": "Add Need"
