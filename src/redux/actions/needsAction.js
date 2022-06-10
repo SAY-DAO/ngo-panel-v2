@@ -153,6 +153,7 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        'X-TAKE': 500,
       },
     };
 

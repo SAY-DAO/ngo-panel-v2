@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import store from './redux/store';
-import * as serviceWorker from './serviceWorker';
+// import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import Spinner from './pages/spinner/Spinner';
 import './i18n';
@@ -23,7 +23,7 @@ root.render(
 );
 
 // If you want to enable client cache, register instead.
-serviceWorker.register();
+// serviceWorker.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

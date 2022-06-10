@@ -1,9 +1,10 @@
 import React from 'react';
 import { Grid, Box, Card, CardContent, Typography, Button, Avatar } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
+import PropTypes from 'prop-types';
 import cover from '../../assets/images/cover.jpg';
 
-const CoverCard = () => (
+const CoverCard = ({ swInfo }) => (
   <Card
     sx={{
       padding: '0',
@@ -75,7 +76,7 @@ const CoverCard = () => (
                   lineHeight: '1.2',
                 }}
               >
-                Posts
+                Needs
               </Typography>
             </Grid>
             <Grid
@@ -189,8 +190,8 @@ const CoverCard = () => (
                 }}
               >
                 <Avatar
-                  src={cover}
-                  alt={cover}
+                  src={swInfo.avatarUrl}
+                  alt="Social worker avatar"
                   sx={{
                     borderRadius: '50%',
                     width: '96px',
@@ -213,7 +214,7 @@ const CoverCard = () => (
                     textAlign: 'center',
                   }}
                 >
-                  Julia Roberts
+                  {`${swInfo.firstName} ${swInfo.lastName}`}{' '}
                 </Typography>
                 <Typography
                   color="textSecondary"
@@ -223,7 +224,7 @@ const CoverCard = () => (
                     textAlign: 'center',
                   }}
                 >
-                  Project Manager
+                  {swInfo.typeName}
                 </Typography>
               </Box>
             </Box>
@@ -272,67 +273,13 @@ const CoverCard = () => (
             }}
           >
             <Button
-              color="secondary"
-              variant="contained"
-              size="small"
-              sx={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                backgroundColor: '#3762d2',
-              }}
-            >
-              <FeatherIcon icon="facebook" width="18" />
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              sx={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                backgroundColor: '#1abbff',
-                ml: 1,
-              }}
-            >
-              <FeatherIcon icon="twitter" width="18" />
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              sx={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                backgroundColor: '#198bfe',
-                ml: 1,
-              }}
-            >
-              <FeatherIcon icon="linkedin" width="18" />
-            </Button>
-            <Button
-              color="error"
-              variant="contained"
-              size="small"
-              sx={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                backgroundColor: '#f7468c',
-                ml: 1,
-              }}
-            >
-              <FeatherIcon icon="instagram" width="18" />
-            </Button>
-            <Button
+              disabled  
               color="primary"
               variant="contained"
               size="small"
               sx={{
                 height: '40px',
-                backgroundColor: '#1a9afb',
+                backgroundColor: '#f4b58f',
                 pl: '18px',
                 pr: '18px',
                 ml: 1,
@@ -343,7 +290,7 @@ const CoverCard = () => (
                 },
               }}
             >
-              Following
+              Connect Wallet
             </Button>
           </Box>
         </Grid>
@@ -351,5 +298,9 @@ const CoverCard = () => (
     </CardContent>
   </Card>
 );
+
+CoverCard.propTypes = {
+  swInfo: PropTypes.object,
+};
 
 export default CoverCard;
