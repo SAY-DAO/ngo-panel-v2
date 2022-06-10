@@ -362,14 +362,14 @@ const ReportStatusTable = () => {
   }, [typeId, openType]);
 
   // Autocomplete ngo
-  useEffect(async () => {
+  useEffect(() => {
     let active = true;
     if (!loadingNgo) {
       return undefined;
     }
 
     if (active && successNgoList) {
-      const activeNgoList = await ngoList.filter((ngo) => ngo.isActive);
+      const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
       setOptionsNgo([...activeNgoList]);
     }
     return () => {

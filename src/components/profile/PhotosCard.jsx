@@ -11,22 +11,24 @@ const PhotosCard = ({ myChildren }) => (
         </Typography>
       </Box>
       <ImageList cols={3} gap={20}>
-        {myChildren.filter((child)=> child.isConfirmed).map((child) => (
-          <ImageListItem key={child.id}>
-            <img
-              srcSet={`${child.awakeAvatarUrl} 1x, ${child.awakeAvatarUrl} 2x`}
-              alt={child.awakeAvatarUrl}
-              loading="lazy"
-              style={{ borderRadius: 8 }}
-            />
-          </ImageListItem>
-        ))}
+        {myChildren
+          .filter((child) => child.isConfirmed)
+          .map((child) => (
+            <ImageListItem key={child.id}>
+              <img
+                srcSet={`${child.awakeAvatarUrl} 1x, ${child.awakeAvatarUrl} 2x`}
+                alt={child.awakeAvatarUrl}
+                loading="lazy"
+                style={{ borderRadius: 8 }}
+              />
+            </ImageListItem>
+          ))}
       </ImageList>
     </CardContent>
   </Card>
 );
 
 PhotosCard.propTypes = {
-  myChildren: PropTypes.object,
+  myChildren: PropTypes.array,
 };
 export default PhotosCard;
