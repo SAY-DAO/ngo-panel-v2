@@ -6,6 +6,7 @@ import RTL from './layouts/full-layout/customizer/RTL';
 import ThemeSettings from './layouts/full-layout/customizer/ThemeSettings';
 import Router from './routes/Router';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import swDev from './swDev';
 
 const App = () => {
   const routing = useRoutes(Router);
@@ -20,5 +21,5 @@ const App = () => {
     </ThemeProvider>
   );
 };
-
+swDev();
 export default App;
