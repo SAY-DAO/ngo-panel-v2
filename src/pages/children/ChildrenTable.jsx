@@ -31,7 +31,7 @@ import { useNavigate } from 'react-router-dom';
 import MuiAudioPlayer from 'mui-audio-player-plus';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
-import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
+import { CHILD_BY_ID_RESET } from '../../redux/constants/childrenConstants';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -260,13 +260,6 @@ function EnhancedTableHead(props) {
       label: t('child.sayFamilyCount'),
     },
     {
-      id: 'education',
-      numeric: false,
-      disablePadding: false,
-      paragraph: false,
-      label: t('child.education'),
-    },
-    {
       id: 'housingStatus',
       numeric: false,
       disablePadding: false,
@@ -446,7 +439,7 @@ const ChildrenTable = ({ childList }) => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -497,8 +490,8 @@ const ChildrenTable = ({ childList }) => {
   };
 
   const handleEdit = (row) => {
-    dispatch({ type: NGO_BY_ID_RESET });
-    navigate(`/ngo/edit/${row.id}`);
+    dispatch({ type: CHILD_BY_ID_RESET });
+    navigate(`/children/edit/${row.id}`);
   };
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
@@ -775,11 +768,6 @@ const ChildrenTable = ({ childList }) => {
                           </TableCell>
                           <TableCell>
                             <Typography variant="h6">{row.sayFamilyCount}</Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography color="textSecondary" variant="body1" fontWeight="400">
-                              {row.education}
-                            </Typography>
                           </TableCell>
                           <TableCell>
                             <Typography color="textSecondary" variant="body1" fontWeight="400">

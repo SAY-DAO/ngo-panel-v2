@@ -32,8 +32,8 @@ const ChildrenList = () => {
   const { ngoList, success: successNgoList } = ngoAll;
 
   const childAll = useSelector((state) => state.childAll);
-  const { childList, loading: loadingChildList, success: successChildren } = childAll;
-  console.log(childList, successChildren, ngoId, ngoList);
+  const { myChildren, loading: loadingChildList, success: successChildren } = childAll;
+  console.log(myChildren, successChildren, ngoId, ngoList);
 
   // children
   useEffect(() => {
@@ -108,7 +108,7 @@ const ChildrenList = () => {
           {loadingChildList ? (
             <CircularProgress />
           ) : (
-            successChildren && ngoId && <ChildrenTable childList={childList.children} />
+            successChildren && ngoId && <ChildrenTable childList={myChildren.children} />
           )}
         </Grid>
       </Grid>

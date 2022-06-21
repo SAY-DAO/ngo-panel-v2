@@ -27,11 +27,13 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import HotelIcon from '@mui/icons-material/Hotel';
+import ChildCareIcon from '@mui/icons-material/ChildCare';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { updateNgo, fetchNgoById, updateNgoIsActive } from '../../redux/actions/ngoAction';
-import Message from '../../components/Message';
+import { updateChild, fetchMyChildById } from '../../redux/actions/childrenAction';
+// import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
@@ -53,85 +55,79 @@ const ChildrenEdit = () => {
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const [activeChecked, setActiveChecked] = useState(false);
-  const [finalImageFile, setFinalImageFile] = useState();
-  const [openImageDialog, setOpenImageDialog] = useState(false);
-  const [openIdImageDialog, setOpenIdImageDialog] = useState(false);
-  const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [values, setValues] = useState({
-    name: '',
-    website: '',
-    country: '',
-    city: '',
-    phoneNumber: '',
-    postalAddress: '',
-    emailAddress: '',
-    logoUrl: '',
-  });
+  // const [activeChecked, setActiveChecked] = useState(false);
+  const [finalAvatar, setFinalAvatar] = useState();
+  const [finalSleptAvatar, setFinalSleptAvatar] = useState();
+  const [openAvatarDialog, setOpenAvatarDialog] = useState(false);
+  const [openSleptAvatarDialog, setOpenSleptAvatarDialog] = useState(false);
+  const [uploadAvatar, setUploadAvatar] = useState(location.state && location.state.newImage);
+  const [uploadSleptAvatar, setUploadSleptAvatar] = useState(
+    location.state && location.state.newImage,
+  );
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const ngoById = useSelector((state) => state.ngoById);
-  const { result, loading: loadingNgoById, success: successNgoById } = ngoById;
+  const childById = useSelector((state) => state.childById);
+  const { result, loading: loadingChild, success: successChild } = childById;
 
-  const ngoStatusUpdate = useSelector((state) => state.ngoStatusUpdate);
-  const { status } = ngoStatusUpdate;
+  // const ngoStatusUpdate = useSelector((state) => state.ngoStatusUpdate);
+  // const { status } = ngoStatusUpdate;
 
-  const ngoUpdate = useSelector((state) => state.ngoUpdate);
-  const { success: successNgoUpdate, loading: loadingNgoUpdate, error: errorNgoUpdate } = ngoUpdate;
+  // const ngoUpdate = useSelector((state) => state.ngoUpdate);
+  // const { success: successNgoUpdate, loading: loadingNgoUpdate, error: errorNgoUpdate } = ngoUpdate;
 
   useEffect(() => {
-    if ((!successNgoById && id) || status) {
-      dispatch(fetchNgoById(id));
+    if (id) {
+      dispatch(fetchMyChildById(id));
     }
-  }, [status, successNgoUpdate, id]);
+  }, [id]);
 
   // isActive
-  useEffect(() => {
-    if (result && result.isActive) {
-      setActiveChecked(true);
-    } else {
-      setActiveChecked(false);
-    }
-  }, [successNgoById, status]);
+  // useEffect(() => {
+  //   if (result && result.isActive) {
+  //     setActiveChecked(true);
+  //   } else {
+  //     setActiveChecked(false);
+  //   }
+  // }, [successNgoById, status]);
 
-  useEffect(() => {
-    if (result) {
-      setValues({
-        ...values,
-        name: result.name,
-        website: result.website,
-        emailAddress: result.emailAddress,
-        country: result.country,
-        city: result.city,
-        phoneNumber: result.phoneNumber,
-        postalAddress: result.postalAddress,
-        logoUrl: result.logoUrl,
-      });
-    }
-  }, [dispatch, result, userInfo]);
-
-  const handleChangeActive = () => {
-    if (activeChecked && result.isActive) {
-      dispatch(updateNgoIsActive(result.id, 'deactivate'));
-    } else if (!activeChecked && !result.isActive) {
-      dispatch(updateNgoIsActive(result.id, 'activate'));
-    }
-  };
+  // const handleChangeActive = () => {
+  //   if (activeChecked && result.isActive) {
+  //     dispatch(updateNgoIsActive(result.id, 'deactivate'));
+  //   } else if (!activeChecked && !result.isActive) {
+  //     dispatch(updateNgoIsActive(result.id, 'activate'));
+  //   }
+  // };
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Please enter your first name'),
-    country: Yup.string().required('Please enter your country'),
-    phoneNumber: Yup.string().required('Please enter your phone number'),
-    postalAddress: Yup.string().required('Please enter your postalAddress'),
-    emailAddress: Yup.string()
-      // .min(3, 'must be at least 3 characters long')
-      .email('Please enter your email')
-      .required('Email is required'),
+    sayName_fa: Yup.string().required('Please enter child`s SAY name'),
+    sayName_en: Yup.string().required('Please enter child`s SAY name'),
+    firstName_fa: Yup.string(),
+    firstName_en: Yup.string(),
+    lastName_fa: Yup.string(),
+    lastName_en: Yup.string(),
+    gender: Yup.boolean().required('Please enter child`s gender'),
+    nationality: Yup.string(),
+    address: Yup.string(),
+    country: Yup.string().required('Please enter child`s country'),
+    city: Yup.string().required('Please enter child`s city'),
+    birthDate: Yup.string(),
+    birthPlace: Yup.string(),
+    phoneNumber: Yup.string().required('Please enter child`s phone number'),
+    familyCount: Yup.number(),
+    housingStatus: Yup.number(),
+    avatarUrl: Yup.string().required('Please choose child`s avatar'),
+    sleptAvatarUrl: Yup.string().required('Please choose child`s slept avatar'),
+    voiceUrl: Yup.string().required('Please choose child`s voice'),
+    bio_fa: Yup.string().required('Please enter child`s bio'),
+    bio_en: Yup.string().required('Please enter child`s bio'),
+    bioSummary_fa: Yup.string().required('Please enter child`s bio summary'),
+    bioSummary_en: Yup.string().required('Please enter child`s bio summary'),
   });
 
   const {
+    setValue,
     register,
     control,
     handleSubmit,
@@ -140,12 +136,40 @@ const ChildrenEdit = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  useEffect(() => {
+    if (result) {
+      setValue('sayName_fa', result.sayname_translations.fa);
+      setValue('sayName_en', result.sayname_translations.en);
+      setValue('firstName_fa', result.firstName_translations.fa);
+      setValue('firstName_en', result.firstName_translations.en);
+      setValue('lastName_fa', result.lastName_translations.fa);
+      setValue('lastName_en', result.lastName_translations.en);
+      setValue('gender', result.gender);
+      setValue('nationality', result.nationality);
+      setValue('address', result.address);
+      setValue('country', result.country);
+      setValue('city', result.city);
+      setValue('birthDate', result.birthDate);
+      setValue('birthPlace', result.birthPlace);
+      setValue('phoneNumber', result.phoneNumber);
+      setValue('familyCount', result.familyCount);
+      setValue('housingStatus', result.housingStatus);
+      setValue('avatarUrl', result.avatarUrl);
+      setValue('sleptAvatarUrl', result.sleptAvatarUrl);
+      setValue('voiceUrl', result.voiceUrl);
+      setValue('bio_fa', result.bio_translations.fa);
+      setValue('bio_en', result.bio_translations.en);
+      setValue('bioSummary_fa', result.bio_summary_translations.fa);
+      setValue('bioSummary_en', result.bio_summary_translations.en);
+    }
+  }, [dispatch, result, userInfo]);
+
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      updateNgo({
+      updateChild({
         id,
         name: data.name,
         emailAddress: data.emailAddress,
@@ -154,104 +178,171 @@ const ChildrenEdit = () => {
         phoneNumber: data.phoneNumber,
         postalAddress: data.postalAddress,
         website: data.website,
-        logoUrl: finalImageFile,
+        // logoUrl: finalImageFile,
       }),
     );
     dispatch({ type: NGO_BY_ID_RESET });
   };
 
   // dialog image
-  const handleImageClickOpen = () => {
-    setOpenImageDialog(true);
+  const handleAvatarClickOpen = () => {
+    setOpenAvatarDialog(true);
   };
-  const handleImageClose = () => {
-    setOpenImageDialog(false);
-  };
-
-  const handleIdImageClose = () => {
-    setOpenIdImageDialog(false);
+  const handleAvatarClose = () => {
+    setOpenAvatarDialog(false);
   };
 
-  const onImageChange = (e) => {
+  const handleSleptAvatarClickOpen = () => {
+    setOpenSleptAvatarDialog(true);
+  };
+  const handleSleptAvatarClose = () => {
+    setOpenSleptAvatarDialog(false);
+  };
+
+  const onAvatarChange = (e) => {
     if (e.target.files[0]) {
-      setUploadImage(e.target.files[0]);
-      handleImageClickOpen();
+      setUploadAvatar(e.target.files[0]);
+      handleAvatarClickOpen();
     }
   };
 
-  const handleChangeInput = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const onSleptAvatarChange = (e) => {
+    if (e.target.files[0]) {
+      setUploadSleptAvatar(e.target.files[0]);
+      handleSleptAvatarClickOpen();
+    }
   };
 
+  // const handleChangeInput = (prop) => (event) => {
+  //   setValues({ ...values, [prop]: event.target.value });
+  // };
+
   return (
-    <PageContainer title="NGO Edit" description="this is NGO Edit page">
+    <PageContainer title="Child Edit" description="this is Child Edit page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {!id || loadingNgoById || loadingNgoUpdate ? (
+      {!id || loadingChild ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        result && (
+        result &&
+        successChild && (
           <>
-            <Breadcrumb title="Edit page" subtitle="NGO" />
+            <Breadcrumb title="Edit page" subtitle="Children" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
-                  <Badge
-                    overlap="circular"
-                    sx={{ margin: 'auto' }}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    badgeContent={
-                      <div className="upload__image-wrapper">
-                        <Grid
-                          sx={{
-                            position: 'relative',
-                          }}
-                        >
-                          <label htmlFor="upload-image">
-                            <input
-                              accept="image/*"
-                              id="upload-image"
-                              type="file"
-                              style={{ display: 'none' }}
-                              onChange={onImageChange}
-                            />
-
-                            <IconButton
-                              name="upload-image"
-                              id="upload-image"
-                              color="primary"
-                              component="div"
-                            >
-                              <AddCircleOutlineIcon
-                                color="primary"
-                                fontSize="medium"
-                                sx={{
-                                  zIndex: 10,
-                                  borderRadius: '20%',
-                                }}
+                  <Grid container spacing={0}>
+                    <Badge
+                      overlap="circular"
+                      sx={{ margin: 'auto' }}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      badgeContent={
+                        <div className="upload__image-wrapper">
+                          <Grid
+                            sx={{
+                              position: 'relative',
+                            }}
+                          >
+                            <label htmlFor="upload-avatar">
+                              <input
+                                accept="image/*"
+                                id="upload-avatar"
+                                type="file"
+                                style={{ display: 'none' }}
+                                onChange={onAvatarChange}
                               />
-                            </IconButton>
-                          </label>
-                        </Grid>
-                      </div>
-                    }
-                  >
-                    <Avatar
-                      alt="user photo"
-                      sx={{ width: 110, height: 110 }}
-                      src={
-                        finalImageFile
-                          ? URL.createObjectURL(finalImageFile) // image preview
-                          : values.logoUrl
+
+                              <IconButton
+                                name="upload-avatar"
+                                id="upload-avatar"
+                                color="primary"
+                                component="div"
+                              >
+                                <AddCircleOutlineIcon
+                                  color="primary"
+                                  fontSize="medium"
+                                  sx={{
+                                    zIndex: 10,
+                                    borderRadius: '20%',
+                                  }}
+                                />
+                              </IconButton>
+                            </label>
+                          </Grid>
+                        </div>
                       }
-                    />
-                  </Badge>
+                    >
+                      <Avatar
+                        alt="child avatar"
+                        sx={{ width: 110, height: 110 }}
+                        src={
+                          finalAvatar
+                            ? URL.createObjectURL(finalAvatar) // image preview
+                            : result.avatarUrl
+                        }
+                      >
+                        <ChildCareIcon fontSize="large" />
+                      </Avatar>
+                    </Badge>
+                    <Badge
+                      overlap="circular"
+                      sx={{ margin: 'auto' }}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      badgeContent={
+                        <div className="upload__image-wrapper">
+                          <Grid
+                            sx={{
+                              position: 'relative',
+                            }}
+                          >
+                            <label htmlFor="upload-slept-avatar">
+                              <input
+                                accept="image/*"
+                                id="upload-slept-avatar"
+                                type="file"
+                                style={{ display: 'none' }}
+                                onChange={onSleptAvatarChange}
+                              />
+
+                              <IconButton
+                                name="upload-slept-avatar"
+                                id="upload-slept-avatar"
+                                color="primary"
+                                component="div"
+                              >
+                                <AddCircleOutlineIcon
+                                  color="primary"
+                                  fontSize="medium"
+                                  sx={{
+                                    zIndex: 10,
+                                    borderRadius: '20%',
+                                  }}
+                                />
+                              </IconButton>
+                            </label>
+                          </Grid>
+                        </div>
+                      }
+                    >
+                      <Avatar
+                        alt="child slept avatar"
+                        sx={{ width: 110, height: 110 }}
+                        src={
+                          finalSleptAvatar
+                            ? URL.createObjectURL(finalSleptAvatar) // image preview
+                            : result.sleptAvatarUrl
+                        }
+                      >
+                        <HotelIcon fontSize="large" />
+                      </Avatar>
+                    </Badge>
+                  </Grid>
 
                   <Typography variant="h2" sx={{ mt: 4 }}>
-                    {result && `${result.name}`}
+                    {result && `${result.sayname_translations.en}`}
                   </Typography>
                   <FormControlLabel
                     control={
@@ -260,8 +351,8 @@ const ChildrenEdit = () => {
                         id="isActive"
                         variant="outlined"
                         defaultValue={result.isActive}
-                        checked={activeChecked}
-                        onChange={handleChangeActive}
+                        // checked={activeChecked}
+                        // onChange={handleChangeActive}
                         inputProps={{ 'aria-label': 'controlled' }}
                       />
                     }
@@ -310,7 +401,7 @@ const ChildrenEdit = () => {
                       defaultValue={result.name}
                       fullWidth
                       size="small"
-                      onChange={handleChangeInput('name')}
+                      // onChange={handleChangeInput('name')}
                       control={control}
                       {...register('name')}
                       error={!!errors.name}
@@ -323,7 +414,7 @@ const ChildrenEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('emailAddress')}
+                      // onChange={handleChangeInput('emailAddress')}
                       control={control}
                       {...register('emailAddress')}
                       error={!!errors.emailAddress}
@@ -337,7 +428,7 @@ const ChildrenEdit = () => {
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
                       defaultValue={1}
-                      onChange={handleChangeInput('country')}
+                      // onChange={handleChangeInput('country')}
                       control={control}
                       register={{ ...register('country') }}
                     >
@@ -351,7 +442,7 @@ const ChildrenEdit = () => {
                       labelId="city-controlled-open-select-label"
                       id="city-controlled-open-select"
                       defaultValue={result.city || 1}
-                      onChange={handleChangeInput('city')}
+                      // onChange={handleChangeInput('city')}
                       control={control}
                       register={{ ...register('city') }}
                     >
@@ -370,7 +461,7 @@ const ChildrenEdit = () => {
                       size="small"
                       sx={{ mb: 2 }}
                       fullWidth
-                      onChange={handleChangeInput('postalAddress')}
+                      // onChange={handleChangeInput('postalAddress')}
                       control={control}
                       register={{ ...register('postalAddress') }}
                     />
@@ -382,7 +473,7 @@ const ChildrenEdit = () => {
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('phoneNumber')}
+                      // onChange={handleChangeInput('phoneNumber')}
                       control={control}
                       {...register('phoneNumber')}
                       error={!!errors.phoneNumber}
@@ -401,10 +492,10 @@ const ChildrenEdit = () => {
                 </Card>
               </Grid>
             </Grid>
-            {/* Social Worker Image */}
+            {/* Child Avatar */}
             <Dialog
-              open={openImageDialog}
-              onClose={handleImageClose}
+              open={openAvatarDialog}
+              onClose={handleAvatarClose}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
@@ -414,31 +505,40 @@ const ChildrenEdit = () => {
               <DialogContent>
                 <Box>
                   <UploadIdImage
-                    uploadImage={uploadImage}
-                    handleImageClose={handleImageClose}
-                    setFinalImageFile={setFinalImageFile}
+                    uploadImage={uploadAvatar}
+                    handleImageClose={handleAvatarClose}
+                    setFinalImageFile={setFinalAvatar}
                   />
                 </Box>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleAvatarClose}>Close</Button>
               </DialogActions>
             </Dialog>
-            {/* Social Worker ID Image */}
+            {/* Child Slept Avatar */}
             <Dialog
-              open={openIdImageDialog}
-              onClose={handleIdImageClose}
+              open={openSleptAvatarDialog}
+              onClose={handleSleptAvatarClose}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title" sx={{ margin: 'auto' }}>
                 {result && `${result.name} ${result.lastName}`}
               </DialogTitle>
+              <DialogContent>
+                <Box>
+                  <UploadIdImage
+                    uploadImage={uploadSleptAvatar}
+                    handleImageClose={handleSleptAvatarClose}
+                    setFinalImageFile={setFinalSleptAvatar}
+                  />
+                </Box>
+              </DialogContent>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleSleptAvatarClose}>Close</Button>
               </DialogActions>
             </Dialog>
-            <Grid>
+            {/* <Grid>
               {(successNgoUpdate || errorNgoUpdate) && (
                 <Message
                   severity={successNgoUpdate ? 'success' : 'error'}
@@ -450,7 +550,7 @@ const ChildrenEdit = () => {
                   {successNgoUpdate && t('ngo.updated')}
                 </Message>
               )}
-            </Grid>
+            </Grid> */}
           </>
         )
       )}
