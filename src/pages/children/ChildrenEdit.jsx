@@ -14,7 +14,7 @@ import {
   DialogActions,
   TextField,
   IconButton,
-  MenuItem,
+  // MenuItem,
   FormHelperText,
   FormControlLabel,
   Switch,
@@ -29,6 +29,9 @@ import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import HotelIcon from '@mui/icons-material/Hotel';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
+import MuiAudioPlayer from 'mui-audio-player-plus';
+// import { AudioCard } from 'material-ui-player';
+
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -36,7 +39,7 @@ import { updateChild, fetchMyChildById } from '../../redux/actions/childrenActio
 // import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
-import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
+// import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 
 const BCrumb = [
@@ -64,6 +67,7 @@ const ChildrenEdit = () => {
   const [uploadSleptAvatar, setUploadSleptAvatar] = useState(
     location.state && location.state.newImage,
   );
+  const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -213,6 +217,12 @@ const ChildrenEdit = () => {
     }
   };
 
+  const onVoiceChange = (e) => {
+    if (e.target.files[0]) {
+      setUploadVoice(e.target.files[0]);
+    }
+  };
+
   // const handleChangeInput = (prop) => (event) => {
   //   setValues({ ...values, [prop]: event.target.value });
   // };
@@ -281,7 +291,7 @@ const ChildrenEdit = () => {
                         src={
                           finalAvatar
                             ? URL.createObjectURL(finalAvatar) // image preview
-                            : result.avatarUrl
+                            : result.awakeAvatarUrl
                         }
                       >
                         <ChildCareIcon fontSize="large" />
@@ -341,9 +351,59 @@ const ChildrenEdit = () => {
                     </Badge>
                   </Grid>
 
-                  <Typography variant="h2" sx={{ mt: 4 }}>
-                    {result && `${result.sayname_translations.en}`}
-                  </Typography>
+                  <Badge
+                    sx={{ margin: '40px auto', width: '100%' }}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    badgeContent={
+                      <div className="upload__image-wrapper">
+                        <Grid
+                          sx={{
+                            position: 'relative',
+                          }}
+                        >
+                          <label htmlFor="upload-voice">
+                            <input
+                              accept="audio/*"
+                              id="upload-voice"
+                              type="file"
+                              style={{ display: 'none' }}
+                              onChange={onVoiceChange}
+                            />
+
+                            <IconButton
+                              name="upload-voice"
+                              id="upload-voice"
+                              color="primary"
+                              component="div"
+                            >
+                              <AddCircleOutlineIcon
+                                color="primary"
+                                fontSize="medium"
+                                sx={{
+                                  zIndex: 10,
+                                  borderRadius: '20%',
+                                }}
+                              />
+                            </IconButton>
+                          </label>
+                        </Grid>
+                      </div>
+                    }
+                  >
+                    <MuiAudioPlayer
+                      id="inline-timeline"
+                      display="timeline"
+                      containerWidth="100%"
+                      inline
+                      src={uploadVoice ? URL.createObjectURL(uploadVoice) : result.voiceUrl}
+                    />
+                    {/* <AudioCard
+                      src={uploadVoice ? URL.createObjectURL(uploadVoice) : result.voiceUrl}
+                      width="100%"
+                      thickness="thin"
+                    /> */}
+                  </Badge>
+
                   <FormControlLabel
                     control={
                       <Switch
@@ -377,14 +437,6 @@ const ChildrenEdit = () => {
                       </Grid>
                     }
                   />
-                  <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('ngo.emailAddress')}
-                  </Typography>
-                  <Typography variant="body2">{result && result.emailAddress}</Typography>
-                  <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('ngo.phoneNumber')}
-                  </Typography>
-                  <Typography variant="body2">{result && result.phoneNumber}</Typography>
                 </Card>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
@@ -423,7 +475,7 @@ const ChildrenEdit = () => {
                       {errors && errors.emailAddress && errors.emailAddress.message}
                     </FormHelperText>
 
-                    <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
+                    {/* <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
@@ -436,8 +488,8 @@ const ChildrenEdit = () => {
                     </CustomSelect>
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                       {errors && errors.country && errors.country.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
+                    </FormHelperText> */}
+                    {/* <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
                     <CustomSelect
                       labelId="city-controlled-open-select-label"
                       id="city-controlled-open-select"
@@ -447,7 +499,7 @@ const ChildrenEdit = () => {
                       register={{ ...register('city') }}
                     >
                       <MenuItem value={1}>{t('ngo.cities.one')}</MenuItem>
-                    </CustomSelect>
+                    </CustomSelect> */}
 
                     <CustomFormLabel htmlFor="postalAddress">
                       {t('ngo.postalAddress')}
