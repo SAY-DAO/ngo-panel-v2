@@ -35,7 +35,8 @@
     },
     "timeout": "Retry",
     "continue": "Accept",
-    "cancel": "Decline"
+    "cancel": "Decline",
+    "delete": "Delete"
   },
   "helperText": {
     "userName": "Alphabets, numbers and dot",
@@ -479,6 +480,12 @@
     "s2": "Service delivery receipt"
   },
   "report": {
+    "history": {
+      "title": "History"
+    },
+    "deleteModal": {
+      "confirm": "Are you sure you want to delete?"
+    },
     "swId": "Social worker’s identification: SW-{{socialWorkerGeneratedCode}}",
     "dkc": "Order: DKC-{{dkc}}",
     "p2s2": {
@@ -517,6 +524,7 @@
     "download": "Download Report"
   },
   "socialWorker": {
+    "socialWorker": " socialWorker",
     "isActive": "Status",
     "isCoordinator": "Coordinator Status",
     "update": "Edit",
@@ -597,12 +605,18 @@
     }
   },
   "need": {
+    "id": "id",
+    "titleEdit": "Edit Need Details",
+    "titleAdd": "Add Need Details",
     "unpayable": "Payable",
     "update": "Edit",
     "imageUrl": "Icon",
     "childSayName": "SAY Name",
-    "name": "Need Name",
-    "title": "Title",
+    "name": {
+      "fa": "Need Name (fa)",
+      "en": "Need Name (en)"
+    },
+    "title": "E-commerce Title",
     "cost": "Cost",
     "paid": "Paid",
     "progress": "Progress",
@@ -610,17 +624,52 @@
     "link": "Link",
     "affiliateLinkUrl": "Aff. Link",
     "type_name": "Type",
+    "types": {
+      "service": "service",
+      "product": "product"
+    },
     "isUrgent": "Urgent",
+    "isUrgentDesc": "Urgency details",
     "information": "Additional Info",
     "details": "Social Worker Notes",
     "category": "Category",
+    "categories": {
+      "growth": "growth",
+      "joy": "joy",
+      "health": "health",
+      "surroundings": "surroundings"
+    },
     "description": "Description",
+    "descriptions": {
+      "fa": "Farsi Description (fa)",
+      "en": "English Description (en)"
+    },
+    "img": {
+      "service": "Image",
+      "product": "E-commerce image"
+    },
     "created": "Created At",
     "isConfirmed": "Confirm",
     "confirmUser": "Confirmed By",
     "confirmDate": "Confirmed At",
     "updated": " Last Edit",
     "doneAt": "Done At",
-    "child_delivery_date": "Delivery To Child"
+    "child_delivery_date": "Delivery To Child",
+    "preNeed": "Template",
+    "doing_duration": "Days to complete",
+    "payers": "Payer(s)",
+    "button": {
+      "update": "Update",
+      "add": "Add Need"
+    },
+    "needStatus": {
+      "1": "Partial payment",
+      "2": "Complete payment",
+      "p3": "Purchased product",
+      "p4": "Delivered to NGO",
+      "p5": "Delivered to child",
+      "s3": "Money transferred to the NGO",
+      "s4": "Delivery to child"
+    }
   }
 }

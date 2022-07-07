@@ -21,9 +21,6 @@ import {
   MIGRATE_SW_CHILDREN_FAIL,
   MIGRATE_SW_CHILDREN_SUCCESS,
   MIGRATE_SW_CHILDREN_REQUEST,
-  SW_NEED_LIST_REQUEST,
-  SW_NEED_LIST_SUCCESS,
-  SW_NEED_LIST_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
@@ -335,43 +332,6 @@ export const AddSw = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_SW_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
-    });
-  }
-};
-
-export const fetchSwNeedList = () => async (dispatch, getState) => {
-  try {
-    dispatch({ type: SW_NEED_LIST_REQUEST });
-    const {
-      userLogin: { userInfo },
-      swDetails: { swInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-
-    let url;
-    // super admin
-    if (swInfo.typeId === 1) {
-      url = `/needs`;
-    } else {
-      url = `/socialworkers/${userInfo.id}/createdNeeds`;
-
-    }
-    const { data } = await publicApi.get(url, config);
-
-    dispatch({
-      type: SW_NEED_LIST_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    dispatch({
-      type: SW_NEED_LIST_FAIL,
       payload: e.response && e.response.status ? e.response : e.message,
     });
   }

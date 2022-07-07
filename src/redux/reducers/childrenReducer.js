@@ -6,36 +6,21 @@ import {
   CHILD_BY_ID_REQUEST,
   CHILD_BY_ID_RESET,
   CHILD_BY_ID_SUCCESS,
-  CHILD_LIST_FAIL,
-  CHILD_LIST_REQUEST,
-  CHILD_LIST_RESET,
-  CHILD_LIST_SUCCESS,
-  CHILD_NEEDS_FAIL,
-  CHILD_NEEDS_REQUEST,
-  CHILD_NEEDS_RESET,
-  CHILD_NEEDS_SUCCESS,
+  CHILDREN_BY_NGO_FAIL,
+  CHILDREN_BY_NGO_REQUEST,
+  CHILDREN_BY_NGO_RESET,
+  CHILDREN_BY_NGO_SUCCESS,
   UPDATE_CHILD_FAIL,
   UPDATE_CHILD_IS_ACTIVE_FAIL,
   UPDATE_CHILD_IS_ACTIVE_REQUEST,
   UPDATE_CHILD_IS_ACTIVE_SUCCESS,
   UPDATE_CHILD_REQUEST,
   UPDATE_CHILD_SUCCESS,
+  CHILD_LIST_REQUEST,
+  CHILD_LIST_SUCCESS,
+  CHILD_LIST_FAIL,
+  CHILD_LIST_RESET,
 } from '../constants/childrenConstants';
-
-export const childNeedsReducer = (state = {}, action) => {
-  switch (action.type) {
-    case CHILD_NEEDS_REQUEST:
-      return { loading: true, success: false };
-    case CHILD_NEEDS_SUCCESS:
-      return { loading: false, success: true, theNeeds: action.payload };
-    case CHILD_NEEDS_FAIL:
-      return { loading: false, error: action.payload };
-    case CHILD_NEEDS_RESET:
-      return {};
-    default:
-      return state;
-  }
-};
 
 export const childByIdReducer = (state = { success: false }, action) => {
   switch (action.type) {
@@ -52,15 +37,32 @@ export const childByIdReducer = (state = { success: false }, action) => {
   }
 };
 
+// all actives
 export const childListReducer = (state = { success: false }, action) => {
   switch (action.type) {
     case CHILD_LIST_REQUEST:
       return { loading: true };
     case CHILD_LIST_SUCCESS:
-      return { loading: false, success: true, childList: action.payload };
+      return { loading: false, success: true, myChildren: action.payload };
     case CHILD_LIST_FAIL:
       return { loading: false, error: action.payload };
     case CHILD_LIST_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+// by Ngo id
+export const childrenByNgoReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case CHILDREN_BY_NGO_REQUEST:
+      return { loading: true };
+    case CHILDREN_BY_NGO_SUCCESS:
+      return { loading: false, success: true, childList: action.payload };
+    case CHILDREN_BY_NGO_FAIL:
+      return { loading: false, error: action.payload };
+    case CHILDREN_BY_NGO_RESET:
       return {};
     default:
       return state;

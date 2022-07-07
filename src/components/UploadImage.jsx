@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +39,12 @@ const PrettySlider = styled((props) => <Slider {...props} />)({
 });
 
 // eslint-disable-next-line react/prop-types
-export default function UploadIdImage({ uploadImage, handleImageClose, setFinalImageFile }) {
+export default function UploadIdImage({
+  uploadImage,
+  handleImageClose,
+  setFinalImageFile,
+  customBorderRadius,
+}) {
   const { t } = useTranslation();
   // const navigate = useNavigate();
   const location = useLocation();
@@ -120,24 +126,6 @@ export default function UploadIdImage({ uploadImage, handleImageClose, setFinalI
       setFinalImageFile(theFile);
       handleImageClose(); // close dialog
 
-      // if (location.state.imageUpload) {
-      //   navigate(`/sw/edit/${location.state.id}`, {
-      //     state: {
-      //       newImage: location.state.imageUpload && theFile,
-      //       newIdImage: location.state.idImageUpload && theFile,
-      //       thumbnail: thumb,
-      //     },
-      //   });
-      // } else if (location.state.idImageUpload) {
-      //   navigate(`/sw/edit/${location.state.id}`, {
-      //     state: {
-      //       newImage: location.state.imageUpload && theFile,
-      //       newIdImage: location.state.idImageUpload && theFile,
-      //       thumbnail: thumb,
-      //     },
-      //   });
-      // }
-
       setIsLoading(false);
     }
   };
@@ -147,16 +135,18 @@ export default function UploadIdImage({ uploadImage, handleImageClose, setFinalI
   return (
     <Grid container maxWidth="50%" sx={{ margin: 'auto  ' }}>
       <Grid item container justifyContent="space-between" alignItems="center">
-        <CloseIcon
-          sx={{
-            color: 'red',
-            top: 0,
-            right: 0,
-            width: '24px',
-            margin: '18px',
-            zIndex: 10,
-          }}
-        />
+        <IconButton onClick={handleImageClose}>
+          <CloseIcon
+            sx={{
+              color: 'red',
+              top: 0,
+              right: 0,
+              width: '24px',
+              margin: '18px',
+              zIndex: 10,
+            }}
+          />
+        </IconButton>
         <Typography
           variant="h6"
           sx={{
@@ -179,7 +169,7 @@ export default function UploadIdImage({ uploadImage, handleImageClose, setFinalI
             }}
           />
         ) : (
-          <IconButton onClick={onClickSave}>
+          <IconButton onClick={(e) => onClickSave(e)}>
             <DoneIcon
               sx={{
                 color: isDisabled ? 'gray' : 'green',
@@ -201,7 +191,7 @@ export default function UploadIdImage({ uploadImage, handleImageClose, setFinalI
             height={window.innerWidth - 100}
             ref={setEditorRef}
             border={50}
-            borderRadius={1000}
+            borderRadius={customBorderRadius || 1000}
             scale={scale}
             rotate={rotate}
             style={{ maxWidth: '100%', height: 'auto' }}

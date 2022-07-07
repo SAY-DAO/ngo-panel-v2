@@ -90,7 +90,6 @@ const Children = () => {
   // state
   useEffect(() => {
     if (countries && watch('country')) {
-      console.log('watch');
       dispatch(fetchStateList(watch('country')));
     }
   }, [watch('country'), countries]);

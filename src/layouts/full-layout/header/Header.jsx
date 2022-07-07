@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
+
 import {
   AppBar,
   Box,
@@ -25,6 +26,7 @@ import { fetchSocialWorkerProfile } from '../../../redux/actions/socialWorkerAct
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const swDetails = useSelector((state) => state.swDetails);
@@ -37,7 +39,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (!successLogin) {
       navigate('/auth/login');
     }
-  }, [successLogin]);
+  }, [successLogin, location]);
 
   useEffect(() => {
     if (!successSwDetails) {

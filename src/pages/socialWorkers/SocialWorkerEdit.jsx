@@ -27,8 +27,10 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LoadingButton } from '@mui/lab';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -72,7 +74,7 @@ const SocialWorkerEdit = () => {
   const [activeChecked, setActiveChecked] = useState(false);
   const [coordChecked, setCoordChecked] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     firstName: '',
     lastName: '',
     country: '',

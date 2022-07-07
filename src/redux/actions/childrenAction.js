@@ -6,12 +6,12 @@ import {
   CHILD_BY_ID_FAIL,
   CHILD_BY_ID_REQUEST,
   CHILD_BY_ID_SUCCESS,
-  CHILD_LIST_FAIL,
+  CHILDREN_BY_NGO_FAIL,
+  CHILDREN_BY_NGO_REQUEST,
+  CHILDREN_BY_NGO_SUCCESS,
   CHILD_LIST_REQUEST,
   CHILD_LIST_SUCCESS,
-  CHILD_NEEDS_FAIL,
-  CHILD_NEEDS_REQUEST,
-  CHILD_NEEDS_SUCCESS,
+  CHILD_LIST_FAIL,
   UPDATE_CHILD_FAIL,
   UPDATE_CHILD_IS_ACTIVE_FAIL,
   UPDATE_CHILD_IS_ACTIVE_REQUEST,
@@ -19,36 +19,6 @@ import {
   UPDATE_CHILD_REQUEST,
   UPDATE_CHILD_SUCCESS,
 } from '../constants/childrenConstants';
-
-export const fetchChildNeeds = (childId) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CHILD_NEEDS_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-    console.log(userInfo);
-
-    const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
-
-    dispatch({
-      type: CHILD_NEEDS_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    // check for generic and custom message to return using ternary statement
-    dispatch({
-      type: CHILD_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
-    });
-  }
-};
 
 export const fetchMyChildById = (childId) => async (dispatch, getState) => {
   try {
@@ -78,11 +48,38 @@ export const fetchMyChildById = (childId) => async (dispatch, getState) => {
   }
 };
 
-export const fetchChildList =
+export const fetchChildList = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CHILD_LIST_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await publicApi.get(`/child/all/confirm=1`, config);
+
+    dispatch({
+      type: CHILD_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: CHILD_LIST_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
+export const fetchChildrenByNgo =
   ({ ngoId }) =>
   async (dispatch, getState) => {
     try {
-      dispatch({ type: CHILD_LIST_REQUEST });
+      dispatch({ type: CHILDREN_BY_NGO_REQUEST });
       const {
         userLogin: { userInfo },
       } = getState();
@@ -97,12 +94,12 @@ export const fetchChildList =
       const { data } = await publicApi.get(`/child/all/confirm=${2}?ngo_id=${ngoId}`, config);
 
       dispatch({
-        type: CHILD_LIST_SUCCESS,
+        type: CHILDREN_BY_NGO_SUCCESS,
         payload: data,
       });
     } catch (e) {
       dispatch({
-        type: CHILD_LIST_FAIL,
+        type: CHILDREN_BY_NGO_FAIL,
         payload: e.response && e.response.status ? e.response : e.message,
       });
     }

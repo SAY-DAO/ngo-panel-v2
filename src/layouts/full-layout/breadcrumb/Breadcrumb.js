@@ -21,7 +21,13 @@ const Breadcrumb = ({ subtitle, items, title, children }) => (
           ? items.map((item) => (
               <div key={item.title}>
                 {item.to ? (
-                  <Link underline="none" color="inherit" component={NavLink} to={item.to}>
+                  <Link
+                    underline="none"
+                    color="inherit"
+                    component={NavLink}
+                    to={item.to}
+                    state={item.state}
+                  >
                     {item.title}
                   </Link>
                 ) : (

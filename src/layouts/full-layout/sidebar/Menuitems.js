@@ -3,7 +3,6 @@ import InterestsIcon from '@mui/icons-material/Interests';
 import HouseIcon from '@mui/icons-material/House';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import HiveIcon from '@mui/icons-material/Hive';
-import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
 const Menuitems = [
@@ -14,34 +13,11 @@ const Menuitems = [
     href: 'Dashboard',
   },
   {
-    title: 'Analytical',
-    icon: 'pie-chart',
-    href: '/dashboards/analytical',
-  },
-  {
-    navlabel: true,
-    subheader: 'MY PANEL',
-    icon: 'mdi mdi-dots-horizontal',
-    href: 'Apps',
-  },
-  {
     title: 'My Page',
     icon: 'user',
-    href: '/my-page',
-    collapse: true,
-    children: [
-      {
-        title: 'View',
-        icon: 'eye',
-        href: '/profile/view',
-      },
-      {
-        title: 'Edit',
-        icon: 'edit',
-        href: '/profile/edit',
-      },
-    ],
+    href: '/profile/view',
   },
+
   {
     title: 'Children',
     icon: <ChildCareIcon />,
@@ -85,9 +61,9 @@ const Menuitems = [
     collapse: true,
     children: [
       {
-        title: 'Done',
+        title: 'Paid List',
         icon: 'list',
-        href: '/reports/needs/done',
+        href: '/report/needs/paid',
       },
       {
         title: 'Paid',
@@ -161,24 +137,6 @@ const Menuitems = [
       },
     ],
   },
-  {
-    title: 'Countries',
-    icon: <PublicIcon />,
-    href: '/admin/countries',
-    collapse: true,
-    children: [
-      {
-        title: 'List',
-        icon: 'list',
-        href: '/countries/list',
-      },
-      {
-        title: 'Add',
-        icon: 'plus',
-        href: '/countries/add',
-      },
-    ],
-  },
-];
+  ];
 
 export default Menuitems;
