@@ -321,6 +321,8 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     }
     if (values.isUrgent) {
       formData.set('isUrgent', values.isUrgent);
+    } else {
+      formData.set('isUrgent', false);
     }
     if (values.cost) {
       formData.set('cost', values.cost);
@@ -352,7 +354,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     if (values.finalImageFile) {
       formData.set('imageUrl', values.finalImageFile);
     }
-    const { data } = await publicApi.post(`/need`, formData, config);
+    const { data } = await publicApi.post(`/need/`, formData, config);
     dispatch({
       type: ADD_ONE_NEED_SUCCESS,
       payload: data,

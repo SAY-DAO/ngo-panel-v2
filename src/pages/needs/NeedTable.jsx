@@ -167,10 +167,10 @@ function EnhancedTableHead(props) {
       label: t('need.isUrgent'),
     },
     {
-      id: 'information',
+      id: 'informations',
       numeric: false,
       disablePadding: false,
-      label: t('need.information'),
+      label: t('need.informations'),
       width: '200px',
     },
     {
@@ -825,7 +825,7 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.information}
+                                    {row.informations}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>

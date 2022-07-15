@@ -106,10 +106,12 @@ const NeedEdit = () => {
       setValue('isUrgent', oneNeed.isUrgent);
       setValue('desc_fa', oneNeed.description_translations.fa);
       setValue('desc_en', oneNeed.description_translations.en);
+      setValue('informations', oneNeed.informations);
       setValue('details', oneNeed.details); // social worker note on app
       setValue('link', oneNeed.link);
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
       setValue('imageUrl', oneNeed.imageUrl);
+      setValue('cost', oneNeed.cost);
       if (oneNeed.isUrgent) {
         setIsUrgentChecked(true);
       } else {
@@ -132,6 +134,9 @@ const NeedEdit = () => {
         postalAddress: data.postalAddress,
         website: data.website,
         logoUrl: finalImageFile,
+        details: data.details,
+        information: data.informations,
+        needId: oneNeed.id,
       }),
     );
     dispatch({ type: CHILD_ONE_NEED_RESET });
@@ -481,18 +486,44 @@ const NeedEdit = () => {
                         {...register('doing_duration', { required: true })}
                         error={!!errors.doing_duration}
                       />
-                      <CustomFormLabel htmlFor="details">{t('need.details')}</CustomFormLabel>
-                      <CustomTextField
-                        id="details"
-                        variant="outlined"
-                        multiline
-                        rows={4}
-                        size="small"
-                        sx={{ mb: 2 }}
-                        fullWidth
-                        control={control}
-                        register={{ ...register('details') }}
-                      />
+                      <Grid
+                        container
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="flex-end"
+                        spacing={2}
+                      >
+                        <Grid item xs={6}>
+                          <CustomFormLabel htmlFor="details">{t('need.details')}</CustomFormLabel>
+                          <CustomTextField
+                            id="details"
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            size="small"
+                            sx={{ mb: 2 }}
+                            fullWidth
+                            control={control}
+                            register={{ ...register('details') }}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <CustomFormLabel htmlFor="informations">
+                            {t('need.informations')}
+                          </CustomFormLabel>
+                          <CustomTextField
+                            id="informations"
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            size="small"
+                            sx={{ mb: 2 }}
+                            fullWidth
+                            control={control}
+                            register={{ ...register('informations') }}
+                          />
+                        </Grid>
+                      </Grid>
                       <LoadingButton
                         // loading={loadingAddNeed}
                         color="primary"
