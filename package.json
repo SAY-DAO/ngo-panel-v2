@@ -30,7 +30,7 @@
     "lodash": "^4.17.21",
     "material-ui-popup-state": "^3.1.1",
     "moment": "^2.29.1",
-    "mui-audio-player-plus": "../../../github/mui-audio-player/",
+    "mui-audio-player-plus": "git+https://github.com/Elhamne/mui-audio-player.git#main",
     "prop-types": "^15.7.2",
     "react": "^18.1.0",
     "react-apexcharts": "^1.3.7",
