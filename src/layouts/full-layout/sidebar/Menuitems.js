@@ -3,6 +3,7 @@ import InterestsIcon from '@mui/icons-material/Interests';
 import HouseIcon from '@mui/icons-material/House';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import HiveIcon from '@mui/icons-material/Hive';
+import HubIcon from '@mui/icons-material/Hub';
 import React from 'react';
 
 const Menuitems = [
@@ -136,6 +137,11 @@ const Menuitems = [
         href: '/categories/add',
       },
     ],
+  },
+  {
+    title: 'DAO',
+    icon: <HubIcon />,
+    href: '/dao',
   },
   ];
 

@@ -35,6 +35,7 @@ import {
   swNeedListReducer,
 } from './needReducer';
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
+import { serverReducer } from './daoReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -67,4 +68,5 @@ export default combineReducers({
   receiptList: receiptsListReducer,
   receiptDelete: receiptDeleteReducer,
   receiptAdd: receiptAddReducer,
+  server: serverReducer
 });

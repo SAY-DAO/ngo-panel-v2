@@ -17,6 +17,9 @@ if (env === 'prod') {
   envApiUrl3 = `https://${process.env.REACT_APP_DOMAIN_LOCAL}/api/v3`;
 }
 
+const envApiDao = `http://${process.env.REACT_APP_NEST_SERVER}/api/dao`;
+
 const apiUrl = envApiUrl;
 const apiUrl3 = envApiUrl3;
-export { apiUrl, apiUrl3 };
+const apiDao = envApiDao;
+export { apiUrl, apiUrl3, apiDao };
