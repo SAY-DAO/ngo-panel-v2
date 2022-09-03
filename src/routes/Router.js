@@ -29,6 +29,7 @@ const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
 const NeedAdd = Loadable(lazy(() => import('../pages/needs/NeedAdd')));
 const ReportList = Loadable(lazy(() => import('../pages/reports/ReportStatus')));
 const DAO = Loadable(lazy(() => import('../pages/dao/Dao')));
+const DaoMileStone = Loadable(lazy(() => import('../pages/dao/DaoMileStone')));
 
 /* ****Routes***** */
 
@@ -55,6 +56,7 @@ const Router = [
       { path: '/need/add', exact: true, element: <NeedAdd /> },
       { path: '/report/needs/paid', exact: true, element: <ReportList /> },
       { path: '/dao', exact: true, element: <DAO /> },
+      { path: '/dao/miestone', exact: true, element: <DaoMileStone /> },
 
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],

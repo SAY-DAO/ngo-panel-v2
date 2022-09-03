@@ -1,16 +1,19 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Fab, CircularProgress } from '@mui/material';
+import { Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
 import Chart from 'react-apexcharts';
-import FeatherIcon from 'feather-icons-react';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTheme } from '@mui/material/styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { LoadingButton } from '@mui/lab';
+import { fetchNestNeeds } from '../../redux/actions/dao/DaoAction';
 
 const DaoNeedStatus = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const primary = theme.palette.primary.main;
 
   const server = useSelector((state) => state.server);
-  const { fetched } = server;
+  const { needList, loading: loadingServer } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -82,7 +85,7 @@ const DaoNeedStatus = () => {
               }}
               gutterBottom
             >
-              Flask Needs
+              Nest Server Needs
             </Typography>
             <Typography
               variant="h2"
@@ -92,7 +95,7 @@ const DaoNeedStatus = () => {
               }}
               gutterBottom
             >
-              {!fetched ? <CircularProgress /> : fetched.needs && fetched.needs.length}
+              {!needList ? <CircularProgress /> : needList.needs && needList.needs.length}
             </Typography>
           </Box>
 
@@ -101,17 +104,14 @@ const DaoNeedStatus = () => {
               marginLeft: 'auto',
             }}
           >
-            <Fab
-              size="medium"
-              aria-label="add"
-              elevation="0"
-              color="primary"
-              sx={{
-                boxShadow: 'none',
-              }}
+            <LoadingButton
+              loading={loadingServer}
+              aria-label="children=refresh"
+              color="secondary"
+              onClick={() => dispatch(fetchNestNeeds())}
             >
-              <FeatherIcon icon="shopping-bag" />
-            </Fab>
+              <RefreshIcon />
+            </LoadingButton>
           </Box>
         </Box>
       </CardContent>

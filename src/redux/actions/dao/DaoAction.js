@@ -14,9 +14,12 @@ import {
   GET_SERVER_NEEDS_SUCCESS,
   GET_SERVER_NEEDS_FAIL,
   UPDATE_FLASK_REQUEST,
+  GET_SERVER_CHILDREN_REQUEST,
+  GET_SERVER_CHILDREN_SUCCESS,
+  GET_SERVER_CHILDREN_FAIL,
 } from '../../constants/daoConstants';
 
-export const UpdateServer = (counter, skip) => async (dispatch, getState) => {
+export const updateNestServer = (counter, skip) => async (dispatch, getState) => {
   let child = {};
   let need = {};
   const childList = [];
@@ -161,20 +164,37 @@ export const UpdateServer = (counter, skip) => async (dispatch, getState) => {
   }
 };
 
-export const fetchServer = () => async (dispatch) => {
+export const fetchNestNeeds = () => async (dispatch) => {
   try {
     dispatch({ type: GET_SERVER_NEEDS_REQUEST });
 
     const responseNeed = await daoApi.get(`/needs/all`);
-    const responseChild = await daoApi.get(`/children/all`);
 
     dispatch({
       type: GET_SERVER_NEEDS_SUCCESS,
-      payload: { needs: responseNeed.data, children: responseChild.data },
+      payload: { needs: responseNeed.data },
     });
   } catch (e) {
     dispatch({
       type: GET_SERVER_NEEDS_FAIL,
+      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+    });
+  }
+};
+
+export const fetchNestChildren = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_SERVER_CHILDREN_REQUEST });
+
+    const responseChild = await daoApi.get(`/children/all`);
+
+    dispatch({
+      type: GET_SERVER_CHILDREN_SUCCESS,
+      payload: { children: responseChild.data },
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_SERVER_CHILDREN_FAIL,
       payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
     });
   }

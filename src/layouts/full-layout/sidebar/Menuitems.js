@@ -4,6 +4,7 @@ import HouseIcon from '@mui/icons-material/House';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import HiveIcon from '@mui/icons-material/Hive';
 import HubIcon from '@mui/icons-material/Hub';
+import RouteIcon from '@mui/icons-material/Route';
 import React from 'react';
 
 const Menuitems = [
@@ -142,7 +143,15 @@ const Menuitems = [
     title: 'DAO',
     icon: <HubIcon />,
     href: '/dao',
+    collapse: true,
+    children: [
+      {
+        title: 'MileStone',
+        icon: <RouteIcon />,
+        href: '/dao/miestone',
+      },
+    ],
   },
-  ];
+];
 
 export default Menuitems;

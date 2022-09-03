@@ -669,7 +669,15 @@
       "p4": "Delivered to NGO",
       "p5": "Delivered to child",
       "s3": "Money transferred to the NGO",
-      "s4": "Delivery to child"
+      "s4": "Delivery to child",
+      "sign": "Signature"
+    }
+  },
+  "dao": {
+    "milestone": {
+      "time": "Time",
+      "title": "Title",
+      "description": "short description"
     }
   }
 }

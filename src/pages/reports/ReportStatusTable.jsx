@@ -34,6 +34,7 @@ import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { LoadingButton } from '@mui/lab';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
@@ -694,6 +695,20 @@ const ReportStatusTable = () => {
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {statusId > 4 && <ReportImage row={row} statusId={5} />}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    {/* 5 product delivery to child */}
+                    {typeId === 1 && (
+                      <TableRow>
+                        <TableCell component="th" scope="row">
+                          {t('need.needStatus.sign')}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          {/* {row.child_delivery_date} */}
+                        </TableCell>
+                        <TableCell component="th" scope="row">
+                          <LoadingButton variant="outlined">Sign</LoadingButton>
                         </TableCell>
                       </TableRow>
                     )}

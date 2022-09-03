@@ -110,13 +110,17 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                             >
                               <ListItemIcon
                                 sx={{
-                                  svg: { width: '14px', marginLeft: '3px' },
+                                  svg: { width: '16px', marginLeft: '3px' },
                                   ...(pathDirect === child.href && {
                                     color: 'primary.main',
                                   }),
                                 }}
                               >
-                                <FeatherIcon icon={child.icon} width="20" height="20" />
+                                {typeof child.icon === 'string' ? (
+                                  <FeatherIcon icon={child.icon} width="20" height="20" />
+                                ) : (
+                                  child.icon
+                                )}
                               </ListItemIcon>
                               <ListItemText>{child.title}</ListItemText>
                             </ListItem>
@@ -153,7 +157,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                           <FeatherIcon icon={item.icon} width="20" height="20" />
                         ) : (
                           item.icon
-                        )}{' '}
+                        )}
                       </ListItemIcon>
                       <ListItemText onClick={onSidebarClose}>{item.title}</ListItemText>
                     </ListItem>

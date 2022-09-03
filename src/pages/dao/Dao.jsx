@@ -3,7 +3,11 @@ import { CircularProgress, Grid } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import PageContainer from '../../components/container/PageContainer';
-import { fetchServer, UpdateServer } from '../../redux/actions/dao/DaoAction';
+import {
+  fetchNestChildren,
+  fetchNestNeeds,
+  updateNestServer,
+} from '../../redux/actions/dao/DaoAction';
 import DaoNeedStatus from './DaoNeedStatus';
 import DaoChildStatus from './DaoChildstatus.';
 
@@ -20,15 +24,16 @@ const Dao = () => {
   const { updated, loading: loadingServer } = server;
 
   useEffect(() => {
-    dispatch(fetchServer());
+    dispatch(fetchNestNeeds());
+    dispatch(fetchNestChildren());
   }, [updated]);
 
   let count;
-  const handleUpdateServer = () => {
+  const handleupdateNestServer = () => {
     count = 500;
     list.push(updated && updated.needs);
     console.log(count, skip);
-    dispatch(UpdateServer(count, skip));
+    dispatch(updateNestServer(count, skip));
     skip += 500;
   };
 
@@ -41,8 +46,8 @@ const Dao = () => {
       ) : (
         <PageContainer>
           <Grid item>
-            <LoadingButton loading={loadingServer} onClick={handleUpdateServer}>
-              Update
+            <LoadingButton loading={loadingServer} onClick={handleupdateNestServer}>
+              sync
             </LoadingButton>
             Nest.js Server
           </Grid>

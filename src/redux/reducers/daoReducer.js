@@ -12,14 +12,23 @@ import {
   GET_SERVER_NEEDS_SUCCESS,
   GET_SERVER_NEEDS_FAIL,
   UPDATE_FLASK_REQUEST,
+  GET_SERVER_CHILDREN_REQUEST,
+  GET_SERVER_CHILDREN_SUCCESS,
+  GET_SERVER_CHILDREN_FAIL,
 } from '../constants/daoConstants';
 
 export const serverReducer = (state = {}, action) => {
   switch (action.type) {
+    case GET_SERVER_CHILDREN_REQUEST:
+      return { ...state, loading: true, success: false };
+    case GET_SERVER_CHILDREN_SUCCESS:
+      return { ...state, loading: false, success: true, childList: action.payload };
+    case GET_SERVER_CHILDREN_FAIL:
+      return { loading: false, error: action.payload };
     case GET_SERVER_NEEDS_REQUEST:
       return { ...state, loading: true, success: false };
     case GET_SERVER_NEEDS_SUCCESS:
-      return { ...state, loading: false, success: true, fetched: action.payload };
+      return { ...state, loading: false, success: true, needList: action.payload };
     case GET_SERVER_NEEDS_FAIL:
       return { loading: false, error: action.payload };
     case UPDATE_FLASK_REQUEST:
