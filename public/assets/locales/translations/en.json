@@ -605,7 +605,7 @@
     }
   },
   "need": {
-    "id": "id",
+    "id": "Need id",
     "titleEdit": "Edit Need Details",
     "titleAdd": "Add Need Details",
     "unpayable": "Payable",
@@ -670,14 +670,20 @@
       "p5": "Delivered to child",
       "s3": "Money transferred to the NGO",
       "s4": "Delivery to child",
-      "sign": "Signature"
+      "signature": "Signature",
+      "sign": "Sign",
+      "pending": "Not Delivered yet"
     }
   },
   "dao": {
     "milestone": {
-      "time": "Time",
-      "title": "Title",
-      "description": "short description"
+      "duetime": "Step due time",
+      "title": "Step title",
+      "description": "short description",
+      "button": {
+        "next": "Next",
+        "finish": "Finish"
+      }
     }
   }
 }

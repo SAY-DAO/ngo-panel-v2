@@ -35,14 +35,15 @@ import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { LoadingButton } from '@mui/lab';
-import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
+import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import PageContainer from '../../components/container/PageContainer';
+import PageContainer from '../container/PageContainer';
 import { fetchAllNeeds, fetchSwNeedList } from '../../redux/actions/needsAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
-import ReportImage from '../../components/report/ReportImage';
+import ReportImage from '../report/ReportImage';
+import { signTransaction } from '../../redux/actions/dao/DaoAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -313,7 +314,7 @@ const ReportStatusTable = () => {
   const { swInfo } = swDetails;
 
   const allNeeds = useSelector((state) => state.allNeeds);
-  const { needs, loading: loadingAllNeeds, success: successAllNeeds } = allNeeds;
+  const { needs, loading: loadingAllNeeds } = allNeeds;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
@@ -445,6 +446,10 @@ const ReportStatusTable = () => {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
+
+    const signReport = () => {
+      dispatch(signTransaction(row.id, swInfo.id));
+    };
 
     return (
       <>
@@ -625,7 +630,7 @@ const ReportStatusTable = () => {
                         {row.payments[0] && (
                           <Tooltip
                             title={row.payments.map((payment, index) => {
-                              if (payment.gateway_track_id) {
+                              if (payment.gateway_track_id && payment.verified) {
                                 return (
                                   <Typography variant="subtitle2" key={payment.id}>{`${
                                     index + 1
@@ -680,7 +685,7 @@ const ReportStatusTable = () => {
                       </TableCell>
                       <TableCell align="right">
                         {((typeId === 1 && statusId > 3) || (typeId === 0 && statusId > 3)) && (
-                          <ReportImage row={row} statusId={4} />
+                          <ReportImage row={row} statusId={statusId} />
                         )}
                       </TableCell>
                     </TableRow>
@@ -694,24 +699,31 @@ const ReportStatusTable = () => {
                           {row.child_delivery_date}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {statusId > 4 && <ReportImage row={row} statusId={5} />}
+                          {statusId > 4 && <ReportImage row={row} statusId={statusId} />}
                         </TableCell>
                       </TableRow>
                     )}
-                    {/* 5 product delivery to child */}
-                    {typeId === 1 && (
-                      <TableRow>
-                        <TableCell component="th" scope="row">
-                          {t('need.needStatus.sign')}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          {/* {row.child_delivery_date} */}
-                        </TableCell>
-                        <TableCell component="th" scope="row">
-                          <LoadingButton variant="outlined">Sign</LoadingButton>
-                        </TableCell>
-                      </TableRow>
-                    )}
+                    {/* Signature */}
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        {t('need.needStatus.signature')}
+                      </TableCell>
+                      <TableCell component="th" scope="row" />
+                      <TableCell component="th" scope="row">
+                        <LoadingButton
+                          onClick={() => signReport()}
+                          disabled={
+                            (typeId === 1 && statusId !== 5) || (typeId === 0 && statusId !== 4)
+                          }
+                          variant="outlined"
+                          fullWidth
+                        >
+                          {(typeId === 1 && statusId !== 5) || (typeId === 0 && statusId !== 4)
+                            ? t('need.needStatus.pending')
+                            : t('need.needStatus.sign')}
+                        </LoadingButton>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </Box>
@@ -825,7 +837,7 @@ const ReportStatusTable = () => {
           <CircularProgress />
         </Grid>
       ) : (
-        successAllNeeds &&
+        needs &&
         needs.needs.length > 0 && (
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>

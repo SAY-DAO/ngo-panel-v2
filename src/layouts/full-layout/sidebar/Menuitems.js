@@ -140,15 +140,30 @@ const Menuitems = [
     ],
   },
   {
-    title: 'DAO',
+    navlabel: true,
+    subheader: 'DAO',
+    href: 'DAO',
+  },
+  {
+    title: 'Dashboard',
     icon: <HubIcon />,
     href: '/dao',
+  },
+  {
+    title: 'MileStone',
+    icon: <RouteIcon />,
+    href: '/dao/milestone',
     collapse: true,
     children: [
       {
-        title: 'MileStone',
-        icon: <RouteIcon />,
-        href: '/dao/miestone',
+        title: 'List',
+        icon: 'list',
+        href: '/dao/milestone/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/dao/milestone/add',
       },
     ],
   },

@@ -35,7 +35,7 @@ import {
   swNeedListReducer,
 } from './needReducer';
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
-import { serverReducer } from './daoReducer';
+import { mileStoneReducer, serverReducer, signatureReducer } from './daoReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -59,6 +59,7 @@ export default combineReducers({
   childNeeds: childNeedsReducer,
   childOneNeed: childOneNeedReducer,
   childById: childByIdReducer,
+  mileStone: mileStoneReducer,
   needUpdate: needUpdateReducer,
   needAdd: needAddReducer,
   childAll: childListReducer,
@@ -68,5 +69,6 @@ export default combineReducers({
   receiptList: receiptsListReducer,
   receiptDelete: receiptDeleteReducer,
   receiptAdd: receiptAddReducer,
-  server: serverReducer
+  server: serverReducer,
+  signature: signatureReducer,
 });

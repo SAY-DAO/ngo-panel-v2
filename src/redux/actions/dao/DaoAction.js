@@ -17,6 +17,18 @@ import {
   GET_SERVER_CHILDREN_REQUEST,
   GET_SERVER_CHILDREN_SUCCESS,
   GET_SERVER_CHILDREN_FAIL,
+  CREATE_MILESTONE_REQUEST,
+  CREATE_MILESTONE_SUCCESS,
+  CREATE_MILESTONE_FAIL,
+  GET_MILESTONES_REQUEST,
+  GET_MILESTONES_SUCCESS,
+  GET_MILESTONES_FAIL,
+  SIGNATURE_REQUEST,
+  SIGNATURE_SUCCESS,
+  SIGNATURE_FAIL,
+  GET_SERVER_USERS_REQUEST,
+  GET_SERVER_USERS_SUCCESS,
+  GET_SERVER_USERS_FAIL,
 } from '../../constants/daoConstants';
 
 export const updateNestServer = (counter, skip) => async (dispatch, getState) => {
@@ -40,34 +52,35 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
     };
     const { data } = await publicApi.get(`/needs`, config);
     const response = await publicApi.get(`/child/all/confirm=1`, config);
+
     dispatch({ type: UPDATE_SERVER_REQUEST });
 
     for (let i = 0; i < data.needs.length; i++) {
       need = {
-        need_id: data.needs[i].id,
+        needId: data.needs[i].id,
         title: data.needs[i].name,
         affiliateLinkUrl: data.needs[i].affiliateLinkUrl,
-        bank_track_id: data.needs[i].bank_track_id,
+        bankTrackId: data.needs[i].bank_track_id,
         category: data.needs[i].category,
         childGeneratedCode: data.needs[i].childGeneratedCode,
         childSayName: data.needs[i].childSayName,
-        child_delivery_date: data.needs[i].child_delivery_date,
-        child_id: data.needs[i].child_id,
+        childDeliveryDate: data.needs[i].child_delivery_date,
+        childId: data.needs[i].child_id,
         confirmDate: data.needs[i].confirmDate,
         confirmUser: data.needs[i].confirmUser,
         cost: data.needs[i].cost,
         created: data.needs[i].created,
-        created_by_id: data.needs[i].created_by_id,
-        deleted_at: data.needs[i].deleted_at,
+        createdById: data.needs[i].created_by_id,
+        deletedAt: data.needs[i].deleted_at,
         description: data.needs[i].description,
-        description_translations: data.needs[i].description_translations, // { en: '' , fa: ''}
-        title_translations: data.needs[i].name_translations, // { en: '' , fa: ''}
+        descriptionTranslations: data.needs[i].description_translations, // { en: '' , fa: ''}
+        titleTranslations: data.needs[i].name_translations, // { en: '' , fa: ''}
         details: data.needs[i].details,
-        doing_duration: data.needs[i].doing_duration,
+        doingDuration: data.needs[i].doing_duration,
         donated: data.needs[i].donated,
         doneAt: data.needs[i].doneAt,
-        expected_delivery_date: data.needs[i].expected_delivery_date,
-        informations: data.needs[i].informations,
+        expectedDeliveryDate: data.needs[i].expected_delivery_date,
+        information: data.needs[i].information,
         isConfirmed: data.needs[i].isConfirmed,
         isDeleted: data.needs[i].isDeleted,
         isDone: data.needs[i].isDone,
@@ -76,40 +89,40 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
         ngoId: data.needs[i].ngoId,
         ngoAddress: data.needs[i].ngoAddress,
         ngoName: data.needs[i].ngoName,
-        ngo_delivery_date: data.needs[i].ngo_delivery_date,
+        ngoDeliveryDate: data.needs[i].ngo_delivery_date,
         oncePurchased: data.needs[i].oncePurchased,
         paid: data.needs[i].paid,
-        purchase_cost: data.needs[i].purchase_cost,
-        purchase_date: data.needs[i].purchase_date,
-        receipt_count: data.needs[i].receipt_count,
+        purchaseCost: data.needs[i].purchase_cost,
+        purchaseDate: data.needs[i].purchase_date,
+        receiptCount: data.needs[i].receipt_count,
         receipts: data.needs[i].receipts,
         status: data.needs[i].status,
-        status_description: data.needs[i].status_description,
-        status_updated_at: data.needs[i].status_updated_at,
+        statusDescription: data.needs[i].status_description,
+        statusUpdatedAt: data.needs[i].status_updated_at,
         type: data.needs[i].type,
-        type_name: data.needs[i].type_name,
-        unavailable_from: data.needs[i].unavailable_from,
-        unconfirmed_at: data.needs[i].unconfirmed_at,
-        unpaid_cost: data.needs[i].unpaid_cost,
+        typeName: data.needs[i].type_name,
+        unavailableFrom: data.needs[i].unavailable_from,
+        unconfirmedAt: data.needs[i].unconfirmed_at,
+        unpaidCost: data.needs[i].unpaid_cost,
         unpayable: data.needs[i].unpayable,
-        unpayable_from: data.needs[i].unpayable_from,
+        unpayableFrom: data.needs[i].unpayable_from,
         updated: data.needs[i].updated,
-        payments: data.needs[i].payments, // []
+        // payments: data.needs[i].payments, // []
         imageUrl: data.needs[i].imageUrl,
-        need_retailer_img: data.needs[i].img,
+        needRetailerImg: data.needs[i].img,
       };
       needList.push(need);
     }
     for (let i = 0; i < response.data.children.length; i++) {
       child = {
-        child_id: response.data.children[i].id,
+        childId: response.data.children[i].id,
         address: response.data.children[i].address,
         avatarUrl: response.data.children[i].avatarUrl,
         awakeAvatarUrl: response.data.children[i].awakeAvatarUrl,
         bio: response.data.children[i].bio,
         bioSummary: response.data.children[i].bioSummary,
-        bio_summary_translations: response.data.children[i].bio_summary_translations,
-        bio_translations: response.data.children[i].bio_translations,
+        bioSummaryTranslations: response.data.children[i].bio_summary_translations,
+        bioTranslations: response.data.children[i].bio_translations,
         birthDate: response.data.children[i].birthDate,
         birthPlace: response.data.children[i].birthPlace,
         city: response.data.children[i].city,
@@ -117,24 +130,24 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
         confirmUser: response.data.children[i].confirmUser,
         country: response.data.children[i].country,
         created: response.data.children[i].created,
-        done_needs_count: response.data.children[i].done_needs_count,
+        doneNeedsCount: response.data.children[i].done_needs_count,
         education: response.data.children[i].education,
-        existence_status: response.data.children[i].existence_status,
+        existenceStatus: response.data.children[i].existence_status,
         familyCount: response.data.children[i].familyCount,
         generatedCode: response.data.children[i].generatedCode,
         housingStatus: response.data.children[i].housingStatus,
-        id_ngo: response.data.children[i].id_ngo,
-        id_social_worker: response.data.children[i].id_social_worker,
+        ngoId: response.data.children[i].id_ngo,
+        idSocialWorker: response.data.children[i].id_social_worker,
         isConfirmed: response.data.children[i].isConfirmed,
         isDeleted: response.data.children[i].isDeleted,
         isMigrated: response.data.children[i].isMigrated,
-        is_gone: response.data.children[i].is_gone,
+        isGone: response.data.children[i].is_gone,
         migrateDate: response.data.children[i].migrateDate,
         migratedId: response.data.children[i].migratedId,
         nationality: response.data.children[i].nationality,
         sayFamilyCount: response.data.children[i].sayFamilyCount,
         sayName: response.data.children[i].sayName,
-        sayname_translations: response.data.children[i].sayname_translations,
+        saynameTranslations: response.data.children[i].sayname_translations,
         sleptAvatarUrl: response.data.children[i].sleptAvatarUrl,
         status: response.data.children[i].status,
         updated: response.data.children[i].updated,
@@ -182,20 +195,80 @@ export const fetchNestNeeds = () => async (dispatch) => {
   }
 };
 
+
+export const fetchNestUsers = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_SERVER_USERS_REQUEST });
+
+    const response = await daoApi.get(`/users/all`);
+
+    dispatch({
+      type: GET_SERVER_USERS_SUCCESS,
+      payload: { users: response.data },
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_SERVER_USERS_FAIL,
+      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+    });
+  }
+};
+
 export const fetchNestChildren = () => async (dispatch) => {
   try {
     dispatch({ type: GET_SERVER_CHILDREN_REQUEST });
 
-    const responseChild = await daoApi.get(`/children/all`);
+    const response = await daoApi.get(`/children/all`);
 
     dispatch({
       type: GET_SERVER_CHILDREN_SUCCESS,
-      payload: { children: responseChild.data },
+      payload: { children: response.data },
     });
   } catch (e) {
     dispatch({
       type: GET_SERVER_CHILDREN_FAIL,
       payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+    });
+  }
+};
+
+export const getMileStones = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_MILESTONES_REQUEST });
+    const { data } = await daoApi.get(`/milestone/all`);
+    dispatch({
+      type: GET_MILESTONES_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_MILESTONES_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
+export const createMileStone = (localData) => async (dispatch) => {
+  try {
+    dispatch({ type: CREATE_MILESTONE_REQUEST });
+
+    const mileStoneRequest = {
+      epics: localData.data,
+      signature: 'TODO',
+    };
+
+    console.log(mileStoneRequest);
+    const { data } = await daoApi.post(`/milestone/create`, mileStoneRequest);
+
+    dispatch({
+      type: CREATE_MILESTONE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: CREATE_MILESTONE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
     });
   }
 };
@@ -252,65 +325,47 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
   }
 };
 
-// export const signTransaction =
-//   (needId, needTitle, needImage, userId, impacts) => async (dispatch, getState) => {
-//     try {
-//       dispatch({ type: SIGNATURE_REQUEST });
+export const signTransaction = (needId, userId) => async (dispatch) => {
+  try {
+    dispatch({ type: SIGNATURE_REQUEST });
 
-//       await window.ethereum.enable();
-//       // eslint-disable-next-line no-undef
-//       const provider = new ethers.providers.Web3Provider(window.ethereum);
-//       const signer = provider.getSigner();
-//       const signerAddress = await signer.getAddress();
-//       // const theSellingPrice_BN = ethers.utils.parseUnits(
-//       //   price.toString(),
-//       //   'ether'
-//       // );
+    await window.ethereum.enable();
+    // eslint-disable-next-line no-undef
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const signerAddress = await signer.getAddress();
 
-//       const VerifySignature = new ethers.ContractFactory(
-//         VerifyVoucher.abi,
-//         VerifyVoucher.bytecode,
-//         signer,
-//       );
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+      request: {
+        verifyContractAddress: '0x004a0304523554961578f2b7050BDFdE57625228',
+        chainId: 1,
+        signerAddress,
+        needId,
+        userId,
+        impacts: 5,
+      },
+    };
 
-//       const signerContract = VerifySignature.attach('0x004a0304523554961578f2b7050BDFdE57625228');
+    const { data } = await daoApi.post(`/signature/add`, config);
+    // eslint-disable-next-line no-underscore-dangle
+    const signature = await signer._signTypedData(
+      data.domain,
+      data.types,
+      data.SocialWorkerVoucher,
+    );
 
-//       const theSignature = new Signature({ contract: signerContract, signer });
-
-//       console.log(signerAddress, needId, needTitle, needImage, userId, impacts);
-//       const voucher = await theSignature.signTransaction(
-//         signerAddress,
-//         needId,
-//         needTitle,
-//         needImage,
-//         userId,
-//         impacts,
-//       );
-
-//       const {
-//         userLogin: { userInfo },
-//       } = getState();
-
-//       const config = {
-//         headers: {
-//           'Content-type': 'application/json',
-//           Authorization: userInfo && userInfo.accessToken,
-//         },
-//         data: {
-//           signature: voucher.signature, // This is the body part
-//         },
-//       };
-//       const { data } = await daoApi.post(`/signature/add`, config);
-
-//       dispatch({
-//         type: SIGNATURE_SUCCESS,
-//         payload: { data, voucher, signerAddress },
-//       });
-//     } catch (e) {
-//       // check for generic and custom message to return using ternary statement
-//       dispatch({
-//         type: SIGNATURE_FAIL,
-//         payload: e.response && e.response.status ? e.response : e.message,
-//       });
-//     }
-//   };
+    dispatch({
+      type: SIGNATURE_SUCCESS,
+      payload: { data, signature },
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: SIGNATURE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};

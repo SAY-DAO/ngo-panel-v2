@@ -3,7 +3,7 @@ import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import { fetchSocialWorkerProfile } from '../../redux/actions/socialWorkerAction';
-import NeedTable from './NeedTable';
+import NeedTable from '../../components/tables/NeedTable';
 
 const NeedList = () => {
   const dispatch = useDispatch();

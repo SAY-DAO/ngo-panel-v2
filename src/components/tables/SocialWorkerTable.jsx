@@ -28,11 +28,11 @@ import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
-import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
+import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
+import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import PageContainer from '../../components/container/PageContainer';
-import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
+import PageContainer from '../container/PageContainer';
+import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -73,86 +73,105 @@ function EnhancedTableHead(props) {
       id: 'isActive',
       numeric: false,
       disablePadding: true,
-      label: t('ngo.isActive'),
+      label: t('socialWorker.isActive'),
     },
     {
       id: 'update',
       numeric: false,
       disablePadding: true,
-      label: t('ngo.update'),
+      label: t('socialWorker.update'),
     },
     {
-      id: 'name',
+      id: 'lastName',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.name'),
+      label: t('socialWorker.nameAndEmail'),
+    },
+    {
+      id: 'generatedCode',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.generatedCode'),
     },
 
+    {
+      id: 'username',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.userName'),
+    },
+
+    {
+      id: 'typeName',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.typeName'),
+    },
+    {
+      id: 'ngoName',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.ngoName'),
+    },
+    {
+      id: 'idNumber',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.idNumber'),
+    },
+    {
+      id: 'idCardUrl',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.idCardUrl'),
+    },
+    {
+      id: 'birthDate',
+      numeric: false,
+      disablePadding: false,
+      label: t('socialWorker.birthDate'),
+    },
     {
       id: 'phoneNumber',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.phoneNumber'),
+      label: t('socialWorker.phoneNumber'),
     },
     {
-      id: 'country',
+      id: 'emergencyPhoneNumber',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.country'),
+      label: t('socialWorker.emergencyPhoneNumber'),
     },
     {
-      id: 'city',
+      id: 'telegramId',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.city'),
+      label: t('socialWorker.telegramId'),
     },
     {
-      id: 'childrenCount',
+      id: 'postalAddress',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.childrenCount'),
+      label: t('socialWorker.address'),
     },
     {
-      id: 'currentChildrenCount',
+      id: 'childCount',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.currentChildrenCount'),
+      label: t('socialWorker.childCount'),
     },
     {
-      id: 'socialWorkerCount',
+      id: 'needCount',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.socialWorkerCount'),
+      label: t('socialWorker.needCount'),
     },
     {
-      id: 'currentSocialWorkerCount',
+      id: 'lastLoginDate',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.currentSocialWorkerCount'),
-    },
-    {
-      id: 'registerDate',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.registerDate'),
-    },
-    {
-      id: 'created',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.created'),
-    },
-    {
-      id: 'updated',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.updated'),
-    },
-    {
-      id: 'website',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.website'),
+      label: t('socialWorker.lastLoginDate'),
     },
   ];
   return (
@@ -256,15 +275,14 @@ const BCrumb = [
     title: 'Home',
   },
   {
-    title: 'NGOs Table',
+    title: 'Social Workers Table',
   },
 ];
 
-const NgoTable = ({ ngoList }) => {
+const SocialWorkerTable = ({ swList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log(ngoList);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
@@ -280,7 +298,7 @@ const NgoTable = ({ ngoList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = ngoList.map((n) => n.firstName);
+      const newSelecteds = swList.map((n) => n.firstName);
       setSelected(newSelecteds);
       return;
     }
@@ -321,15 +339,15 @@ const NgoTable = ({ ngoList }) => {
   };
 
   const handleEdit = (row) => {
-    dispatch({ type: NGO_BY_ID_RESET });
-    navigate(`/ngo/edit/${row.id}`);
+    dispatch({ type: SW_BY_ID_RESET });
+    navigate(`/sw/edit/${row.id}`);
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swList.length) : 0;
   return (
-    <PageContainer title="NGO Table" description="this is NGO page">
+    <PageContainer title="Social Worker Table">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
@@ -350,10 +368,10 @@ const NgoTable = ({ ngoList }) => {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={ngoList.length}
+                    rowCount={swList.length}
                   />
                   <TableBody>
-                    {stableSort(ngoList, getComparator(order, orderBy))
+                    {stableSort(swList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.firstName);
@@ -415,8 +433,8 @@ const NgoTable = ({ ngoList }) => {
                             <TableCell>
                               <Box display="flex" alignItems="center">
                                 <Avatar
-                                  src={row.logoUrl}
-                                  alt="ngo logo"
+                                  src={row.avatarUrl}
+                                  alt="sw photo"
                                   width="35"
                                   sx={{
                                     borderRadius: '100%',
@@ -428,76 +446,76 @@ const NgoTable = ({ ngoList }) => {
                                   }}
                                 >
                                   <Typography variant="h6" fontWeight="600">
-                                    {row.name}
+                                    {row.firstName} {row.lastName}
                                   </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                    {row.emailAddress}
+                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                    {row.email}
                                   </Typography>
                                 </Box>
                               </Box>
                             </TableCell>
                             <TableCell>
-                              <Typography
-                                color="textSecondary"
-                                variant="h6"
-                                fontWeight="600"
-                                sx={{
-                                  maxWidth: '400px',
-                                  textOverflow: 'ellipsis',
-                                  overflow: 'hidden',
-                                  width: '160px',
-                                  height: '1.2em',
-                                  whiteSpace: 'nowrap',
-                                }}
-                              >
+                              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                {row.generatedCode}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.username}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.typeName}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.ngoName}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.idNumber}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.idCardUrl && <Link href={row.idCardUrl}>Link</Link>}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.birthDate}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.phoneNumber}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city.countryName}
+                                {row.emergencyPhoneNumber}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city.name}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.childrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.currentChildrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.socialWorkerCount}
+                                {row.telegramId}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.currentSocialWorkerCount}
+                                {row.postalAddress}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.registerDate}
-                              </Typography>
+                              <Typography variant="h6">{row.childCount}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.needCount}</Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.created}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.updated}
-                              </Typography>
-                            </TableCell>
-
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.website && <Link href={row.website}>Link</Link>}
+                                {row.lastLoginDate}
                               </Typography>
                             </TableCell>
                           </TableRow>
@@ -518,7 +536,7 @@ const NgoTable = ({ ngoList }) => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={ngoList.length}
+                count={swList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -536,8 +554,8 @@ const NgoTable = ({ ngoList }) => {
   );
 };
 
-export default NgoTable;
+export default SocialWorkerTable;
 
-NgoTable.propTypes = {
-  ngoList: PropTypes.array.isRequired,
+SocialWorkerTable.propTypes = {
+  swList: PropTypes.array.isRequired,
 };

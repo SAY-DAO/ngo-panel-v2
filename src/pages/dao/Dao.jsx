@@ -6,13 +6,12 @@ import PageContainer from '../../components/container/PageContainer';
 import {
   fetchNestChildren,
   fetchNestNeeds,
+  fetchNestUsers,
   updateNestServer,
 } from '../../redux/actions/dao/DaoAction';
 import DaoNeedStatus from './DaoNeedStatus';
 import DaoChildStatus from './DaoChildstatus.';
-
-const list = [];
-let skip = 0;
+import DaoUserStatus from './DaoUserStatus';
 
 const Dao = () => {
   const dispatch = useDispatch();
@@ -21,20 +20,21 @@ const Dao = () => {
   const { loading: loadingSwDetails } = swDetails;
 
   const server = useSelector((state) => state.server);
-  const { updated, loading: loadingServer } = server;
+  const { updated, needList, loading: loadingServer } = server;
 
   useEffect(() => {
     dispatch(fetchNestNeeds());
     dispatch(fetchNestChildren());
+    dispatch(fetchNestUsers());
   }, [updated]);
 
   let count;
-  const handleupdateNestServer = () => {
+  let skip = needList && needList.needs.meta.totalItems;
+  const handleUpdateNestServer = () => {
+    skip += 1000;
     count = 500;
-    list.push(updated && updated.needs);
     console.log(count, skip);
     dispatch(updateNestServer(count, skip));
-    skip += 500;
   };
 
   return (
@@ -46,7 +46,7 @@ const Dao = () => {
       ) : (
         <PageContainer>
           <Grid item>
-            <LoadingButton loading={loadingServer} onClick={handleupdateNestServer}>
+            <LoadingButton loading={loadingServer} onClick={handleUpdateNestServer}>
               sync
             </LoadingButton>
             Nest.js Server
@@ -57,6 +57,9 @@ const Dao = () => {
             </Grid>
             <Grid item xs={6}>
               <DaoChildStatus />
+            </Grid>
+            <Grid item xs={6}>
+              <DaoUserStatus />
             </Grid>
           </Grid>
         </PageContainer>

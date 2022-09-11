@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
-import NgoTable from './NgoTable';
+import NgoTable from '../../components/tables/NgoTable';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 
 const NgoList = () => {

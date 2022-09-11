@@ -7,13 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { fetchNestNeeds } from '../../redux/actions/dao/DaoAction';
 
-const DaoNeedStatus = () => {
+const DaoUserStatus = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const primary = theme.palette.primary.main;
 
   const server = useSelector((state) => state.server);
-  const { needList, loading: loadingServer } = server;
+  const { userList, loading: loadingServer } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -96,7 +96,7 @@ const DaoNeedStatus = () => {
               gutterBottom
             >
               {/*  meta.totalItemsfrom pagination */}
-              {!needList ? <CircularProgress /> : needList.needs && needList.needs.meta.totalItems}
+              {!userList ? <CircularProgress /> : userList.users && userList.users.length}
             </Typography>
           </Box>
 
@@ -121,4 +121,4 @@ const DaoNeedStatus = () => {
   );
 };
 
-export default DaoNeedStatus;
+export default DaoUserStatus;

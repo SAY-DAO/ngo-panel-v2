@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
-import SocialWorkerTable from './SocialWorkerTable';
+import SocialWorkerTable from '../../components/tables/SocialWorkerTable';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 
 const SocialWorkerList = () => {

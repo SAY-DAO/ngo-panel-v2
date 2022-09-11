@@ -33,14 +33,14 @@ import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
-import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
+import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import PageContainer from '../../components/container/PageContainer';
+import PageContainer from '../container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { fetchChildrenByNgo, fetchMyChildById } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
-import LinearNeedStats from '../../components/analytics/LinearNeedStats';
-import PieChart from '../../components/analytics/PieChart';
+import LinearNeedStats from '../analytics/LinearNeedStats';
+import PieChart from '../analytics/PieChart';
 import { fetchChildNeeds } from '../../redux/actions/needsAction';
 
 function descendingComparator(a, b, orderBy) {

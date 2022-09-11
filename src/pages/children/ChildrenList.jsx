@@ -3,7 +3,7 @@ import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
-import ChildrenTable from './ChildrenTable';
+import ChildrenTable from '../../components/tables/ChildrenTable';
 
 const ChildrenList = () => {
   const dispatch = useDispatch();

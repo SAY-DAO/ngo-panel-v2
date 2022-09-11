@@ -28,10 +28,10 @@ import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
-import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
+import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
+import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import PageContainer from '../../components/container/PageContainer';
+import PageContainer from '../container/PageContainer';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 
 function descendingComparator(a, b, orderBy) {
@@ -94,12 +94,6 @@ function EnhancedTableHead(props) {
       disablePadding: false,
       label: t('ngo.phoneNumber'),
     },
-    // {
-    //   id: 'postalAddress',
-    //   numeric: false,
-    //   disablePadding: false,
-    //   label: t('ngo.postalAddress'),
-    // },
     {
       id: 'country',
       numeric: false,
@@ -262,13 +256,15 @@ const BCrumb = [
     title: 'Home',
   },
   {
-    title: 'Children Table',
+    title: 'NGOs Table',
   },
 ];
 
-const ChildrenTable = ({ ngoList }) => {
+const NgoTable = ({ ngoList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  console.log(ngoList);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
@@ -333,7 +329,7 @@ const ChildrenTable = ({ ngoList }) => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
   return (
-    <PageContainer>
+    <PageContainer title="NGO Table" description="this is NGO page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
@@ -441,23 +437,30 @@ const ChildrenTable = ({ ngoList }) => {
                               </Box>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="600">
+                              <Typography
+                                color="textSecondary"
+                                variant="h6"
+                                fontWeight="600"
+                                sx={{
+                                  maxWidth: '400px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  width: '160px',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
                                 {row.phoneNumber}
                               </Typography>
                             </TableCell>
-                            {/* <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="600">
-                                {row.postalAddress}
-                              </Typography>
-                            </TableCell> */}
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.country}
+                                {row.city.countryName}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city}
+                                {row.city.name}
                               </Typography>
                             </TableCell>
                             <TableCell>
@@ -533,8 +536,8 @@ const ChildrenTable = ({ ngoList }) => {
   );
 };
 
-export default ChildrenTable;
+export default NgoTable;
 
-ChildrenTable.propTypes = {
+NgoTable.propTypes = {
   ngoList: PropTypes.array.isRequired,
 };
