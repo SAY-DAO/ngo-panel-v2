@@ -1,4 +1,4 @@
-const staticCacheName = 'SAY-Panel-v2.0.0';
+const staticCacheName = 'SAY-Panel-v2';
 const urlsToCache = [
   '/images/back_gray.svg',
   '/images/back_orange.svg',
