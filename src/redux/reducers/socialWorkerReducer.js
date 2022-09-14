@@ -54,7 +54,7 @@ export const swByIdReducer = (state = { success: false }, action) => {
     case SW_BY_ID_REQUEST:
       return { loading: true };
     case SW_BY_ID_SUCCESS:
-      return { loading: false, success: true, result: action.payload };
+      return { ...state, loading: false, success: true, result: action.payload };
     case SW_BY_ID_FAIL:
       return { loading: false, error: action.payload };
     case SW_BY_ID_RESET:

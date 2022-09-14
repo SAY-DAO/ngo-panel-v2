@@ -38,6 +38,7 @@ export default function SocialWorkerMigrate() {
   // to save result after state change
   const [fromSw, setFromSw] = useState();
   const [toSw, setToSw] = useState();
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const swAll = useSelector((state) => state.swAll);
   const { swList, loading: loadingSwAll, success: successSwAll } = swAll;
@@ -66,21 +67,31 @@ export default function SocialWorkerMigrate() {
     if (result && children && from) {
       setFromSw({ result, children });
     }
-  }, [from, children]);
+  }, [from, result, children]);
 
   // to sw card
   useEffect(() => {
     if (result && children && to) {
       setToSw({ result, children });
     }
-  }, [to, children]);
+  }, [to, result, children]);
+
+  useEffect(() => {
+    if (fromSw && toSw) {
+      console.log(fromSw);
+      console.log(toSw);
+      if (fromSw.children.totalCount > 0 && toSw.result.id !== fromSw.result.id) {
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
+    }
+  }, [fromSw, toSw, to, from]);
 
   const handleChangeFrom = (e) => {
     if (e.target.outerText) {
-      setFromSw(); // empty result
       setTo();
       const swId = e.target.outerText.split(/([0-9]+)/)[1];
-      console.log(swId);
       dispatch(fetchSocialWorkerById(swId));
       dispatch(fetchSwChildList(swId));
       setFrom(swId);
@@ -89,9 +100,7 @@ export default function SocialWorkerMigrate() {
 
   const handleChangeTo = (e) => {
     if (e.target.outerText) {
-      setToSw(); // empty result
       setFrom();
-
       const swId = e.target.outerText.split(/([0-9]+)/)[1];
       dispatch(fetchSocialWorkerById(swId));
       dispatch(fetchSwChildList(swId));
@@ -99,7 +108,7 @@ export default function SocialWorkerMigrate() {
     }
   };
 
-  const handleDialog = () => {
+  const handleMigrate = () => {
     dispatch(migrateSwChildren(from, to));
   };
 
@@ -190,8 +199,8 @@ export default function SocialWorkerMigrate() {
           <Grid item sx={{ m: 'auto' }} xs>
             <LoadingButton
               loading={loadingSw}
-              disabled={!to}
-              onClick={handleDialog}
+              disabled={isDisabled}
+              onClick={handleMigrate}
               variant="contained"
             >
               {t('socialWorker.button.migrate')} <ChildCareIcon fontSize="small" />

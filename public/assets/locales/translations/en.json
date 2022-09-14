@@ -524,7 +524,8 @@
     "download": "Download Report"
   },
   "socialWorker": {
-    "socialWorker": " socialWorker",
+    "noChildren": "No Children",
+    "socialWorker": "Social Worker",
     "isActive": "Status",
     "isCoordinator": "Coordinator Status",
     "update": "Edit",

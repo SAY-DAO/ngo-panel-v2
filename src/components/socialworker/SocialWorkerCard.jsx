@@ -7,7 +7,6 @@ import BaseFeed from '../base-card/BaseFeed';
 import SocialWorkerChildMigrate from './SocialWorkerChildMigrate';
 
 const SocialWorkerCard = ({ fromSw, toSw }) => {
-  console.log(fromSw, toSw);
   return (
     <PageContainer title="Migration" description="this is migration page">
       <Grid
