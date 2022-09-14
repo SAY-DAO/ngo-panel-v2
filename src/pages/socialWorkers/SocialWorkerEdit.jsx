@@ -45,7 +45,10 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
-import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
+import {
+  SW_BY_ID_RESET,
+  UPDATE_SW_IS_ACTIVE_RESET,
+} from '../../redux/constants/socialWorkerConstants';
 
 const BCrumb = [
   {
@@ -99,7 +102,7 @@ const SocialWorkerEdit = () => {
   const { result, loading: loadingSwById, success: successSwById } = swById;
 
   const swStatusUpdate = useSelector((state) => state.swStatusUpdate);
-  const { status } = swStatusUpdate;
+  const { status, error: errorStatusUpdate } = swStatusUpdate;
 
   const swUpdate = useSelector((state) => state.swUpdate);
   const { success: successSwUpdate, loading: loadingSwUpdate, error: errorSwUpdate } = swUpdate;
@@ -130,6 +133,9 @@ const SocialWorkerEdit = () => {
     } else {
       setActiveChecked(false);
     }
+    return () => {
+      dispatch({ type: UPDATE_SW_IS_ACTIVE_RESET });
+    };
   }, [successSwById]);
 
   // isCoordinator
@@ -498,6 +504,18 @@ const SocialWorkerEdit = () => {
                   </Typography>
                   <Typography variant="body2">{result && result.phoneNumber}</Typography>
                 </Card>
+                {errorStatusUpdate && (
+                  <Message
+                    severity="error"
+                    variant="filled"
+                    input="addSw"
+                    backError={errorStatusUpdate}
+                    sx={{ width: '100%' }}
+                  >
+                    {errorStatusUpdate}
+                  </Message>
+                )}
+
                 <Card sx={{ p: 3, minHeight: 150 }}>
                   <Grid container direction="row" justifyContent="center" alignItems="center">
                     <Grid item xs={12} sx={{ margin: 'auto', textAlign: 'center' }}>

@@ -6,6 +6,7 @@ import HiveIcon from '@mui/icons-material/Hive';
 import HubIcon from '@mui/icons-material/Hub';
 import RouteIcon from '@mui/icons-material/Route';
 import React from 'react';
+import MoveDownIcon from '@mui/icons-material/MoveDown';
 
 const Menuitems = [
   {
@@ -116,7 +117,7 @@ const Menuitems = [
       },
       {
         title: 'Migrate',
-        icon: 'shuffle',
+        icon: <MoveDownIcon />,
         href: '/sw/migrate',
       },
     ],

@@ -9,10 +9,12 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import {
   fetchSocialWorkerById,
   fetchSocialWorkersList,
+  fetchSwChildList,
   migrateSwChildren,
 } from '../../redux/actions/socialWorkerAction';
 import { SW_LIST_RESET } from '../../redux/constants/socialWorkerConstants';
 import Message from '../../components/Message';
+import SocialWorkerCard from '../../components/socialworker/SocialWorkerCard';
 
 const BCrumb = [
   {
@@ -33,6 +35,9 @@ export default function SocialWorkerMigrate() {
   const [options, setOptions] = useState([]);
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
+  // to save result after state change
+  const [fromSw, setFromSw] = useState();
+  const [toSw, setToSw] = useState();
 
   const swAll = useSelector((state) => state.swAll);
   const { swList, loading: loadingSwAll, success: successSwAll } = swAll;
@@ -40,39 +45,61 @@ export default function SocialWorkerMigrate() {
   const swMigrate = useSelector((state) => state.swMigrate);
   const { error: errorMigrate, success: successMigrate } = swMigrate;
 
+  const swById = useSelector((state) => state.swById);
+  const { result, children, loading: loadingSw } = swById;
+
   useEffect(() => {
     if ((openTo || openFrom) && !successSwAll) {
       dispatch(fetchSocialWorkersList());
     }
     if (swList) {
-      setOptions([...swList]);
+      const filterActive = swList && swList.filter((sw) => sw.isActive === true);
+      setOptions([...filterActive]);
     }
     if (!openFrom && !openTo) {
       dispatch({ type: SW_LIST_RESET });
     }
   }, [openFrom, openTo, swList]);
 
+  // from sw card
+  useEffect(() => {
+    if (result && children && from) {
+      setFromSw({ result, children });
+    }
+  }, [from, children]);
+
+  // to sw card
+  useEffect(() => {
+    if (result && children && to) {
+      setToSw({ result, children });
+    }
+  }, [to, children]);
+
   const handleChangeFrom = (e) => {
     if (e.target.outerText) {
+      setFromSw(); // empty result
+      setTo();
       const swId = e.target.outerText.split(/([0-9]+)/)[1];
       console.log(swId);
       dispatch(fetchSocialWorkerById(swId));
+      dispatch(fetchSwChildList(swId));
       setFrom(swId);
-      console.log('swId');
-      console.log(swId);
     }
   };
 
   const handleChangeTo = (e) => {
     if (e.target.outerText) {
+      setToSw(); // empty result
+      setFrom();
+
       const swId = e.target.outerText.split(/([0-9]+)/)[1];
       dispatch(fetchSocialWorkerById(swId));
+      dispatch(fetchSwChildList(swId));
       setTo(swId);
-      console.log(swId);
     }
   };
 
-  const handleMigrate = () => {
+  const handleDialog = () => {
     dispatch(migrateSwChildren(from, to));
   };
 
@@ -82,11 +109,11 @@ export default function SocialWorkerMigrate() {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
       <Card>
-        <Grid container>
-          <Grid item xs={6}>
+        <Grid container spacing={1} direction="row" alignItems="center">
+          <Grid item lg={5} xs={12}>
             <Autocomplete
               id="from"
-              sx={{ width: 400 }}
+              sx={{ maxWidth: 400 }}
               open={openFrom}
               onOpen={() => {
                 setOpenFrom(true);
@@ -97,7 +124,7 @@ export default function SocialWorkerMigrate() {
               isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
               getOptionLabel={(option) => {
                 return !option.firstName
-                  ? 'no name'
+                  ? `${option.id}`
                   : `${option.id} - ${option.firstName} ${option.lastName} - ${option.ngoName}`;
               }}
               options={options}
@@ -122,10 +149,10 @@ export default function SocialWorkerMigrate() {
               }}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item lg={5} xs={12}>
             <Autocomplete
               id="to"
-              sx={{ width: 400 }}
+              sx={{ maxWidth: 400 }}
               open={openTo}
               onOpen={() => {
                 setOpenTo(true);
@@ -160,16 +187,13 @@ export default function SocialWorkerMigrate() {
               )}
             />
           </Grid>
-        </Grid>
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          sx={{ mt: 3 }}
-        >
-          <Grid item>
-            <LoadingButton onClick={handleMigrate} variant="contained">
+          <Grid item sx={{ m: 'auto' }} xs>
+            <LoadingButton
+              loading={loadingSw}
+              disabled={!to}
+              onClick={handleDialog}
+              variant="contained"
+            >
               {t('socialWorker.button.migrate')} <ChildCareIcon fontSize="small" />
             </LoadingButton>
           </Grid>
@@ -188,6 +212,7 @@ export default function SocialWorkerMigrate() {
           </Grid>
         </Grid>
       </Card>
+      <SocialWorkerCard fromSw={fromSw} toSw={toSw} />
     </PageContainer>
   );
 }

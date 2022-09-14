@@ -23,6 +23,9 @@ import {
   MIGRATE_SW_CHILDREN_REQUEST,
   MIGRATE_SW_CHILDREN_SUCCESS,
   MIGRATE_SW_CHILDREN_FAIL,
+  SW_CHILD_LIST_REQUEST,
+  SW_CHILD_LIST_SUCCESS,
+  SW_CHILD_LIST_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const swDetailsReducer = (state = { success: false }, action) => {
@@ -42,6 +45,12 @@ export const swDetailsReducer = (state = { success: false }, action) => {
 
 export const swByIdReducer = (state = { success: false }, action) => {
   switch (action.type) {
+    case SW_CHILD_LIST_REQUEST:
+      return { ...state, loading: true };
+    case SW_CHILD_LIST_SUCCESS:
+      return { ...state, loading: false, success: true, children: action.payload };
+    case SW_CHILD_LIST_FAIL:
+      return { loading: false, error: action.payload };
     case SW_BY_ID_REQUEST:
       return { loading: true };
     case SW_BY_ID_SUCCESS:
@@ -121,4 +130,3 @@ export const swAddReducer = (state = { success: false }, action) => {
       return state;
   }
 };
-
