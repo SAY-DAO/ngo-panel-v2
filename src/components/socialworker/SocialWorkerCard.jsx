@@ -41,8 +41,8 @@ const SocialWorkerCard = ({ fromSw, toSw }) => {
           <Grid item lg={5} md={12} xs={12}>
             <BaseFeed
               img={toSw.result.avatarUrl}
-              username={toSw.result.firstName || ''}
-              time={toSw.result.ngoName}
+              firstName={toSw.result.firstName || ''}
+              ngoName={toSw.result.ngoName}
             >
               {toSw.children && <SocialWorkerChildMigrate swChildren={toSw.children.children} />}
             </BaseFeed>
