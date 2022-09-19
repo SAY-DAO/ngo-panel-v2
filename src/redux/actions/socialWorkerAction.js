@@ -171,6 +171,7 @@ export const fetchSwChildList = (swId) => async (dispatch, getState) => {
   }
 };
 export const migrateSwChildren = (fromId, toId) => async (dispatch, getState) => {
+  console.log(fromId, toId);
   try {
     dispatch({ type: MIGRATE_SW_CHILDREN_REQUEST });
     const {

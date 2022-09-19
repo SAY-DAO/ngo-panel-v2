@@ -109,7 +109,7 @@ export default function SocialWorkerMigrate() {
   };
 
   const handleMigrate = () => {
-    dispatch(migrateSwChildren(from, to));
+    dispatch(migrateSwChildren(fromSw.result.id, toSw.result.id));
   };
 
   return (

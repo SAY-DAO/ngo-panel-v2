@@ -147,7 +147,7 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
         nationality: response.data.children[i].nationality,
         sayFamilyCount: response.data.children[i].sayFamilyCount,
         sayName: response.data.children[i].sayName,
-        saynameTranslations: response.data.children[i].sayname_translations,
+        sayNameTranslations: response.data.children[i].sayNameTranslations,
         sleptAvatarUrl: response.data.children[i].sleptAvatarUrl,
         status: response.data.children[i].status,
         updated: response.data.children[i].updated,
