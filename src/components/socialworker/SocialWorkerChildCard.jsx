@@ -91,9 +91,14 @@ const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
                     ) : errorOneMigrate && child.id === myChildId ? (
                       <ClearIcon color="error" />
                     ) : (
-                      <IconButton onClick={() => handleMigrateDialog(child.id)} sx={{ m: 'auto' }}>
-                        <SwapHorizIcon />
-                      </IconButton>
+                      toSwId && (
+                        <IconButton
+                          onClick={() => handleMigrateDialog(child.id)}
+                          sx={{ m: 'auto' }}
+                        >
+                          <SwapHorizIcon />
+                        </IconButton>
+                      )
                     )}
                   </Box>
                 </Box>

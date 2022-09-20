@@ -49,7 +49,7 @@ const SocialWorkerCard = ({ fromSw, toSw }) => {
               {toSw.children && (
                 <SocialWorkerChildCard
                   swChildren={toSw.children.children}
-                  toSwId={toSw && toSw.result.id}
+                  // toSwId={toSw && toSw.result.id}
                 />
               )}
             </BaseFeed>
