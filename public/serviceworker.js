@@ -30,6 +30,7 @@ const urlsToCache = [
   '/images/otp.svg',
   '/images/register.svg',
   '/offline.html',
+  'panel.saydao.org',
 ];
 
 const self = this;
