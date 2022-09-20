@@ -86,10 +86,10 @@ const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
                     </Box>
                   </Box>
                   <Box>
-                    {successOneMigrate ? (
-                      <CheckIcon color='success'/>
-                    ) : errorOneMigrate ? (
-                      <ClearIcon color='error' />
+                    {successOneMigrate && child.id === myChildId ? (
+                      <CheckIcon color="success" />
+                    ) : errorOneMigrate && child.id === myChildId ? (
+                      <ClearIcon color="error" />
                     ) : (
                       <IconButton onClick={() => handleMigrateDialog(child.id)} sx={{ m: 'auto' }}>
                         <SwapHorizIcon />
