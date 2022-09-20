@@ -10,11 +10,15 @@ import {
   fetchSocialWorkerById,
   fetchSocialWorkersList,
   fetchSwChildList,
-  migrateSwChildren,
 } from '../../redux/actions/socialWorkerAction';
-import { SW_LIST_RESET } from '../../redux/constants/socialWorkerConstants';
+import {
+  MIGRATE_ONE_CHILD_RESET,
+  MIGRATE_SW_CHILDREN_RESET,
+  SW_LIST_RESET,
+} from '../../redux/constants/socialWorkerConstants';
 import Message from '../../components/Message';
 import SocialWorkerCard from '../../components/socialworker/SocialWorkerCard';
+import MigrateDialog from '../../components/Dialogs/MigrateDialog';
 
 const BCrumb = [
   {
@@ -40,11 +44,17 @@ export default function SocialWorkerMigrate() {
   const [toSw, setToSw] = useState();
   const [isDisabled, setIsDisabled] = useState(true);
 
+  const [dialogValues, setDialogValues] = useState();
+  const [openMigrate, setOpenMigrate] = useState(false);
+
   const swAll = useSelector((state) => state.swAll);
   const { swList, loading: loadingSwAll, success: successSwAll } = swAll;
 
   const swMigrate = useSelector((state) => state.swMigrate);
   const { error: errorMigrate, success: successMigrate } = swMigrate;
+
+  const swOneMigrate = useSelector((state) => state.swOneMigrate);
+  const { error: errorOneMigrate, success: successOneMigrate } = swOneMigrate;
 
   const swById = useSelector((state) => state.swById);
   const { result, children, loading: loadingSw } = swById;
@@ -60,12 +70,25 @@ export default function SocialWorkerMigrate() {
     if (!openFrom && !openTo) {
       dispatch({ type: SW_LIST_RESET });
     }
+    if (successMigrate) {
+      dispatch({ type: MIGRATE_SW_CHILDREN_RESET });
+    }
+  }, [openFrom, openTo, swList]);
+
+  // when migrate one child
+  useEffect(() => {
+    if (errorOneMigrate || successOneMigrate) {
+      dispatch({ type: MIGRATE_ONE_CHILD_RESET });
+    }
   }, [openFrom, openTo, swList]);
 
   // from sw card
   useEffect(() => {
     if (result && children && from) {
       setFromSw({ result, children });
+    }
+    if (toSw) {
+      setToSw();
     }
   }, [from, result, children]);
 
@@ -75,6 +98,13 @@ export default function SocialWorkerMigrate() {
       setToSw({ result, children });
     }
   }, [to, result, children]);
+
+  useEffect(() => {
+    if (successMigrate) {
+      setFromSw();
+      setToSw();
+    }
+  }, [successMigrate]);
 
   useEffect(() => {
     if (fromSw && toSw) {
@@ -108,10 +138,13 @@ export default function SocialWorkerMigrate() {
     }
   };
 
-  const handleMigrate = () => {
-    dispatch(migrateSwChildren(fromSw.result.id, toSw.result.id));
+  const handleMigrateDialog = () => {
+    setOpenMigrate(true);
+    setDialogValues({
+      fromSw,
+      toSw,
+    });
   };
-
   return (
     <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
       {/* breadcrumb */}
@@ -200,13 +233,13 @@ export default function SocialWorkerMigrate() {
             <LoadingButton
               loading={loadingSw}
               disabled={isDisabled}
-              onClick={handleMigrate}
+              onClick={handleMigrateDialog}
               variant="contained"
             >
               {t('socialWorker.button.migrate')} <ChildCareIcon sx={{ m: 1 }} fontSize="small" />
             </LoadingButton>
           </Grid>
-          <Grid item>
+          <Grid item sx={{ m: 'auto', mt: 10 }}>
             {(successMigrate || errorMigrate) && (
               <Message
                 severity={successMigrate ? 'success' : 'error'}
@@ -221,7 +254,14 @@ export default function SocialWorkerMigrate() {
           </Grid>
         </Grid>
       </Card>
-      <SocialWorkerCard fromSw={fromSw} toSw={toSw} />
+      {!loadingSw ? (
+        <SocialWorkerCard fromSw={fromSw} toSw={toSw} />
+      ) : (
+        <Grid container>
+          <CircularProgress sx={{ m: 'auto' }} />
+        </Grid>
+      )}
+      <MigrateDialog open={openMigrate} setOpen={setOpenMigrate} dialogValues={dialogValues} />
     </PageContainer>
   );
 }

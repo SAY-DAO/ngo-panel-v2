@@ -21,9 +21,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AlertDialog from '../AlertDialog';
 import { addReceiptToNeed, fetchNeedReceipts } from '../../redux/actions/reportAction';
 import UploadImage from '../UploadImage';
+import DeleteDialog from '../Dialogs/DeleteDialog';
 
 export default function ReportImage({ row, statusId }) {
   const location = useLocation();
@@ -90,6 +90,7 @@ export default function ReportImage({ row, statusId }) {
     setDialogValues({
       needId,
       receiptId,
+      type: 'delete',
     });
   };
   return (
@@ -195,7 +196,7 @@ export default function ReportImage({ row, statusId }) {
           <Button onClick={handleImageClose}>Close</Button>
         </DialogActions>
       </Dialog>
-      <AlertDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
+      <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
     </Stack>
   );
 }

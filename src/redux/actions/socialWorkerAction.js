@@ -24,6 +24,9 @@ import {
   SW_CHILD_LIST_REQUEST,
   SW_CHILD_LIST_SUCCESS,
   SW_CHILD_LIST_FAIL,
+  MIGRATE_ONE_CHILD_REQUEST,
+  MIGRATE_ONE_CHILD_SUCCESS,
+  MIGRATE_ONE_CHILD_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
@@ -170,6 +173,36 @@ export const fetchSwChildList = (swId) => async (dispatch, getState) => {
     });
   }
 };
+
+export const migrateSwOneChild = (childId, toId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: MIGRATE_ONE_CHILD_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const formData = new FormData();
+    formData.set('new_sw_id', parseInt(toId, 10));
+    const { data } = await publicApi.patch(`/child/migrate/childId=${childId}`, formData, config);
+
+    dispatch({
+      type: MIGRATE_ONE_CHILD_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: MIGRATE_ONE_CHILD_FAIL,
+      payload: e.response && e.response.status ? e.response : e.message,
+    });
+  }
+};
+
 export const migrateSwChildren = (fromId, toId) => async (dispatch, getState) => {
   console.log(fromId, toId);
   try {

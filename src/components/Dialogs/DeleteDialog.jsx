@@ -7,9 +7,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { deleteReceipt } from '../redux/actions/reportAction';
+import { deleteReceipt } from '../../redux/actions/reportAction';
 
-export default function AlertDialog({ open, setOpen, dialogValues }) {
+export default function DeleteDialog({ open, setOpen, dialogValues }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -46,7 +46,7 @@ export default function AlertDialog({ open, setOpen, dialogValues }) {
   );
 }
 
-AlertDialog.propTypes = {
+DeleteDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
   dialogValues: PropTypes.object,

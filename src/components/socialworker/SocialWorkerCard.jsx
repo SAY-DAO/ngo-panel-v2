@@ -4,7 +4,7 @@ import { Grid } from '@mui/material';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import PageContainer from '../container/PageContainer';
 import BaseFeed from '../base-card/BaseFeed';
-import SocialWorkerChildMigrate from './SocialWorkerChildMigrate';
+import SocialWorkerChildCard from './SocialWorkerChildCard';
 
 const SocialWorkerCard = ({ fromSw, toSw }) => {
   return (
@@ -25,7 +25,10 @@ const SocialWorkerCard = ({ fromSw, toSw }) => {
               ngoName={fromSw.result.ngoName}
             >
               {fromSw.children && (
-                <SocialWorkerChildMigrate swChildren={fromSw.children.children} />
+                <SocialWorkerChildCard
+                  swChildren={fromSw.children.children}
+                  toSwId={toSw && toSw.result.id}
+                />
               )}
             </BaseFeed>
           </Grid>
@@ -43,7 +46,12 @@ const SocialWorkerCard = ({ fromSw, toSw }) => {
               firstName={toSw.result.firstName || ''}
               ngoName={toSw.result.ngoName}
             >
-              {toSw.children && <SocialWorkerChildMigrate swChildren={toSw.children.children} />}
+              {toSw.children && (
+                <SocialWorkerChildCard
+                  swChildren={toSw.children.children}
+                  toSwId={toSw && toSw.result.id}
+                />
+              )}
             </BaseFeed>
           </Grid>
         )}
