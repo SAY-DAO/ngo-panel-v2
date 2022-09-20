@@ -14,34 +14,34 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Serve files from the cache
-self.addEventListener('fetch', (event) => {
-  // console.log('Fetch event for ', event.request.url);
-  event.respondWith(
-    caches
-      .match(event.request)
-      .then((response) => {
-        if (response) {
-          console.log('Found ', event.request.url, ' in cache');
-          return response;
-        }
-        // If fails, we send the request to the network.
-        console.log('Network request for ', event.request.url);
-        return fetch(event.request).then((res) =>
-          // TODO 5 - Respond with custom 404 page
-          caches.open(staticCacheName).then((cache) => {
-            cache.put(event.request.url, res.clone());
-            return res;
-          }),
-        );
-      })
-      .catch((error) => {
-        // Respond with custom offline page
-        console.log('offline error ', error);
-        // return caches.match('offline.html'); // will ineterfere with action error responses
-      }),
-  );
-});
+// // Serve files from the cache
+// self.addEventListener('fetch', (event) => {
+//   // console.log('Fetch event for ', event.request.url);
+//   event.respondWith(
+//     caches
+//       .match(event.request)
+//       .then((response) => {
+//         if (response) {
+//           console.log('Found ', event.request.url, ' in cache');
+//           return response;
+//         }
+//         // If fails, we send the request to the network.
+//         console.log('Network request for ', event.request.url);
+//         return fetch(event.request).then((res) =>
+//           // TODO 5 - Respond with custom 404 page
+//           caches.open(staticCacheName).then((cache) => {
+//             cache.put(event.request.url, res.clone());
+//             return res;
+//           }),
+//         );
+//       })
+//       .catch((error) => {
+//         // Respond with custom offline page
+//         console.log('offline error ', error);
+//         // return caches.match('offline.html'); // will ineterfere with action error responses
+//       }),
+//   );
+// });
 
 // self.addEventListener('fetch', (event) => {
 //   console.log('Fetch event for ', event.request.url);

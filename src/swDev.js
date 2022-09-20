@@ -7,6 +7,6 @@ export default function swDev() {
     navigator.serviceWorker
       .register(swUrl)
       .then((reg) => console.log('success: ', reg.scope))
-      .catch((err) => console.log('Failiure: ', err));
+      .catch((err) => console.log('Failure: ', err));
   }
 }
