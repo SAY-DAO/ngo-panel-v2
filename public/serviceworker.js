@@ -1,4 +1,4 @@
-const staticCacheName = 'SAY-Panel-v2';
+const staticCacheName = 'SAY-Panel-v2.0.0';
 const urlsToCache = [];
 
 const self = this;
