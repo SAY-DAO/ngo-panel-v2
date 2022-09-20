@@ -1,37 +1,5 @@
 const staticCacheName = 'SAY-Panel-v2';
-const urlsToCache = [
-  '/images/back_gray.svg',
-  '/images/back_orange.svg',
-  '/images/logo.png',
-  '/images/logo2.png',
-  '/images/icons/changePassword.svg',
-  '/images/icons/email.svg',
-  '/images/icons/exit.svg',
-  '/images/icons/info.svg',
-  '/images/icons/language.svg',
-  '/images/icons/Money.svg',
-  '/images/icons/settings.svg',
-  '/images/icons/Task.svg',
-  '/images/icons/un.svg',
-  '/images/icons/upload.svg',
-  '/images/icons/wallet.svg',
-  '/images/icons/doneNeeds/child.svg',
-  '/images/icons/doneNeeds/hand.svg',
-  '/images/icons/doneNeeds/ngo.svg',
-  '/images/icons/doneNeeds/package.svg',
-  '/images/icons/doneNeeds/receipts/done.jpg',
-  '/images/icons/doneNeeds/receipts/ngo_delivered.jpg',
-  '/images/cartWhite.svg',
-  '/images/favicon.png',
-  '/images/finalForm.svg',
-  '/images/say_donation.svg',
-  '/images/back.svg',
-  '/images/intro.png',
-  '/images/otp.svg',
-  '/images/register.svg',
-  '/offline.html',
-  'panel.saydao.org',
-];
+const urlsToCache = [];
 
 const self = this;
 
@@ -75,27 +43,27 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-self.addEventListener('fetch', (event) => {
-  console.log('Fetch event for ', event.request.url);
-  event.respondWith(
-    caches
-      .match(event.request)
-      .then((response) => {
-        if (response) {
-          console.log('Found ', event.request.url, ' in cache');
-          return response;
-        }
-        console.log('Network request for ', event.request.url);
-        return fetch(event.request);
+// self.addEventListener('fetch', (event) => {
+//   console.log('Fetch event for ', event.request.url);
+//   event.respondWith(
+//     caches
+//       .match(event.request)
+//       .then((response) => {
+//         if (response) {
+//           console.log('Found ', event.request.url, ' in cache');
+//           return response;
+//         }
+//         console.log('Network request for ', event.request.url);
+//         return fetch(event.request);
 
-        // TODO 4 - Add fetched files to the cache
-      })
-      .catch((error) => {
-        console.log(error);
-        // TODO 6 - Respond with custom offline page
-      }),
-  );
-});
+//         // TODO 4 - Add fetched files to the cache
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//         // TODO 6 - Respond with custom offline page
+//       }),
+//   );
+// });
 
 // Delete outdated caches
 self.addEventListener('activate', (event) => {
