@@ -19,9 +19,6 @@ export default function MigrateDialog({ open, setOpen, dialogValues, childId, to
 
   // when only one child migrate
   const handleConfirmOne = () => {
-    console.log('childId1');
-    console.log(childId);
-    console.log('childId1');
     dispatch(migrateSwOneChild(childId, toSwId));
     setOpen(false);
   };

@@ -82,7 +82,10 @@ const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
                     >
                       <Typography variant="h5">{child.sayName}</Typography>
                       <Typography color="textSecondary" variant="h6" fontWeight="400">
-                        {child.id} {child.lastName} {child.firstName}
+                        {child.lastName} {child.firstName}
+                      </Typography>
+                      <Typography color="textSecondary" variant="body2">
+                        Id:{child.id} - Code:{child.generatedCode}
                       </Typography>
                     </Box>
                   </Box>
