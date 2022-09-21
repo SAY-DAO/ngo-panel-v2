@@ -5,13 +5,13 @@ const self = this;
 
 // install Service Worker and save cache to Application - Cache
 self.addEventListener('install', (event) => {
-  // console.log('Attempting to install service worker and cache static assets');
-  // event.waitUntil(
-  //   caches.open(staticCacheName).then((cache) =>
-      // console.log('Opened cache');
-      // cache.addAll(urlsToCache),
-  //   ),
-  // );
+  console.log('Attempting to install service worker and cache static assets');
+  event.waitUntil(
+    caches.open(staticCacheName).then((cache) => {
+      console.log('Opened cache');
+      cache.addAll(urlsToCache);
+    }),
+  );
 });
 
 // // Serve files from the cache

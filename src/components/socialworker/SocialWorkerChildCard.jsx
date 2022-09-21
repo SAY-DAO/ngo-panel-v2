@@ -23,27 +23,28 @@ const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
   const [openMigrate, setOpenMigrate] = useState(false);
 
   useEffect(() => {
-    if (myChildId && successOneMigrate) {
-      const tempList = swChildren;
-      console.log(`**swChildren.length (should still be 3) ${swChildren.length}`);
-
-      const indx = tempList.findIndex((child) => child.id === myChildId);
-      tempList.splice(indx, indx >= 0 ? 1 : 0);
-
-      console.log(`**tempList.length (should still be 3) ${tempList.length}`);
-    }
+    // if (myChildId && successOneMigrate) {
+    //   const tempList = swChildren;
+    //   console.log(`**swChildren.length (should still be 3) ${swChildren.length}`);
+    //   const indx = tempList.findIndex((child) => child.id === myChildId);
+    //   tempList.splice(indx, indx >= 0 ? 1 : 0);
+    //   console.log(`**tempList.length (should still be 3) ${tempList.length}`);
+    // }
     // return () => {
     //   dispatch({ type: MIGRATE_ONE_CHILD_RESET });
     // };
   }, [myChildId, successOneMigrate]);
 
   const handleMigrateDialog = (id) => {
+    console.log('childId2');
+    console.log(id);
+    console.log('childId2');
     setMyChildId(id);
-    setOpenMigrate(true);
     setDialogValues({
       fromSw: null,
       toSw: null,
     });
+    setOpenMigrate(true);
   };
   return (
     <Card
@@ -81,7 +82,7 @@ const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
                     >
                       <Typography variant="h5">{child.sayName}</Typography>
                       <Typography color="textSecondary" variant="h6" fontWeight="400">
-                        {child.lastName} {child.firstName}
+                        {child.id} {child.lastName} {child.firstName}
                       </Typography>
                     </Box>
                   </Box>
@@ -104,19 +105,19 @@ const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
                 </Box>
               </Box>
               <Divider />
-              <MigrateDialog
-                open={openMigrate}
-                setOpen={setOpenMigrate}
-                dialogValues={dialogValues}
-                childId={child.id}
-                toSwId={toSwId}
-              />
             </Box>
           ))
         ) : (
           <Typography sx={{ p: 10 }}>{t('socialWorker.noChildren')}</Typography>
         )}
       </Box>
+      <MigrateDialog
+        open={openMigrate}
+        setOpen={setOpenMigrate}
+        dialogValues={dialogValues}
+        childId={myChildId}
+        toSwId={toSwId}
+      />
     </Card>
   );
 };
