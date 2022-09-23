@@ -29,8 +29,8 @@ const Dao = () => {
   }, [updated]);
 
   let count;
-  let skip = needList && needList.needs.meta.totalItems;
   const handleUpdateNestServer = () => {
+    let skip = needList && needList.needs.meta.totalItems;
     skip += 1000;
     count = 500;
     console.log(count, skip);

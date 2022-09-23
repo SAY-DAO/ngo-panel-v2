@@ -33,7 +33,7 @@ export const fetchNeedReceipts = (needId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: NEED_RECEIPT_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -60,7 +60,7 @@ export const deleteReceipt = (needId, receiptId) => async (dispatch, getState) =
   } catch (e) {
     dispatch({
       type: DELETE_RECEIPT_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -105,7 +105,7 @@ export const addReceiptToNeed = (values) => async (dispatch, getState) => {
     console.log(e);
     dispatch({
       type: ADD_RECEIPT_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };

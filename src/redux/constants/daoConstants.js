@@ -15,6 +15,12 @@ export const UPDATE_SERVER_REQUEST = 'UPDATE_SERVER_REQUEST'; // update nest
 export const UPDATE_SERVER_SUCCESS = 'UPDATE_SERVER_SUCCESS';
 export const UPDATE_SERVER_FAIL = 'UPDATE_SERVER_FAIL';
 
+export const GET_ONE_SERVER_REQUEST = 'GET_ONE_SERVER_REQUEST'; // fetch  one need from server to see if there
+export const GET_ONE_SERVER_SUCCESS = 'GET_ONE_SERVER_SUCCESS'; // fetch  one need from server to see if there
+export const UPDATE_ONE_SERVER_REQUEST = 'UPDATE_ONE_SERVER_REQUEST'; // if not update need
+export const UPDATE_ONE_SERVER_SUCCESS = 'UPDATE_ONE_SERVER_SUCCESS';
+export const UPDATE_ONE_SERVER_FAIL = 'UPDATE_ONE_SERVER_FAIL';
+
 export const FAMILY_NETWORK_REQUEST = 'FAMILY_NETWORK_REQUEST';
 export const FAMILY_NETWORK_SUCCESS = 'FAMILY_NETWORK_SUCCESS';
 export const FAMILY_NETWORK_FAIL = 'FAMILY_NETWORK_FAIL';

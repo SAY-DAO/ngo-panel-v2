@@ -36,7 +36,12 @@ import {
   swNeedListReducer,
 } from './needReducer';
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
-import { mileStoneReducer, serverReducer, signatureReducer } from './daoReducer';
+import {
+  mileStoneReducer,
+  serverOneNeedReducer,
+  serverReducer,
+  signatureReducer,
+} from './daoReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -72,5 +77,6 @@ export default combineReducers({
   receiptDelete: receiptDeleteReducer,
   receiptAdd: receiptAddReducer,
   server: serverReducer,
+  serverOneNeed: serverOneNeedReducer,
   signature: signatureReducer,
 });

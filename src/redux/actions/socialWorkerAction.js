@@ -51,7 +51,7 @@ export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_DETAILS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -79,7 +79,7 @@ export const fetchSocialWorkerById = (id) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -107,7 +107,7 @@ export const fetchSocialWorkersList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -141,7 +141,10 @@ export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
 
     dispatch({
       type: UPDATE_SW_IS_ACTIVE_FAIL,
-      payload: e.response && e.response.data.status_code ? e.response.data.message : e.message,
+      payload:
+        e.response && e.response.data.status_code
+          ? e.response.data.message
+          : e.response.data.message,
     });
   }
 };
@@ -169,7 +172,7 @@ export const fetchSwChildList = (swId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_CHILD_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -198,7 +201,7 @@ export const migrateSwOneChild = (childId, toId) => async (dispatch, getState) =
   } catch (e) {
     dispatch({
       type: MIGRATE_ONE_CHILD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -232,7 +235,7 @@ export const migrateSwChildren = (fromId, toId) => async (dispatch, getState) =>
   } catch (e) {
     dispatch({
       type: MIGRATE_SW_CHILDREN_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -314,7 +317,7 @@ export const updateSw = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_SW_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -397,7 +400,7 @@ export const AddSw = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_SW_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };

@@ -85,10 +85,10 @@ const DaoNeedStatus = () => {
               }}
               gutterBottom
             >
-              Nest Server Needs
+              Nest Need Ratio
             </Typography>
             <Typography
-              variant="h2"
+              variant="body2"
               sx={{
                 mt: '1px',
                 mb: '0px',
@@ -96,7 +96,24 @@ const DaoNeedStatus = () => {
               gutterBottom
             >
               {/*  meta.totalItemsfrom pagination */}
+              {!needList ? <CircularProgress /> : needList.totalDone} {''}/ {''}
               {!needList ? <CircularProgress /> : needList.needs && needList.needs.meta.totalItems}
+              {''} ~ {''}
+              {!needList ? (
+                <CircularProgress />
+              ) : (
+                <Typography
+                  component="span"
+                  variant="h2"
+                  sx={{
+                    marginBottom: '0',
+                  }}
+                  gutterBottom
+                >
+                  {needList.needs &&
+                    (needList.totalDone / needList.needs.meta.totalItems).toFixed(2)}
+                </Typography>
+              )}
             </Typography>
           </Box>
 

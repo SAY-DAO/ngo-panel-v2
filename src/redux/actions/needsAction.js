@@ -51,7 +51,7 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
   } catch (e) {
     dispatch({
       type: ALL_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -79,7 +79,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_EXAMPLE_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -107,7 +107,7 @@ export const fetchChildNeeds = (childId) => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -136,7 +136,7 @@ export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_ONE_NEED_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -173,7 +173,7 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_NEED_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -200,7 +200,7 @@ export const updateNeedConfirm = (needId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NEED_CONFIRM_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -284,7 +284,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_ONE_NEED_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -362,7 +362,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_ONE_NEED_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };

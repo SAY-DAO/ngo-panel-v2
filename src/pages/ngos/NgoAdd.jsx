@@ -55,8 +55,8 @@ const NgoAdd = () => {
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
 
-  const swAdd = useSelector((state) => state.swAdd);
-  const { success: successAddSW, loading: loadingAddSw, error: errorAddSW } = swAdd;
+  const ngoAdd = useSelector((state) => state.ngoAdd);
+  const { success: successAddNgo, loading: loadingAddNgo, error: errorAddNgo } = ngoAdd;
 
   const countryList = useSelector((state) => state.countryList);
   const { countries, states, cities, success: successCountryList } = countryList;
@@ -68,7 +68,6 @@ const NgoAdd = () => {
     postalAddress: Yup.string().required('Please enter your postalAddress'),
     emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
   });
-
   const {
     register,
     control,
@@ -138,7 +137,9 @@ const NgoAdd = () => {
 
   const handleRemoveImage = () => {
     console.log('remove');
+    setFinalImageFile();
   };
+  console.log(errorAddNgo);
 
   return (
     <PageContainer title="Social Worker Add" description="this is Social Worker Add page">
@@ -361,7 +362,7 @@ const NgoAdd = () => {
                   />
 
                   <LoadingButton
-                    loading={loadingAddSw}
+                    loading={loadingAddNgo}
                     color="primary"
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
@@ -372,6 +373,19 @@ const NgoAdd = () => {
                   </LoadingButton>
                 </form>
               </Card>
+              <Grid>
+                {(successAddNgo || errorAddNgo) && (
+                  <Message
+                    severity={successAddNgo ? 'success' : 'error'}
+                    variant="filled"
+                    input="addSw"
+                    backError={errorAddNgo}
+                    sx={{ width: '100%' }}
+                  >
+                    {successAddNgo && t('socialWorker.updated')}
+                  </Message>
+                )}
+              </Grid>
             </Grid>
           </Grid>
 
@@ -395,19 +409,6 @@ const NgoAdd = () => {
               <Button onClick={handleImageClose}>Close</Button>
             </DialogActions>
           </Dialog>
-          <Grid>
-            {(successAddSW || errorAddSW) && (
-              <Message
-                severity={successAddSW ? 'success' : 'error'}
-                variant="filled"
-                input="addSw"
-                backError={errorAddSW}
-                sx={{ width: '100%' }}
-              >
-                {successAddSW && t('socialWorker.updated')}
-              </Message>
-            )}
-          </Grid>
         </>
       )}
     </PageContainer>

@@ -29,6 +29,11 @@ import {
   GET_SERVER_USERS_REQUEST,
   GET_SERVER_USERS_SUCCESS,
   GET_SERVER_USERS_FAIL,
+  GET_ONE_SERVER_SUCCESS,
+  UPDATE_ONE_SERVER_REQUEST,
+  GET_ONE_SERVER_REQUEST,
+  UPDATE_ONE_SERVER_SUCCESS,
+  UPDATE_ONE_SERVER_FAIL,
 } from '../../constants/daoConstants';
 
 export const updateNestServer = (counter, skip) => async (dispatch, getState) => {
@@ -51,7 +56,11 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       },
     };
     const { data } = await publicApi.get(`/needs`, config);
-    const response = await publicApi.get(`/child/all/confirm=1`, config);
+    const response = await publicApi.get(`/child/all/confirm=2`, config); // confirmed and unconfirmed
+    const responseNotExistence = await publicApi.get(
+      `/child/all/confirm=2?existence_status=!1`,
+      config,
+    ); // confirmed and unconfirmed
 
     dispatch({ type: UPDATE_SERVER_REQUEST });
 
@@ -107,12 +116,57 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
         unpayable: data.needs[i].unpayable,
         unpayableFrom: data.needs[i].unpayable_from,
         updated: data.needs[i].updated,
-        // payments: data.needs[i].payments, // []
+        payments: data.needs[i].payments, // []
         imageUrl: data.needs[i].imageUrl,
         needRetailerImg: data.needs[i].img,
       };
       needList.push(need);
     }
+
+    // for not existence children - those who have left :(
+    for (let i = 0; i < responseNotExistence.data.children.length; i++) {
+      child = {
+        childId: responseNotExistence.data.children[i].id,
+        address: responseNotExistence.data.children[i].address,
+        avatarUrl: responseNotExistence.data.children[i].avatarUrl,
+        awakeAvatarUrl: responseNotExistence.data.children[i].awakeAvatarUrl,
+        bio: responseNotExistence.data.children[i].bio,
+        bioSummary: responseNotExistence.data.children[i].bioSummary,
+        bioSummaryTranslations: responseNotExistence.data.children[i].bio_summary_translations,
+        bioTranslations: responseNotExistence.data.children[i].bio_translations,
+        birthDate: responseNotExistence.data.children[i].birthDate,
+        birthPlace: responseNotExistence.data.children[i].birthPlace,
+        city: responseNotExistence.data.children[i].city,
+        confirmDate: responseNotExistence.data.children[i].confirmDate,
+        confirmUser: responseNotExistence.data.children[i].confirmUser,
+        country: responseNotExistence.data.children[i].country,
+        created: responseNotExistence.data.children[i].created,
+        doneNeedsCount: responseNotExistence.data.children[i].done_needs_count,
+        education: responseNotExistence.data.children[i].education,
+        existenceStatus: responseNotExistence.data.children[i].existence_status,
+        familyCount: responseNotExistence.data.children[i].familyCount,
+        generatedCode: responseNotExistence.data.children[i].generatedCode,
+        housingStatus: responseNotExistence.data.children[i].housingStatus,
+        ngoId: responseNotExistence.data.children[i].id_ngo,
+        idSocialWorker: responseNotExistence.data.children[i].id_social_worker,
+        isConfirmed: responseNotExistence.data.children[i].isConfirmed,
+        isDeleted: responseNotExistence.data.children[i].isDeleted,
+        isMigrated: responseNotExistence.data.children[i].isMigrated,
+        isGone: responseNotExistence.data.children[i].is_gone,
+        migrateDate: responseNotExistence.data.children[i].migrateDate,
+        migratedId: responseNotExistence.data.children[i].migratedId,
+        nationality: responseNotExistence.data.children[i].nationality,
+        sayFamilyCount: responseNotExistence.data.children[i].sayFamilyCount,
+        sayName: responseNotExistence.data.children[i].sayName,
+        sayNameTranslations: responseNotExistence.data.children[i].sayNameTranslations,
+        sleptAvatarUrl: responseNotExistence.data.children[i].sleptAvatarUrl,
+        status: responseNotExistence.data.children[i].status,
+        updated: responseNotExistence.data.children[i].updated,
+        voiceUrl: responseNotExistence.data.children[i].voiceUrl,
+      };
+      childList.push(child);
+    }
+
     for (let i = 0; i < response.data.children.length; i++) {
       child = {
         childId: response.data.children[i].id,
@@ -157,8 +211,6 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
     }
 
     const needRequest = {
-      totalCount: data.totalCount,
-      totalChildCount: response.data.totalCount,
       needData: needList,
       childData: childList,
     };
@@ -172,7 +224,95 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
   } catch (e) {
     dispatch({
       type: UPDATE_SERVER_FAIL,
-      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+    });
+  }
+};
+
+export const updateOneNeedNestServer = (values) => async (dispatch) => {
+  console.log(values);
+  let responseNeed;
+  try {
+    dispatch({ type: GET_ONE_SERVER_REQUEST });
+    responseNeed = await daoApi.get(`needs/needId=${values.id}`);
+    dispatch({
+      type: GET_ONE_SERVER_SUCCESS,
+      payload: responseNeed.data,
+    });
+    if (!responseNeed.data) {
+      dispatch({ type: UPDATE_ONE_SERVER_REQUEST });
+      const need = {
+        needId: values.id,
+        title: values.name,
+        affiliateLinkUrl: values.affiliateLinkUrl,
+        bankTrackId: values.bank_track_id,
+        category: values.category,
+        childGeneratedCode: values.childGeneratedCode,
+        childSayName: values.childSayName,
+        childDeliveryDate: values.child_delivery_date,
+        childId: values.child_id,
+        confirmDate: values.confirmDate,
+        confirmUser: values.confirmUser,
+        cost: values.cost,
+        created: values.created,
+        createdById: values.created_by_id,
+        deletedAt: values.deleted_at,
+        description: values.description,
+        descriptionTranslations: values.description_translations, // { en: '' , fa: ''}
+        titleTranslations: values.name_translations, // { en: '' , fa: ''}
+        details: values.details,
+        doingDuration: values.doing_duration,
+        donated: values.donated,
+        doneAt: values.doneAt,
+        expectedDeliveryDate: values.expected_delivery_date,
+        information: values.information,
+        isConfirmed: values.isConfirmed,
+        isDeleted: values.isDeleted,
+        isDone: values.isDone,
+        isReported: values.isReported,
+        isUrgent: values.isUrgent,
+        ngoId: values.ngoId,
+        ngoAddress: values.ngoAddress,
+        ngoName: values.ngoName,
+        ngoDeliveryDate: values.ngo_delivery_date,
+        oncePurchased: values.oncePurchased,
+        paid: values.paid,
+        purchaseCost: values.purchase_cost,
+        purchaseDate: values.purchase_date,
+        receiptCount: values.receipt_count,
+        receipts: values.receipts,
+        status: values.status,
+        statusDescription: values.status_description,
+        statusUpdatedAt: values.status_updated_at,
+        type: values.type,
+        typeName: values.type_name,
+        unavailableFrom: values.unavailable_from,
+        unconfirmedAt: values.unconfirmed_at,
+        unpaidCost: values.unpaid_cost,
+        unpayable: values.unpayable,
+        unpayableFrom: values.unpayable_from,
+        updated: values.updated,
+        payments: values.payments, // []
+        imageUrl: values.imageUrl,
+        needRetailerImg: values.img,
+      };
+      const needRequest = {
+        needData: [need],
+        childData: [],
+      };
+      console.log(needRequest);
+      responseNeed = await daoApi.post(`needs/add`, needRequest); // create
+      dispatch({
+        type: UPDATE_ONE_SERVER_SUCCESS,
+        payload: responseNeed.data,
+      });
+    }
+  } catch (e) {
+    dispatch({
+      type: UPDATE_ONE_SERVER_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });
   }
 };
@@ -182,19 +322,20 @@ export const fetchNestNeeds = () => async (dispatch) => {
     dispatch({ type: GET_SERVER_NEEDS_REQUEST });
 
     const responseNeed = await daoApi.get(`/needs/all`);
+    const { data } = await daoApi.get(`/needs/all/done`);
 
     dispatch({
       type: GET_SERVER_NEEDS_SUCCESS,
-      payload: { needs: responseNeed.data },
+      payload: { needs: responseNeed.data, totalDone: data },
     });
   } catch (e) {
     dispatch({
       type: GET_SERVER_NEEDS_FAIL,
-      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });
   }
 };
-
 
 export const fetchNestUsers = () => async (dispatch) => {
   try {
@@ -209,7 +350,8 @@ export const fetchNestUsers = () => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: GET_SERVER_USERS_FAIL,
-      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });
   }
 };
@@ -227,7 +369,8 @@ export const fetchNestChildren = () => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: GET_SERVER_CHILDREN_FAIL,
-      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });
   }
 };
@@ -243,7 +386,7 @@ export const getMileStones = () => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: GET_MILESTONES_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -268,7 +411,7 @@ export const createMileStone = (localData) => async (dispatch) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CREATE_MILESTONE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -292,7 +435,8 @@ export const connectWallet = () => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: WALLET_CONNECT_FAIL,
-      payload: e.response && e.response.data.detail ? e.response.data.detail : e.message,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });
   }
 };
@@ -320,7 +464,7 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: FAMILY_NETWORK_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -365,7 +509,7 @@ export const signTransaction = (needId, userId) => async (dispatch) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: SIGNATURE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };

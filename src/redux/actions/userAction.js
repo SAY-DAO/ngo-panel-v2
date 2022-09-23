@@ -57,7 +57,7 @@ export const register = (userName, password, theKey, value, otp) => async (dispa
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: USER_REGISTER_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -84,7 +84,7 @@ export const login = (userName, password) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: USER_LOGIN_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -122,7 +122,7 @@ export const forgotPassword = (theKey, value) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: USER_FORGOT_PASSWORD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -153,7 +153,7 @@ export const resetPassword = (password) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: USER_RESET_PASSWORD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -203,7 +203,7 @@ export const userEditProfile =
     } catch (e) {
       dispatch({
         type: USER_UPDATE_PROFILE_FAIL,
-        payload: e.response && e.response.status ? e.response : e.message,
+        payload: e.response && e.response.status ? e.response : e.response.data.message,
       });
     }
   };

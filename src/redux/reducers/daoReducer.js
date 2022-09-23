@@ -24,6 +24,11 @@ import {
   GET_SERVER_USERS_REQUEST,
   GET_SERVER_USERS_SUCCESS,
   GET_SERVER_USERS_FAIL,
+  GET_ONE_SERVER_REQUEST,
+  GET_ONE_SERVER_SUCCESS,
+  UPDATE_ONE_SERVER_REQUEST,
+  UPDATE_ONE_SERVER_SUCCESS,
+  UPDATE_ONE_SERVER_FAIL,
 } from '../constants/daoConstants';
 
 export const serverReducer = (state = {}, action) => {
@@ -53,6 +58,22 @@ export const serverReducer = (state = {}, action) => {
     case UPDATE_SERVER_SUCCESS:
       return { loading: false, success: true, updated: action.payload };
     case UPDATE_SERVER_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+export const serverOneNeedReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_ONE_SERVER_REQUEST:
+      return { ...state, loading: true, success: false };
+    case GET_ONE_SERVER_SUCCESS:
+      return { ...state, loading: false, success: true, oneNeed: action.payload };
+    case UPDATE_ONE_SERVER_REQUEST:
+      return { ...state, loading: true, success: false };
+    case UPDATE_ONE_SERVER_SUCCESS:
+      return { ...state, loading: false, success: true, oneNeed: action.payload };
+    case UPDATE_ONE_SERVER_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

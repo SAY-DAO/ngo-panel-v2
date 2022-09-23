@@ -43,7 +43,7 @@ export const fetchMyChildById = (childId) => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -70,7 +70,7 @@ export const fetchChildList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: CHILD_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -100,7 +100,7 @@ export const fetchChildrenByNgo =
     } catch (e) {
       dispatch({
         type: CHILDREN_BY_NGO_FAIL,
-        payload: e.response && e.response.status ? e.response : e.message,
+        payload: e.response && e.response.status ? e.response : e.response.data.message,
       });
     }
   };
@@ -127,7 +127,7 @@ export const updateChildIsActive = (id, status) => async (dispatch, getState) =>
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_IS_ACTIVE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -185,7 +185,7 @@ export const updateChild = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -242,7 +242,7 @@ export const AddChild = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_CHILD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };

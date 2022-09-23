@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -43,7 +44,7 @@ import { fetchNgoList } from '../../redux/actions/ngoAction';
 import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
-import { signTransaction } from '../../redux/actions/dao/DaoAction';
+import { signTransaction, updateOneNeedNestServer } from '../../redux/actions/dao/DaoAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -316,6 +317,9 @@ const ReportStatusTable = () => {
   const allNeeds = useSelector((state) => state.allNeeds);
   const { needs, loading: loadingAllNeeds } = allNeeds;
 
+  const serverOneNeed = useSelector((state) => state.serverOneNeed);
+  const { oneNeed, loading: loadingOneNeed } = serverOneNeed;
+
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
@@ -447,8 +451,15 @@ const ReportStatusTable = () => {
       }
     }, [accOpen]);
 
+    // useEffect(() => {
+    //   if (successReceiptList) {
+    //     dispatch(updateOneNeedNestServer(row));
+    //   }
+    // }, [successReceiptList]);
+
     const signReport = () => {
       dispatch(signTransaction(row.id, swInfo.id));
+      console.log(oneNeed);
     };
 
     return (
@@ -711,6 +722,7 @@ const ReportStatusTable = () => {
                       <TableCell component="th" scope="row" />
                       <TableCell component="th" scope="row">
                         <LoadingButton
+                          loading={loadingOneNeed}
                           onClick={() => signReport()}
                           disabled={
                             (typeId === 1 && statusId !== 5) || (typeId === 0 && statusId !== 4)

@@ -33,7 +33,7 @@ export const fetchCountryList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: COUNTRY_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -60,7 +60,7 @@ export const fetchStateList = (countryId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: STATE_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -87,7 +87,7 @@ export const fetchCityList = (stateId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: CITY_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };

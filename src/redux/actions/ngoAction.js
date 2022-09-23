@@ -39,7 +39,7 @@ export const fetchNgoById = (id) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: NGO_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -66,7 +66,7 @@ export const fetchNgoList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: NGO_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -93,7 +93,7 @@ export const updateNgoIsActive = (id, status) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NGO_IS_ACTIVE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -151,7 +151,7 @@ export const updateNgo = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NGO_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
@@ -204,9 +204,10 @@ export const AddNgo = (values) => async (dispatch, getState) => {
       payload: data,
     });
   } catch (e) {
+    console.log(e);
     dispatch({
       type: ADD_NGO_FAIL,
-      payload: e.response && e.response.status ? e.response : e.message,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
 };
