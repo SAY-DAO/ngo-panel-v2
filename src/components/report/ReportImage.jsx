@@ -15,6 +15,9 @@ import {
   Button,
   DialogContent,
   Dialog,
+  TextField,
+  TextareaAutosize,
+  Typography,
 } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +27,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { addReceiptToNeed, fetchNeedReceipts } from '../../redux/actions/reportAction';
 import UploadImage from '../UploadImage';
 import DeleteDialog from '../Dialogs/DeleteDialog';
+import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 
 export default function ReportImage({ row, statusId }) {
   const location = useLocation();
@@ -37,6 +41,10 @@ export default function ReportImage({ row, statusId }) {
   const [dialogValues, setDialogValues] = useState();
   const [openDelete, setOpenDelete] = useState(false);
 
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [code, setCode] = useState('');
+
   const receiptList = useSelector((state) => state.receiptList);
   const { receipts, loading: loadingReceiptList } = receiptList;
 
@@ -47,15 +55,14 @@ export default function ReportImage({ row, statusId }) {
   const { success: successDelete } = receiptDelete;
 
   useEffect(() => {
-    console.log(statusId);
-    if (finalImageFile) {
+    if (finalImageFile && title) {
       dispatch(
         addReceiptToNeed({
           needId: row.id,
-          code: 1,
-          title: 'test',
+          title,
+          code,
           needStatus: statusId,
-          description: 'tests',
+          description,
           attachment: finalImageFile,
         }),
       );
@@ -136,12 +143,23 @@ export default function ReportImage({ row, statusId }) {
                       <Tooltip
                         arrow
                         title={
-                          <CardMedia
-                            component="img"
-                            image={receipt.attachment}
-                            alt="large"
-                            sx={{ width: '100%' }}
-                          />
+                          <>
+                            <Typography variant="subtitle1">
+                              {receipt.code && receipt.code}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                              {receipt.title && receipt.title}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                              {receipt.description && receipt.description}
+                            </Typography>
+                            <CardMedia
+                              component="img"
+                              image={receipt.attachment}
+                              alt="large"
+                              sx={{ width: '100%' }}
+                            />
+                          </>
                         }
                         placement="left"
                       >
@@ -184,6 +202,42 @@ export default function ReportImage({ row, statusId }) {
       >
         <DialogContent>
           <Box>
+            <Grid container>
+              <CustomFormLabel htmlFor="title">{t('report.receipt.code')}</CustomFormLabel>
+              <TextField
+                id="code"
+                variant="outlined"
+                fullWidth
+                size="small"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+              <CustomFormLabel htmlFor="title">{t('report.receipt.title')}</CustomFormLabel>
+              <TextField
+                required
+                id="title"
+                variant="outlined"
+                fullWidth
+                size="small"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <CustomFormLabel htmlFor="description">
+                {t('report.receipt.description')}
+              </CustomFormLabel>
+              <TextareaAutosize
+                aria-label="minimum height"
+                minRows={5}
+                id="description"
+                variant="outlined"
+                size="small"
+                sx={{ mb: 1 }}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                style={{ width: '100%', background: 'transparent' }}
+              />
+            </Grid>
+
             <UploadImage
               uploadImage={uploadImage}
               handleImageClose={handleImageClose}

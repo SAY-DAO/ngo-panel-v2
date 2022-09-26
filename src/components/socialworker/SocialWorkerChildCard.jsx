@@ -1,18 +1,14 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Card, Avatar, Badge, Divider, IconButton, Grid } from '@mui/material';
+import { Box, Typography, Card, Avatar, Badge, Divider, IconButton } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import MigrateDialog from '../Dialogs/MigrateDialog';
-import { MIGRATE_ONE_CHILD_RESET } from '../../redux/constants/socialWorkerConstants';
-import Message from '../Message';
 
 const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const swOneMigrate = useSelector((state) => state.swOneMigrate);

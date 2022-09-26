@@ -34,7 +34,7 @@ import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
-import { AddNgo } from '../../redux/actions/ngoAction';
+import { addNgo } from '../../redux/actions/ngoAction';
 
 const BCrumb = [
   {
@@ -106,7 +106,7 @@ const Children = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      AddNgo({
+      addNgo({
         name: data.name,
         website: data.website,
         emailAddress: data.emailAddress,

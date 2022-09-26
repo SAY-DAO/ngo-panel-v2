@@ -34,7 +34,7 @@ import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
-import { AddNgo } from '../../redux/actions/ngoAction';
+import { addNgo } from '../../redux/actions/ngoAction';
 
 const BCrumb = [
   {
@@ -63,7 +63,7 @@ const NgoAdd = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Please enter your first name'),
-    country: Yup.string().required('Please enter your country'),
+    country: Yup.string().required('Please enter Ngo country'),
     phoneNumber: Yup.string().required('Please enter your phone number'),
     postalAddress: Yup.string().required('Please enter your postalAddress'),
     emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
@@ -105,14 +105,16 @@ const NgoAdd = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
+    console.log('values');
+
     dispatch(
-      AddNgo({
+      addNgo({
         name: data.name,
         website: data.website,
         emailAddress: data.emailAddress,
         country: data.country,
-        // state: data.state,
-        // city: data.city,
+        state: data.state,
+        city: data.city,
         phoneNumber: data.phoneNumber,
         postalAddress: data.postalAddress,
         logoUrl: finalImageFile,
@@ -348,6 +350,7 @@ const NgoAdd = () => {
                     fullWidth
                     control={control}
                     register={{ ...register('postalAddress') }}
+                    error={!!errors.postalAddress}
                   />
                   <CustomFormLabel htmlFor="phoneNumber">{t('ngo.phoneNumber')}</CustomFormLabel>
                   <TextField

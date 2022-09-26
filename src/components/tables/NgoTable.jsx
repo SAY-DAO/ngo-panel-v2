@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -33,6 +34,7 @@ import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
+import { deleteNgo } from '../../redux/actions/ngoAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -206,7 +208,13 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const dispatch = useDispatch();
+  const { numSelected, selected } = props;
+
+  const handleDelete = () => {
+    console.log(selected);
+    dispatch(deleteNgo(selected[0]));
+  };
 
   return (
     <Toolbar
@@ -231,7 +239,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={handleDelete}>
             <FeatherIcon icon="trash-2" width="18" />
           </IconButton>
         </Tooltip>
@@ -248,6 +256,7 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  selected: PropTypes.array.isRequired,
 };
 
 const BCrumb = [
@@ -264,7 +273,6 @@ const NgoTable = ({ ngoList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log(ngoList);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
@@ -280,31 +288,30 @@ const NgoTable = ({ ngoList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = ngoList.map((n) => n.firstName);
+      const newSelecteds = ngoList.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, firstName) => {
-    const selectedIndex = selected.indexOf(firstName);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, firstName);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
+  const handleClick = (event, id) => {
+    // const selectedIndex = selected.indexOf(id);
+    const newSelected = [];
+    // setSelected(selectedIndex);
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, id);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1),
+    //   );
+    // }
+    setSelected([id]);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -324,7 +331,8 @@ const NgoTable = ({ ngoList }) => {
     dispatch({ type: NGO_BY_ID_RESET });
     navigate(`/ngo/edit/${row.id}`);
   };
-  const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
+
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
@@ -337,7 +345,7 @@ const NgoTable = ({ ngoList }) => {
         <CardContent>
           <Box>
             <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar numSelected={selected.length} selected={selected} />
               <TableContainer>
                 <Table
                   sx={{ minWidth: 750 }}
@@ -356,13 +364,13 @@ const NgoTable = ({ ngoList }) => {
                     {stableSort(ngoList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
-                        const isItemSelected = isSelected(row.firstName);
+                        const isItemSelected = isSelected(row.id);
                         const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
                           <TableRow
                             hover
-                            onClick={(event) => handleClick(event, row.firstName)}
+                            onClick={(event) => handleClick(event, row.id)}
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}

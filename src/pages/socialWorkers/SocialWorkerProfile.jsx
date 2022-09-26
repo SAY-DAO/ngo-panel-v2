@@ -1,11 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
 import { Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import CoverCard from '../../components/profile/CoverCard';
-import IntroCard from '../../components/profile/IntroCard';
 import PhotosCard from '../../components/profile/PhotosCard';
 import NewPost from '../../components/profile/NewPost';
 import ImgPost from '../../components/profile/ImgPost';
@@ -28,9 +26,6 @@ const SocialWorkerProfile = () => {
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
-
-  const swNeedList = useSelector((state) => state.swNeedList);
-  const { needs, loading: loadingNeedList, success: successNeedList } = swNeedList;
 
   const childAll = useSelector((state) => state.childAll);
   const { myChildren } = childAll;

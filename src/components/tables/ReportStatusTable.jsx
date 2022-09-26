@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -26,6 +25,8 @@ import {
   Autocomplete,
   TextField,
   Avatar,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,7 +45,7 @@ import { fetchNgoList } from '../../redux/actions/ngoAction';
 import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
-import { signTransaction, updateOneNeedNestServer } from '../../redux/actions/dao/DaoAction';
+import { signTransaction } from '../../redux/actions/dao/DaoAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -310,6 +311,7 @@ const ReportStatusTable = () => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [toastOpen, setToastOpen] = React.useState(false);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -318,7 +320,7 @@ const ReportStatusTable = () => {
   const { needs, loading: loadingAllNeeds } = allNeeds;
 
   const serverOneNeed = useSelector((state) => state.serverOneNeed);
-  const { oneNeed, loading: loadingOneNeed } = serverOneNeed;
+  const { loading: loadingOneNeed, error: errorOneNeed } = serverOneNeed;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
@@ -407,6 +409,20 @@ const ReportStatusTable = () => {
     }
   }, [ngoId, typeId, statusId, swInfo, successNgoList]);
 
+  // toast
+  useEffect(() => {
+    if (errorOneNeed) {
+      setToastOpen(true);
+    }
+  }, [errorOneNeed]);
+
+  const handleCloseToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setToastOpen(false);
+  };
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = needs.needs.map((n) => n.id);
@@ -451,15 +467,8 @@ const ReportStatusTable = () => {
       }
     }, [accOpen]);
 
-    // useEffect(() => {
-    //   if (successReceiptList) {
-    //     dispatch(updateOneNeedNestServer(row));
-    //   }
-    // }, [successReceiptList]);
-
     const signReport = () => {
-      dispatch(signTransaction(row.id, swInfo.id));
-      console.log(oneNeed);
+      dispatch(signTransaction(row));
     };
 
     return (
@@ -681,9 +690,7 @@ const ReportStatusTable = () => {
                         {typeId === 0 &&
                           statusId > 2 &&
                           row.bank_track_id &&
-                          parseInt(convertor(row.bank_track_id), 10)
-                            .toLocaleString('en-US')
-                            .replace(/,/g, '-')}
+                          parseInt(convertor(row.bank_track_id), 10)}
                       </TableCell>
                     </TableRow>
                     {/* 4 Product delivered to NGO - service delivery to child */}
@@ -695,8 +702,10 @@ const ReportStatusTable = () => {
                         {typeId === 1 ? row.ngo_delivery_date : row.child_delivery_date}
                       </TableCell>
                       <TableCell align="right">
-                        {((typeId === 1 && statusId > 3) || (typeId === 0 && statusId > 3)) && (
+                        {typeId === 0 && statusId === 4 ? (
                           <ReportImage row={row} statusId={statusId} />
+                        ) : (
+                          '-'
                         )}
                       </TableCell>
                     </TableRow>
@@ -749,6 +758,7 @@ const ReportStatusTable = () => {
   Row.propTypes = {
     row: PropTypes.shape({
       id: PropTypes.number,
+      child_id: PropTypes.number,
       childSayName: PropTypes.string,
       name: PropTypes.string,
       title: PropTypes.string,
@@ -909,6 +919,13 @@ const ReportStatusTable = () => {
           </Card>
         )
       )}
+      <Stack spacing={2} sx={{ width: '100%' }}>
+        <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
+          <Alert onClose={handleCloseToast} severity="error" sx={{ width: '100%' }}>
+            {errorOneNeed}
+          </Alert>
+        </Snackbar>
+      </Stack>
     </PageContainer>
   );
 };

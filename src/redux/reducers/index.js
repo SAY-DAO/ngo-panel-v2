@@ -4,6 +4,7 @@ import CustomizerReducer from './customizerReducer';
 import {
   ngoAddReducer,
   ngoByIdReducer,
+  ngoDeleteReducer,
   ngoListReducer,
   ngoUpdateIsActiveReducer,
   ngoUpdateReducer,
@@ -61,6 +62,7 @@ export default combineReducers({
   ngoAll: ngoListReducer,
   ngoUpdate: ngoUpdateReducer,
   ngoAdd: ngoAddReducer,
+  ngoDelete: ngoDeleteReducer,
   allNeeds: allNeedsReducer,
   childExampleNeeds: exampleNeedsReducer,
   childNeeds: childNeedsReducer,

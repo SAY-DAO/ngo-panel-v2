@@ -3,6 +3,9 @@ import {
   ADD_NGO_FAIL,
   ADD_NGO_REQUEST,
   ADD_NGO_SUCCESS,
+  DELETE_NGO_FAIL,
+  DELETE_NGO_REQUEST,
+  DELETE_NGO_SUCCESS,
   NGO_BY_ID_FAIL,
   NGO_BY_ID_REQUEST,
   NGO_BY_ID_SUCCESS,
@@ -156,8 +159,11 @@ export const updateNgo = (values) => async (dispatch, getState) => {
   }
 };
 
-export const AddNgo = (values) => async (dispatch, getState) => {
+export const addNgo = (values) => async (dispatch, getState) => {
   try {
+    console.log(values);
+    console.log('values');
+
     dispatch({ type: ADD_NGO_REQUEST });
     const {
       userLogin: { userInfo },
@@ -171,18 +177,17 @@ export const AddNgo = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
-
-    if (values.lastName) {
+    if (values.name) {
       formData.set('name', values.name);
     }
-    if (values.email) {
+    if (values.emailAddress) {
       formData.set('emailAddress', values.emailAddress);
     }
     if (values.country) {
       formData.set('country', values.country);
     }
     if (values.city) {
-      formData.set('city', values.city);
+      formData.set('cityId', values.city);
     }
     if (values.phoneNumber) {
       formData.set('phoneNumber', values.phoneNumber);
@@ -207,6 +212,33 @@ export const AddNgo = (values) => async (dispatch, getState) => {
     console.log(e);
     dispatch({
       type: ADD_NGO_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const deleteNgo = (ngoId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_NGO_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const { data } = await publicApi.patch(`/ngo/delete/ngoId=${ngoId}`,{}, config);
+    dispatch({
+      type: DELETE_NGO_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_NGO_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }

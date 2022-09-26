@@ -14,9 +14,12 @@ const NgoList = () => {
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading, success } = ngoAll;
 
+  const ngoDelete = useSelector((state) => state.ngoDelete);
+  const { success: successDelete } = ngoDelete;
+
   useEffect(() => {
     dispatch(fetchNgoList());
-  }, [dispatch]);
+  }, [dispatch, successDelete]);
 
   return (
     <>
