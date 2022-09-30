@@ -587,6 +587,7 @@
     "isActive": "Status",
     "update": "Edit",
     "titleEdit": "Edit Details",
+    "titleAdd": "Add Details",
     "childrenCount": "Children Count",
     "country": "Country",
     "state": "State",
@@ -604,7 +605,8 @@
     "updated": "Updated",
     "website": "website",
     "button": {
-      "update": "Update"
+      "update": "Update",
+      "add": "Add NGO"
     },
     "cities": {
       "one": "Tehran"
@@ -682,6 +684,28 @@
       "signature": "Signature",
       "sign": "Sign",
       "pending": "Not Delivered yet"
+    }
+  },
+  "provider": {
+    "update": "Edit",
+    "titleEdit": "Edit Details",
+    "titleAdd": "Add Details",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "description": "Description",
+    "emailAddress": "Email",
+    "name": "Name",
+    "website": "website",
+    "button": {
+      "update": "Update",
+      "add": "Add Provider"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
     }
   },
   "dao": {

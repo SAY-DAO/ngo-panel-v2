@@ -7,6 +7,7 @@ import HubIcon from '@mui/icons-material/Hub';
 import RouteIcon from '@mui/icons-material/Route';
 import React from 'react';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 const Menuitems = [
   {
@@ -100,9 +101,27 @@ const Menuitems = [
     ],
   },
   {
+    title: 'Providers',
+    icon: <StorefrontIcon />,
+    href: '/provider',
+    collapse: true,
+    children: [
+      {
+        title: 'List',
+        icon: 'list',
+        href: '/provider/list',
+      },
+      {
+        title: 'Add',
+        icon: 'plus',
+        href: '/provider/add',
+      },
+    ],
+  },
+  {
     title: 'Social Workers',
     icon: 'users',
-    href: '/sws',
+    href: '/sw',
     collapse: true,
     children: [
       {

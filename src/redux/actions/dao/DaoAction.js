@@ -217,7 +217,7 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
     };
     console.log(needRequest);
 
-    const nestResponse = await daoApi.post(`/sync/update`, needRequest);
+    const nestResponse = await daoApi.post(`/sync/update/multi`, needRequest);
     dispatch({
       type: UPDATE_SERVER_SUCCESS,
       payload: nestResponse,
@@ -231,86 +231,82 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
   }
 };
 
-export const updateOneNeedNestServer = (need) => async (dispatch) => {
-  let responseNeed;
-  console.log(need.id);
+export const updateOneNeedNestServer = (need) => async (dispatch, getState) => {
   try {
-    dispatch({ type: GET_ONE_SERVER_REQUEST });
-    responseNeed = await daoApi.get(`/needs/flaskNeedId=${need.id}`);
+    dispatch({ type: UPDATE_ONE_SERVER_REQUEST });
+    const {
+      receiptList: { receipts },
+    } = getState();
+
+    const theNeed = {
+      needId: need.id,
+      title: need.name,
+      affiliateLinkUrl: need.affiliateLinkUrl,
+      bankTrackId: need.bank_track_id,
+      category: need.category,
+      childGeneratedCode: need.childGeneratedCode,
+      childSayName: need.childSayName,
+      childDeliveryDate: need.child_delivery_date,
+      childId: need.child_id,
+      confirmDate: need.confirmDate,
+      confirmUser: need.confirmUser,
+      cost: need.cost,
+      created: need.created,
+      createdById: need.created_by_id,
+      deletedAt: need.deleted_at,
+      description: need.description,
+      descriptionTranslations: need.description_translations, // { en: '' , fa: ''}
+      titleTranslations: need.name_translations, // { en: '' , fa: ''}
+      details: need.details,
+      doingDuration: need.doing_duration,
+      donated: need.donated,
+      doneAt: need.doneAt,
+      expectedDeliveryDate: need.expected_delivery_date,
+      information: need.information,
+      isConfirmed: need.isConfirmed,
+      isDeleted: need.isDeleted,
+      isDone: need.isDone,
+      isReported: need.isReported,
+      isUrgent: need.isUrgent,
+      ngoId: need.ngoId,
+      ngoAddress: need.ngoAddress,
+      ngoName: need.ngoName,
+      ngoDeliveryDate: need.ngo_delivery_date,
+      oncePurchased: need.oncePurchased,
+      paid: need.paid,
+      purchaseCost: need.purchase_cost,
+      purchaseDate: need.purchase_date,
+      receiptCount: need.receipt_count,
+      receipts, // when accordion opens we request receipts
+      status: need.status,
+      statusDescription: need.status_description,
+      statusUpdatedAt: need.status_updated_at,
+      type: need.type,
+      typeName: need.type_name,
+      unavailableFrom: need.unavailable_from,
+      unconfirmedAt: need.unconfirmed_at,
+      unpaidCost: need.unpaid_cost,
+      unpayable: need.unpayable,
+      unpayableFrom: need.unpayable_from,
+      updated: need.updated,
+      payments: need.payments,
+      imageUrl: need.imageUrl,
+      needRetailerImg: need.img,
+    };
+    const needRequest = {
+      needData: [theNeed],
+      childData: [],
+    };
+    console.log('needRequest');
+    console.log(needRequest);
+    const responseNeed = await daoApi.post(`/sync/update/one`, theNeed); // create
+    console.log('responseNeed');
+    console.log(responseNeed);
+
     dispatch({
-      type: GET_ONE_SERVER_SUCCESS,
+      type: UPDATE_ONE_SERVER_SUCCESS,
       payload: responseNeed.data,
     });
-    if (!responseNeed.data) {
-      dispatch({ type: UPDATE_ONE_SERVER_REQUEST });
-      console.log('need');
-      console.log(responseNeed);
-      const theNeed = {
-        needId: need.id,
-        title: need.name,
-        affiliateLinkUrl: need.affiliateLinkUrl,
-        bankTrackId: need.bank_track_id,
-        category: need.category,
-        childGeneratedCode: need.childGeneratedCode,
-        childSayName: need.childSayName,
-        childDeliveryDate: need.child_delivery_date,
-        childId: need.child_id,
-        confirmDate: need.confirmDate,
-        confirmUser: need.confirmUser,
-        cost: need.cost,
-        created: need.created,
-        createdById: need.created_by_id,
-        deletedAt: need.deleted_at,
-        description: need.description,
-        descriptionTranslations: need.description_translations, // { en: '' , fa: ''}
-        titleTranslations: need.name_translations, // { en: '' , fa: ''}
-        details: need.details,
-        doingDuration: need.doing_duration,
-        donated: need.donated,
-        doneAt: need.doneAt,
-        expectedDeliveryDate: need.expected_delivery_date,
-        information: need.information,
-        isConfirmed: need.isConfirmed,
-        isDeleted: need.isDeleted,
-        isDone: need.isDone,
-        isReported: need.isReported,
-        isUrgent: need.isUrgent,
-        ngoId: need.ngoId,
-        ngoAddress: need.ngoAddress,
-        ngoName: need.ngoName,
-        ngoDeliveryDate: need.ngo_delivery_date,
-        oncePurchased: need.oncePurchased,
-        paid: need.paid,
-        purchaseCost: need.purchase_cost,
-        purchaseDate: need.purchase_date,
-        receiptCount: need.receipt_count,
-        receipts: need.receipts,
-        status: need.status,
-        statusDescription: need.status_description,
-        statusUpdatedAt: need.status_updated_at,
-        type: need.type,
-        typeName: need.type_name,
-        unavailableFrom: need.unavailable_from,
-        unconfirmedAt: need.unconfirmed_at,
-        unpaidCost: need.unpaid_cost,
-        unpayable: need.unpayable,
-        unpayableFrom: need.unpayable_from,
-        updated: need.updated,
-        payments: need.payments, // []
-        imageUrl: need.imageUrl,
-        needRetailerImg: need.img,
-      };
-      const needRequest = {
-        needData: [theNeed],
-        childData: [],
-      };
-      console.log(needRequest);
-      responseNeed = await daoApi.post(`/needs/add`, theNeed); // create
-      dispatch({
-        type: UPDATE_ONE_SERVER_SUCCESS,
-        payload: responseNeed.data,
-      });
-    }
   } catch (e) {
     dispatch({
       type: UPDATE_ONE_SERVER_FAIL,
@@ -475,38 +471,52 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
 export const signTransaction = (need) => async (dispatch, getState) => {
   try {
     dispatch({ type: SIGNATURE_REQUEST });
+    // update server first
+    await dispatch(updateOneNeedNestServer(need));
+    console.log('here');
     const {
-      receiptList: { receipts },
+      serverOneNeed: { error },
     } = getState();
 
-    await dispatch(updateOneNeedNestServer(need));
-    // await window.ethereum.enable();
-    // // eslint-disable-next-line no-undef
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const signer = provider.getSigner();
-    // const signerAddress = await signer.getAddress();
-    // // console.log(need);
-    // const request = {
-    //   flaskSwId: need.swId,
-    //   flaskNeedId: need.needId,
-    //   flaskChildId: need.childId,
-    //   signerAddress,
-    //   receipts,
-    // };
+    if (error) {
+      dispatch({
+        type: SIGNATURE_FAIL,
+        payload: error,
+      });
+      return;
+    }
+    await window.ethereum.enable();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const signerAddress = await signer.getAddress();
+    const request = {
+      flaskSwId: need.created_by_id,
+      flaskNeedId: need.id,
+      flaskChildId: need.child_id,
+      signerAddress,
+    };
+    console.log('request');
+    console.log(request);
 
-    // const { data } = await daoApi.post(`/signature/sw/add`, request);
-    // // eslint-disable-next-line no-underscore-dangle
-    // const signature = await signer._signTypedData(
-    //   data.domain,
-    //   data.types,
-    //   data.SocialWorkerVoucher,
-    // );
+    const { data } = await daoApi.post(`/signature/sw/generate`, request);
+    console.log('data');
+    console.log(data);
+
+    // eslint-disable-next-line no-underscore-dangle
+    const signature = await signer._signTypedData(
+      data.domain,
+      data.types,
+      data.SocialWorkerVoucher,
+    );
+
+    await daoApi.post(`/needs/patch`, request);
+
     dispatch({
       type: SIGNATURE_SUCCESS,
-      // payload: { data, signature },
+      payload: { data, signature },
     });
   } catch (e) {
-    // check for generic and custom message to return using ternary statement
+    console.log(e);
     dispatch({
       type: SIGNATURE_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,

@@ -325,16 +325,17 @@ const ReportStatusTable = () => {
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
-  /*   ---- PAYMENT-----
+  /*   
+  ---- PAYMENT-----
   partial payment status = 1
   complete payment status = 2
 
-  ---- PRODUCT -----
+  ---- PRODUCT ---type = 1---
   complete purchase for product status = 3
   complete delivery for product to NGO status = 4
   complete delivery to child status = 5
 
-  ----- SERVICE -----
+  ----- SERVICE ---type = 0---
   complete money transfer to NGO for service status = 3
   complete delivery to child for service status = 4
  */
@@ -522,12 +523,12 @@ const ReportStatusTable = () => {
                 <Avatar
                   src={
                     row.status === 2 // Complete payment
-                      ? '/image/hand-orange.svg'
+                      ? '/images/hand-orange.svg'
                       : row.status === 3 && typeId === 1 // Purchased Product
-                      ? '/image/package-orange.svg'
+                      ? '/images/package-orange.svg'
                       : (row.status === 4 && typeId === 1) || (row.status === 3 && typeId === 0) // Sent product to NGO
-                      ? '/image/package-orange.svg'
-                      : '/image/child-orange.svg' // Delivered to Child
+                      ? '/images/package-orange.svg'
+                      : '/images/child-orange.svg' // Delivered to Child
                   }
                   alt="icon"
                   sx={{

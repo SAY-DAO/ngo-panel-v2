@@ -33,8 +33,8 @@ import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
-import { deleteNgo } from '../../redux/actions/ngoAction';
+import { PROVIDER_BY_ID_RESET } from '../../redux/constants/providerConstants';
+import { deleteProvider } from '../../redux/actions/providerAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -71,91 +71,45 @@ function EnhancedTableHead(props) {
   };
 
   const headCells = [
-    {
-      id: 'isActive',
-      numeric: false,
-      disablePadding: true,
-      label: t('ngo.isActive'),
-    },
+
     {
       id: 'update',
       numeric: false,
       disablePadding: true,
-      label: t('ngo.update'),
+      label: t('provider.update'),
     },
     {
       id: 'name',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.name'),
+      label: t('provider.name'),
     },
 
     {
-      id: 'phoneNumber',
+      id: 'website',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.phoneNumber'),
+      label: t('provider.website'),
     },
     {
       id: 'country',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.country'),
+      label: t('provider.country'),
     },
     {
       id: 'city',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.city'),
+      label: t('provider.city'),
     },
     {
-      id: 'childrenCount',
+      id: 'type',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.childrenCount'),
+      label: t('provider.type'),
     },
-    {
-      id: 'currentChildrenCount',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.currentChildrenCount'),
-    },
-    {
-      id: 'socialWorkerCount',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.socialWorkerCount'),
-    },
-    {
-      id: 'currentSocialWorkerCount',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.currentSocialWorkerCount'),
-    },
-    {
-      id: 'registerDate',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.registerDate'),
-    },
-    {
-      id: 'created',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.created'),
-    },
-    {
-      id: 'updated',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.updated'),
-    },
-    {
-      id: 'website',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.website'),
-    },
+
   ];
   return (
     <TableHead>
@@ -213,7 +167,7 @@ const EnhancedTableToolbar = (props) => {
 
   const handleDelete = () => {
     console.log(selected);
-    dispatch(deleteNgo(selected[0]));
+    dispatch(deleteProvider(selected[0]));
   };
 
   return (
@@ -265,11 +219,11 @@ const BCrumb = [
     title: 'Home',
   },
   {
-    title: 'NGOs Table',
+    title: 'Providers Table',
   },
 ];
 
-const NgoTable = ({ ngoList }) => {
+const ProviderTable = ({ providerList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -288,7 +242,7 @@ const NgoTable = ({ ngoList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = ngoList.map((n) => n.id);
+      const newSelecteds = providerList.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -328,16 +282,16 @@ const NgoTable = ({ ngoList }) => {
   };
 
   const handleEdit = (row) => {
-    dispatch({ type: NGO_BY_ID_RESET });
-    navigate(`/ngo/edit/${row.id}`);
+    dispatch({ type: PROVIDER_BY_ID_RESET });
+    navigate(`/provider/edit/${row.id}`);
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - providerList.length) : 0;
   return (
-    <PageContainer title="NGO Table" description="this is NGO page">
+    <PageContainer title="Provider Table" description="this is Provider page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
@@ -358,15 +312,14 @@ const NgoTable = ({ ngoList }) => {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={ngoList.length}
+                    rowCount={providerList.length}
                   />
                   <TableBody>
-                    {stableSort(ngoList, getComparator(order, orderBy))
+                    {stableSort(providerList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-
                         return (
                           <TableRow
                             hover
@@ -387,35 +340,10 @@ const NgoTable = ({ ngoList }) => {
                               />
                             </TableCell>
                             <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Box
-                                  sx={{
-                                    backgroundColor:
-                                      row.isActive === true
-                                        ? (theme) => theme.palette.success.main
-                                        : (theme) => theme.palette.error.main,
-                                    borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
-                                  }}
-                                />
-                                <Typography
-                                  color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
-                                  sx={{
-                                    ml: 1,
-                                  }}
-                                >
-                                  {row.status}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
                               <IconButton
                                 onClick={() => handleEdit(row)}
                                 color="primary"
-                                aria-label="update ngo"
+                                aria-label="update provider"
                               >
                                 <EditOutlinedIcon />
                               </IconButton>
@@ -424,7 +352,7 @@ const NgoTable = ({ ngoList }) => {
                               <Box display="flex" alignItems="center">
                                 <Avatar
                                   src={row.logoUrl}
-                                  alt="ngo logo"
+                                  alt="provider logo"
                                   width="35"
                                   sx={{
                                     borderRadius: '100%',
@@ -437,9 +365,6 @@ const NgoTable = ({ ngoList }) => {
                                 >
                                   <Typography variant="h6" fontWeight="600">
                                     {row.name}
-                                  </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                    {row.emailAddress}
                                   </Typography>
                                 </Box>
                               </Box>
@@ -458,7 +383,7 @@ const NgoTable = ({ ngoList }) => {
                                   whiteSpace: 'nowrap',
                                 }}
                               >
-                                {row.phoneNumber}
+                                {row.website}
                               </Typography>
                             </TableCell>
                             <TableCell>
@@ -469,43 +394,6 @@ const NgoTable = ({ ngoList }) => {
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.city.name}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.childrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.currentChildrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.socialWorkerCount}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.currentSocialWorkerCount}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.registerDate}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.created}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.updated}
-                              </Typography>
-                            </TableCell>
-
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.website && <Link href={row.website}>Link</Link>}
                               </Typography>
                             </TableCell>
                           </TableRow>
@@ -526,7 +414,7 @@ const NgoTable = ({ ngoList }) => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={ngoList.length}
+                count={providerList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -544,8 +432,8 @@ const NgoTable = ({ ngoList }) => {
   );
 };
 
-export default NgoTable;
+export default ProviderTable;
 
-NgoTable.propTypes = {
-  ngoList: PropTypes.array.isRequired,
+ProviderTable.propTypes = {
+  providerList: PropTypes.array.isRequired,
 };

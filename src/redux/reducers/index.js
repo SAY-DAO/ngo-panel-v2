@@ -43,6 +43,7 @@ import {
   serverReducer,
   signatureReducer,
 } from './daoReducer';
+import { providerAddReducer, providerByIdReducer, providerDeleteReducer, providerListReducer, providerUpdateIsActiveReducer, providerUpdateReducer } from './providerReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -57,12 +58,6 @@ export default combineReducers({
   swMigrate: swMigrateReducer,
   swOneMigrate: swMigrateOneReducer,
   swNeedList: swNeedListReducer,
-  ngoStatusUpdate: ngoUpdateIsActiveReducer,
-  ngoById: ngoByIdReducer,
-  ngoAll: ngoListReducer,
-  ngoUpdate: ngoUpdateReducer,
-  ngoAdd: ngoAddReducer,
-  ngoDelete: ngoDeleteReducer,
   allNeeds: allNeedsReducer,
   childExampleNeeds: exampleNeedsReducer,
   childNeeds: childNeedsReducer,
@@ -81,4 +76,16 @@ export default combineReducers({
   server: serverReducer,
   serverOneNeed: serverOneNeedReducer,
   signature: signatureReducer,
+  ngoStatusUpdate: ngoUpdateIsActiveReducer,
+  ngoById: ngoByIdReducer,
+  ngoAll: ngoListReducer,
+  ngoUpdate: ngoUpdateReducer,
+  ngoAdd: ngoAddReducer,
+  ngoDelete: ngoDeleteReducer,
+  providerStatusUpdate: providerUpdateIsActiveReducer,
+  providerById: providerByIdReducer,
+  providerAll: providerListReducer,
+  providerUpdate: providerUpdateReducer,
+  providerAdd: providerAddReducer,
+  providerDelete: providerDeleteReducer,
 });

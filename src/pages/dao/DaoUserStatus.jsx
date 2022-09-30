@@ -85,7 +85,7 @@ const DaoUserStatus = () => {
               }}
               gutterBottom
             >
-              Nest Server Needs
+              Nest Server Users
             </Typography>
             <Typography
               variant="h2"

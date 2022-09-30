@@ -135,7 +135,7 @@ export default function ReportImage({ row, statusId }) {
 
           {receipts &&
             receipts
-              .filter((receipt) => receipt.needStatus === statusId)
+              // .filter((receipt) => receipt.needStatus === statusId) // Some service needs does not have status id
               .map((receipt) => (
                 <PopupState key={receipt.id} variant="popover" popupId="demo-popup-menu">
                   {(popupState) => (

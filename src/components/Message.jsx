@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import Alert from '@mui/lab/Alert';
-import { Stack } from '@mui/material';
+import { Alert, Stack } from '@mui/material';
 import contents from '../inputsValidation/Contents';
 import '../i18n';
 

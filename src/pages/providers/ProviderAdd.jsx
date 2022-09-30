@@ -34,19 +34,19 @@ import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
-import { addNgo } from '../../redux/actions/ngoAction';
+import { addProvider } from '../../redux/actions/providerAction';
 
 const BCrumb = [
   {
-    to: '/ngo/list',
-    title: 'NGOs List',
+    to: '/provider/list',
+    title: 'Providers List',
   },
   {
     title: 'Add',
   },
 ];
 
-const NgoAdd = () => {
+const ProviderAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
@@ -55,18 +55,27 @@ const NgoAdd = () => {
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
 
-  const ngoAdd = useSelector((state) => state.ngoAdd);
-  const { success: successAddNgo, loading: loadingAddNgo, error: errorAddNgo } = ngoAdd;
+  const providerAdd = useSelector((state) => state.providerAdd);
+  const {
+    success: successAddProvider,
+    loading: loadingAddProvider,
+    error: errorAddProvider,
+  } = providerAdd;
 
   const countryList = useSelector((state) => state.countryList);
   const { countries, states, cities, success: successCountryList } = countryList;
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Please enter your first name'),
-    country: Yup.string().required('Please enter Ngo country'),
-    phoneNumber: Yup.string().required('Please enter your phone number'),
-    postalAddress: Yup.string().required('Please enter your postalAddress'),
-    emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
+    name: Yup.string().required('Please enter your provider name'),
+    country: Yup.string().required('Please enter Provider country'),
+    state: Yup.string().required('Please enter Provider state'),
+    city: Yup.string().required('Please enter Provider city'),
+    website: Yup.string()
+      .matches(
+        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+        'Enter correct url!',
+      )
+      .required('Please enter website'),
   });
   const {
     register,
@@ -89,7 +98,6 @@ const NgoAdd = () => {
   // state
   useEffect(() => {
     if (countries && watch('country')) {
-      console.log('watch');
       dispatch(fetchStateList(watch('country')));
     }
   }, [watch('country'), countries]);
@@ -105,18 +113,16 @@ const NgoAdd = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    console.log('values');
 
     dispatch(
-      addNgo({
+      addProvider({
         name: data.name,
         website: data.website,
-        emailAddress: data.emailAddress,
+        type: data.type,
         country: data.country,
         state: data.state,
         city: data.city,
-        phoneNumber: data.phoneNumber,
-        postalAddress: data.postalAddress,
+        description: data.description,
         logoUrl: finalImageFile,
       }),
     );
@@ -138,13 +144,11 @@ const NgoAdd = () => {
   };
 
   const handleRemoveImage = () => {
-    console.log('remove');
     setFinalImageFile();
   };
-  console.log(errorAddNgo);
 
   return (
-    <PageContainer title="NGO Add" description="this is NGO Add page">
+    <PageContainer title="Provider Add" description="this is Provider Add page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
@@ -154,7 +158,7 @@ const NgoAdd = () => {
         </Grid>
       ) : (
         <>
-          <Breadcrumb title="Add page" subtitle="NGO" />
+          <Breadcrumb title="Add page" subtitle="Provider" />
           <Grid container spacing={0}>
             <Grid item lg={4} md={12} xs={12}>
               <Card sx={{ p: 3, textAlign: 'center' }}>
@@ -188,7 +192,7 @@ const NgoAdd = () => {
                       }}
                     >
                       <Avatar
-                        alt="ngo logo"
+                        alt="provider logo"
                         sx={{ width: 110, height: 110 }}
                         src={
                           finalImageFile
@@ -234,10 +238,10 @@ const NgoAdd = () => {
             <Grid item lg={8} md={12} xs={12}>
               <Card sx={{ p: 3 }}>
                 <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                  {t('ngo.titleAdd')}
+                  {t('provider.titleAdd')}
                 </Typography>
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                  <CustomFormLabel htmlFor="name">{t('ngo.name')}</CustomFormLabel>
+                  <CustomFormLabel htmlFor="name"> {t('provider.name')}</CustomFormLabel>
                   <TextField
                     required
                     id="name"
@@ -248,21 +252,10 @@ const NgoAdd = () => {
                     {...register('name')}
                     error={!!errors.name}
                   />
-                  <CustomFormLabel htmlFor="Email">{t('ngo.emailAddress')}</CustomFormLabel>
-                  <TextField
-                    id="emailAddress"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    sx={{ mb: 1 }}
-                    control={control}
-                    {...register('emailAddress')}
-                    error={!!errors.emailAddress}
-                  />
                   <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                    {errors && errors.emailAddress && errors.emailAddress.message}
+                    {errors && errors.name && errors.name.message}
                   </FormHelperText>
-                  <CustomFormLabel htmlFor="Website">{t('ngo.website')}</CustomFormLabel>
+                  <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
                   <TextField
                     id="website"
                     variant="outlined"
@@ -273,7 +266,21 @@ const NgoAdd = () => {
                     {...register('website')}
                     error={!!errors.website}
                   />
-                  <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
+                  <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                    {errors && errors.website && errors.website.message}
+                  </FormHelperText>
+                  <CustomFormLabel htmlFor="type">{t('need.type_name')}</CustomFormLabel>
+                  <CustomSelect
+                    labelId="type-controlled-open-select-label"
+                    id="type-controlled-open-select"
+                    defaultValue={1}
+                    control={control}
+                    register={{ ...register('type') }}
+                  >
+                    <MenuItem value={0}>{t('need.types.service')}</MenuItem>
+                    <MenuItem value={1}>{t('need.types.product')}</MenuItem>
+                  </CustomSelect>
+                  <CustomFormLabel htmlFor="country">{t('provider.country')}</CustomFormLabel>
                   <CustomSelect
                     labelId="country-controlled-open-select-label"
                     id="country-controlled-open-select"
@@ -290,7 +297,7 @@ const NgoAdd = () => {
                   </CustomSelect>
                   {countries && states && (
                     <>
-                      <CustomFormLabel htmlFor="state">{t('ngo.state')}</CustomFormLabel>
+                      <CustomFormLabel htmlFor="state">{t('provider.state')}</CustomFormLabel>
                       <CustomSelect
                         labelId="state-controlled-open-select-label"
                         id="state-controlled-open-select"
@@ -308,7 +315,7 @@ const NgoAdd = () => {
                   )}
                   {countries && states && cities && (
                     <>
-                      <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
+                      <CustomFormLabel htmlFor="city">{t('provider.city')}</CustomFormLabel>
                       <CustomSelect
                         labelId="city-controlled-open-select-label"
                         id="city-controlled-open-select"
@@ -324,24 +331,11 @@ const NgoAdd = () => {
                       </CustomSelect>
                     </>
                   )}
-                  {/* <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
-                  <CustomSelect
-                 
-                  >
-                    {cities &&
-                      states &&
-                      states.map((city) => (
-                        <MenuItem key={city.id} value={city.id}>
-                          {city.name}
-                        </MenuItem>
-                      ))}
-                  </CustomSelect> */}
-
-                  <CustomFormLabel htmlFor="postalAddress">
-                    {t('ngo.postalAddress')}
+                  <CustomFormLabel htmlFor="description">
+                    {t('provider.description')}
                   </CustomFormLabel>
                   <CustomTextField
-                    id="postalAddress"
+                    id="description"
                     variant="outlined"
                     multiline
                     rows={4}
@@ -349,50 +343,39 @@ const NgoAdd = () => {
                     sx={{ mb: 2 }}
                     fullWidth
                     control={control}
-                    register={{ ...register('postalAddress') }}
+                    register={{ ...register('description') }}
                     error={!!errors.postalAddress}
-                  />
-                  <CustomFormLabel htmlFor="phoneNumber">{t('ngo.phoneNumber')}</CustomFormLabel>
-                  <TextField
-                    id="phoneNumber"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    sx={{ mb: 1 }}
-                    control={control}
-                    {...register('phoneNumber')}
-                    error={!!errors.phoneNumber}
                   />
 
                   <LoadingButton
-                    loading={loadingAddNgo}
+                    loading={loadingAddProvider}
                     color="primary"
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
                     variant="contained"
                     sx={{ mt: 4 }}
                   >
-                    {t('ngo.button.add')}
+                    {t('provider.button.add')}
                   </LoadingButton>
                 </form>
               </Card>
               <Grid>
-                {(successAddNgo || errorAddNgo) && (
+                {(successAddProvider || errorAddProvider) && (
                   <Message
-                    severity={successAddNgo ? 'success' : 'error'}
+                    severity={successAddProvider ? 'success' : 'error'}
                     variant="filled"
                     input="addSw"
-                    backError={errorAddNgo}
+                    backError={errorAddProvider}
                     sx={{ width: '100%' }}
                   >
-                    {successAddNgo && t('ngo.updated')}
+                    {successAddProvider && t('provider.updated')}
                   </Message>
                 )}
               </Grid>
             </Grid>
           </Grid>
 
-          {/* NGO Image */}
+          {/* Provider Image */}
           <Dialog
             open={openImageDialog}
             onClose={handleImageClose}
@@ -418,4 +401,4 @@ const NgoAdd = () => {
   );
 };
 
-export default NgoAdd;
+export default ProviderAdd;

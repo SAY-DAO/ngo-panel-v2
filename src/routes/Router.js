@@ -18,6 +18,9 @@ const SocialWorkerMigrate = Loadable(
 const SocialWorkerProfile = Loadable(
   lazy(() => import('../pages/socialWorkers/SocialWorkerProfile')),
 );
+const ProviderList = Loadable(lazy(() => import('../pages/providers/ProviderList')));
+const ProviderEdit = Loadable(lazy(() => import('../pages/providers/ProviderEdit')));
+const ProviderAdd = Loadable(lazy(() => import('../pages/providers/ProviderAdd')));
 const NgoList = Loadable(lazy(() => import('../pages/ngos/NgoList')));
 const NgoEdit = Loadable(lazy(() => import('../pages/ngos/NgoEdit')));
 const NgoAdd = Loadable(lazy(() => import('../pages/ngos/NgoAdd')));
@@ -46,6 +49,9 @@ const Router = [
       { path: '/sw/edit/:id', exact: true, element: <SocialWorkerEdit /> },
       { path: '/sw/add', exact: true, element: <SocialWorkerAdd /> },
       { path: '/sw/migrate', exact: true, element: <SocialWorkerMigrate /> },
+      { path: '/provider/list', exact: true, element: <ProviderList /> },
+      { path: '/provider/edit/:id', exact: true, element: <ProviderEdit /> },
+      { path: '/provider/add', exact: true, element: <ProviderAdd /> },
       { path: '/ngo/list', exact: true, element: <NgoList /> },
       { path: '/ngo/edit/:id', exact: true, element: <NgoEdit /> },
       { path: '/ngo/add', exact: true, element: <NgoAdd /> },
@@ -59,7 +65,6 @@ const Router = [
       { path: '/dao', exact: true, element: <DAO /> },
       { path: '/dao/milestone/add', exact: true, element: <DaoMileStoneAdd /> },
       { path: '/dao/milestone/list', exact: true, element: <DaoMileStoneList /> },
-
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

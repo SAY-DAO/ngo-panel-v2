@@ -70,7 +70,7 @@ export const serverOneNeedReducer = (state = {}, action) => {
     case GET_ONE_SERVER_SUCCESS:
       return { ...state, loading: false, success: true, oneNeed: action.payload };
     case UPDATE_ONE_SERVER_REQUEST:
-      return { ...state, loading: true, success: false };
+      return { loading: true, success: false };
     case UPDATE_ONE_SERVER_SUCCESS:
       return { ...state, loading: false, success: true, oneNeed: action.payload };
     case UPDATE_ONE_SERVER_FAIL:
