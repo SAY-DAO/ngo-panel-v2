@@ -30,17 +30,24 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { updateNgo, fetchNgoById, updateNgoIsActive } from '../../redux/actions/ngoAction';
+import {
+  updateProvider,
+  fetchProviderById,
+  updateProviderIsActive,
+} from '../../redux/actions/providerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
+import { PROVIDER_BY_ID_RESET } from '../../redux/constants/providerConstants';
+import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
+import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
+import { apiDao } from '../../env';
 
 const BCrumb = [
   {
-    to: '/ngo/list',
-    title: 'NGOs List',
+    to: '/provider/list',
+    title: 'Providers List',
   },
   {
     title: 'Edit',
@@ -60,32 +67,85 @@ const ProviderEdit = () => {
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
   const [values, setValues] = useState({
     name: '',
-    website: '',
     country: '',
     city: '',
-    phoneNumber: '',
-    postalAddress: '',
-    emailAddress: '',
+    type: '',
+    state: '',
+    website: '',
     logoUrl: '',
   });
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const ngoById = useSelector((state) => state.ngoById);
-  const { result, loading: loadingNgoById, success: successNgoById } = ngoById;
+  const providerById = useSelector((state) => state.providerById);
+  const { result, loading: loadingProviderById, success: successProviderById } = providerById;
 
-  const ngoStatusUpdate = useSelector((state) => state.ngoStatusUpdate);
-  const { status } = ngoStatusUpdate;
+  const providerStatusUpdate = useSelector((state) => state.providerStatusUpdate);
+  const { status } = providerStatusUpdate;
 
-  const ngoUpdate = useSelector((state) => state.ngoUpdate);
-  const { success: successNgoUpdate, loading: loadingNgoUpdate, error: errorNgoUpdate } = ngoUpdate;
+  const providerUpdate = useSelector((state) => state.providerUpdate);
+  const {
+    success: successProviderUpdate,
+    loading: loadingProviderUpdate,
+    error: errorProviderUpdate,
+  } = providerUpdate;
+
+  const countryList = useSelector((state) => state.countryList);
+  const { countries, states, cities, success: successCountryList } = countryList;
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Please enter your provider name'),
+    country: Yup.string().required('Please enter Provider country'),
+    state: Yup.string().required('Please enter Provider state'),
+    city: Yup.string().required('Please enter Provider city'),
+    website: Yup.string()
+      .matches(
+        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+        'Enter correct url!',
+      )
+      .required('Please enter website'),
+  });
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  // country
+  useEffect(() => {
+    if (!successCountryList && result) {
+      dispatch({ type: COUNTRY_LIST_RESET });
+      dispatch(fetchCountryList());
+      dispatch(fetchStateList(result.country));
+      dispatch(fetchCityList(result.state));
+    }
+  }, [successCountryList, result]);
+
+  // state
+  useEffect(() => {
+    if (countries && watch('country')) {
+      dispatch(fetchStateList(watch('country')));
+    }
+  }, [watch('country'), countries, result]);
+
+  // city
+  useEffect(() => {
+    if (states && (watch('state') || watch('country'))) {
+      dispatch(fetchCityList(watch('state')));
+    }
+  }, [watch('state'), watch('country'), countries, states, result]);
 
   useEffect(() => {
-    if ((!successNgoById && id) || status) {
-      dispatch(fetchNgoById(id));
+    if (id) {
+      dispatch(fetchProviderById(id));
     }
-  }, [status, successNgoUpdate, id]);
+  }, [successProviderUpdate, id]);
 
   // isActive
   useEffect(() => {
@@ -94,7 +154,7 @@ const ProviderEdit = () => {
     } else {
       setActiveChecked(false);
     }
-  }, [successNgoById, status]);
+  }, [successProviderById, status]);
 
   useEffect(() => {
     if (result) {
@@ -102,11 +162,10 @@ const ProviderEdit = () => {
         ...values,
         name: result.name,
         website: result.website,
-        emailAddress: result.emailAddress,
+        type: result.type,
         country: result.country,
         city: result.city,
-        phoneNumber: result.phoneNumber,
-        postalAddress: result.postalAddress,
+        description: result.description,
         logoUrl: result.logoUrl,
       });
     }
@@ -114,50 +173,30 @@ const ProviderEdit = () => {
 
   const handleChangeActive = () => {
     if (activeChecked && result.isActive) {
-      dispatch(updateNgoIsActive(result.id, 'deactivate'));
+      dispatch(updateProviderIsActive(result.id, 'deactivate'));
     } else if (!activeChecked && !result.isActive) {
-      dispatch(updateNgoIsActive(result.id, 'activate'));
+      dispatch(updateProviderIsActive(result.id, 'activate'));
     }
   };
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Please enter your first name'),
-    country: Yup.string().required('Please enter your country'),
-    phoneNumber: Yup.string().required('Please enter your phone number'),
-    postalAddress: Yup.string().required('Please enter your postalAddress'),
-    emailAddress: Yup.string()
-      // .min(3, 'must be at least 3 characters long')
-      .email('Please enter your email')
-      .required('Email is required'),
-  });
-
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validationSchema),
-  });
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      updateNgo({
+      updateProvider({
         id,
         name: data.name,
-        emailAddress: data.emailAddress,
-        country: data.country,
-        city: data.city,
-        phoneNumber: data.phoneNumber,
-        postalAddress: data.postalAddress,
         website: data.website,
-        logoUrl: finalImageFile,
+        type: data.type,
+        country: data.country,
+        state: data.state,
+        city: data.city,
+        description: data.description,
+        logoFile: finalImageFile,
       }),
     );
-    dispatch({ type: NGO_BY_ID_RESET });
+    dispatch({ type: PROVIDER_BY_ID_RESET });
   };
 
   // dialog image
@@ -184,18 +223,24 @@ const ProviderEdit = () => {
   };
 
   return (
-    <PageContainer title="NGO Edit" description="this is NGO Edit page">
+    <PageContainer title="Provider Edit" description="this is Provider Edit page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {!id || loadingNgoById || loadingNgoUpdate ? (
+      {!id ||
+      loadingProviderById ||
+      loadingProviderUpdate ||
+      !result ||
+      !countries ||
+      !states ||
+      !cities ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
         result && (
           <>
-            <Breadcrumb title="Edit page" subtitle="NGO" />
+            <Breadcrumb title="Edit page" subtitle="Provider" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
@@ -245,7 +290,7 @@ const ProviderEdit = () => {
                       src={
                         finalImageFile
                           ? URL.createObjectURL(finalImageFile) // image preview
-                          : values.logoUrl
+                          : `${apiDao}/providers/images/${result.logoUrl}`
                       }
                     />
                   </Badge>
@@ -281,28 +326,24 @@ const ProviderEdit = () => {
                         />
                         {'  '}
                         <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                          {t('ngo.isActive')}
+                          {t('provider.isActive')}
                         </Typography>
                       </Grid>
                     }
                   />
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('ngo.emailAddress')}
+                    {t('provider.website')}
                   </Typography>
-                  <Typography variant="body2">{result && result.emailAddress}</Typography>
-                  <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('ngo.phoneNumber')}
-                  </Typography>
-                  <Typography variant="body2">{result && result.phoneNumber}</Typography>
+                  <Typography variant="body2">{result && result.website}</Typography>
                 </Card>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                    {t('ngo.titleEdit')}
+                    {t('provider.titleEdit')}
                   </Typography>
-                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="name">NGO Name</CustomFormLabel>
+                  <form onSubmit={handleSubmit(() => onSubmit())} noValidate>
+                    <CustomFormLabel htmlFor="name">{t('provider.name')}</CustomFormLabel>
                     <TextField
                       required
                       id="name"
@@ -315,87 +356,113 @@ const ProviderEdit = () => {
                       {...register('name')}
                       error={!!errors.name}
                     />
-                    <CustomFormLabel htmlFor="Email">{t('ngo.emailAddress')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="Email">{t('provider.website')}</CustomFormLabel>
                     <TextField
-                      id="Email"
+                      id="website"
                       variant="outlined"
-                      defaultValue={result.emailAddress}
+                      defaultValue={result.website}
                       fullWidth
                       size="small"
                       sx={{ mb: 1 }}
-                      onChange={handleChangeInput('emailAddress')}
+                      onChange={handleChangeInput('website')}
                       control={control}
-                      {...register('emailAddress')}
-                      error={!!errors.emailAddress}
+                      {...register('website')}
+                      error={!!errors.website}
                     />
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.emailAddress && errors.emailAddress.message}
+                      {errors && errors.website && errors.website.message}
                     </FormHelperText>
-
-                    <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="type">{t('provider.type')}</CustomFormLabel>
+                    <CustomSelect
+                      labelId="type-controlled-open-select-label"
+                      id="type-controlled-open-select"
+                      defaultValue={result.type}
+                      onChange={handleChangeInput('type')}
+                      control={control}
+                      register={{ ...register('type') }}
+                    >
+                      <MenuItem value={0}>{t('need.types.service')}</MenuItem>
+                      <MenuItem value={1}>{t('need.types.product')}</MenuItem>
+                    </CustomSelect>
+                    <CustomFormLabel htmlFor="country">{t('provider.country')}</CustomFormLabel>
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
-                      defaultValue={1}
+                      defaultValue={result.country}
                       onChange={handleChangeInput('country')}
                       control={control}
                       register={{ ...register('country') }}
                     >
-                      <MenuItem value={result.country || 1}>{t('ngo.countries.one')}</MenuItem>
+                      {countries &&
+                        countries.map((country) => (
+                          <MenuItem key={country.id} value={country.id}>
+                            {country.name}
+                          </MenuItem>
+                        ))}
+                    </CustomSelect>
+                    <CustomFormLabel htmlFor="state">{t('provider.state')}</CustomFormLabel>
+                    <CustomSelect
+                      labelId="state-controlled-open-select-label"
+                      id="state-controlled-open-select"
+                      defaultValue={result.state}
+                      onChange={handleChangeInput('state')}
+                      control={control}
+                      register={{ ...register('state') }}
+                    >
+                      {states &&
+                        states.map((state) => (
+                          <MenuItem key={state.id} value={state.id}>
+                            {state.name}
+                          </MenuItem>
+                        ))}
                     </CustomSelect>
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                       {errors && errors.country && errors.country.message}
                     </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="city">{t('provider.city')}</CustomFormLabel>
                     <CustomSelect
                       labelId="city-controlled-open-select-label"
                       id="city-controlled-open-select"
-                      defaultValue={result.city || 1}
+                      defaultValue={result.city}
                       onChange={handleChangeInput('city')}
                       control={control}
                       register={{ ...register('city') }}
                     >
-                      <MenuItem value={1}>{t('ngo.cities.one')}</MenuItem>
+                      {states &&
+                        cities &&
+                        cities.map((city) => (
+                          <MenuItem key={city.id} value={city.id}>
+                            {city.name}
+                          </MenuItem>
+                        ))}
                     </CustomSelect>
 
-                    <CustomFormLabel htmlFor="postalAddress">
-                      {t('ngo.postalAddress')}
+                    <CustomFormLabel htmlFor="description">
+                      {t('provider.description')}
                     </CustomFormLabel>
                     <CustomTextField
-                      id="postalAddress"
+                      id="description"
                       variant="outlined"
                       multiline
                       rows={4}
-                      defaultValue={result.postalAddress}
+                      defaultValue={result.description}
                       size="small"
                       sx={{ mb: 2 }}
                       fullWidth
-                      onChange={handleChangeInput('postalAddress')}
+                      onChange={handleChangeInput('description')}
                       control={control}
-                      register={{ ...register('postalAddress') }}
+                      register={{ ...register('description') }}
                     />
-                    <CustomFormLabel htmlFor="phoneNumber">{t('ngo.phoneNumber')}</CustomFormLabel>
-                    <TextField
-                      id="phoneNumber"
-                      variant="outlined"
-                      defaultValue={result.phoneNumber}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('phoneNumber')}
-                      control={control}
-                      {...register('phoneNumber')}
-                      error={!!errors.phoneNumber}
-                    />
+
                     <LoadingButton
-                      // loading={loadingNgoUpdate}
+                      // loading={loadingProviderUpdate}
                       color="primary"
                       type="submit"
                       onClick={handleSubmit(onSubmit)}
                       variant="contained"
                       sx={{ mt: 4 }}
                     >
-                      {t('ngo.button.update')}
+                      {t('provider.button.update')}
                     </LoadingButton>
                   </form>
                 </Card>
@@ -439,15 +506,15 @@ const ProviderEdit = () => {
               </DialogActions>
             </Dialog>
             <Grid>
-              {(successNgoUpdate || errorNgoUpdate) && (
+              {(successProviderUpdate || errorProviderUpdate) && (
                 <Message
-                  severity={successNgoUpdate ? 'success' : 'error'}
+                  severity={successProviderUpdate ? 'success' : 'error'}
                   variant="filled"
-                  input="addNgo"
-                  backError={errorNgoUpdate}
+                  input="addProvider"
+                  backError={errorProviderUpdate}
                   sx={{ width: '100%' }}
                 >
-                  {successNgoUpdate && t('ngo.updated')}
+                  {successProviderUpdate && t('provider.updated')}
                 </Message>
               )}
             </Grid>

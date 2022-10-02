@@ -21,20 +21,20 @@ import {
   CardContent,
   Typography,
   Avatar,
-  Link,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { PROVIDER_BY_ID_RESET } from '../../redux/constants/providerConstants';
+import { apiDao } from '../../env';
 import { deleteProvider } from '../../redux/actions/providerAction';
+import { PROVIDER_BY_ID_RESET } from '../../redux/constants/providerConstants';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -71,7 +71,6 @@ function EnhancedTableHead(props) {
   };
 
   const headCells = [
-
     {
       id: 'update',
       numeric: false,
@@ -98,6 +97,12 @@ function EnhancedTableHead(props) {
       label: t('provider.country'),
     },
     {
+      id: 'state',
+      numeric: false,
+      disablePadding: false,
+      label: t('provider.state'),
+    },
+    {
       id: 'city',
       numeric: false,
       disablePadding: false,
@@ -109,7 +114,6 @@ function EnhancedTableHead(props) {
       disablePadding: false,
       label: t('provider.type'),
     },
-
   ];
   return (
     <TableHead>
@@ -234,6 +238,9 @@ const ProviderTable = ({ providerList }) => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const countryList = useSelector((state) => state.countryList);
+  const { countries, states, cities, success: successCountryList } = countryList;
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -351,7 +358,7 @@ const ProviderTable = ({ providerList }) => {
                             <TableCell>
                               <Box display="flex" alignItems="center">
                                 <Avatar
-                                  src={row.logoUrl}
+                                  src={`${apiDao}/providers/images/${row.logoUrl}`}
                                   alt="provider logo"
                                   width="35"
                                   sx={{
@@ -388,26 +395,27 @@ const ProviderTable = ({ providerList }) => {
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city.countryName}
+                                {row.country}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city.name}
+                                {row.state}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.city}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.type}
                               </Typography>
                             </TableCell>
                           </TableRow>
                         );
                       })}
-                    {emptyRows > 0 && (
-                      <TableRow
-                        style={{
-                          height: (dense ? 33 : 53) * emptyRows,
-                        }}
-                      >
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

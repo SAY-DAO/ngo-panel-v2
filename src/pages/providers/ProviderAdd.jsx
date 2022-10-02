@@ -110,7 +110,7 @@ const ProviderAdd = () => {
   }, [watch('state'), countries, states]);
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data, null, 2));
+    console.log(finalImageFile);
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
 
@@ -123,7 +123,7 @@ const ProviderAdd = () => {
         state: data.state,
         city: data.city,
         description: data.description,
-        logoUrl: finalImageFile,
+        logoFile: finalImageFile,
       }),
     );
   };

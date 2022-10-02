@@ -14,7 +14,7 @@ import {
 export default function countryListReducer(state = { success: false }, action) {
   switch (action.type) {
     case COUNTRY_LIST_REQUEST:
-      return { ...state, loading: true };
+      return { loading: true };
     case COUNTRY_LIST_SUCCESS:
       return { ...state, loading: false, success: true, countries: action.payload };
     case COUNTRY_LIST_FAIL:

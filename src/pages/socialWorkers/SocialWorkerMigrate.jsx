@@ -18,7 +18,7 @@ import {
 } from '../../redux/constants/socialWorkerConstants';
 import Message from '../../components/Message';
 import SocialWorkerCard from '../../components/socialworker/SocialWorkerCard';
-import MigrateDialog from '../../components/Dialogs/MigrateDialog';
+import MigrateDialog from '../../components/dialogs/MigrateDialog';
 
 const BCrumb = [
   {

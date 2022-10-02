@@ -693,10 +693,13 @@
     "country": "Country",
     "state": "State",
     "city": "City",
+    "isActive": "Status",
     "description": "Description",
     "emailAddress": "Email",
     "name": "Name",
     "website": "website",
+    "type": "type",
+    "updated": "Updated",
     "button": {
       "update": "Update",
       "add": "Add Provider"

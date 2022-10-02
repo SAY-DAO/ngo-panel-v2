@@ -473,7 +473,6 @@ export const signTransaction = (need) => async (dispatch, getState) => {
     dispatch({ type: SIGNATURE_REQUEST });
     // update server first
     await dispatch(updateOneNeedNestServer(need));
-    console.log('here');
     const {
       serverOneNeed: { error },
     } = getState();

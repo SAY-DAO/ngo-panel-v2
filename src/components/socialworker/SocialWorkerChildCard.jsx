@@ -6,7 +6,7 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { useSelector } from 'react-redux';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import MigrateDialog from '../Dialogs/MigrateDialog';
+import MigrateDialog from '../dialogs/MigrateDialog';
 
 const SocialWorkerChildCard = ({ swChildren, toSwId }) => {
   const { t } = useTranslation();

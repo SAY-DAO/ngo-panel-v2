@@ -33,7 +33,7 @@ export const fetchProviderById = (id) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await publicApi.get(`/provider/providerId=${id}`, config);
+    const { data } = await daoApi.get(`/providers/${id}`, config);
 
     dispatch({
       type: PROVIDER_BY_ID_SUCCESS,
@@ -101,56 +101,44 @@ export const updateProviderIsActive = (id, status) => async (dispatch, getState)
   }
 };
 
-export const updateProvider = (values) => async (dispatch, getState) => {
+export const updateProvider = (values) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_PROVIDER_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
+        'Content-Type': 'multipart/form-data',
       },
     };
-
     const formData = new FormData();
 
-    if (values.firstName) {
-      formData.set('name', values.name);
+    if (values.name) {
+      formData.append('name', values.name);
     }
-    if (values.lastName) {
-      formData.set('lastName', values.lastName);
-    }
-    if (values.emailAddress) {
-      formData.set('emailAddress', values.emailAddress);
+    if (values.description) {
+      formData.append('description', values.description);
     }
     if (values.country) {
-      formData.set('country', values.country);
+      formData.append('country', values.country);
     }
     if (values.city) {
-      formData.set('city', values.city);
+      formData.append('city', values.city);
     }
-    if (values.phoneNumber) {
-      formData.set('phoneNumber', values.phoneNumber);
+    if (values.type) {
+      formData.append('type', String(values.type));
     }
-    if (values.postalAddress) {
-      formData.set('postalAddress', values.postalAddress);
+    if (values.state) {
+      formData.append('state', values.state);
     }
     if (values.website) {
-      formData.set('website', values.website);
+      formData.append('website', values.website);
     }
 
-    if (values.finalImageFile) {
-      formData.set('logoUrl', values.finalImageFile);
+    if (values.logoFile) {
+      formData.append('file', values.logoFile);
     }
-
-    const { data } = await publicApi.patch(
-      `/provider/update/providerId=${values.id}`,
-      formData,
-      config,
-    );
+    console.log(values);
+    const { data } = await daoApi.patch(`/providers/update/${values.id}`, formData, config);
     dispatch({
       type: UPDATE_PROVIDER_SUCCESS,
       payload: data,
@@ -166,18 +154,41 @@ export const updateProvider = (values) => async (dispatch, getState) => {
 export const addProvider = (values) => async (dispatch) => {
   try {
     dispatch({ type: ADD_PROVIDER_REQUEST });
+    console.log(values);
 
-    const request = {
-      name: values.name,
-      website: values.website,
-      type: values.type,
-      country: values.country,
-      city: values.city,
-      state: values.state,
-      description: values.description,
-      logoUrl: values.logoUrl,
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     };
-    const { data } = await daoApi.post(`/providers/add`, request);
+    const formData = new FormData();
+    if (values.name) {
+      formData.append('name', values.name);
+    }
+    if (values.description) {
+      formData.append('description', values.description);
+    }
+    if (values.country) {
+      formData.append('country', values.country);
+    }
+    if (values.city) {
+      formData.append('city', values.city);
+    }
+    if (values.type) {
+      formData.append('type', values.type);
+    }
+    if (values.state) {
+      formData.append('state', values.state);
+    }
+    if (values.website) {
+      formData.append('website', values.website);
+    }
+
+    if (values.logoFile) {
+      formData.append('file', values.logoFile);
+    }
+
+    const { data } = await daoApi.post(`/providers/add`, formData, config);
     dispatch({
       type: ADD_PROVIDER_SUCCESS,
       payload: data,

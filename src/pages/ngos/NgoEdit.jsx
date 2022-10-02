@@ -302,7 +302,7 @@ const NgoEdit = () => {
                     {t('ngo.titleEdit')}
                   </Typography>
                   <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="name">NGO Name</CustomFormLabel>
+                    <CustomFormLabel htmlFor="name">{t('ngo.name')}</CustomFormLabel>
                     <TextField
                       required
                       id="name"

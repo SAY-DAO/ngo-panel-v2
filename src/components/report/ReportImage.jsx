@@ -26,7 +26,7 @@ import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { addReceiptToNeed, fetchNeedReceipts } from '../../redux/actions/reportAction';
 import UploadImage from '../UploadImage';
-import DeleteDialog from '../Dialogs/DeleteDialog';
+import DeleteDialog from '../dialogs/DeleteDialog';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 
 export default function ReportImage({ row, statusId }) {
