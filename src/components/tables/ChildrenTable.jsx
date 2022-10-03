@@ -70,97 +70,176 @@ function EnhancedTableHead(props) {
 
   const headCells = [
     {
-      id: 'isActive',
+      id: 'status',
       numeric: false,
       disablePadding: true,
-      label: t('ngo.isActive'),
+      label: t('child.status'),
     },
     {
-      id: 'update',
-      numeric: false,
-      disablePadding: true,
-      label: t('ngo.update'),
+      id: 'id',
+      numeric: true,
+      disablePadding: false,
+      label: t('child.id'),
     },
     {
-      id: 'name',
+      id: 'generatedCode',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.name'),
+      label: t('child.generatedCode'),
     },
-
     {
-      id: 'phoneNumber',
+      id: 'edit',
+      numeric: true,
+      disablePadding: false,
+      label: t('child.edit'),
+    },
+    {
+      id: 'awakeAvatarUrl',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.phoneNumber'),
+      label: t('child.awakeAvatarUrl'),
     },
-    // {
-    //   id: 'postalAddress',
-    //   numeric: false,
-    //   disablePadding: false,
-    //   label: t('ngo.postalAddress'),
-    // },
     {
-      id: 'country',
+      id: 'sleptAvatarUrl',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.country'),
+      label: t('child.sleptAvatarUrl'),
+    },
+    {
+      id: 'bio',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.bio'),
+    },
+    {
+      id: 'bioSummaryTranslations',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.bioSummaryTranslations'),
+    },
+    {
+      id: 'bioSummary',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.bioSummary'),
+    },
+    {
+      id: 'birthDate',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.birthDate'),
+    },
+    {
+      id: 'birthPlace',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.birthPlace'),
     },
     {
       id: 'city',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.city'),
+      label: t('child.city'),
     },
     {
-      id: 'childrenCount',
+      id: 'country',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.childrenCount'),
+      label: t('child.country'),
     },
     {
-      id: 'currentChildrenCount',
+      id: 'confirmDate',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.currentChildrenCount'),
+      label: t('child.confirmDate'),
     },
     {
-      id: 'socialWorkerCount',
+      id: 'confirmUser',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.socialWorkerCount'),
+      label: t('child.confirmUser'),
     },
     {
-      id: 'currentSocialWorkerCount',
+      id: 'done_needs_count',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.currentSocialWorkerCount'),
+      label: t('child.done_needs_count'),
     },
     {
-      id: 'registerDate',
+      id: 'familyCount',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.registerDate'),
+      label: t('child.familyCount'),
+    },
+
+    {
+      id: 'id_social_worker',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.id_social_worker'),
     },
     {
-      id: 'created',
+      id: 'isDeleted',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.created'),
+      label: t('child.isDeleted'),
+    },
+    {
+      id: 'spent_credit',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.spent_credit'),
+    },
+    {
+      id: 'id_ngo',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.id_ngo'),
+    },
+    {
+      id: 'isMigrated',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.isMigrated'),
+    },
+    {
+      id: 'isGone',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.isGone'),
+    },
+    {
+      id: 'nationality',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.nationality'),
+    },
+    {
+      id: 'sayName',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.sayName'),
+    },
+    {
+      id: 'sayNameTranslations',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.sayNameTranslations'),
+    },
+    {
+      id: 'voiceUrl',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.voiceUrl'),
     },
     {
       id: 'updated',
       numeric: false,
       disablePadding: false,
-      label: t('ngo.updated'),
-    },
-    {
-      id: 'website',
-      numeric: false,
-      disablePadding: false,
-      label: t('ngo.website'),
+      label: t('child.updated'),
     },
   ];
+
   return (
     <TableHead>
       <TableRow>
@@ -266,15 +345,17 @@ const BCrumb = [
   },
 ];
 
-const ChildrenTable = ({ ngoList }) => {
+const ChildrenTable = ({ childList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -284,7 +365,7 @@ const ChildrenTable = ({ ngoList }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = ngoList.map((n) => n.firstName);
+      const newSelecteds = childList.map((n) => n.firstName);
       setSelected(newSelecteds);
       return;
     }
@@ -326,12 +407,12 @@ const ChildrenTable = ({ ngoList }) => {
 
   const handleEdit = (row) => {
     dispatch({ type: NGO_BY_ID_RESET });
-    navigate(`/ngo/edit/${row.id}`);
+    navigate(`/child/edit/${row.id}`);
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - ngoList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - childList.length) : 0;
   return (
     <PageContainer>
       {/* breadcrumb */}
@@ -354,10 +435,10 @@ const ChildrenTable = ({ ngoList }) => {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={ngoList.length}
+                    rowCount={childList.length}
                   />
                   <TableBody>
-                    {stableSort(ngoList, getComparator(order, orderBy))
+                    {stableSort(childList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.firstName);
@@ -387,7 +468,7 @@ const ChildrenTable = ({ ngoList }) => {
                                 <Box
                                   sx={{
                                     backgroundColor:
-                                      row.isActive === true
+                                      row.isConfirmed === true
                                         ? (theme) => theme.palette.success.main
                                         : (theme) => theme.palette.error.main,
                                     borderRadius: '100%',
@@ -403,9 +484,65 @@ const ChildrenTable = ({ ngoList }) => {
                                     ml: 1,
                                   }}
                                 >
-                                  {row.status}
+                                  {t('child.isConfirmed')}
                                 </Typography>
                               </Box>
+                              <Box display="flex" alignItems="center">
+                                <Box
+                                  sx={{
+                                    backgroundColor:
+                                      row.existence_status === 1
+                                        ? (theme) => theme.palette.success.main
+                                        : (theme) => theme.palette.error.main,
+                                    borderRadius: '100%',
+                                    height: '10px',
+                                    width: '10px',
+                                  }}
+                                />
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="400"
+                                  sx={{
+                                    ml: 1,
+                                  }}
+                                >
+                                  {t('child.existence_status')}
+                                </Typography>
+                              </Box>
+                              <Box display="flex" alignItems="center">
+                                <Box
+                                  sx={{
+                                    backgroundColor:
+                                      row.isDeleted === false
+                                        ? (theme) => theme.palette.success.main
+                                        : (theme) => theme.palette.error.main,
+                                    borderRadius: '100%',
+                                    height: '10px',
+                                    width: '10px',
+                                  }}
+                                />
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="400"
+                                  sx={{
+                                    ml: 1,
+                                  }}
+                                >
+                                  {t('child.isDeleted')}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6" fontWeight="600">
+                                {row.id}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6" fontWeight="600">
+                                {row.generatedCode}
+                              </Typography>
                             </TableCell>
                             <TableCell>
                               <IconButton
@@ -419,8 +556,8 @@ const ChildrenTable = ({ ngoList }) => {
                             <TableCell>
                               <Box display="flex" alignItems="center">
                                 <Avatar
-                                  src={row.logoUrl}
-                                  alt="ngo logo"
+                                  src={row.awakeAvatarUrl}
+                                  alt="child logo"
                                   width="35"
                                   sx={{
                                     borderRadius: '100%',
@@ -432,28 +569,97 @@ const ChildrenTable = ({ ngoList }) => {
                                   }}
                                 >
                                   <Typography variant="h6" fontWeight="600">
-                                    {row.name}
+                                    {row.firstName}
                                   </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                    {row.emailAddress}
+                                  <Typography variant="h6" fontWeight="600">
+                                    {row.lastName}
+                                  </Typography>
+                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                    ({row.sayName})
                                   </Typography>
                                 </Box>
                               </Box>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                {row.phoneNumber}
-                              </Typography>
+                              <Box display="flex" alignItems="center">
+                                <Avatar
+                                  src={row.sleptAvatarUrl}
+                                  alt="child logo"
+                                  width="35"
+                                  sx={{
+                                    borderRadius: '100%',
+                                  }}
+                                />
+                              </Box>
                             </TableCell>
-                            {/* <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="600">
-                                {row.postalAddress}
-                              </Typography>
-                            </TableCell> */}
                             <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.country}
-                              </Typography>
+                              <Tooltip title={row.bio ? row.bio : ''} placement="top-end">
+                                <Typography
+                                  color="textSecondary"
+                                  variant="h6"
+                                  fontWeight="600"
+                                  sx={{
+                                    maxWidth: '400px',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    width: '160px',
+                                    height: '1.2em',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  {row.bio}
+                                </Typography>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell>
+                              <Tooltip
+                                title={row.bio_translations.fa ? row.bio_translations.fa : ''}
+                                placement="top-end"
+                              >
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="400"
+                                  sx={{
+                                    maxWidth: '400px',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    width: '160px',
+                                    height: '1.2em',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  {row.bio_translations.fa}
+                                </Typography>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell>
+                              <Tooltip
+                                title={row.bioSummary ? row.bioSummary : ''}
+                                placement="top-end"
+                              >
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="600"
+                                  sx={{
+                                    maxWidth: '400px',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    width: '160px',
+                                    height: '1.2em',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  {row.bioSummary}
+                                </Typography>
+                              </Tooltip>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.birthDate}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="h6">{row.birthPlace}</Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
@@ -461,26 +667,51 @@ const ChildrenTable = ({ ngoList }) => {
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography variant="h6">{row.childrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.currentChildrenCount}</Typography>
-                            </TableCell>
-                            <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.socialWorkerCount}
+                                {row.country}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.currentSocialWorkerCount}
+                                {row.confirmDate}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.registerDate}
+                                {row.confirmUser}
                               </Typography>
                             </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.done_needs_count}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.familyCount}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.id_social_worker}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.isDeleted}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.confirmDate}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.confirmDate}
+                              </Typography>
+                            </TableCell>
+
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.created}
@@ -515,7 +746,7 @@ const ChildrenTable = ({ ngoList }) => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={ngoList.length}
+                count={childList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -536,5 +767,5 @@ const ChildrenTable = ({ ngoList }) => {
 export default ChildrenTable;
 
 ChildrenTable.propTypes = {
-  ngoList: PropTypes.array.isRequired,
+  childList: PropTypes.array.isRequired,
 };

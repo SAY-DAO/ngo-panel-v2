@@ -1,4 +1,4 @@
-import { daoApi, publicApi } from '../../apis/sayBase';
+import { daoApi } from '../../apis/sayBase';
 import {
   ADD_PROVIDER_FAIL,
   ADD_PROVIDER_REQUEST,
@@ -13,9 +13,6 @@ import {
   PROVIDER_LIST_REQUEST,
   PROVIDER_LIST_SUCCESS,
   UPDATE_PROVIDER_FAIL,
-  UPDATE_PROVIDER_IS_ACTIVE_FAIL,
-  UPDATE_PROVIDER_IS_ACTIVE_REQUEST,
-  UPDATE_PROVIDER_IS_ACTIVE_SUCCESS,
   UPDATE_PROVIDER_REQUEST,
   UPDATE_PROVIDER_SUCCESS,
 } from '../constants/providerConstants';
@@ -74,33 +71,6 @@ export const fetchProviderList = () => async (dispatch, getState) => {
   }
 };
 
-export const updateProviderIsActive = (id, status) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: UPDATE_PROVIDER_IS_ACTIVE_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-    const { data } = await publicApi.patch(`/provider/${status}/providerId=${id}`, id, config);
-
-    dispatch({
-      type: UPDATE_PROVIDER_IS_ACTIVE_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    dispatch({
-      type: UPDATE_PROVIDER_IS_ACTIVE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
-    });
-  }
-};
-
 export const updateProvider = (values) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_PROVIDER_REQUEST });
@@ -125,7 +95,7 @@ export const updateProvider = (values) => async (dispatch) => {
       formData.append('city', values.city);
     }
     if (values.type) {
-      formData.append('type', String(values.type));
+      formData.append('type', values.type);
     }
     if (values.state) {
       formData.append('state', values.state);
@@ -133,7 +103,9 @@ export const updateProvider = (values) => async (dispatch) => {
     if (values.website) {
       formData.append('website', values.website);
     }
-
+    if (values.isActive) {
+      formData.append('isActive', values.isActive);
+    }
     if (values.logoFile) {
       formData.append('file', values.logoFile);
     }
@@ -183,7 +155,9 @@ export const addProvider = (values) => async (dispatch) => {
     if (values.website) {
       formData.append('website', values.website);
     }
-
+    if (values.isActive) {
+      formData.append('isActive', values.isActive);
+    }
     if (values.logoFile) {
       formData.append('file', values.logoFile);
     }
@@ -202,21 +176,11 @@ export const addProvider = (values) => async (dispatch) => {
   }
 };
 
-export const deleteProvider = (providerId) => async (dispatch, getState) => {
+export const deleteProvider = (providerId) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
 
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-
-    const { data } = await publicApi.patch(`/provider/delete/providerId=${providerId}`, {}, config);
+    const { data } = await daoApi.delete(`/providers/${providerId}`, {});
     dispatch({
       type: DELETE_PROVIDER_SUCCESS,
       payload: data,

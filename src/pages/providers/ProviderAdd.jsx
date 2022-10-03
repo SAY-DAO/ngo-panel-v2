@@ -77,6 +77,7 @@ const ProviderAdd = () => {
       )
       .required('Please enter website'),
   });
+
   const {
     register,
     control,
@@ -250,11 +251,24 @@ const ProviderAdd = () => {
                     size="small"
                     control={control}
                     {...register('name')}
+                    placeholder="Provider Name"
                     error={!!errors.name}
                   />
                   <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                     {errors && errors.name && errors.name.message}
                   </FormHelperText>
+
+                  <CustomFormLabel htmlFor="type">{t('need.type_name')}</CustomFormLabel>
+                  <CustomSelect
+                    labelId="type-controlled-open-select-label"
+                    id="type-controlled-open-select"
+                    defaultValue={0}
+                    control={control}
+                    register={{ ...register('type') }}
+                  >
+                    <MenuItem value={0}>{t('need.types.service')}</MenuItem>
+                    <MenuItem value={1}>{t('need.types.product')}</MenuItem>
+                  </CustomSelect>
                   <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
                   <TextField
                     id="website"
@@ -265,21 +279,12 @@ const ProviderAdd = () => {
                     control={control}
                     {...register('website')}
                     error={!!errors.website}
+                    defaultValue="https://example.com"
                   />
                   <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                     {errors && errors.website && errors.website.message}
                   </FormHelperText>
-                  <CustomFormLabel htmlFor="type">{t('need.type_name')}</CustomFormLabel>
-                  <CustomSelect
-                    labelId="type-controlled-open-select-label"
-                    id="type-controlled-open-select"
-                    defaultValue={1}
-                    control={control}
-                    register={{ ...register('type') }}
-                  >
-                    <MenuItem value={0}>{t('need.types.service')}</MenuItem>
-                    <MenuItem value={1}>{t('need.types.product')}</MenuItem>
-                  </CustomSelect>
+
                   <CustomFormLabel htmlFor="country">{t('provider.country')}</CustomFormLabel>
                   <CustomSelect
                     labelId="country-controlled-open-select-label"

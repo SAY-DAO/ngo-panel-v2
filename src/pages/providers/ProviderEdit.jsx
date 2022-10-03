@@ -30,11 +30,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import {
-  updateProvider,
-  fetchProviderById,
-  updateProviderIsActive,
-} from '../../redux/actions/providerAction';
+import { updateProvider, fetchProviderById } from '../../redux/actions/providerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
@@ -92,7 +88,7 @@ const ProviderEdit = () => {
   } = providerUpdate;
 
   const countryList = useSelector((state) => state.countryList);
-  const { countries, states, cities, success: successCountryList } = countryList;
+  const { countries, states, cities } = countryList;
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Please enter your provider name'),
@@ -119,13 +115,19 @@ const ProviderEdit = () => {
 
   // country
   useEffect(() => {
-    if (!successCountryList && result) {
-      dispatch({ type: COUNTRY_LIST_RESET });
-      dispatch(fetchCountryList());
-      dispatch(fetchStateList(result.country));
-      dispatch(fetchCityList(result.state));
+    if (result) {
+      if (!countries) {
+        dispatch({ type: COUNTRY_LIST_RESET });
+        dispatch(fetchCountryList());
+      }
+      if (countries && !states) {
+        dispatch(fetchStateList(result.country));
+      }
+      if (states && !cities) {
+        dispatch(fetchCityList(result.state));
+      }
     }
-  }, [successCountryList, result]);
+  }, [result, countries, states]);
 
   // state
   useEffect(() => {
@@ -139,7 +141,7 @@ const ProviderEdit = () => {
     if (states && (watch('state') || watch('country'))) {
       dispatch(fetchCityList(watch('state')));
     }
-  }, [watch('state'), watch('country'), countries, states, result]);
+  }, [watch('state'), watch('country'), states, result]);
 
   useEffect(() => {
     if (id) {
@@ -154,7 +156,7 @@ const ProviderEdit = () => {
     } else {
       setActiveChecked(false);
     }
-  }, [successProviderById, status]);
+  }, [successProviderById, status, result]);
 
   useEffect(() => {
     if (result) {
@@ -173,9 +175,9 @@ const ProviderEdit = () => {
 
   const handleChangeActive = () => {
     if (activeChecked && result.isActive) {
-      dispatch(updateProviderIsActive(result.id, 'deactivate'));
-    } else if (!activeChecked && !result.isActive) {
-      dispatch(updateProviderIsActive(result.id, 'activate'));
+      dispatch(updateProvider({ id: result.id, isActive: false }));
+    } else {
+      dispatch(updateProvider({ id: result.id, isActive: true }));
     }
   };
 
@@ -194,6 +196,7 @@ const ProviderEdit = () => {
         city: data.city,
         description: data.description,
         logoFile: finalImageFile,
+        isActive: result.isActive,
       }),
     );
     dispatch({ type: PROVIDER_BY_ID_RESET });
@@ -356,22 +359,7 @@ const ProviderEdit = () => {
                       {...register('name')}
                       error={!!errors.name}
                     />
-                    <CustomFormLabel htmlFor="Email">{t('provider.website')}</CustomFormLabel>
-                    <TextField
-                      id="website"
-                      variant="outlined"
-                      defaultValue={result.website}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('website')}
-                      control={control}
-                      {...register('website')}
-                      error={!!errors.website}
-                    />
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.website && errors.website.message}
-                    </FormHelperText>
+
                     <CustomFormLabel htmlFor="type">{t('provider.type')}</CustomFormLabel>
                     <CustomSelect
                       labelId="type-controlled-open-select-label"
@@ -384,6 +372,23 @@ const ProviderEdit = () => {
                       <MenuItem value={0}>{t('need.types.service')}</MenuItem>
                       <MenuItem value={1}>{t('need.types.product')}</MenuItem>
                     </CustomSelect>
+                    <CustomFormLabel htmlFor="website">{t('provider.website')}</CustomFormLabel>
+                    <TextField
+                      id="website"
+                      variant="outlined"
+                      defaultValue={result.website}
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      onChange={handleChangeInput('website')}
+                      control={control}
+                      {...register('website')}
+                      error={!!errors.website}
+                      placeholder="https://example.com"
+                    />
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.website && errors.website.message}
+                    </FormHelperText>
                     <CustomFormLabel htmlFor="country">{t('provider.country')}</CustomFormLabel>
                     <CustomSelect
                       labelId="country-controlled-open-select-label"

@@ -635,6 +635,11 @@
     "link": "Link",
     "affiliateLinkUrl": "Aff. Link",
     "type_name": "Type",
+    "provider": "Provider Name",
+    "providers": {
+      "service": "service",
+      "product": "product"
+    },
     "types": {
       "service": "service",
       "product": "product"
@@ -710,6 +715,29 @@
     "countries": {
       "one": "Iran"
     }
+  },
+  "child": {
+    "id": "Id",
+    "isConfirmed": "Confirmation",
+    "existence_status": "Existence",
+    "isDeleted": "Deletion",
+    "status": "Status",
+    "awakeAvatarUrl": "Awake",
+    "sleptAvatarUrl": "Sleep",
+    "bio": "Bio",
+    "bioSummary": "Summary",
+    "bioSummaryTranslations": "Translation",
+    "birthDate": "Birthday",
+    "birthPlace": "Origin",
+    "city": "City",
+    "country": "Country",
+    "confirmUser": "Confirm User",
+    "confirmDate": "Confirm Date",
+    "done_needs_count": "Done",
+    "familyCount": "FamilyCount",
+    "generatedCode": "Code",
+    "id_social_worker": "Social Worker",
+    "edit": "Edit"
   },
   "dao": {
     "milestone": {

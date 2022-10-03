@@ -361,7 +361,6 @@ const NeedTable = () => {
 
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
-  const loading = open && options.length === 0;
 
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
@@ -371,7 +370,7 @@ const NeedTable = () => {
   const { theNeeds, loading: loadingChildrenNeeds, success: successChildrenNeeds } = childNeeds;
 
   const childrenByNgo = useSelector((state) => state.childrenByNgo);
-  const { childList, success: successChildren } = childrenByNgo;
+  const { childList, loading: loadingChildren, success: successChildren } = childrenByNgo;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
@@ -446,7 +445,7 @@ const NeedTable = () => {
   // Autocomplete children
   useEffect(() => {
     let active = true;
-    if (!loading) {
+    if (loadingChildren) {
       return undefined;
     }
     if (active && successChildren) {
@@ -459,13 +458,13 @@ const NeedTable = () => {
     return () => {
       active = false;
     };
-  }, [loading, successChildren, ngoId]);
+  }, [loadingChildren, successChildren, ngoId]);
 
   // child open
   useEffect(() => {
     if (!open || openNgo) {
       setOptions([]);
-    } else if (open || !openNgo) {
+    } else if (ngoId && (open || !openNgo)) {
       dispatch(fetchChildrenByNgo({ ngoId }));
     }
   }, [open, openNgo, ngoId]);
@@ -599,7 +598,7 @@ const NeedTable = () => {
               </Box>
             )}
             options={successNgoList && ngoId ? options : []}
-            loading={loading}
+            loading={loadingChildren}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -608,7 +607,7 @@ const NeedTable = () => {
                   ...params.InputProps,
                   endAdornment: (
                     <>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {loadingChildren ? <CircularProgress color="inherit" size={20} /> : null}
                       {params.InputProps.endAdornment}
                     </>
                   ),

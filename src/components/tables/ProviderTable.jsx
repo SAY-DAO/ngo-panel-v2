@@ -72,6 +72,12 @@ function EnhancedTableHead(props) {
 
   const headCells = [
     {
+      id: 'isActive',
+      numeric: false,
+      disablePadding: true,
+      label: t('provider.isActive'),
+    },
+    {
       id: 'update',
       numeric: false,
       disablePadding: true,
@@ -345,6 +351,31 @@ const ProviderTable = ({ providerList }) => {
                                   'aria-labelledby': labelId,
                                 }}
                               />
+                            </TableCell>
+                            <TableCell>
+                              <Box display="flex" alignItems="center">
+                                <Box
+                                  sx={{
+                                    backgroundColor:
+                                      row.isActive === true
+                                        ? (theme) => theme.palette.success.main
+                                        : (theme) => theme.palette.error.main,
+                                    borderRadius: '100%',
+                                    height: '10px',
+                                    width: '10px',
+                                  }}
+                                />
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="400"
+                                  sx={{
+                                    ml: 1,
+                                  }}
+                                >
+                                  {row.status}
+                                </Typography>
+                              </Box>
                             </TableCell>
                             <TableCell>
                               <IconButton

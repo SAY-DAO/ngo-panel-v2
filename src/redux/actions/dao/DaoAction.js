@@ -59,7 +59,7 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
     const { data } = await publicApi.get(`/needs`, config);
     const response = await publicApi.get(`/child/all/confirm=2`, config); // confirmed and unconfirmed
     const responseNotExistence = await publicApi.get(
-      `/child/all/confirm=2?existence_status=!1`,
+      `/child/all/confirm=2?existence_status=1`,
       config,
     ); // confirmed and unconfirmed
 
