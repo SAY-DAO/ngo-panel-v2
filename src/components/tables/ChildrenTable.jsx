@@ -57,6 +57,8 @@ function stableSort(array, comparator) {
     if (order !== 0) return order;
     return a[1] - b[1];
   });
+  console.log(stabilizedThis);
+
   return stabilizedThis.map((el) => el[0]);
 }
 
@@ -70,10 +72,10 @@ function EnhancedTableHead(props) {
 
   const headCells = [
     {
-      id: 'status',
-      numeric: false,
-      disablePadding: true,
-      label: t('child.status'),
+      id: 'edit',
+      numeric: true,
+      disablePadding: false,
+      label: t('child.edit'),
     },
     {
       id: 'id',
@@ -82,16 +84,16 @@ function EnhancedTableHead(props) {
       label: t('child.id'),
     },
     {
+      id: 'status',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.status'),
+    },
+    {
       id: 'generatedCode',
       numeric: false,
       disablePadding: false,
       label: t('child.generatedCode'),
-    },
-    {
-      id: 'edit',
-      numeric: true,
-      disablePadding: false,
-      label: t('child.edit'),
     },
     {
       id: 'awakeAvatarUrl',
@@ -104,6 +106,18 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('child.sleptAvatarUrl'),
+    },
+    {
+      id: 'birthDate',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.age'),
+    },
+    {
+      id: 'education',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.education'),
     },
     {
       id: 'bio',
@@ -124,26 +138,20 @@ function EnhancedTableHead(props) {
       label: t('child.bioSummary'),
     },
     {
-      id: 'birthDate',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.birthDate'),
-    },
-    {
       id: 'birthPlace',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('child.birthPlace'),
     },
     {
       id: 'city',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('child.city'),
     },
     {
       id: 'country',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('child.country'),
     },
@@ -160,54 +168,37 @@ function EnhancedTableHead(props) {
       label: t('child.confirmUser'),
     },
     {
+      id: 'id_ngo',
+      numeric: true,
+      disablePadding: false,
+      label: t('child.id_ngo'),
+    },
+    {
       id: 'done_needs_count',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('child.done_needs_count'),
     },
     {
       id: 'familyCount',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('child.familyCount'),
     },
 
     {
       id: 'id_social_worker',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('child.id_social_worker'),
     },
     {
-      id: 'isDeleted',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.isDeleted'),
-    },
-    {
       id: 'spent_credit',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('child.spent_credit'),
     },
-    {
-      id: 'id_ngo',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.id_ngo'),
-    },
-    {
-      id: 'isMigrated',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.isMigrated'),
-    },
-    {
-      id: 'isGone',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.isGone'),
-    },
+
     {
       id: 'nationality',
       numeric: false,
@@ -215,28 +206,22 @@ function EnhancedTableHead(props) {
       label: t('child.nationality'),
     },
     {
-      id: 'sayName',
+      id: 'created',
       numeric: false,
       disablePadding: false,
-      label: t('child.sayName'),
-    },
-    {
-      id: 'sayNameTranslations',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.sayNameTranslations'),
-    },
-    {
-      id: 'voiceUrl',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.voiceUrl'),
+      label: t('child.created'),
     },
     {
       id: 'updated',
       numeric: false,
       disablePadding: false,
       label: t('child.updated'),
+    },
+    {
+      id: 'voiceUrl',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.voiceUrl'),
     },
   ];
 
@@ -407,9 +392,21 @@ const ChildrenTable = ({ childList }) => {
 
   const handleEdit = (row) => {
     dispatch({ type: NGO_BY_ID_RESET });
-    navigate(`/child/edit/${row.id}`);
+    navigate(`/children/edit/${row.id}`);
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
+
+  // Age
+  const getAge = (DOB) => {
+    const today = new Date();
+    const birthDate = new Date(DOB);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age -= 1;
+    }
+    return age;
+  };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - childList.length) : 0;
@@ -464,6 +461,20 @@ const ChildrenTable = ({ childList }) => {
                               />
                             </TableCell>
                             <TableCell>
+                              <IconButton
+                                onClick={() => handleEdit(row)}
+                                color="primary"
+                                aria-label="update social worker"
+                              >
+                                <EditOutlinedIcon />
+                              </IconButton>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6" fontWeight="600">
+                                {row.id}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
                               <Box display="flex" alignItems="center">
                                 <Box
                                   sx={{
@@ -479,7 +490,7 @@ const ChildrenTable = ({ childList }) => {
                                 <Typography
                                   color="textSecondary"
                                   variant="body1"
-                                  fontWeight="400"
+                                  fontWeight="200"
                                   sx={{
                                     ml: 1,
                                   }}
@@ -507,7 +518,7 @@ const ChildrenTable = ({ childList }) => {
                                     ml: 1,
                                   }}
                                 >
-                                  {t('child.existence_status')}
+                                  {`${t('child.existence_status')}=${row.existence_status}`}
                                 </Typography>
                               </Box>
                               <Box display="flex" alignItems="center">
@@ -533,25 +544,34 @@ const ChildrenTable = ({ childList }) => {
                                   {t('child.isDeleted')}
                                 </Typography>
                               </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="600">
-                                {row.id}
-                              </Typography>
+                              <Box display="flex" alignItems="center">
+                                <Box
+                                  sx={{
+                                    backgroundColor:
+                                      row.is_gone === false
+                                        ? (theme) => theme.palette.success.main
+                                        : (theme) => theme.palette.error.main,
+                                    borderRadius: '100%',
+                                    height: '10px',
+                                    width: '10px',
+                                  }}
+                                />
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="400"
+                                  sx={{
+                                    ml: 1,
+                                  }}
+                                >
+                                  {t('child.is_gone')}
+                                </Typography>
+                              </Box>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="h6" fontWeight="600">
                                 {row.generatedCode}
                               </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={() => handleEdit(row)}
-                                color="primary"
-                                aria-label="update social worker"
-                              >
-                                <EditOutlinedIcon />
-                              </IconButton>
                             </TableCell>
                             <TableCell>
                               <Box display="flex" alignItems="center">
@@ -591,6 +611,17 @@ const ChildrenTable = ({ childList }) => {
                                   }}
                                 />
                               </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                {getAge(row.birthDate)} Years
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6" fontWeight="600">
+                                {row.education}
+                              </Typography>
                             </TableCell>
                             <TableCell>
                               <Tooltip title={row.bio ? row.bio : ''} placement="top-end">
@@ -656,9 +687,6 @@ const ChildrenTable = ({ childList }) => {
                               </Tooltip>
                             </TableCell>
                             <TableCell>
-                              <Typography variant="h6">{row.birthDate}</Typography>
-                            </TableCell>
-                            <TableCell>
                               <Typography variant="h6">{row.birthPlace}</Typography>
                             </TableCell>
                             <TableCell>
@@ -683,6 +711,11 @@ const ChildrenTable = ({ childList }) => {
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.id_ngo}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.done_needs_count}
                               </Typography>
                             </TableCell>
@@ -698,20 +731,14 @@ const ChildrenTable = ({ childList }) => {
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.isDeleted}
+                                {row.spent_credit.toLocaleString()}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.confirmDate}
+                                {row.nationality}
                               </Typography>
                             </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.confirmDate}
-                              </Typography>
-                            </TableCell>
-
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.created}
@@ -722,10 +749,13 @@ const ChildrenTable = ({ childList }) => {
                                 {row.updated}
                               </Typography>
                             </TableCell>
-
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.website && <Link href={row.website}>Link</Link>}
+                                {row.voiceUrl && (
+                                  <Link target="_blank" href={row.voiceUrl}>
+                                    Link
+                                  </Link>
+                                )}
                               </Typography>
                             </TableCell>
                           </TableRow>

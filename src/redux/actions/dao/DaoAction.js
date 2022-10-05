@@ -57,13 +57,6 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       },
     };
     const { data } = await publicApi.get(`/needs`, config);
-    const response = await publicApi.get(`/child/all/confirm=2`, config); // confirmed and unconfirmed
-    const responseNotExistence = await publicApi.get(
-      `/child/all/confirm=2?existence_status=1`,
-      config,
-    ); // confirmed and unconfirmed
-
-    dispatch({ type: UPDATE_SERVER_REQUEST });
 
     for (let i = 0; i < data.needs.length; i++) {
       need = {
@@ -124,89 +117,70 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       needList.push(need);
     }
 
-    // for not existence children - those who have left :(
-    for (let i = 0; i < responseNotExistence.data.children.length; i++) {
-      child = {
-        childId: responseNotExistence.data.children[i].id,
-        address: responseNotExistence.data.children[i].address,
-        avatarUrl: responseNotExistence.data.children[i].avatarUrl,
-        awakeAvatarUrl: responseNotExistence.data.children[i].awakeAvatarUrl,
-        bio: responseNotExistence.data.children[i].bio,
-        bioSummary: responseNotExistence.data.children[i].bioSummary,
-        bioSummaryTranslations: responseNotExistence.data.children[i].bio_summary_translations,
-        bioTranslations: responseNotExistence.data.children[i].bio_translations,
-        birthDate: responseNotExistence.data.children[i].birthDate,
-        birthPlace: responseNotExistence.data.children[i].birthPlace,
-        city: responseNotExistence.data.children[i].city,
-        confirmDate: responseNotExistence.data.children[i].confirmDate,
-        confirmUser: responseNotExistence.data.children[i].confirmUser,
-        country: responseNotExistence.data.children[i].country,
-        created: responseNotExistence.data.children[i].created,
-        doneNeedsCount: responseNotExistence.data.children[i].done_needs_count,
-        education: responseNotExistence.data.children[i].education,
-        existenceStatus: responseNotExistence.data.children[i].existence_status,
-        familyCount: responseNotExistence.data.children[i].familyCount,
-        generatedCode: responseNotExistence.data.children[i].generatedCode,
-        housingStatus: responseNotExistence.data.children[i].housingStatus,
-        ngoId: responseNotExistence.data.children[i].id_ngo,
-        idSocialWorker: responseNotExistence.data.children[i].id_social_worker,
-        isConfirmed: responseNotExistence.data.children[i].isConfirmed,
-        isDeleted: responseNotExistence.data.children[i].isDeleted,
-        isMigrated: responseNotExistence.data.children[i].isMigrated,
-        isGone: responseNotExistence.data.children[i].is_gone,
-        migrateDate: responseNotExistence.data.children[i].migrateDate,
-        migratedId: responseNotExistence.data.children[i].migratedId,
-        nationality: responseNotExistence.data.children[i].nationality,
-        sayFamilyCount: responseNotExistence.data.children[i].sayFamilyCount,
-        sayName: responseNotExistence.data.children[i].sayName,
-        sayNameTranslations: responseNotExistence.data.children[i].sayNameTranslations,
-        sleptAvatarUrl: responseNotExistence.data.children[i].sleptAvatarUrl,
-        status: responseNotExistence.data.children[i].status,
-        updated: responseNotExistence.data.children[i].updated,
-        voiceUrl: responseNotExistence.data.children[i].voiceUrl,
-      };
-      childList.push(child);
-    }
 
-    for (let i = 0; i < response.data.children.length; i++) {
+    const responseDead = await publicApi.get(`/child/all/confirm=2?existence_status=0`, config);
+    console.log(responseDead.data);
+
+    const responseAlivePresent = await publicApi.get(
+      `/child/all/confirm=2?existence_status=1`,
+      config,
+    );
+    console.log(responseAlivePresent.data);
+    const array1 =responseDead.data.children.concat(responseAlivePresent.data.children);
+
+    const responseAliveGone = await publicApi.get(
+      `/child/all/confirm=2?existence_status=2`,
+      config,
+    );
+    console.log(responseAliveGone.data);
+    const array2 =array1.concat(responseAliveGone.data.children);
+
+    const responseTempGone = await publicApi.get(`/child/all/confirm=2?existence_status=3`, config);
+    console.log(responseTempGone.data);
+    const array4 =array2.concat(responseTempGone.data.children);
+
+    dispatch({ type: UPDATE_SERVER_REQUEST });
+
+      console.log(array4);
+      for (let i = 0; i < array4.length; i++) {
       child = {
-        childId: response.data.children[i].id,
-        address: response.data.children[i].address,
-        avatarUrl: response.data.children[i].avatarUrl,
-        awakeAvatarUrl: response.data.children[i].awakeAvatarUrl,
-        bio: response.data.children[i].bio,
-        bioSummary: response.data.children[i].bioSummary,
-        bioSummaryTranslations: response.data.children[i].bio_summary_translations,
-        bioTranslations: response.data.children[i].bio_translations,
-        birthDate: response.data.children[i].birthDate,
-        birthPlace: response.data.children[i].birthPlace,
-        city: response.data.children[i].city,
-        confirmDate: response.data.children[i].confirmDate,
-        confirmUser: response.data.children[i].confirmUser,
-        country: response.data.children[i].country,
-        created: response.data.children[i].created,
-        doneNeedsCount: response.data.children[i].done_needs_count,
-        education: response.data.children[i].education,
-        existenceStatus: response.data.children[i].existence_status,
-        familyCount: response.data.children[i].familyCount,
-        generatedCode: response.data.children[i].generatedCode,
-        housingStatus: response.data.children[i].housingStatus,
-        ngoId: response.data.children[i].id_ngo,
-        idSocialWorker: response.data.children[i].id_social_worker,
-        isConfirmed: response.data.children[i].isConfirmed,
-        isDeleted: response.data.children[i].isDeleted,
-        isMigrated: response.data.children[i].isMigrated,
-        isGone: response.data.children[i].is_gone,
-        migrateDate: response.data.children[i].migrateDate,
-        migratedId: response.data.children[i].migratedId,
-        nationality: response.data.children[i].nationality,
-        sayFamilyCount: response.data.children[i].sayFamilyCount,
-        sayName: response.data.children[i].sayName,
-        sayNameTranslations: response.data.children[i].sayNameTranslations,
-        sleptAvatarUrl: response.data.children[i].sleptAvatarUrl,
-        status: response.data.children[i].status,
-        updated: response.data.children[i].updated,
-        voiceUrl: response.data.children[i].voiceUrl,
+        childId: array4[i].id,
+        address: array4[i].address,
+        avatarUrl: array4[i].avatarUrl,
+        awakeAvatarUrl: array4[i].awakeAvatarUrl,
+        bio: array4[i].bio,
+        bioSummary: array4[i].bioSummary,
+        bioSummaryTranslations: array4[i].bio_summary_translations,
+        bioTranslations: array4[i].bio_translations,
+        birthDate: array4[i].birthDate,
+        birthPlace: array4[i].birthPlace,
+        city: array4[i].city,
+        confirmDate: array4[i].confirmDate,
+        confirmUser: array4[i].confirmUser,
+        country: array4[i].country,
+        created: array4[i].created,
+        doneNeedsCount: array4[i].done_needs_count,
+        education: array4[i].education,
+        existenceStatus: array4[i].existence_status,
+        familyCount: array4[i].familyCount,
+        generatedCode: array4[i].generatedCode,
+        housingStatus: array4[i].housingStatus,
+        ngoId: array4[i].id_ngo,
+        idSocialWorker: array4[i].id_social_worker,
+        isConfirmed: array4[i].isConfirmed,
+        isDeleted: array4[i].isDeleted,
+        isMigrated: array4[i].isMigrated,
+        isGone: array4[i].is_gone,
+        migrateDate: array4[i].migrateDate,
+        migratedId: array4[i].migratedId,
+        nationality: array4[i].nationality,
+        sayFamilyCount: array4[i].sayFamilyCount,
+        sayName: array4[i].sayName,
+        sayNameTranslations: array4[i].sayNameTranslations,
+        sleptAvatarUrl: array4[i].sleptAvatarUrl,
+        status: array4[i].status,
+        updated: array4[i].updated,
+        voiceUrl: array4[i].voiceUrl,
       };
       childList.push(child);
     }

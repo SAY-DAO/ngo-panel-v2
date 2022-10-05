@@ -61,11 +61,26 @@ export const fetchChildList = () => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await publicApi.get(`/child/all/confirm=1`, config);
+    const responseDead = await publicApi.get(`/child/all/confirm=2?existence_status=0`, config);
+
+    const responseAlivePresent = await publicApi.get(
+      `/child/all/confirm=2?existence_status=1`,
+      config,
+    );
+    const array1 = responseDead.data.children.concat(responseAlivePresent.data.children);
+
+    const responseAliveGone = await publicApi.get(
+      `/child/all/confirm=2?existence_status=2`,
+      config,
+    );
+    const array2 = array1.concat(responseAliveGone.data.children);
+
+    const responseTempGone = await publicApi.get(`/child/all/confirm=2?existence_status=3`, config);
+    const array4 = array2.concat(responseTempGone.data.children);
 
     dispatch({
       type: CHILD_LIST_SUCCESS,
-      payload: data,
+      payload: array4,
     });
   } catch (e) {
     dispatch({

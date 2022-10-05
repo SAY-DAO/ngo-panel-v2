@@ -48,7 +48,7 @@ const SocialWorkerProfile = () => {
           <Grid container spacing={0}>
             <Grid item sm={12} lg={4} xs={12}>
               {/* <IntroCard /> */}
-              <PhotosCard myChildren={myChildren.children} />
+              <PhotosCard myChildren={myChildren} />
             </Grid>
             <Grid item sm={12} lg={8} xs={12}>
               <NewPost />

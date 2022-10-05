@@ -210,6 +210,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     dispatch({ type: UPDATE_ONE_NEED_REQUEST });
     const {
       userLogin: { userInfo },
+      swDetails: { swInfo },
     } = getState();
 
     const config = {
@@ -220,57 +221,56 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
+    formData.append('sw_id', swInfo.swId);
+
     if (values.childId) {
-      formData.set('child_id', values.childId);
-    }
-    if (values.swId) {
-      formData.set('sw_id', values.swId);
+      formData.append('child_id', values.childId);
     }
     if (values.name) {
-      formData.set('name_translations', values.name);
+      formData.append('name_translations', values.name);
     }
     if (values.description) {
-      formData.set('description_translations', values.description);
+      formData.append('description_translations', values.description);
     }
     if (values.category) {
-      formData.set('category', values.category);
+      formData.append('category', values.category);
     }
     if (values.isUrgent) {
-      formData.set('isUrgent', values.isUrgent);
+      formData.append('isUrgent', values.isUrgent);
     }
     if (values.cost) {
-      formData.set('cost', values.cost);
+      formData.append('cost', values.cost);
     }
-    // Can be set only in p3 (product status 3)
+    // Can be append only in p3 (product status 3)
     if (values.purchaseCost) {
-      formData.set('purchase_cost', values.purchaseCost);
+      formData.append('purchase_cost', values.purchaseCost);
     }
     if (values.type) {
-      formData.set('type', values.type);
+      formData.append('type', values.type);
     }
     if (values.link) {
-      formData.set('link', values.link);
+      formData.append('link', values.link);
     }
     if (values.affiliateLinkUrl) {
-      formData.set('affiliateLinkUrl', values.affiliateLinkUrl);
+      formData.append('affiliateLinkUrl', values.affiliateLinkUrl);
     }
     if (values.receipts) {
-      formData.set('receipts', values.receipts);
+      formData.append('receipts', values.receipts);
     }
     if (values.doingDuration) {
-      formData.set('doing_duration', values.doingDuration);
+      formData.append('doing_duration', values.doingDuration);
     }
     if (values.details) {
-      formData.set('details', values.details);
+      formData.append('details', values.details);
     }
     if (values.information) {
-      formData.set('informations', values.information);
+      formData.append('informations', values.information);
     }
     if (values.deliveryDate) {
-      formData.set('delivery_date', values.deliveryDate);
+      formData.append('delivery_date', values.deliveryDate);
     }
     if (values.finalImageFile) {
-      formData.set('imageUrl', values.finalImageFile);
+      formData.append('imageUrl', values.finalImageFile);
     }
     const { data } = await publicApi.patch(
       `/need/update/needId=${values.needId}`,
@@ -294,66 +294,62 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     dispatch({ type: ADD_ONE_NEED_REQUEST });
     const {
       userLogin: { userInfo },
+      swDetails: { swInfo },
     } = getState();
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: userInfo && userInfo.access_token,
       },
     };
 
     const formData = new FormData();
+
+    formData.append('sw_id', swInfo.swId);
+
     if (values.childId) {
-      formData.set('child_id', values.childId);
-    }
-    if (values.swId) {
-      formData.set('sw_id', values.swId);
+      formData.append('child_id', values.childId);
     }
     if (values.name) {
-      formData.set('name_translations', values.name);
+      formData.append('name_translations', values.name);
     }
     if (values.description) {
-      formData.set('description_translations', values.description);
+      formData.append('description_translations', values.description);
     }
     if (values.category) {
-      formData.set('category', values.category);
+      formData.append('category', values.category);
     }
     if (values.isUrgent) {
-      formData.set('isUrgent', values.isUrgent);
+      formData.append('isUrgent', values.isUrgent);
     } else {
-      formData.set('isUrgent', false);
+      formData.append('isUrgent', false);
     }
     if (values.cost) {
-      formData.set('cost', values.cost);
+      formData.append('cost', values.cost);
     }
     if (values.type) {
-      formData.set('type', values.type);
+      formData.append('type', values.type);
     }
     if (values.link) {
-      formData.set('link', values.link);
+      formData.append('link', values.link);
     }
     if (values.affiliateLinkUrl) {
-      formData.set('affiliateLinkUrl', values.affiliateLinkUrl);
-    }
-    if (values.receipts) {
-      formData.set('receipts', values.receipts);
+      formData.append('affiliateLinkUrl', values.affiliateLinkUrl);
     }
     if (values.doingDuration) {
-      formData.set('doing_duration', values.doingDuration);
+      formData.append('doing_duration', values.doingDuration);
     }
     if (values.details) {
-      formData.set('details', values.details);
+      formData.append('details', values.details);
     }
     if (values.information) {
-      formData.set('informations', values.information);
+      formData.append('informations', values.information);
     }
-    if (values.deliveryDate) {
-      formData.set('delivery_date', values.deliveryDate);
+    if (values.imageUrl) {
+      formData.append('imageUrl', values.imageUrl);
     }
-    if (values.finalImageFile) {
-      formData.set('imageUrl', values.finalImageFile);
-    }
+    console.log(values);
     const { data } = await publicApi.post(`/need/`, formData, config);
     dispatch({
       type: ADD_ONE_NEED_SUCCESS,

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import ChildrenTable from '../../components/tables/ChildrenTable';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
+import { fetchChildList } from '../../redux/actions/childrenAction';
 
 const ChildrenList = () => {
   const dispatch = useDispatch();
@@ -17,15 +18,13 @@ const ChildrenList = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-
   // fetch children
   useEffect(() => {
     if (swInfo) {
       // super admin
       if (swInfo.typeId === 1) {
-        dispatch(fetchChildList());
+        dispatch(fetchChildList()); // all => confirm=2, existence_status=1
       } else if (swInfo.typeId !== 1) {
-        console.
         dispatch(fetchSwChildList(swInfo.id));
       }
     }
@@ -33,7 +32,7 @@ const ChildrenList = () => {
 
   return (
     <>
-      {!swInfo || (!children && myChildren) ? (
+      {!swInfo || (!children && !myChildren) ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -41,7 +40,7 @@ const ChildrenList = () => {
         (children || myChildren) && (
           <PageContainer title="Children" description="this is Children page">
             <Grid>
-              <ChildrenTable childList={children.children} />
+              <ChildrenTable childList={children ? children.children : myChildren} />
             </Grid>
           </PageContainer>
         )

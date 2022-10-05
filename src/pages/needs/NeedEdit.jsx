@@ -84,7 +84,6 @@ const NeedEdit = () => {
     category: Yup.string().required('Please enter needs category'),
     link: Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
-    // isUrgentDesc: Yup.string().required('Please enter urgency details'),
   });
 
   const {
@@ -120,23 +119,28 @@ const NeedEdit = () => {
     }
   }, [oneNeed]);
 
+
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
       updateNeed({
-        name: data.name,
-        emailAddress: data.emailAddress,
-        country: data.country,
-        city: data.city,
-        phoneNumber: data.phoneNumber,
-        postalAddress: data.postalAddress,
-        website: data.website,
-        logoUrl: finalImageFile,
+        needId: oneNeed.id,
+        name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
+        description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
+        isUrgent: isUrgentChecked,
+        cost: data.cost,
+        type: data.type,
+        category: data.category,
+        imageUrl: finalImageFile || data.imageUrl,
         details: data.details,
         information: data.informations,
-        needId: oneNeed.id,
+        doing_duration: data.doing_duration,
+        link: data.link,
+        isUrgentDesc: data.isUrgentDesc,
+        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
+        childId,
       }),
     );
     dispatch({ type: CHILD_ONE_NEED_RESET });
@@ -181,6 +185,7 @@ const NeedEdit = () => {
         <>
           {successChild && childId && (
             <>
+            <Breadcrumb title="Edit page" subtitle="Need" />
               <Grid container spacing={0}>
                 <Grid item lg={4} md={12} xs={12}>
                   <Card sx={{ pb: 6 }}>
@@ -364,25 +369,6 @@ const NeedEdit = () => {
                           />
                         </Grid>
                       </Grid>
-                      {isUrgentChecked && (
-                        <>
-                          <CustomFormLabel htmlFor="isUrgentDesc">
-                            {t('need.isUrgentDesc')}
-                          </CustomFormLabel>
-                          <CustomTextField
-                            id="isUrgentDesc"
-                            variant="outlined"
-                            multiline
-                            rows={4}
-                            size="small"
-                            sx={{ mb: 2 }}
-                            fullWidth
-                            control={control}
-                            register={{ ...register('isUrgentDesc') }}
-                          />
-                        </>
-                      )}
-
                       <Grid
                         container
                         direction="row"

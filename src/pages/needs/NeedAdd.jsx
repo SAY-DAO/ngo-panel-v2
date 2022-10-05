@@ -25,6 +25,7 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import FeatherIcon from 'feather-icons-react';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -128,7 +129,7 @@ const NeedAdd = () => {
     }
     if (active && successChildren) {
       // sort myChildren
-      const sortedChildren = myChildren.children.sort(
+      const sortedChildren = myChildren.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
       setOptionsChildren([...sortedChildren]);
@@ -221,7 +222,6 @@ const NeedAdd = () => {
     category: Yup.string().required('Please enter needs category'),
     link: Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
-    // isUrgentDesc: Yup.string().required('Please enter urgency details'),
   });
 
   const {
@@ -239,7 +239,6 @@ const NeedAdd = () => {
     if (successNeedEx && oneNeed) {
       setValue('name_fa', oneNeed.name_translations.fa);
       setValue('name_en', oneNeed.name_translations.en);
-      setValue('type', oneNeed.type);
       setValue('category', oneNeed.category);
       setValue('isUrgent', oneNeed.isUrgent);
       setValue('desc_fa', oneNeed.description_translations.fa);
@@ -272,19 +271,17 @@ const NeedAdd = () => {
       AddNeed({
         name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
         description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
-        isUrgent: data.isUrgent,
+        isUrgent: isUrgentChecked,
         cost: data.cost,
         type: data.type,
         category: data.category,
-        emailAddress: data.emailAddress,
-        country: data.country,
-        city: data.city,
-        phoneNumber: data.phoneNumber,
-        postalAddress: data.postalAddress,
-        website: data.website,
-        logoUrl: finalImageFile,
+        imageUrl: finalImageFile || data.imageUrl,
         details: data.details,
         information: data.informations,
+        doing_duration: data.doing_duration,
+        link: data.link,
+        isUrgentDesc: data.isUrgentDesc,
+        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
         childId,
       }),
     );
@@ -326,7 +323,7 @@ const NeedAdd = () => {
         <Grid item>
           <Autocomplete
             id="asynchronous-myChildren"
-            sx={{ minWidth: '300px' }}
+            sx={{ minWidth: '350px' }}
             open={openChildren}
             onOpen={() => {
               setOpenChildren(true);
@@ -341,6 +338,23 @@ const NeedAdd = () => {
             }
             options={optionsChildren}
             loading={isLoadingChildren}
+            renderOption={(props, option) => (
+              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                {option.isConfirmed ? (
+                  <>
+                    <FeatherIcon color="green" icon="check" width="18" />
+                    <Typography>
+                      {`${option.id} - ${option.generatedCode} - ${option.sayName}`}
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    <FeatherIcon color="red" icon="x" width="18" />
+                    <Typography>{`${option.id} - ${option.sayName} `}</Typography>
+                  </>
+                )}
+              </Box>
+            )}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -588,24 +602,6 @@ const NeedAdd = () => {
                             />
                           </Grid>
                         </Grid>
-                        {isUrgentChecked && (
-                          <>
-                            <CustomFormLabel htmlFor="isUrgentDesc">
-                              {t('need.isUrgentDesc')}
-                            </CustomFormLabel>
-                            <CustomTextField
-                              id="isUrgentDesc"
-                              variant="outlined"
-                              multiline
-                              rows={4}
-                              size="small"
-                              sx={{ mb: 2 }}
-                              fullWidth
-                              control={control}
-                              register={{ ...register('isUrgentDesc') }}
-                            />
-                          </>
-                        )}
                         <Grid
                           container
                           direction="row"

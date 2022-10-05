@@ -27,19 +27,26 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import { updateNgo, fetchNgoById, updateNgoIsActive } from '../../redux/actions/ngoAction';
+import {
+  updateChild,
+  fetchMyChildById,
+  updateChildIsActive,
+} from '../../redux/actions/childrenAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
+import { CHILD_BY_ID_RESET } from '../../redux/constants/childrenConstants';
 
 const BCrumb = [
   {
-    to: '/child/list',
+    to: '/children/list',
     title: 'Children List',
   },
   {
@@ -58,34 +65,27 @@ const ChildrenEdit = () => {
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [openIdImageDialog, setOpenIdImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
-  const [values, setValues] = useState({
-    name: '',
-    website: '',
-    country: '',
-    city: '',
-    phoneNumber: '',
-    postalAddress: '',
-    emailAddress: '',
-    logoUrl: '',
-  });
+  const [birthDate, setBirthDate] = useState(new Date());
+  const [values, setValues] = useState({});
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const ngoById = useSelector((state) => state.ngoById);
-  const { result, loading: loadingNgoById, success: successNgoById } = ngoById;
+  const childById = useSelector((state) => state.childById);
+  const { result, loading: loadingChildById, success: successChildById } = childById;
 
-  const ngoStatusUpdate = useSelector((state) => state.ngoStatusUpdate);
-  const { status } = ngoStatusUpdate;
-
-  const ngoUpdate = useSelector((state) => state.ngoUpdate);
-  const { success: successNgoUpdate, loading: loadingNgoUpdate, error: errorNgoUpdate } = ngoUpdate;
+  const childUpdate = useSelector((state) => state.childUpdate);
+  const {
+    success: successChildUpdate,
+    loading: loadingChildUpdate,
+    error: errorChildUpdate,
+  } = childUpdate;
 
   useEffect(() => {
-    if ((!successNgoById && id) || status) {
-      dispatch(fetchNgoById(id));
+    if (!successChildById && id) {
+      dispatch(fetchMyChildById(id));
     }
-  }, [status, successNgoUpdate, id]);
+  }, [successChildUpdate, id]);
 
   // isActive
   useEffect(() => {
@@ -94,19 +94,55 @@ const ChildrenEdit = () => {
     } else {
       setActiveChecked(false);
     }
-  }, [successNgoById, status]);
+  }, [successChildById]);
+
+  // awakeAvatarUrl(pin):"https://api.sayapp.company/files/40-child/40-avatar_0010010013.png"
+  // sleptAvatarUrl(pin):"https://api.sayapp.company/files/40-child/40-sleptAvatar_0010010013.png"
+  // voiceUrl(pin):"https://api.sayapp.company/files/40-child/40-voice_0010010013.mp3"
+  // avatarUrl(pin):"https://api.sayapp.company/files/40-child/40-sleptAvatar_0010010013.png"
 
   useEffect(() => {
     if (result) {
+      setBirthDate(result.birthDate);
       setValues({
         ...values,
-        name: result.name,
-        website: result.website,
-        emailAddress: result.emailAddress,
+        id_ngo: result.id_ngo,
+        id_social_worker: result.id_social_worker,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        sayName: result.sayName,
+        phoneNumber: result.phoneNumber,
+        nationality: result.nationality,
         country: result.country,
         city: result.city,
-        phoneNumber: result.phoneNumber,
-        postalAddress: result.postalAddress,
+        bio: result.bio,
+        bioSummary: result.bioSummary,
+        sayFamilyCount: result.sayFamilyCount,
+        birthPlace: result.birthPlace,
+        address: result.address,
+        housingStatus: result.housingStatus,
+        familyCount: result.familyCount,
+        education: result.education,
+        status: result.status,
+        existence_status: result.existence_status,
+        isDeleted: result.isDeleted,
+        isConfirmed: result.isConfirmed,
+        confirmUser: result.confirmUser,
+        confirmDate: result.confirmDate,
+        generatedCode: result.generatedCode,
+        isMigrated: result.isMigrated,
+        migratedId: result.migratedId,
+        migrateDate: result.migrateDate,
+        is_gone: result.is_gone,
+        done_needs_count: result.done_needs_count,
+        spent_credit: result.spent_credit.firstName_translations,
+        firstName_translations: result.firstName_translations,
+        sayname_translations: result.sayname_translations,
+        bio_translations: result.bio_translations,
+        bio_summary_translations: result.bio_summary_translations,
+        lastName_translations: result.lastName_translations,
+        gender: result.gender,
+        child_id: result.child_id,
         logoUrl: result.logoUrl,
       });
     }
@@ -114,9 +150,9 @@ const ChildrenEdit = () => {
 
   const handleChangeActive = () => {
     if (activeChecked && result.isActive) {
-      dispatch(updateNgoIsActive(result.id, 'deactivate'));
+      dispatch(updateChildIsActive(result.id, 'deactivate'));
     } else if (!activeChecked && !result.isActive) {
-      dispatch(updateNgoIsActive(result.id, 'activate'));
+      dispatch(updateChildIsActive(result.id, 'activate'));
     }
   };
 
@@ -145,7 +181,7 @@ const ChildrenEdit = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      updateNgo({
+      updateChild({
         id,
         name: data.name,
         emailAddress: data.emailAddress,
@@ -157,7 +193,7 @@ const ChildrenEdit = () => {
         logoUrl: finalImageFile,
       }),
     );
-    dispatch({ type: NGO_BY_ID_RESET });
+    dispatch({ type: CHILD_BY_ID_RESET });
   };
 
   // dialog image
@@ -172,6 +208,10 @@ const ChildrenEdit = () => {
     setOpenIdImageDialog(false);
   };
 
+  const handleDateChange = (newValue) => {
+    setBirthDate(newValue);
+  };
+
   const onImageChange = (e) => {
     if (e.target.files[0]) {
       setUploadImage(e.target.files[0]);
@@ -184,18 +224,18 @@ const ChildrenEdit = () => {
   };
 
   return (
-    <PageContainer title="NGO Edit" description="this is NGO Edit page">
+    <PageContainer title="CHILD Edit" description="this is CHILD Edit page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {!id || loadingNgoById || loadingNgoUpdate ? (
+      {!id || loadingChildById || loadingChildUpdate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
         result && (
           <>
-            <Breadcrumb title="Edit page" subtitle="NGO" />
+            <Breadcrumb title="Edit page" subtitle="Child" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
@@ -281,17 +321,17 @@ const ChildrenEdit = () => {
                         />
                         {'  '}
                         <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                          {t('ngo.isActive')}
+                          {t('child.isActive')}
                         </Typography>
                       </Grid>
                     }
                   />
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('ngo.emailAddress')}
+                    {t('child.emailAddress')}
                   </Typography>
                   <Typography variant="body2">{result && result.emailAddress}</Typography>
                   <Typography variant="h6" fontWeight="600" sx={{ mt: 3, mb: 1 }}>
-                    {t('ngo.phoneNumber')}
+                    {t('child.phoneNumber')}
                   </Typography>
                   <Typography variant="body2">{result && result.phoneNumber}</Typography>
                 </Card>
@@ -299,23 +339,37 @@ const ChildrenEdit = () => {
               <Grid item lg={8} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                    {t('ngo.titleEdit')}
+                    {t('child.titleEdit')}
                   </Typography>
                   <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="name">NGO Name</CustomFormLabel>
+                    <CustomFormLabel htmlFor="generatedCode">
+                      {' '}
+                      {t('child.generatedCode')}
+                    </CustomFormLabel>
                     <TextField
                       required
-                      id="name"
+                      id="generatedCode"
                       variant="outlined"
-                      defaultValue={result.name}
+                      defaultValue={result.generatedCode}
                       fullWidth
                       size="small"
-                      onChange={handleChangeInput('name')}
+                      onChange={handleChangeInput('generatedCode')}
                       control={control}
-                      {...register('name')}
-                      error={!!errors.name}
+                      {...register('generatedCode')}
+                      error={!!errors.generatedCode}
                     />
-                    <CustomFormLabel htmlFor="Email">{t('ngo.emailAddress')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="birthDate">{t('child.birthDate')}</CustomFormLabel>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDatePicker
+                        id="birthDate"
+                        inputFormat="MM/dd/yyyy"
+                        value={birthDate}
+                        onChange={handleDateChange}
+                        renderInput={(params) => <TextField {...params} />}
+                        helperText={errors && errors.birthDate && errors.birthDate.message}
+                      />
+                    </LocalizationProvider>
+                    <CustomFormLabel htmlFor="Email">{t('child.emailAddress')}</CustomFormLabel>
                     <TextField
                       id="Email"
                       variant="outlined"
@@ -332,7 +386,7 @@ const ChildrenEdit = () => {
                       {errors && errors.emailAddress && errors.emailAddress.message}
                     </FormHelperText>
 
-                    <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="country">{t('child.country')}</CustomFormLabel>
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
@@ -341,12 +395,12 @@ const ChildrenEdit = () => {
                       control={control}
                       register={{ ...register('country') }}
                     >
-                      <MenuItem value={result.country || 1}>{t('ngo.countries.one')}</MenuItem>
+                      <MenuItem value={result.country || 1}>{t('child.countries.one')}</MenuItem>
                     </CustomSelect>
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                       {errors && errors.country && errors.country.message}
                     </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="city">{t('child.city')}</CustomFormLabel>
                     <CustomSelect
                       labelId="city-controlled-open-select-label"
                       id="city-controlled-open-select"
@@ -355,11 +409,11 @@ const ChildrenEdit = () => {
                       control={control}
                       register={{ ...register('city') }}
                     >
-                      <MenuItem value={1}>{t('ngo.cities.one')}</MenuItem>
+                      <MenuItem value={1}>{t('child.cities.one')}</MenuItem>
                     </CustomSelect>
 
                     <CustomFormLabel htmlFor="postalAddress">
-                      {t('ngo.postalAddress')}
+                      {t('child.postalAddress')}
                     </CustomFormLabel>
                     <CustomTextField
                       id="postalAddress"
@@ -374,7 +428,9 @@ const ChildrenEdit = () => {
                       control={control}
                       register={{ ...register('postalAddress') }}
                     />
-                    <CustomFormLabel htmlFor="phoneNumber">{t('ngo.phoneNumber')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="phoneNumber">
+                      {t('child.phoneNumber')}
+                    </CustomFormLabel>
                     <TextField
                       id="phoneNumber"
                       variant="outlined"
@@ -388,14 +444,14 @@ const ChildrenEdit = () => {
                       error={!!errors.phoneNumber}
                     />
                     <LoadingButton
-                      // loading={loadingNgoUpdate}
+                      // loading={loadingChildUpdate}
                       color="primary"
                       type="submit"
                       onClick={handleSubmit(onSubmit)}
                       variant="contained"
                       sx={{ mt: 4 }}
                     >
-                      {t('ngo.button.update')}
+                      {t('child.button.update')}
                     </LoadingButton>
                   </form>
                 </Card>
@@ -439,15 +495,15 @@ const ChildrenEdit = () => {
               </DialogActions>
             </Dialog>
             <Grid>
-              {(successNgoUpdate || errorNgoUpdate) && (
+              {(successChildUpdate || errorChildUpdate) && (
                 <Message
-                  severity={successNgoUpdate ? 'success' : 'error'}
+                  severity={successChildUpdate ? 'success' : 'error'}
                   variant="filled"
-                  input="addNgo"
-                  backError={errorNgoUpdate}
+                  input="addChild"
+                  backError={errorChildUpdate}
                   sx={{ width: '100%' }}
                 >
-                  {successNgoUpdate && t('ngo.updated')}
+                  {successChildUpdate && t('child.updated')}
                 </Message>
               )}
             </Grid>

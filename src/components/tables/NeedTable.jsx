@@ -242,6 +242,13 @@ function EnhancedTableHead(props) {
       width: '150px',
     },
     {
+      id: 'doing_duration',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.doing_duration'),
+      width: '100px',
+    },
+    {
       id: 'child_delivery_date',
       numeric: false,
       disablePadding: false,
@@ -939,6 +946,15 @@ const NeedTable = () => {
                                     fontWeight="400"
                                   >
                                     {row.doneAt}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    fontWeight="400"
+                                  >
+                                    {row.doing_duration}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
