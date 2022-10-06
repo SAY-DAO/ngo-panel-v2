@@ -28,7 +28,6 @@ import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
@@ -65,7 +64,7 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
 
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -228,7 +227,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <CustomCheckbox
             color="primary"
             checked={rowCount > 0 && numSelected === rowCount}
@@ -237,7 +236,7 @@ function EnhancedTableHead(props) {
               'aria-label': 'select all desserts',
             }}
           />
-        </TableCell>
+        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -267,12 +266,12 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
+  // numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
+  // rowCount: PropTypes.number.isRequired,
 };
 
 const EnhancedTableToolbar = (props) => {
@@ -357,24 +356,24 @@ const ChildrenTable = ({ childList }) => {
     setSelected([]);
   };
 
-  const handleClick = (event, firstName) => {
-    const selectedIndex = selected.indexOf(firstName);
-    let newSelected = [];
+  const handleClick = (event, id) => {
+    // const selectedIndex = selected.indexOf(firstName);
+    // let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, firstName);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, firstName);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1),
+    //   );
+    // }
 
-    setSelected(newSelected);
+    setSelected([id]);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -419,7 +418,7 @@ const ChildrenTable = ({ childList }) => {
         <CardContent>
           <Box>
             <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
               <TableContainer>
                 <Table
                   sx={{ minWidth: 750 }}
@@ -437,21 +436,21 @@ const ChildrenTable = ({ childList }) => {
                   <TableBody>
                     {stableSort(childList, getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => {
+                      .map((row) => {
                         const isItemSelected = isSelected(row.firstName);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                        // const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
                           <TableRow
                             hover
-                            onClick={(event) => handleClick(event, row.firstName)}
+                            onClick={(event) => handleClick(event, row.id)}
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}
                             key={row.id}
                             selected={isItemSelected}
                           >
-                            <TableCell padding="checkbox">
+                            {/* <TableCell padding="checkbox">
                               <CustomCheckbox
                                 color="primary"
                                 checked={isItemSelected}
@@ -459,7 +458,7 @@ const ChildrenTable = ({ childList }) => {
                                   'aria-labelledby': labelId,
                                 }}
                               />
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>
                               <IconButton
                                 onClick={() => handleEdit(row)}

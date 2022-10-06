@@ -22,6 +22,12 @@ import {
   ALL_NEEDS_REQUEST,
   ALL_NEEDS_SUCCESS,
   ALL_NEEDS_FAIL,
+  UPDATE_NEED_CONFIRM_SUCCESS,
+  UPDATE_NEED_CONFIRM_FAIL,
+  UPDATE_NEED_CONFIRM_REQUEST,
+  DELETE_NEED_REQUEST,
+  DELETE_NEED_SUCCESS,
+  DELETE_NEED_FAIL,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -67,6 +73,18 @@ export const childNeedsReducer = (state = {}, action) => {
 
 export const childOneNeedReducer = (state = {}, action) => {
   switch (action.type) {
+    case UPDATE_NEED_CONFIRM_REQUEST:
+      return { ...state, loading: true, success: false };
+    case UPDATE_NEED_CONFIRM_SUCCESS:
+      return { loading: false, success: true, confirmed: action.payload };
+    case UPDATE_NEED_CONFIRM_FAIL:
+      return { loading: false, error: action.payload };
+    case DELETE_NEED_REQUEST:
+      return { ...state, loading: true, success: false };
+    case DELETE_NEED_SUCCESS:
+      return { loading: false, success: true, deleted: action.payload };
+    case DELETE_NEED_FAIL:
+      return { loading: false, error: action.payload };
     case CHILD_ONE_NEED_REQUEST:
       return { ...state, loading: true, success: false };
     case CHILD_ONE_NEED_SUCCESS:

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { publicApi } from '../../apis/sayBase';
 import {
   CHILD_EXAMPLE_NEEDS_FAIL,
@@ -24,6 +25,9 @@ import {
   ALL_NEEDS_REQUEST,
   ALL_NEEDS_SUCCESS,
   ALL_NEEDS_FAIL,
+  DELETE_NEED_REQUEST,
+  DELETE_NEED_SUCCESS,
+  DELETE_NEED_FAIL,
 } from '../constants/needConstant';
 
 export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, getState) => {
@@ -191,15 +195,42 @@ export const updateNeedConfirm = (needId) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await publicApi.patch(`/need/confirm/needId=${needId}`, config);
+    const { data } = await publicApi.patch(`/need/confirm/needId=${needId}`, {}, config);
 
     dispatch({
       type: UPDATE_NEED_CONFIRM_SUCCESS,
-      payload: data,
+      payload: { data, id: needId },
     });
   } catch (e) {
     dispatch({
       type: UPDATE_NEED_CONFIRM_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const deleteNeed = (needId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_NEED_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await publicApi.patch(`/need/delete/needId=${needId}`, {}, config);
+
+    dispatch({
+      type: DELETE_NEED_SUCCESS,
+      payload: { data, id: needId },
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_NEED_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
@@ -272,6 +303,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     if (values.finalImageFile) {
       formData.append('imageUrl', values.finalImageFile);
     }
+
     const { data } = await publicApi.patch(
       `/need/update/needId=${values.needId}`,
       formData,
@@ -305,8 +337,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
-
-    formData.append('sw_id', swInfo.swId);
+    formData.append('sw_id', swInfo.id);
 
     if (values.childId) {
       formData.append('child_id', values.childId);
@@ -318,7 +349,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
       formData.append('description_translations', values.description);
     }
     if (values.category) {
-      formData.append('category', values.category);
+      formData.append('category', parseInt(values.category, 10));
     }
     if (values.isUrgent) {
       formData.append('isUrgent', values.isUrgent);
@@ -329,7 +360,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
       formData.append('cost', values.cost);
     }
     if (values.type) {
-      formData.append('type', values.type);
+      formData.append('type', parseInt(values.type, 10));
     }
     if (values.link) {
       formData.append('link', values.link);
@@ -337,8 +368,8 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     if (values.affiliateLinkUrl) {
       formData.append('affiliateLinkUrl', values.affiliateLinkUrl);
     }
-    if (values.doingDuration) {
-      formData.append('doing_duration', values.doingDuration);
+    if (values.doing_duration) {
+      formData.append('doing_duration', values.doing_duration);
     }
     if (values.details) {
       formData.append('details', values.details);
@@ -349,7 +380,9 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     if (values.imageUrl) {
       formData.append('imageUrl', values.imageUrl);
     }
-    console.log(values);
+    for (const value of formData.values()) {
+      console.log(value);
+    }
     const { data } = await publicApi.post(`/need/`, formData, config);
     dispatch({
       type: ADD_ONE_NEED_SUCCESS,

@@ -16,6 +16,8 @@ import {
   Autocomplete,
   FormControlLabel,
   MenuItem,
+  InputAdornment,
+  OutlinedInput,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -216,7 +218,7 @@ const NeedAdd = () => {
   const validationSchema = Yup.object().shape({
     // name_fa: Yup.string().required('Please enter needs name'),
     name_en: Yup.string().required('Please enter needs name'),
-    cost: Yup.number().required('Please enter needs cost'),
+    cost: Yup.number().required('Please enter needs cost').moreThan(0, 'Cost can not be zero'),
     type: Yup.string().required('Please enter type'),
     doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
@@ -247,7 +249,6 @@ const NeedAdd = () => {
       setValue('details', oneNeed.details); // social worker note on app
       setValue('link', oneNeed.link);
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
-      setValue('imageUrl', oneNeed.imageUrl);
       setValue('cost', oneNeed.cost);
       setValue('doing_duration', oneNeed.doing_duration);
     }
@@ -275,13 +276,12 @@ const NeedAdd = () => {
         cost: data.cost,
         type: data.type,
         category: data.category,
-        imageUrl: finalImageFile || data.imageUrl,
+        imageUrl: finalImageFile,
         details: data.details,
         information: data.informations,
         doing_duration: data.doing_duration,
         link: data.link,
-        isUrgentDesc: data.isUrgentDesc,
-        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
+        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
         childId,
       }),
     );
@@ -433,9 +433,7 @@ const NeedAdd = () => {
                               variant="circle"
                               alt="icon image"
                               src={
-                                finalImageFile
-                                  ? URL.createObjectURL(finalImageFile) // image preview
-                                  : oneNeed && oneNeed.imageUrl
+                                finalImageFile && URL.createObjectURL(finalImageFile) // image preview
                               }
                               sx={{
                                 width: 50,
@@ -577,7 +575,7 @@ const NeedAdd = () => {
 
                           <Grid item xs={6}>
                             <CustomFormLabel htmlFor="cost">{t('need.cost')}</CustomFormLabel>
-                            <TextField
+                            <OutlinedInput
                               sx={{ width: '100%' }}
                               id="cost"
                               type="number"
@@ -587,6 +585,7 @@ const NeedAdd = () => {
                               control={control}
                               {...register('cost', { required: true })}
                               error={!!errors.cost}
+                              endAdornment={<InputAdornment position="end">Toman</InputAdornment>}
                             />
                           </Grid>
                           <Grid item xs={3}>
@@ -665,24 +664,26 @@ const NeedAdd = () => {
                               control={control}
                               register={{ ...register('provider', { required: true }) }}
                             >
-                              {providerList.map((p) => (
-                                <MenuItem key={p.id} value={p.id}>
-                                  <Grid container spacing={2}>
-                                    <Grid item>
-                                      <Avatar
-                                        alt="provider logo"
-                                        src={`${apiDao}/providers/images/${p.logoUrl}`}
-                                        sx={{ width: 30, height: 30, display: 'inline-block' }}
-                                      />
+                              {providerList
+                                .filter((p) => p.isActive === true)
+                                .map((p) => (
+                                  <MenuItem key={p.id} value={p.id}>
+                                    <Grid container spacing={2}>
+                                      <Grid item>
+                                        <Avatar
+                                          alt="provider logo"
+                                          src={`${apiDao}/providers/images/${p.logoUrl}`}
+                                          sx={{ width: 30, height: 30, display: 'inline-block' }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Typography variant="body1" sx={{ p: 1 }}>
+                                          {p.name}
+                                        </Typography>
+                                      </Grid>
                                     </Grid>
-                                    <Grid item>
-                                      <Typography variant="body1" sx={{ p: 1 }}>
-                                        {p.name}
-                                      </Typography>
-                                    </Grid>
-                                  </Grid>
-                                </MenuItem>
-                              ))}
+                                  </MenuItem>
+                                ))}
                             </CustomSelect>
                           </Grid>
                           <Grid item xs={6}>

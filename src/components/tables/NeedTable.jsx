@@ -41,7 +41,8 @@ import { fetchChildrenByNgo, fetchMyChildById } from '../../redux/actions/childr
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import LinearNeedStats from '../analytics/LinearNeedStats';
 import PieChart from '../analytics/PieChart';
-import { fetchChildNeeds } from '../../redux/actions/needsAction';
+import { deleteNeed, fetchChildNeeds, updateNeedConfirm } from '../../redux/actions/needsAction';
+import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -78,6 +79,12 @@ function EnhancedTableHead(props) {
   };
 
   const headCells = [
+    {
+      id: 'selectCheckbox',
+      numeric: false,
+      disablePadding: false,
+      label: '',
+    },
     {
       id: 'id',
       numeric: false,
@@ -295,7 +302,13 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const dispatch = useDispatch();
+  const { numSelected, selected } = props;
+
+  const handleDelete = () => {
+    console.log(selected);
+    dispatch(deleteNeed(selected[0]));
+  };
 
   return (
     <Toolbar
@@ -320,7 +333,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={handleDelete}>
             <FeatherIcon icon="trash-2" width="18" />
           </IconButton>
         </Tooltip>
@@ -337,6 +350,7 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  selected: PropTypes.array.isRequired,
 };
 
 const BCrumb = [
@@ -376,6 +390,9 @@ const NeedTable = () => {
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, loading: loadingChildrenNeeds, success: successChildrenNeeds } = childNeeds;
 
+  const childOneNeed = useSelector((state) => state.childOneNeed);
+  const { confirmed, deleted } = childOneNeed;
+
   const childrenByNgo = useSelector((state) => state.childrenByNgo);
   const { childList, loading: loadingChildren, success: successChildren } = childrenByNgo;
 
@@ -396,7 +413,7 @@ const NeedTable = () => {
     if (childId || (result && result.id)) {
       dispatch(fetchChildNeeds(childId || result.id));
     }
-  }, [childId, result]);
+  }, [childId, result, confirmed, deleted]);
 
   // sort needs
   // urgent ==> index 0
@@ -483,33 +500,34 @@ const NeedTable = () => {
     }
   }, [theChildId]);
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = theNeeds.needs.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = theNeeds.needs.map((n) => n.id);
+  //     setSelected(newSelecteds);
+  //     console.log(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
+    // const selectedIndex = selected.indexOf(id);
+    // let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, id);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1),
+    //   );
+    // }
 
-    setSelected(newSelected);
+    setSelected([id]);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -652,7 +670,7 @@ const NeedTable = () => {
             <CardContent>
               <Box>
                 <Paper sx={{ mb: 2 }}>
-                  {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
+                  <EnhancedTableToolbar numSelected={selected.length} selected={selected} />
                   <TableContainer sx={{ maxHeight: 850 }}>
                     <Table
                       sx={{ minWidth: 750 }}
@@ -665,7 +683,7 @@ const NeedTable = () => {
                         numSelected={selected.length}
                         order={order}
                         orderBy={orderBy}
-                        onSelectAllClick={handleSelectAllClick}
+                        // onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
                         rowCount={theNeeds.needs.length}
                       />
@@ -687,6 +705,15 @@ const NeedTable = () => {
                                 selected={isItemSelected}
                               >
                                 <TableCell padding="checkbox">
+                                  <CustomCheckbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputprops={{
+                                      'aria-labelledby': labelId,
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell padding="checkbox">
                                   <Typography color="textSecondary" variant="h6" fontWeight="400">
                                     {labelId}
                                   </Typography>
@@ -694,7 +721,7 @@ const NeedTable = () => {
                                 <TableCell>
                                   <Switch
                                     checked={row.isConfirmed}
-                                    // onChange={handleChange}
+                                    onChange={() => dispatch(updateNeedConfirm(row.id))}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                   />
                                 </TableCell>

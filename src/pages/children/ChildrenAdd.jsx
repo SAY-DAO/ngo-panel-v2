@@ -34,7 +34,7 @@ import UploadIdImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
-import { addNgo } from '../../redux/actions/ngoAction';
+import { AddChild } from '../../redux/actions/childrenAction';
 
 const BCrumb = [
   {
@@ -106,15 +106,27 @@ const Children = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      addNgo({
-        name: data.name,
-        website: data.website,
-        emailAddress: data.emailAddress,
+      AddChild({
+        ngo_id: data.ngo_id,
+        awakeAvatarUrl: data.awakeAvatarUrl,
+        sleptAvatarUrl: data.sleptAvatarUrl,
+        voiceUrl: data.voiceUrl,
         country: data.country,
-        // state: data.state,
-        // city: data.city,
+        city: data.city,
         phoneNumber: data.phoneNumber,
-        postalAddress: data.postalAddress,
+        birthDate: data.birthDate,
+        sayname_translations: data.sayname_translations,
+        bio_translations: data.bio_translations,
+        bio_summary_translations: data.bio_summary_translations,
+        firstName_translations: data.firstName_translations,
+        lastName_translations: data.lastName_translations,
+        nationality: data.nationality,
+        birthPlace: data.birthPlace,
+        address: data.address,
+        housingStatus: data.housingStatus,
+        familyCount: data.familyCount,
+        education: data.education,
+        school_type: data.school_type,
         logoUrl: finalImageFile,
       }),
     );

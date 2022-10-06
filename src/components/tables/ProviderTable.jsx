@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -26,7 +25,7 @@ import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
@@ -244,9 +243,6 @@ const ProviderTable = ({ providerList }) => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const countryList = useSelector((state) => state.countryList);
-  const { countries, states, cities, success: successCountryList } = countryList;
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -264,7 +260,7 @@ const ProviderTable = ({ providerList }) => {
 
   const handleClick = (event, id) => {
     // const selectedIndex = selected.indexOf(id);
-    const newSelected = [];
+    // const newSelected = [];
     // setSelected(selectedIndex);
     // if (selectedIndex === -1) {
     //   newSelected = newSelected.concat(selected, id);
@@ -302,7 +298,7 @@ const ProviderTable = ({ providerList }) => {
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - providerList.length) : 0;
+  // const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - providerList.length) : 0;
   return (
     <PageContainer title="Provider Table" description="this is Provider page">
       {/* breadcrumb */}
