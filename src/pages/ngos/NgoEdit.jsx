@@ -33,7 +33,7 @@ import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLa
 import { updateNgo, fetchNgoById, updateNgoIsActive } from '../../redux/actions/ngoAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
-import UploadIdImage from '../../components/UploadImage';
+import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 
@@ -413,7 +413,7 @@ const NgoEdit = () => {
               </DialogTitle>
               <DialogContent>
                 <Box>
-                  <UploadIdImage
+                  <UploadImage
                     uploadImage={uploadImage}
                     handleImageClose={handleImageClose}
                     setFinalImageFile={setFinalImageFile}

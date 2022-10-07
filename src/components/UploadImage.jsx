@@ -39,12 +39,13 @@ const PrettySlider = styled((props) => <Slider {...props} />)({
 });
 
 // eslint-disable-next-line react/prop-types
-export default function UploadIdImage({
+export default function UploadImage({
   uploadImage,
   handleImageClose,
   setFinalImageFile,
   customBorderRadius,
 }) {
+
   const { t } = useTranslation();
   // const navigate = useNavigate();
   const location = useLocation();

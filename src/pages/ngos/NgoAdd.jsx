@@ -30,7 +30,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
-import UploadIdImage from '../../components/UploadImage';
+import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
@@ -401,7 +401,7 @@ const NgoAdd = () => {
           >
             <DialogContent>
               <Box>
-                <UploadIdImage
+                <UploadImage
                   uploadImage={uploadImage}
                   handleImageClose={handleImageClose}
                   setFinalImageFile={setFinalImageFile}

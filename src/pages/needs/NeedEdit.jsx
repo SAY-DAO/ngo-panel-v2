@@ -26,7 +26,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import UploadIdImage from '../../components/UploadImage';
+import UploadImage from '../../components/UploadImage';
 import { fetchChildOneNeed, updateNeed } from '../../redux/actions/needsAction';
 import { CHILD_ONE_NEED_RESET } from '../../redux/constants/needConstant';
 import { fetchMyChildById } from '../../redux/actions/childrenAction';
@@ -590,7 +590,7 @@ const NeedEdit = () => {
               >
                 <DialogContent>
                   <Box>
-                    <UploadIdImage
+                    <UploadImage
                       uploadImage={uploadImage}
                       handleImageClose={handleImageClose}
                       setFinalImageFile={setFinalImageFile}

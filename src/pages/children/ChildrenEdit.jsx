@@ -40,7 +40,7 @@ import {
 } from '../../redux/actions/childrenAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
-import UploadIdImage from '../../components/UploadImage';
+import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { CHILD_BY_ID_RESET } from '../../redux/constants/childrenConstants';
 
@@ -469,7 +469,7 @@ const ChildrenEdit = () => {
               </DialogTitle>
               <DialogContent>
                 <Box>
-                  <UploadIdImage
+                  <UploadImage
                     uploadImage={uploadImage}
                     handleImageClose={handleImageClose}
                     setFinalImageFile={setFinalImageFile}

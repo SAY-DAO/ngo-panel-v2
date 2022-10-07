@@ -38,7 +38,7 @@ import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLa
 import { AddSw } from '../../redux/actions/socialWorkerAction';
 import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
-import UploadIdImage from '../../components/UploadImage';
+import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 
@@ -615,7 +615,7 @@ const SocialWorkerAdd = () => {
             >
               <DialogContent>
                 <Box>
-                  <UploadIdImage
+                  <UploadImage
                     uploadImage={uploadImage}
                     handleImageClose={handleImageClose}
                     setFinalImageFile={setFinalImageFile}
@@ -635,7 +635,7 @@ const SocialWorkerAdd = () => {
             >
               <DialogContent>
                 <Box>
-                  <UploadIdImage
+                  <UploadImage
                     uploadImage={uploadIdImage}
                     handleImageClose={handleIdImageClose}
                     setFinalImageFile={setFinalIdImageFile}

@@ -726,6 +726,7 @@
     "status": "Status",
     "awakeAvatarUrl": "Awake",
     "sleptAvatarUrl": "Sleep",
+    "uploadVoice": "Upload Voice",
     "bio": "Bio",
     "bioSummary": "Summary",
     "bioSummaryTranslations": "Translation",

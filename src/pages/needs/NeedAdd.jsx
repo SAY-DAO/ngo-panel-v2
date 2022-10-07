@@ -32,7 +32,7 @@ import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import Message from '../../components/Message';
-import UploadIdImage from '../../components/UploadImage';
+import UploadImage from '../../components/UploadImage';
 import {
   AddNeed,
   fetchExampleNeeds,
@@ -879,7 +879,7 @@ const NeedAdd = () => {
               >
                 <DialogContent>
                   <Box>
-                    <UploadIdImage
+                    <UploadImage
                       uploadImage={uploadImage}
                       handleImageClose={handleImageClose}
                       setFinalImageFile={setFinalImageFile}

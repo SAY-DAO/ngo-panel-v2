@@ -218,39 +218,31 @@ export const AddChild = (values) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-
+    
+    
     const formData = new FormData();
-    if (values.lastName) {
+    if (values.id_ngo) {
       formData.append('ngo_id', values.id_ngo);
     }
-    if (values.lastName) {
+    if (values.id_social_worker) {
       formData.append('sw_id', values.id_social_worker);
     }
-    if (values.lastName) {
+    if (values.awakeAvatarUrl) {
       formData.append('awakeAvatarUrl', values.awakeAvatarUrl);
     }
-    if (values.lastName) {
+    if (values.sleptAvatarUrl) {
       formData.append('sleptAvatarUrl', values.sleptAvatarUrl);
     }
-    if (values.lastName) {
+    if (values.voiceUrl) {
       formData.append('voiceUrl', values.voiceUrl);
     }
-    if (values.lastName) {
-      formData.append('gender', values.gender);
+    if (values.firstName) {
+      formData.append('firstName_translations', values.firstName_translations);
     }
     if (values.lastName) {
-      formData.append('country', values.country);
+      formData.append('lastName_translations', values.lastName_translations);
     }
-    if (values.lastName) {
-      formData.append('city', values.city);
-    }
-    if (values.lastName) {
-      formData.append('phoneNumber', values.phoneNumber);
-    }
-    if (values.lastName) {
-      formData.append('birthDate', values.birthDate);
-    }
-    if (values.lastName) {
+    if (values.bio_translations) {
       formData.append('sayname_translations', values.sayname_translations);
     }
     if (values.lastName) {
@@ -259,17 +251,29 @@ export const AddChild = (values) => async (dispatch, getState) => {
     if (values.lastName) {
       formData.append('bio_summary_translations', values.bio_summary_translations);
     }
-    if (values.lastName) {
-      formData.append('lastName_translations', values.lastName_translations);
+    if (values.phoneNumber) {
+      formData.append('phoneNumber', values.phoneNumber);
     }
     if (values.nationality) {
       formData.append('nationality', values.nationality);
     }
-    if (values.address) {
-      formData.append('address', values.address);
+    if (values.country) {
+      formData.append('country', values.country);
+    }
+    if (values.city) {
+      formData.append('city', values.city);
     }
     if (values.birthPlace) {
       formData.append('birthPlace', values.birthPlace);
+    }
+    if (values.birthDate) {
+      formData.append('birthDate', values.birthDate);
+    }
+    if (values.address) {
+      formData.append('address', values.address);
+    }
+    if (values.familyCount) {
+      formData.append('familyCount', values.familyCount);
     }
     if (values.familyCount) {
       formData.append('familyCount', values.familyCount);
