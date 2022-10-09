@@ -724,6 +724,26 @@
     "existence_status": "Existence",
     "isDeleted": "Deletion",
     "status": "Status",
+    "sayname_translations": {
+      "fa": "Farsi SAY name (fa)",
+      "en": "English SAY name (en)"
+    },
+    "firstName_translations": {
+      "fa": "First Name (fa)",
+      "en": "First name (en)"
+    },
+    "lastName_translations": {
+      "fa": "Last Name (fa)",
+      "en": "Last name (en)"
+    },
+    "bio_translations": {
+      "fa": "Biography (fa)",
+      "en": "Biography (en)"
+    },
+    "bio_summary_translations": {
+      "fa": "Biography Summary (fa)",
+      "en": "Biography Summary (en)"
+    },
     "awakeAvatarUrl": "Awake",
     "sleptAvatarUrl": "Sleep",
     "uploadVoice": "Upload Voice",

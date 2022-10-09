@@ -110,7 +110,7 @@ export const updateNgo = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -130,7 +130,7 @@ export const updateNgo = (values) => async (dispatch, getState) => {
       formData.set('country', values.country);
     }
     if (values.city) {
-      formData.set('city', values.city);
+      formData.set('cityId', values.city);
     }
     if (values.phoneNumber) {
       formData.set('phoneNumber', values.phoneNumber);
@@ -142,8 +142,8 @@ export const updateNgo = (values) => async (dispatch, getState) => {
       formData.set('website', values.website);
     }
 
-    if (values.finalImageFile) {
-      formData.set('logoUrl', values.finalImageFile);
+    if (values.logoUrl) {
+      formData.set('logoUrl', values.logoUrl);
     }
 
     const { data } = await publicApi.patch(`/ngo/update/ngoId=${values.id}`, formData, config);
@@ -171,7 +171,7 @@ export const addNgo = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: userInfo && userInfo.access_token,
       },
     };

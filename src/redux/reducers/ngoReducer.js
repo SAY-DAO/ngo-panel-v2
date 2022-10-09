@@ -1,6 +1,7 @@
 import {
   ADD_NGO_FAIL,
   ADD_NGO_REQUEST,
+  ADD_NGO_RESET,
   ADD_NGO_SUCCESS,
   DELETE_NGO_FAIL,
   DELETE_NGO_REQUEST,
@@ -85,6 +86,8 @@ export const ngoAddReducer = (state = { success: false }, action) => {
       return { loading: false, success: true, added: action.payload };
     case ADD_NGO_FAIL:
       return { loading: false, error: action.payload };
+    case ADD_NGO_RESET:
+      return {};
     default:
       return state;
   }

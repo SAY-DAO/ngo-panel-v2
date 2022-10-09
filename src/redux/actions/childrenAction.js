@@ -275,9 +275,6 @@ export const AddChild = (values) => async (dispatch, getState) => {
     if (values.familyCount) {
       formData.append('familyCount', values.familyCount);
     }
-    if (values.familyCount) {
-      formData.append('familyCount', values.familyCount);
-    }
     if (values.education || values.school_type) {
       formData.append(
         'education',
@@ -287,10 +284,8 @@ export const AddChild = (values) => async (dispatch, getState) => {
     if (values.housingStatus) {
       formData.append('housingStatus', values.housingStatus);
     }
-    if (values.logoUrl) {
-      formData.set('logoUrl', values.logoUrl);
-    }
-    console.log('hala');
+ 
+    console.log('child');
     console.log(values);
 
     const { data } = await publicApi.post(`/child/add`, formData, config);

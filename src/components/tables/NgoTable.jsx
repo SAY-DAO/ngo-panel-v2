@@ -103,6 +103,12 @@ function EnhancedTableHead(props) {
       label: t('ngo.country'),
     },
     {
+      id: 'state',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.state'),
+    },
+    {
       id: 'city',
       numeric: false,
       disablePadding: false,
@@ -464,6 +470,11 @@ const NgoTable = ({ ngoList }) => {
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.city.countryName}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {row.city.stateName}
                               </Typography>
                             </TableCell>
                             <TableCell>

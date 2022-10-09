@@ -36,6 +36,8 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
+import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
+import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 
 const BCrumb = [
   {
@@ -78,8 +80,32 @@ const NgoEdit = () => {
   const ngoStatusUpdate = useSelector((state) => state.ngoStatusUpdate);
   const { status } = ngoStatusUpdate;
 
+  const countryList = useSelector((state) => state.countryList);
+  const { countries, states, cities, success: successCountryList } = countryList;
+
   const ngoUpdate = useSelector((state) => state.ngoUpdate);
   const { success: successNgoUpdate, loading: loadingNgoUpdate, error: errorNgoUpdate } = ngoUpdate;
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Please enter your first name'),
+    country: Yup.string().required('Please enter your country'),
+    phoneNumber: Yup.string().required('Please enter your phone number'),
+    postalAddress: Yup.string().required('Please enter your postalAddress'),
+    emailAddress: Yup.string()
+      // .min(3, 'must be at least 3 characters long')
+      .email('Please enter your email')
+      .required('Email is required'),
+  });
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
   useEffect(() => {
     if ((!successNgoById && id) || status) {
@@ -112,6 +138,28 @@ const NgoEdit = () => {
     }
   }, [dispatch, result, userInfo]);
 
+  // country
+  useEffect(() => {
+    if (!successCountryList) {
+      dispatch({ type: COUNTRY_LIST_RESET });
+      dispatch(fetchCountryList());
+    }
+  }, [successCountryList]);
+
+  // state
+  useEffect(() => {
+    if (countries && watch('country')) {
+      dispatch(fetchStateList(watch('country')));
+    }
+  }, [watch('country'), countries]);
+
+  // city
+  useEffect(() => {
+    if (countries && states && watch('state')) {
+      dispatch(fetchCityList(watch('state')));
+    }
+  }, [watch('state'), countries, states]);
+
   const handleChangeActive = () => {
     if (activeChecked && result.isActive) {
       dispatch(updateNgoIsActive(result.id, 'deactivate'));
@@ -119,26 +167,6 @@ const NgoEdit = () => {
       dispatch(updateNgoIsActive(result.id, 'activate'));
     }
   };
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Please enter your first name'),
-    country: Yup.string().required('Please enter your country'),
-    phoneNumber: Yup.string().required('Please enter your phone number'),
-    postalAddress: Yup.string().required('Please enter your postalAddress'),
-    emailAddress: Yup.string()
-      // .min(3, 'must be at least 3 characters long')
-      .email('Please enter your email')
-      .required('Email is required'),
-  });
-
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validationSchema),
-  });
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -150,6 +178,7 @@ const NgoEdit = () => {
         name: data.name,
         emailAddress: data.emailAddress,
         country: data.country,
+        state: data.state,
         city: data.city,
         phoneNumber: data.phoneNumber,
         postalAddress: data.postalAddress,
@@ -157,6 +186,7 @@ const NgoEdit = () => {
         logoUrl: finalImageFile,
       }),
     );
+
     dispatch({ type: NGO_BY_ID_RESET });
   };
 
@@ -336,27 +366,53 @@ const NgoEdit = () => {
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
-                      defaultValue={1}
-                      onChange={handleChangeInput('country')}
+                      value={watch('country') || result.city.countryId}
                       control={control}
                       register={{ ...register('country') }}
                     >
-                      <MenuItem value={result.country || 1}>{t('ngo.countries.one')}</MenuItem>
+                      {countries &&
+                        countries.map((country) => (
+                          <MenuItem key={country.id} value={country.id}>
+                            {country.name}
+                          </MenuItem>
+                        ))}
                     </CustomSelect>
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.country && errors.country.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
-                    <CustomSelect
-                      labelId="city-controlled-open-select-label"
-                      id="city-controlled-open-select"
-                      defaultValue={result.city || 1}
-                      onChange={handleChangeInput('city')}
-                      control={control}
-                      register={{ ...register('city') }}
-                    >
-                      <MenuItem value={1}>{t('ngo.cities.one')}</MenuItem>
-                    </CustomSelect>
+                    {countries && states && (
+                      <>
+                        <CustomFormLabel htmlFor="state">{t('ngo.state')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="state-controlled-open-select-label"
+                          id="state-controlled-open-select"
+                          value={watch('state') || result.city.stateId || 0}
+                          control={control}
+                          register={{ ...register('state') }}
+                        >
+                          {states.map((state) => (
+                            <MenuItem key={state.id} value={state.id}>
+                              {state.name}
+                            </MenuItem>
+                          ))}
+                        </CustomSelect>
+                      </>
+                    )}
+                    {countries && states && cities && (
+                      <>
+                        <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="city-controlled-open-select-label"
+                          id="city-controlled-open-select"
+                          value={watch('city') || result.city.id}
+                          control={control}
+                          register={{ ...register('city') }}
+                        >
+                          {cities.map((city) => (
+                            <MenuItem key={city.id} value={city.id}>
+                              {city.name}
+                            </MenuItem>
+                          ))}
+                        </CustomSelect>
+                      </>
+                    )}
 
                     <CustomFormLabel htmlFor="postalAddress">
                       {t('ngo.postalAddress')}

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Avatar,
@@ -18,7 +19,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -35,6 +36,7 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import { addNgo } from '../../redux/actions/ngoAction';
+import { ADD_NGO_RESET } from '../../redux/constants/ngoConstants';
 
 const BCrumb = [
   {
@@ -48,6 +50,7 @@ const BCrumb = [
 
 const NgoAdd = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -89,17 +92,24 @@ const NgoAdd = () => {
   // state
   useEffect(() => {
     if (countries && watch('country')) {
-      console.log('watch');
-      dispatch(fetchStateList(watch('country')));
+      dispatch(fetchStateList(watch('country') || countries[0]));
     }
   }, [watch('country'), countries]);
+  console.log(watch('country'));
 
   // city
   useEffect(() => {
     if (countries && states && watch('state')) {
-      dispatch(fetchCityList(watch('state')));
+      dispatch(fetchCityList(watch('state') || states[0]));
     }
   }, [watch('state'), countries, states]);
+
+  useEffect(() => {
+    dispatch({ type: ADD_NGO_RESET });
+    if (successAddNgo) {
+      navigate(`/ngo/list`);
+    }
+  }, [successAddNgo]);
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -141,7 +151,6 @@ const NgoAdd = () => {
     console.log('remove');
     setFinalImageFile();
   };
-  console.log(errorAddNgo);
 
   return (
     <PageContainer title="NGO Add" description="this is NGO Add page">
@@ -277,9 +286,9 @@ const NgoAdd = () => {
                   <CustomSelect
                     labelId="country-controlled-open-select-label"
                     id="country-controlled-open-select"
-                    defaultValue={countries && countries[0].id}
                     control={control}
                     register={{ ...register('country') }}
+                    defaultValue={countries && countries[0].id}
                   >
                     {countries &&
                       countries.map((country) => (
@@ -294,9 +303,9 @@ const NgoAdd = () => {
                       <CustomSelect
                         labelId="state-controlled-open-select-label"
                         id="state-controlled-open-select"
-                        defaultValue={states && states[0].id}
                         control={control}
                         register={{ ...register('state') }}
+                        value={watch('state') || (states && states[0].id)}
                       >
                         {states.map((state) => (
                           <MenuItem key={state.id} value={state.id}>
@@ -312,9 +321,9 @@ const NgoAdd = () => {
                       <CustomSelect
                         labelId="city-controlled-open-select-label"
                         id="city-controlled-open-select"
-                        defaultValue={cities && cities[0].id}
                         control={control}
                         register={{ ...register('city') }}
+                        value={watch('city') || (cities && cities[0].id)}
                       >
                         {cities.map((city) => (
                           <MenuItem key={city.id} value={city.id}>
@@ -324,19 +333,6 @@ const NgoAdd = () => {
                       </CustomSelect>
                     </>
                   )}
-                  {/* <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
-                  <CustomSelect
-                 
-                  >
-                    {cities &&
-                      states &&
-                      states.map((city) => (
-                        <MenuItem key={city.id} value={city.id}>
-                          {city.name}
-                        </MenuItem>
-                      ))}
-                  </CustomSelect> */}
-
                   <CustomFormLabel htmlFor="postalAddress">
                     {t('ngo.postalAddress')}
                   </CustomFormLabel>

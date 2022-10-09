@@ -16,6 +16,7 @@ import {
   FormHelperText,
   CircularProgress,
   Autocomplete,
+  TextareaAutosize,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,9 @@ import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import FeatherIcon from 'feather-icons-react';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -43,6 +47,7 @@ import {
 } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
+import getAge from '../../utils/helpers';
 
 const BCrumb = [
   {
@@ -67,6 +72,7 @@ const Children = () => {
     location.state && location.state.newImage,
   );
   const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
+  const [birthDate, setBirthDate] = useState(new Date());
 
   const [ngoId, setNgoId] = useState();
   const [swId, setSwId] = useState();
@@ -91,11 +97,11 @@ const Children = () => {
   const { ngoList, success: successNgoList } = ngoAll;
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Please enter your first name'),
-    country: Yup.string().required('Please enter your country'),
-    phoneNumber: Yup.string().required('Please enter your phone number'),
-    postalAddress: Yup.string().required('Please enter your postalAddress'),
-    emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
+    // name: Yup.string().required('Please enter your first name'),
+    // country: Yup.string().required('Please enter your country'),
+    // phoneNumber: Yup.string().required('Please enter your phone number'),
+    // postalAddress: Yup.string().required('Please enter your postalAddress'),
+    // emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
   });
 
   const {
@@ -190,27 +196,42 @@ const Children = () => {
     await sleep(300);
     dispatch(
       AddChild({
-        ngo_id: data.ngo_id,
-        awakeAvatarUrl: finalAvatarFile,
-        sleptAvatarUrl: finalSleptAvatarFile,
-        voiceUrl: data.voiceUrl,
+        // sw_id: swId,
+        // ngo_id: data.ngo_id,
+        // awakeAvatarUrl: finalAvatarFile,
+        // sleptAvatarUrl: finalSleptAvatarFile,
+        // voiceUrl: uploadVoice,
+        sayname_translations: JSON.stringify({
+          en: data.sayname_translations_en,
+          fa: data.sayname_translations_fa,
+        }),
+        firstName_translations: JSON.stringify({
+          en: data.firstName_translations_en,
+          fa: data.firstName_translations_fa,
+        }),
+        lastName_translations: JSON.stringify({
+          en: data.lastName_translations_en,
+          fa: data.lastName_translations_fa,
+        }),
+        nationality: data.nationality,
+        address: data.address,
         country: data.country,
         city: data.city,
-        phoneNumber: data.phoneNumber,
         birthDate: data.birthDate,
-        sayname_translations: data.sayname_translations,
-        bio_translations: data.bio_translations,
-        bio_summary_translations: data.bio_summary_translations,
-        firstName_translations: data.firstName_translations,
-        lastName_translations: data.lastName_translations,
-        nationality: data.nationality,
         birthPlace: data.birthPlace,
-        address: data.address,
-        housingStatus: data.housingStatus,
         familyCount: data.familyCount,
         education: data.education,
         school_type: data.school_type,
-        logoUrl: finalAvatarFile,
+        phoneNumber: data.phoneNumber,
+        housingStatus: data.housingStatus,
+        bio_translations: JSON.stringify({
+          en: data.bio_translations_en,
+          fa: data.bio_translations_fa,
+        }),
+        bio_summary_translations: JSON.stringify({
+          en: data.bio_summary_translations_en,
+          fa: data.bio_summary_translations_fa,
+        }),
       }),
     );
   };
@@ -239,6 +260,10 @@ const Children = () => {
     }
   };
 
+  const handleDateChange = (newValue) => {
+    setBirthDate(newValue);
+  };
+
   const onVoiceChange = (e) => {
     if (e.target.files[0]) {
       setUploadVoice(URL.createObjectURL(e.target.files[0]));
@@ -250,7 +275,7 @@ const Children = () => {
   };
 
   return (
-    <PageContainer title="Social Worker Add" description="this is Social Worker Add page">
+    <PageContainer title="Child Add" description="this is Child Add page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
@@ -326,7 +351,7 @@ const Children = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Social Worker"
+                label="Child"
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -348,7 +373,7 @@ const Children = () => {
         </Grid>
       ) : (
         <>
-          {swId && (
+          {!swId && (
             <>
               <Grid container spacing={0}>
                 <Grid item lg={4} md={12} xs={12} sx={{ m: 'auto', mr: 0 }}>
@@ -542,31 +567,252 @@ const Children = () => {
                   </Card>
 
                   <Card sx={{ p: 3 }}>
-                    <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                      {t('child.titleAdd')}
-                    </Typography>
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                      <CustomFormLabel htmlFor="name"> {t('child.titleAdd')}</CustomFormLabel>
-                      <TextField
-                        required
-                        id="name"
-                        variant="outlined"
-                        fullWidth
-                        size="small"
+                      <Grid container direction="row" spacing={1}>
+                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                          <Grid item md={5} xs={12}>
+                            <CustomFormLabel htmlFor="firstName_translations_en">
+                              {t('child.firstName_translations.en')}
+                            </CustomFormLabel>
+                            <TextField
+                              required
+                              id="firstName_translations_en"
+                              variant="outlined"
+                              size="large"
+                              control={control}
+                              {...register('firstName_translations_en')}
+                              error={!!errors.firstName_translations_en}
+                            />
+                          </Grid>
+                          <Grid item md={5} xs={12}>
+                            <CustomFormLabel htmlFor="lastName_translations_en">
+                              {t('child.lastName_translations.en')}
+                            </CustomFormLabel>
+                            <TextField
+                              id="lastName_translations_en"
+                              variant="outlined"
+                              size="large"
+                              control={control}
+                              {...register('lastName_translations_en')}
+                              error={!!errors.lastName_translations_en}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                          <Grid item md={5} xs={12}>
+                            <CustomFormLabel htmlFor="firstName_translations_fa">
+                              {t('child.firstName_translations.fa')}
+                            </CustomFormLabel>
+                            <TextField
+                              required
+                              id="firstName_translations_fa"
+                              variant="outlined"
+                              size="large"
+                              control={control}
+                              {...register('firstName_translations_fa')}
+                              error={!!errors.firstName_translations_fa}
+                            />
+                          </Grid>
+                          <Grid item md={5} xs={12}>
+                            <CustomFormLabel htmlFor="lastName_translations_fa">
+                              {t('child.lastName_translations.fa')}
+                            </CustomFormLabel>
+                            <TextField
+                              id="lastName_translations_fa"
+                              variant="outlined"
+                              size="large"
+                              control={control}
+                              {...register('lastName_translations_fa')}
+                              error={!!errors.lastName_translations_fa}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                          <Grid item md={10} xs={12}>
+                            <CustomFormLabel htmlFor="bio_translations_en">
+                              {t('child.bio_translations.en')}
+                            </CustomFormLabel>
+                            <TextareaAutosize
+                              aria-label="minimum height"
+                              minRows={5}
+                              id="bio_translations_en"
+                              variant="outlined"
+                              size="small"
+                              control={control}
+                              {...register('bio_translations_en')}
+                              style={{ width: '100%', background: 'transparent' }}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                          <Grid item md={10} xs={12}>
+                            <CustomFormLabel htmlFor="bio_translations_fa">
+                              {t('child.bio_translations.fa')}
+                            </CustomFormLabel>
+                            <TextareaAutosize
+                              aria-label="minimum height"
+                              minRows={5}
+                              id="bio_translations_fa"
+                              variant="outlined"
+                              control={control}
+                              {...register('bio_translations_fa')}
+                              style={{ width: '100%', background: 'transparent' }}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                          <Grid item md={10} xs={12}>
+                            <CustomFormLabel htmlFor="bio_summary_translations_en">
+                              {t('child.bio_summary_translations.en')}
+                            </CustomFormLabel>
+                            <TextareaAutosize
+                              aria-label="minimum height"
+                              minRows={5}
+                              id="bio_summary_translations_en"
+                              variant="outlined"
+                              size="small"
+                              control={control}
+                              {...register('bio_summary_translations_en')}
+                              style={{ width: '100%', background: 'transparent' }}
+                            />
+                          </Grid>
+                        </Grid>
+
+                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                          <Grid item md={10} xs={12}>
+                            <CustomFormLabel htmlFor="bio_summary_translations_fa">
+                              {t('child.bio_summary_translations.fa')}
+                            </CustomFormLabel>
+                            <TextareaAutosize
+                              aria-label="minimum height"
+                              minRows={5}
+                              id="bio_summary_translations_fa"
+                              variant="outlined"
+                              control={control}
+                              {...register('bio_summary_translations_fa')}
+                              style={{ width: '100%', background: 'transparent' }}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          item
+                          xs={6}
+                          container
+                          spacing={1}
+                          justifyContent="center"
+                          sx={{ mt: 2 }}
+                        >
+                          <Grid item md={10} xs={12}>
+                            <CustomFormLabel htmlFor="birthDate">
+                              {t('child.birthDate')}
+                            </CustomFormLabel>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                              <DesktopDatePicker
+                                id="birthDate"
+                                inputFormat="MM/dd/yyyy"
+                                value={birthDate}
+                                onChange={handleDateChange}
+                                renderInput={(params) => <TextField {...params} />}
+                                helperText={errors && errors.birthDate && errors.birthDate.message}
+                              />
+                            </LocalizationProvider>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          item
+                          xs={6}
+                          container
+                          spacing={1}
+                          justifyContent="center"
+                          sx={{ mt: 2 }}
+                        >
+                          <Grid item md={10} xs={12}>
+                            <CustomFormLabel htmlFor="age">{t('child.age')}</CustomFormLabel>
+                            <Typography
+                              id="age"
+                              variant="body1"
+                              size="large"
+                              color="primary.light"
+                              sx={{
+                                textAlign: 'center',
+                                lineHeight: 3,
+                                opacity: '60%',
+                              }}
+                            >
+                              {getAge(birthDate)} Years
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                          <Grid item md={10} xs={12}>
+                            <CustomFormLabel htmlFor="nationality">
+                              {t('child.nationality')}
+                            </CustomFormLabel>
+                            <TextField
+                              id="nationality"
+                              variant="outlined"
+                              size="small"
+                              sx={{ mb: 1 }}
+                              control={control}
+                              {...register('nationality')}
+                              error={!!errors.nationality}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Grid>
+
+                      <CustomFormLabel htmlFor="country">
+                        {t('socialWorker.country')}
+                      </CustomFormLabel>
+                      <CustomSelect
+                        labelId="country-controlled-open-select-label"
+                        id="country-controlled-open-select"
+                        defaultValue={1}
                         control={control}
-                        {...register('name')}
-                        error={!!errors.name}
-                      />
-                      <CustomFormLabel htmlFor="Email">{t('ngo.emailAddress')}</CustomFormLabel>
-                      <TextField
-                        id="emailAddress"
+                        register={{ ...register('country') }}
+                      >
+                        <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
+                      </CustomSelect>
+                      <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                        {errors && errors.country && errors.country.message}
+                      </FormHelperText>
+                      <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="city-controlled-open-select-label"
+                        id="city-controlled-open-select"
+                        defaultValue={1}
+                        control={control}
+                        register={{ ...register('city') }}
+                      >
+                        <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
+                      </CustomSelect>
+                      <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                        {errors && errors.city && errors.city.message}
+                      </FormHelperText>
+                      <CustomFormLabel htmlFor="postalAddress">
+                        {t('socialWorker.postalAddress')}
+                      </CustomFormLabel>
+                      <CustomTextField
+                        id="postalAddress"
                         variant="outlined"
+                        multiline
+                        rows={4}
+                        size="small"
+                        sx={{ mb: 2 }}
                         fullWidth
+                        control={control}
+                        register={{ ...register('postalAddress') }}
+                        helperText={errors && errors.postalAddress && errors.postalAddress.message}
+                      />
+                      <CustomFormLabel htmlFor="age">{t('child.age')}</CustomFormLabel>
+                      <TextField
+                        id="sayname_translations_fa"
+                        variant="outlined"
                         size="small"
                         sx={{ mb: 1 }}
                         control={control}
-                        {...register('emailAddress')}
-                        error={!!errors.emailAddress}
+                        {...register('sayname_translations_fa')}
+                        error={!!errors.sayname_translations_fa}
                       />
                       <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                         {errors && errors.emailAddress && errors.emailAddress.message}
@@ -575,7 +821,6 @@ const Children = () => {
                       <TextField
                         id="website"
                         variant="outlined"
-                        fullWidth
                         size="small"
                         sx={{ mb: 1 }}
                         control={control}
@@ -597,24 +842,6 @@ const Children = () => {
                             </MenuItem>
                           ))}
                       </CustomSelect>
-                      {countries && states && (
-                        <>
-                          <CustomFormLabel htmlFor="state">{t('ngo.state')}</CustomFormLabel>
-                          <CustomSelect
-                            labelId="state-controlled-open-select-label"
-                            id="state-controlled-open-select"
-                            defaultValue={states && states[0].id}
-                            control={control}
-                            register={{ ...register('state') }}
-                          >
-                            {states.map((state) => (
-                              <MenuItem key={state.id} value={state.id}>
-                                {state.name}
-                              </MenuItem>
-                            ))}
-                          </CustomSelect>
-                        </>
-                      )}
                       {countries && states && cities && (
                         <>
                           <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
@@ -633,19 +860,7 @@ const Children = () => {
                           </CustomSelect>
                         </>
                       )}
-                      {/* <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
-                  <CustomSelect
-                 
-                  >
-                    {cities &&
-                      states &&
-                      states.map((city) => (
-                        <MenuItem key={city.id} value={city.id}>
-                          {city.name}
-                        </MenuItem>
-                      ))}
-                  </CustomSelect> */}
-
+      
                       <CustomFormLabel htmlFor="postalAddress">
                         {t('ngo.postalAddress')}
                       </CustomFormLabel>
@@ -656,7 +871,6 @@ const Children = () => {
                         rows={4}
                         size="small"
                         sx={{ mb: 2 }}
-                        fullWidth
                         control={control}
                         register={{ ...register('postalAddress') }}
                       />
@@ -666,7 +880,6 @@ const Children = () => {
                       <TextField
                         id="phoneNumber"
                         variant="outlined"
-                        fullWidth
                         size="small"
                         sx={{ mb: 1 }}
                         control={control}
@@ -682,14 +895,14 @@ const Children = () => {
                         variant="contained"
                         sx={{ mt: 4 }}
                       >
-                        {t('socialWorker.button.update')}
+                        {t('child.button.update')}
                       </LoadingButton>
                     </form>
                   </Card>
                 </Grid>
               </Grid>
 
-              {/* Social Worker Image */}
+              {/* Child Image */}
               <Dialog
                 open={openImageDialog}
                 onClose={handleImageClose}
@@ -730,7 +943,7 @@ const Children = () => {
                     backError={errorAddChild}
                     sx={{ width: '100%' }}
                   >
-                    {successAddChild && t('socialWorker.updated')}
+                    {successAddChild && t('child.updated')}
                   </Message>
                 )}
               </Grid>

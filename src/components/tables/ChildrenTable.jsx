@@ -32,6 +32,7 @@ import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
+import getAge from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -394,18 +395,6 @@ const ChildrenTable = ({ childList }) => {
     navigate(`/children/edit/${row.id}`);
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
-
-  // Age
-  const getAge = (DOB) => {
-    const today = new Date();
-    const birthDate = new Date(DOB);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age -= 1;
-    }
-    return age;
-  };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - childList.length) : 0;
