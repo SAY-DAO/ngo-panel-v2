@@ -31,8 +31,8 @@ import { useNavigate } from 'react-router-dom';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 import getAge from '../../utils/helpers';
+import { CHILD_BY_ID_RESET } from '../../redux/constants/childrenConstants';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -391,7 +391,7 @@ const ChildrenTable = ({ childList }) => {
   };
 
   const handleEdit = (row) => {
-    dispatch({ type: NGO_BY_ID_RESET });
+    dispatch({ type: CHILD_BY_ID_RESET });
     navigate(`/children/edit/${row.id}`);
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;

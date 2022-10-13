@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Avatar,
@@ -13,10 +14,10 @@ import {
   TextField,
   IconButton,
   MenuItem,
-  FormHelperText,
   CircularProgress,
   Autocomplete,
-  TextareaAutosize,
+  FormControl,
+  Divider,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -47,7 +48,7 @@ import {
 } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import getAge from '../../utils/helpers';
+import getAge, { EducationEnum, HousingStatusEnum } from '../../utils/helpers';
 
 const BCrumb = [
   {
@@ -73,6 +74,9 @@ const Children = () => {
   );
   const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
   const [birthDate, setBirthDate] = useState(new Date());
+  const [education, setEducation] = useState('');
+  const [housingStatus, setHousingStatus] = useState('');
+  const [sex, setSex] = useState('');
 
   const [ngoId, setNgoId] = useState();
   const [swId, setSwId] = useState();
@@ -85,7 +89,7 @@ const Children = () => {
   const isLoadingNgo = openNgo && optionsNgo.length === 0;
 
   const childAdd = useSelector((state) => state.childAdd);
-  const { success: successAddChild, loading: loadingAddChild, error: errorAddChild } = childAdd;
+  const { success: successAddChild, error: errorAddChild } = childAdd;
 
   const countryList = useSelector((state) => state.countryList);
   const { countries, states, cities, success: successCountryList } = countryList;
@@ -97,11 +101,25 @@ const Children = () => {
   const { ngoList, success: successNgoList } = ngoAll;
 
   const validationSchema = Yup.object().shape({
-    // name: Yup.string().required('Please enter your first name'),
-    // country: Yup.string().required('Please enter your country'),
-    // phoneNumber: Yup.string().required('Please enter your phone number'),
-    // postalAddress: Yup.string().required('Please enter your postalAddress'),
-    // emailAddress: Yup.string().required('Email is required').email('Email is invalid'),
+    // housingStatus: Yup.string().required('Please enter your address'),
+    // address: Yup.string().required('Please enter your address'),
+    // sex: Yup.string().required('Please enter your address'),
+    // education: Yup.number().required('Please enter your address'),
+    // familyCount: Yup.string().required('Please enter your address'),
+    // birthPlace: Yup.string().required('Please enter your address'),
+    // city: Yup.string().required('Please enter your address'),
+    // state: Yup.string().required('Please enter your address'),
+    // country: Yup.string().required('Please enter your address'),
+    // lastName_translations_en: Yup.string().required('Please enter your address'),
+    // lastName_translations_fa: Yup.string().required('Please enter your address'),
+    // firstName_translations_fa: Yup.string().required('Please enter your address'),
+    // firstName_translations_en: Yup.string().required('Please enter your address'),
+    // sayname_translations_fa: Yup.string().required('Please enter your address'),
+    // sayname_translations_en: Yup.string().required('Please enter your address'),
+    // bio_translations_en: Yup.string().required('Please enter your address'),
+    // bio_translations_fa: Yup.string().required('Please enter your address'),
+    // bio_summary_translations_en: Yup.string().required('Please enter your address'),
+    // bio_summary_translations_fa: Yup.string().required('Please enter your address'),
   });
 
   const {
@@ -113,6 +131,7 @@ const Children = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+  console.log(errors);
 
   // social worker
   useEffect(() => {
@@ -132,14 +151,14 @@ const Children = () => {
   // state
   useEffect(() => {
     if (countries && watch('country')) {
-      dispatch(fetchStateList(watch('country')));
+      dispatch(fetchStateList(watch('country') || countries[0]));
     }
   }, [watch('country'), countries]);
 
   // city
   useEffect(() => {
     if (countries && states && watch('state')) {
-      dispatch(fetchCityList(watch('state')));
+      dispatch(fetchCityList(watch('state') || states[0]));
     }
   }, [watch('state'), countries, states]);
 
@@ -196,34 +215,37 @@ const Children = () => {
     await sleep(300);
     dispatch(
       AddChild({
-        // sw_id: swId,
-        // ngo_id: data.ngo_id,
-        // awakeAvatarUrl: finalAvatarFile,
-        // sleptAvatarUrl: finalSleptAvatarFile,
-        // voiceUrl: uploadVoice,
-        sayname_translations: JSON.stringify({
+        sw_id: swId,
+        ngo_id: ngoId,
+        awakeAvatarUrl: finalAvatarFile,
+        sleptAvatarUrl: finalSleptAvatarFile,
+        voiceUrl: uploadVoice,
+        sayName: JSON.stringify({
           en: data.sayname_translations_en,
           fa: data.sayname_translations_fa,
         }),
-        firstName_translations: JSON.stringify({
+        firstName: JSON.stringify({
           en: data.firstName_translations_en,
           fa: data.firstName_translations_fa,
         }),
-        lastName_translations: JSON.stringify({
+        lastName: JSON.stringify({
           en: data.lastName_translations_en,
           fa: data.lastName_translations_fa,
         }),
-        nationality: data.nationality,
         address: data.address,
-        country: data.country,
-        city: data.city,
-        birthDate: data.birthDate,
-        birthPlace: data.birthPlace,
-        familyCount: data.familyCount,
-        education: data.education,
+        // country: parseInt(data.country, 10),
+        country: 98,
+        // state: parseInt(data.state, 10),  no state in flask server
+        // city: parseInt(data.city, 10),
+        city: 1,
+        birthDate,
+        nationality: data.birthPlace,
+        education: parseInt(education, 10),
+        sex: sex !== 1, // true:male | false:female
         school_type: data.school_type,
         phoneNumber: data.phoneNumber,
-        housingStatus: data.housingStatus,
+        familyCount: parseInt(data.familyCount, 10),
+        housingStatus: parseInt(data.housingStatus, 10),
         bio_translations: JSON.stringify({
           en: data.bio_translations_en,
           fa: data.bio_translations_fa,
@@ -267,11 +289,26 @@ const Children = () => {
   const onVoiceChange = (e) => {
     if (e.target.files[0]) {
       setUploadVoice(URL.createObjectURL(e.target.files[0]));
+      console.log(e.target.files);
+      console.log(e.target.files[0]);
+      console.log(URL.createObjectURL(e.target.files[0]));
     }
   };
 
   const handleRemoveAvatar = () => {
-    console.log(uploadVoice);
+    console.log('uploadVoice');
+  };
+
+  const handleChangeEducation = (event) => {
+    setEducation(event.target.value);
+  };
+
+  const handleChangeHousing = (event) => {
+    setHousingStatus(event.target.value);
+  };
+
+  const handleChangeSex = (event) => {
+    setSex(event.target.value);
   };
 
   return (
@@ -351,7 +388,7 @@ const Children = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Child"
+                label="Social Worker"
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -373,204 +410,241 @@ const Children = () => {
         </Grid>
       ) : (
         <>
-          {!swId && (
+          {swId && (
             <>
-              <Grid container spacing={0}>
-                <Grid item lg={4} md={12} xs={12} sx={{ m: 'auto', mr: 0 }}>
-                  <Card sx={{ p: 3, textAlign: 'center' }}>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      badgeContent={
-                        <IconButton
-                          onClick={handleRemoveAvatar}
-                          color="secondary"
-                          sx={{
-                            position: 'absolute',
-                            bottom: '-5px',
-                            right: '65px',
-                          }}
-                        >
-                          <RemoveCircleOutlineIcon
+              <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <Grid container>
+                  {/*  Child avatar */}
+                  <Grid item lg={4} md={12} xs={12} sx={{ m: 'auto', mr: 0 }}>
+                    <Card sx={{ p: 3, textAlign: 'center' }}>
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        badgeContent={
+                          <IconButton
+                            onClick={handleRemoveAvatar}
                             color="secondary"
-                            fontSize="small"
                             sx={{
-                              borderRadius: '20%',
-                            }}
-                          />
-                        </IconButton>
-                      }
-                    >
-                      <div className="upload__image-wrapper">
-                        <Grid
-                          sx={{
-                            position: 'relative',
-                          }}
-                        >
-                          <Avatar
-                            alt="ngo logo"
-                            sx={{ width: 110, height: 110 }}
-                            src={
-                              finalAvatarFile
-                                ? URL.createObjectURL(finalAvatarFile) // image preview
-                                : null
-                            }
-                          />
-                          <label htmlFor="upload-image-avatar">
-                            <input
-                              accept="image/*"
-                              id="upload-image-avatar"
-                              type="file"
-                              style={{ display: 'none' }}
-                              onChange={onAvatarChange}
-                            />
-
-                            <IconButton
-                              name="upload-image-avatar"
-                              id="upload-image-avatar"
-                              color="primary"
-                              component="div"
-                              sx={{
-                                position: 'absolute',
-                                bottom: '0px',
-                                right: '0px',
-                              }}
-                            >
-                              <AddCircleOutlineIcon
-                                color="primary"
-                                fontSize="small"
-                                sx={{
-                                  zIndex: 10,
-                                  borderRadius: '20%',
-                                }}
-                              />
-                            </IconButton>
-                          </label>
-                        </Grid>
-                      </div>
-                    </Badge>
-                    <Typography variant="body2" sx={{ mt: 2, color: 'gray' }}>
-                      {t('child.awakeAvatarUrl')}
-                    </Typography>
-                  </Card>
-                </Grid>
-                <Grid item lg={4} md={12} xs={12} sx={{ m: 'auto', ml: 0 }}>
-                  <Card sx={{ p: 3, textAlign: 'center' }}>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      badgeContent={
-                        <IconButton
-                          onClick={handleRemoveAvatar}
-                          color="secondary"
-                          sx={{
-                            position: 'absolute',
-                            bottom: '-5px',
-                            right: '65px',
-                          }}
-                        >
-                          <RemoveCircleOutlineIcon
-                            color="secondary"
-                            fontSize="small"
-                            sx={{
-                              borderRadius: '20%',
-                            }}
-                          />
-                        </IconButton>
-                      }
-                    >
-                      <div className="upload__image-wrapper">
-                        <Grid
-                          sx={{
-                            position: 'relative',
-                          }}
-                        >
-                          <Avatar
-                            alt="ngo logo"
-                            sx={{ width: 110, height: 110 }}
-                            src={
-                              finalSleptAvatarFile
-                                ? URL.createObjectURL(finalSleptAvatarFile) // image preview
-                                : null
-                            }
-                          />
-                          <label htmlFor="upload-image-slept-avatar">
-                            <input
-                              accept="image/*"
-                              id="upload-image-slept-avatar"
-                              type="file"
-                              style={{ display: 'none' }}
-                              onChange={onSleptAvatarChange}
-                            />
-
-                            <IconButton
-                              name="upload-image-slept-avatar"
-                              id="upload-image-slept-avatar"
-                              color="primary"
-                              component="div"
-                              sx={{
-                                position: 'absolute',
-                                bottom: '0px',
-                                right: '0px',
-                              }}
-                            >
-                              <AddCircleOutlineIcon
-                                color="primary"
-                                fontSize="small"
-                                sx={{
-                                  zIndex: 10,
-                                  borderRadius: '20%',
-                                }}
-                              />
-                            </IconButton>
-                          </label>
-                        </Grid>
-                      </div>
-                    </Badge>
-                    <Typography variant="body2" sx={{ mt: 2, color: 'gray' }}>
-                      {t('child.sleptAvatarUrl')}
-                    </Typography>
-                  </Card>
-                </Grid>
-
-                <Grid item lg={8} md={12} xs={12} sx={{ m: 'auto' }}>
-                  <Card sx={{ p: 3, textAlign: 'center' }}>
-                    <Grid container sx={{ m: 'auto' }}>
-                      <Grid item xs={6} sx={{ width: '100%' }}>
-                        <VoiceBar url="theChild.voiceUrl" />
-                      </Grid>
-                      <Grid item xs={6} sx={{ m: 'auto', width: '100%' }}>
-                        <label htmlFor="upload-voice">
-                          <input
-                            id="upload-voice"
-                            type="file"
-                            style={{ display: 'none' }}
-                            onChange={onVoiceChange}
-                          />
-
-                          <Button
-                            name="upload-voice"
-                            id="upload-voice"
-                            color="primary"
-                            component="div"
-                            variant="outlined"
-                            sx={{
-                              bottom: '0px',
-                              right: '0px',
+                              position: 'absolute',
+                              bottom: '-5px',
+                              right: '65px',
                             }}
                           >
-                            {t('child.uploadVoice')}
-                          </Button>
-                        </label>
-                      </Grid>
-                    </Grid>
-                  </Card>
+                            <RemoveCircleOutlineIcon
+                              color="secondary"
+                              fontSize="small"
+                              sx={{
+                                borderRadius: '20%',
+                              }}
+                            />
+                          </IconButton>
+                        }
+                      >
+                        <div className="upload__image-wrapper">
+                          <Grid
+                            sx={{
+                              position: 'relative',
+                            }}
+                          >
+                            <Avatar
+                              alt="avatar"
+                              sx={{ width: 110, height: 110 }}
+                              src={
+                                finalAvatarFile
+                                  ? URL.createObjectURL(finalAvatarFile) // image preview
+                                  : null
+                              }
+                            />
+                            <label htmlFor="upload-image-avatar">
+                              <input
+                                accept="image/*"
+                                id="upload-image-avatar"
+                                type="file"
+                                style={{ display: 'none' }}
+                                onChange={onAvatarChange}
+                              />
 
-                  <Card sx={{ p: 3 }}>
-                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                      <Grid container direction="row" spacing={1}>
-                        <Grid item xs={6} container spacing={1} justifyContent="center">
-                          <Grid item md={5} xs={12}>
+                              <IconButton
+                                name="upload-image-avatar"
+                                id="upload-image-avatar"
+                                color="primary"
+                                component="div"
+                                sx={{
+                                  position: 'absolute',
+                                  bottom: '0px',
+                                  right: '0px',
+                                }}
+                              >
+                                <AddCircleOutlineIcon
+                                  color="primary"
+                                  fontSize="small"
+                                  sx={{
+                                    zIndex: 10,
+                                    borderRadius: '20%',
+                                  }}
+                                />
+                              </IconButton>
+                            </label>
+                          </Grid>
+                        </div>
+                      </Badge>
+                      <Typography variant="body2" sx={{ mt: 2, color: 'gray' }}>
+                        {t('child.awakeAvatarUrl')}
+                      </Typography>
+                    </Card>
+                  </Grid>
+                  {/*  Child slept avatar */}
+                  <Grid item lg={4} md={12} xs={12} sx={{ m: 'auto', ml: 0 }}>
+                    <Card sx={{ p: 3, textAlign: 'center' }}>
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        badgeContent={
+                          <IconButton
+                            onClick={handleRemoveAvatar}
+                            color="secondary"
+                            sx={{
+                              position: 'absolute',
+                              bottom: '-5px',
+                              right: '65px',
+                            }}
+                          >
+                            <RemoveCircleOutlineIcon
+                              color="secondary"
+                              fontSize="small"
+                              sx={{
+                                borderRadius: '20%',
+                              }}
+                            />
+                          </IconButton>
+                        }
+                      >
+                        <div className="upload__image-wrapper">
+                          <Grid
+                            sx={{
+                              position: 'relative',
+                            }}
+                          >
+                            <Avatar
+                              alt="avatar"
+                              sx={{ width: 110, height: 110 }}
+                              src={
+                                finalSleptAvatarFile
+                                  ? URL.createObjectURL(finalSleptAvatarFile) // image preview
+                                  : null
+                              }
+                            />
+                            <label htmlFor="upload-image-slept-avatar">
+                              <input
+                                accept="image/*"
+                                id="upload-image-slept-avatar"
+                                type="file"
+                                style={{ display: 'none' }}
+                                onChange={onSleptAvatarChange}
+                              />
+
+                              <IconButton
+                                name="upload-image-slept-avatar"
+                                id="upload-image-slept-avatar"
+                                color="primary"
+                                component="div"
+                                sx={{
+                                  position: 'absolute',
+                                  bottom: '0px',
+                                  right: '0px',
+                                }}
+                              >
+                                <AddCircleOutlineIcon
+                                  color="primary"
+                                  fontSize="small"
+                                  sx={{
+                                    zIndex: 10,
+                                    borderRadius: '20%',
+                                  }}
+                                />
+                              </IconButton>
+                            </label>
+                          </Grid>
+                        </div>
+                      </Badge>
+                      <Typography variant="body2" sx={{ mt: 2, color: 'gray' }}>
+                        {t('child.sleptAvatarUrl')}
+                      </Typography>
+                    </Card>
+                  </Grid>
+
+                  <Grid item lg={10} md={12} xs={12} sx={{ m: 'auto' }}>
+                    {/*  Child voice */}
+                    <Card sx={{ p: 3, textAlign: 'center' }}>
+                      <Grid container sx={{ m: 'auto' }}>
+                        <Grid item xs={6} sx={{ width: '100%' }}>
+                          <VoiceBar url="theChild.voiceUrl" />
+                        </Grid>
+                        <Grid item xs={6} sx={{ m: 'auto', width: '100%' }}>
+                          <label htmlFor="upload-voice">
+                            <input
+                              id="upload-voice"
+                              type="file"
+                              style={{ display: 'none' }}
+                              onChange={onVoiceChange}
+                            />
+
+                            <Button
+                              name="upload-voice"
+                              id="upload-voice"
+                              color="primary"
+                              component="div"
+                              variant="outlined"
+                              sx={{
+                                bottom: '0px',
+                                right: '0px',
+                              }}
+                            >
+                              {t('child.uploadVoice')}
+                            </Button>
+                          </label>
+                        </Grid>
+                      </Grid>
+                    </Card>
+                    {/* Say Name */}
+                    <Card sx={{ p: 2, textAlign: 'center' }}>
+                      <Grid container sx={{ m: 'auto' }}>
+                        <Grid item md={6} sx={{ width: '100%' }}>
+                          <CustomFormLabel htmlFor="sayname_translations_en">
+                            {t('child.sayname_translations.en')}
+                          </CustomFormLabel>
+                          <TextField
+                            id="sayname_translations_en"
+                            variant="outlined"
+                            size="small"
+                            sx={{ mb: 1 }}
+                            control={control}
+                            {...register('sayname_translations_en')}
+                            error={!!errors.sayname_translations_en}
+                          />
+                        </Grid>
+                        <Grid item md={6} sx={{ width: '100%' }}>
+                          <CustomFormLabel htmlFor="sayname_translations_fa">
+                            {t('child.sayname_translations.fa')}
+                          </CustomFormLabel>
+                          <TextField
+                            id="sayname_translations_fa"
+                            variant="outlined"
+                            size="small"
+                            sx={{ mb: 1 }}
+                            control={control}
+                            {...register('sayname_translations_fa')}
+                            error={!!errors.sayname_translations_fa}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Card>
+                    <Card sx={{ p: 1, textAlign: 'center' }}>
+                      <Grid container direction="row">
+                        {/* First Name */}
+                        {/* Last Name */}
+                        <Grid item md={6} container spacing={1} justifyContent="center">
+                          <Grid item lg={5} xs={12}>
                             <CustomFormLabel htmlFor="firstName_translations_en">
                               {t('child.firstName_translations.en')}
                             </CustomFormLabel>
@@ -584,7 +658,7 @@ const Children = () => {
                               error={!!errors.firstName_translations_en}
                             />
                           </Grid>
-                          <Grid item md={5} xs={12}>
+                          <Grid item lg={5} xs={12}>
                             <CustomFormLabel htmlFor="lastName_translations_en">
                               {t('child.lastName_translations.en')}
                             </CustomFormLabel>
@@ -598,7 +672,7 @@ const Children = () => {
                             />
                           </Grid>
                         </Grid>
-                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                        <Grid item md={6} container spacing={1} justifyContent="center">
                           <Grid item md={5} xs={12}>
                             <CustomFormLabel htmlFor="firstName_translations_fa">
                               {t('child.firstName_translations.fa')}
@@ -627,106 +701,142 @@ const Children = () => {
                             />
                           </Grid>
                         </Grid>
-                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                        <Grid item md={6} container spacing={1} justifyContent="center">
                           <Grid item md={10} xs={12}>
                             <CustomFormLabel htmlFor="bio_translations_en">
                               {t('child.bio_translations.en')}
                             </CustomFormLabel>
-                            <TextareaAutosize
-                              aria-label="minimum height"
-                              minRows={5}
+                            <TextField
+                              minRows={4}
+                              multiline
                               id="bio_translations_en"
                               variant="outlined"
                               size="small"
                               control={control}
                               {...register('bio_translations_en')}
                               style={{ width: '100%', background: 'transparent' }}
+                              error={!!errors.bio_translations_en}
                             />
                           </Grid>
                         </Grid>
-                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                        <Grid item md={6} container spacing={1} justifyContent="center">
                           <Grid item md={10} xs={12}>
                             <CustomFormLabel htmlFor="bio_translations_fa">
                               {t('child.bio_translations.fa')}
                             </CustomFormLabel>
-                            <TextareaAutosize
+                            <TextField
                               aria-label="minimum height"
-                              minRows={5}
+                              minRows={4}
+                              multiline
                               id="bio_translations_fa"
                               variant="outlined"
                               control={control}
                               {...register('bio_translations_fa')}
                               style={{ width: '100%', background: 'transparent' }}
+                              error={!!errors.bio_translations_fa}
                             />
                           </Grid>
                         </Grid>
-                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                        <Grid item md={6} container spacing={1} justifyContent="center">
                           <Grid item md={10} xs={12}>
                             <CustomFormLabel htmlFor="bio_summary_translations_en">
                               {t('child.bio_summary_translations.en')}
                             </CustomFormLabel>
-                            <TextareaAutosize
+                            <TextField
                               aria-label="minimum height"
-                              minRows={5}
+                              minRows={4}
+                              multiline
                               id="bio_summary_translations_en"
                               variant="outlined"
                               size="small"
                               control={control}
                               {...register('bio_summary_translations_en')}
                               style={{ width: '100%', background: 'transparent' }}
+                              error={!!errors.bio_summary_translations_en}
                             />
                           </Grid>
                         </Grid>
-
-                        <Grid item xs={6} container spacing={1} justifyContent="center">
+                        <Grid item md={6} container spacing={1} justifyContent="center">
                           <Grid item md={10} xs={12}>
                             <CustomFormLabel htmlFor="bio_summary_translations_fa">
                               {t('child.bio_summary_translations.fa')}
                             </CustomFormLabel>
-                            <TextareaAutosize
+                            <TextField
                               aria-label="minimum height"
-                              minRows={5}
+                              minRows={4}
+                              multiline
                               id="bio_summary_translations_fa"
                               variant="outlined"
                               control={control}
                               {...register('bio_summary_translations_fa')}
                               style={{ width: '100%', background: 'transparent' }}
+                              error={!!errors.bio_summary_translations_fa}
                             />
                           </Grid>
                         </Grid>
-                        <Grid
-                          item
-                          xs={6}
-                          container
-                          spacing={1}
-                          justifyContent="center"
-                          sx={{ mt: 2 }}
-                        >
-                          <Grid item md={10} xs={12}>
-                            <CustomFormLabel htmlFor="birthDate">
-                              {t('child.birthDate')}
-                            </CustomFormLabel>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                              <DesktopDatePicker
-                                id="birthDate"
-                                inputFormat="MM/dd/yyyy"
-                                value={birthDate}
-                                onChange={handleDateChange}
-                                renderInput={(params) => <TextField {...params} />}
-                                helperText={errors && errors.birthDate && errors.birthDate.message}
-                              />
-                            </LocalizationProvider>
-                          </Grid>
+                        <Grid item xs={12} container justifyContent="center">
+                          <FormControl sx={{ minWidth: 300 }}>
+                            <CustomFormLabel id="sex">{t('child.sex')}</CustomFormLabel>
+                            <CustomSelect
+                              labelId="sex-controlled-open-select-label"
+                              id="sex"
+                              onChange={handleChangeSex}
+                              control={control}
+                              value={watch('sex') || ''}
+                              register={{ ...register('sex') }}
+                              error={!!errors.sex}
+                            >
+                              <MenuItem value={1}>Female</MenuItem>
+                              <MenuItem value={2}>Male</MenuItem>
+                            </CustomSelect>
+                          </FormControl>
                         </Grid>
+                        <Grid item xs={12} container justifyContent="center">
+                          <FormControl sx={{ minWidth: 300 }}>
+                            <CustomFormLabel id="education">{t('child.education')}</CustomFormLabel>
+                            <CustomSelect
+                              labelId="education-controlled-open-select-label"
+                              id="education"
+                              onChange={handleChangeEducation}
+                              control={control}
+                              value={watch('education') || ''}
+                              register={{ ...register('education') }}
+                              error={!!errors.education}
+                            >
+                              {Object.keys(EducationEnum).map((name, index) => (
+                                <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
+                                  {name}
+                                </MenuItem>
+                              ))}
+                            </CustomSelect>
+                          </FormControl>
+                        </Grid>
+                        <Grid item md={12} sx={{ width: '100%' }}>
+                          <CustomFormLabel htmlFor="familyCount">
+                            {t('child.familyCount')}
+                          </CustomFormLabel>
+                          <TextField
+                            id="familyCount"
+                            variant="outlined"
+                            type="number"
+                            size="small"
+                            sx={{ mb: 1 }}
+                            control={control}
+                            {...register('familyCount')}
+                            error={!!errors.familyCount}
+                          />
+                        </Grid>
+
+                        <Divider sx={{ width: '70%', m: 'auto', mt: 6 }} variant="middle" />
                         <Grid
                           item
-                          xs={6}
+                          xs={12}
                           container
                           spacing={1}
                           justifyContent="center"
-                          sx={{ mt: 2 }}
+                          sx={{ mt: 4 }}
                         >
-                          <Grid item md={10} xs={12}>
+                          <Grid item md={4} xs={12}>
                             <CustomFormLabel htmlFor="age">{t('child.age')}</CustomFormLabel>
                             <Typography
                               id="age"
@@ -742,165 +852,208 @@ const Children = () => {
                               {getAge(birthDate)} Years
                             </Typography>
                           </Grid>
-                        </Grid>
-                        <Grid item xs={6} container spacing={1} justifyContent="center">
-                          <Grid item md={10} xs={12}>
-                            <CustomFormLabel htmlFor="nationality">
-                              {t('child.nationality')}
+                          <Grid item md={4} xs={12}>
+                            <CustomFormLabel htmlFor="birthDate">
+                              {t('child.birthDate')}
                             </CustomFormLabel>
-                            <TextField
-                              id="nationality"
-                              variant="outlined"
-                              size="small"
-                              sx={{ mb: 1 }}
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                              <DesktopDatePicker
+                                id="birthDate"
+                                inputFormat="MM/dd/yyyy"
+                                value={birthDate}
+                                onChange={handleDateChange}
+                                renderInput={(params) => <TextField {...params} />}
+                                error={!!errors.birthDate}
+                              />
+                            </LocalizationProvider>
+                          </Grid>
+
+                          <Grid item md={4} xs={12}>
+                            <CustomFormLabel htmlFor="birthPlace">
+                              {t('child.birthPlace')}
+                            </CustomFormLabel>
+                            <CustomSelect
+                              labelId="birthPlace-controlled-open-select-label"
+                              id="birthPlace-controlled-open-select"
                               control={control}
-                              {...register('nationality')}
-                              error={!!errors.nationality}
-                            />
+                              register={{ ...register('birthPlace') }}
+                              defaultValue=""
+                              sx={{ width: '100%' }}
+                              error={!!errors.birthPlace}
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              {countries &&
+                                countries.map((country) => (
+                                  <MenuItem key={country.id} value={country.id}>
+                                    {country.name}
+                                  </MenuItem>
+                                ))}
+                            </CustomSelect>
                           </Grid>
                         </Grid>
                       </Grid>
-
-                      <CustomFormLabel htmlFor="country">
-                        {t('socialWorker.country')}
-                      </CustomFormLabel>
-                      <CustomSelect
-                        labelId="country-controlled-open-select-label"
-                        id="country-controlled-open-select"
-                        defaultValue={1}
-                        control={control}
-                        register={{ ...register('country') }}
-                      >
-                        <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
-                      </CustomSelect>
-                      <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                        {errors && errors.country && errors.country.message}
-                      </FormHelperText>
-                      <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
-                      <CustomSelect
-                        labelId="city-controlled-open-select-label"
-                        id="city-controlled-open-select"
-                        defaultValue={1}
-                        control={control}
-                        register={{ ...register('city') }}
-                      >
-                        <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
-                      </CustomSelect>
-                      <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                        {errors && errors.city && errors.city.message}
-                      </FormHelperText>
-                      <CustomFormLabel htmlFor="postalAddress">
-                        {t('socialWorker.postalAddress')}
-                      </CustomFormLabel>
-                      <CustomTextField
-                        id="postalAddress"
-                        variant="outlined"
-                        multiline
-                        rows={4}
-                        size="small"
-                        sx={{ mb: 2 }}
-                        fullWidth
-                        control={control}
-                        register={{ ...register('postalAddress') }}
-                        helperText={errors && errors.postalAddress && errors.postalAddress.message}
-                      />
-                      <CustomFormLabel htmlFor="age">{t('child.age')}</CustomFormLabel>
-                      <TextField
-                        id="sayname_translations_fa"
-                        variant="outlined"
-                        size="small"
-                        sx={{ mb: 1 }}
-                        control={control}
-                        {...register('sayname_translations_fa')}
-                        error={!!errors.sayname_translations_fa}
-                      />
-                      <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                        {errors && errors.emailAddress && errors.emailAddress.message}
-                      </FormHelperText>
-                      <CustomFormLabel htmlFor="Website">{t('ngo.website')}</CustomFormLabel>
-                      <TextField
-                        id="website"
-                        variant="outlined"
-                        size="small"
-                        sx={{ mb: 1 }}
-                        control={control}
-                        {...register('website')}
-                        error={!!errors.website}
-                      />
-                      <CustomFormLabel htmlFor="country">{t('ngo.country')}</CustomFormLabel>
-                      <CustomSelect
-                        labelId="country-controlled-open-select-label"
-                        id="country-controlled-open-select"
-                        defaultValue={countries && countries[0].id}
-                        control={control}
-                        register={{ ...register('country') }}
-                      >
-                        {countries &&
-                          countries.map((country) => (
-                            <MenuItem key={country.id} value={country.id}>
-                              {country.name}
-                            </MenuItem>
-                          ))}
-                      </CustomSelect>
-                      {countries && states && cities && (
-                        <>
-                          <CustomFormLabel htmlFor="city">{t('ngo.city')}</CustomFormLabel>
-                          <CustomSelect
-                            labelId="city-controlled-open-select-label"
-                            id="city-controlled-open-select"
-                            defaultValue={cities && cities[0].id}
-                            control={control}
-                            register={{ ...register('city') }}
-                          >
-                            {cities.map((city) => (
-                              <MenuItem key={city.id} value={city.id}>
-                                {city.name}
+                      <Grid item xs={12} container spacing={1} justifyContent="center">
+                        <Grid item md={4} xs={12}>
+                          <FormControl sx={{ width: '100%' }}>
+                            <CustomFormLabel htmlFor="country">
+                              {t('child.country')}
+                            </CustomFormLabel>
+                            <CustomSelect
+                              labelId="country-controlled-open-select-label"
+                              id="country-controlled-open-select"
+                              control={control}
+                              register={{ ...register('country') }}
+                              defaultValue={watch('country') || ''}
+                              sx={{ width: '100%' }}
+                              error={!!errors.country}
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
                               </MenuItem>
-                            ))}
-                          </CustomSelect>
-                        </>
-                      )}
-      
-                      <CustomFormLabel htmlFor="postalAddress">
-                        {t('ngo.postalAddress')}
-                      </CustomFormLabel>
-                      <CustomTextField
-                        id="postalAddress"
-                        variant="outlined"
-                        multiline
-                        rows={4}
-                        size="small"
-                        sx={{ mb: 2 }}
-                        control={control}
-                        register={{ ...register('postalAddress') }}
-                      />
-                      <CustomFormLabel htmlFor="phoneNumber">
-                        {t('ngo.phoneNumber')}
-                      </CustomFormLabel>
-                      <TextField
-                        id="phoneNumber"
-                        variant="outlined"
-                        size="small"
-                        sx={{ mb: 1 }}
-                        control={control}
-                        {...register('phoneNumber')}
-                        error={!!errors.phoneNumber}
-                      />
+                              {countries &&
+                                countries.map((country) => (
+                                  <MenuItem key={country.id} value={country.id}>
+                                    {country.name}
+                                  </MenuItem>
+                                ))}
+                            </CustomSelect>
+                          </FormControl>
+                        </Grid>
+                        <Grid item md={4} xs={12}>
+                          <FormControl sx={{ width: '100%' }}>
+                            <CustomFormLabel htmlFor="state">{t('child.state')}</CustomFormLabel>
+                            <CustomSelect
+                              labelId="state-controlled-open-select-label"
+                              id="state-controlled-open-select"
+                              control={control}
+                              register={{ ...register('state') }}
+                              value={watch('state') || ''}
+                              sx={{ width: '100%' }}
+                              error={!!errors.state}
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              {states &&
+                                states.map((state) => (
+                                  <MenuItem key={state.id} value={state.id}>
+                                    {state.name}
+                                  </MenuItem>
+                                ))}
+                            </CustomSelect>
+                          </FormControl>
+                        </Grid>
+                        <Grid item md={4} xs={12}>
+                          <FormControl sx={{ width: '100%' }}>
+                            <CustomFormLabel htmlFor="city">{t('child.city')}</CustomFormLabel>
+                            <CustomSelect
+                              labelId="city-controlled-open-select-label"
+                              id="city-controlled-open-select"
+                              control={control}
+                              register={{ ...register('city') }}
+                              value={watch('city') || ''}
+                              sx={{ width: '100%' }}
+                              error={!!errors.city}
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              {cities &&
+                                cities.map((city) => (
+                                  <MenuItem key={city.id} value={city.id}>
+                                    {city.name}
+                                  </MenuItem>
+                                ))}
+                            </CustomSelect>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
 
+                      <Grid
+                        item
+                        xs={12}
+                        container
+                        justifyContent="center"
+                        alignItems="flex-end"
+                        sx={{ mt: 4 }}
+                        spacing={1}
+                      >
+                        <Grid item md={6} xs={12}>
+                          <CustomFormLabel htmlFor="address">{t('child.address')}</CustomFormLabel>
+                          <CustomTextField
+                            id="address"
+                            variant="outlined"
+                            multiline
+                            rows={6}
+                            size="small"
+                            fullWidth
+                            control={control}
+                            register={{ ...register('address') }}
+                            error={!!errors.address}
+                          />
+                        </Grid>
+
+                        <Grid item md={6} xs={12}>
+                          <Grid item>
+                            <CustomFormLabel htmlFor="phoneNumber">
+                              {t('child.phoneNumber')}
+                            </CustomFormLabel>
+                            <TextField
+                              id="phoneNumber"
+                              variant="outlined"
+                              size="medium"
+                              sx={{ width: '100%' }}
+                              control={control}
+                              {...register('phoneNumber')}
+                            />
+                          </Grid>
+
+                          <Grid item>
+                            <FormControl sx={{ width: '100%' }}>
+                              <CustomFormLabel htmlFor="housingStatus">
+                                {t('child.housingStatus')}
+                              </CustomFormLabel>
+                              <CustomSelect
+                                labelId="housingStatus"
+                                id="multiple-education"
+                                value={watch('housingStatus') || ''}
+                                onChange={handleChangeHousing}
+                                control={control}
+                                register={{ ...register('housingStatus') }}
+                                error={!!errors.housingStatus}
+                              >
+                                <MenuItem value="">
+                                  <em>None</em>
+                                </MenuItem>
+                                {Object.keys(HousingStatusEnum).map((name, index) => (
+                                  <MenuItem
+                                    key={name}
+                                    value={Object.values(HousingStatusEnum)[index]}
+                                  >
+                                    {name}
+                                  </MenuItem>
+                                ))}
+                              </CustomSelect>
+                            </FormControl>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                       <LoadingButton
-                        loading={loadingAddChild}
+                        // loading={loadingAddChild}
                         color="primary"
                         type="submit"
                         onClick={handleSubmit(onSubmit)}
                         variant="contained"
                         sx={{ mt: 4 }}
                       >
-                        {t('child.button.update')}
+                        {t('child.button.add')}
                       </LoadingButton>
-                    </form>
-                  </Card>
+                    </Card>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </form>
 
               {/* Child Image */}
               <Dialog

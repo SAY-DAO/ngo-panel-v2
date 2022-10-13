@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { publicApi } from '../../apis/sayBase';
+import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   CHILD_EXAMPLE_NEEDS_FAIL,
   CHILD_EXAMPLE_NEEDS_REQUEST,
@@ -60,7 +60,7 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
   }
 };
 
-export const fetchExampleNeeds = () => async (dispatch, getState) => {
+export const fetchExampleNeeds = (childId) => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_EXAMPLE_NEEDS_REQUEST });
 
@@ -73,7 +73,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await publicApi.get(`/preneeds/`, config);
+    const { data } = await daoApi.get(`/children/child/needs/templates/${childId}`, config);
 
     dispatch({
       type: CHILD_EXAMPLE_NEEDS_SUCCESS,

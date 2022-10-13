@@ -95,7 +95,6 @@ const NgoAdd = () => {
       dispatch(fetchStateList(watch('country') || countries[0]));
     }
   }, [watch('country'), countries]);
-  console.log(watch('country'));
 
   // city
   useEffect(() => {

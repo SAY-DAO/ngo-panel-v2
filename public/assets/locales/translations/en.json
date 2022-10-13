@@ -752,9 +752,14 @@
     "bioSummaryTranslations": "Translation",
     "birthDate": "Birthday",
     "age": "Age",
+    "sex": "Sex",
     "birthPlace": "Origin",
     "city": "City",
+    "state": "State",
     "country": "Country",
+    "housingStatus": "Housing",
+    "phoneNumber": "Phone Number",
+    "address": "Address",
     "education": "Education",
     "confirmUser": "Confirm User",
     "confirmDate": "Confirm Date",
@@ -770,7 +775,11 @@
     "voiceUrl": "Voice",
     "created": "Created",
     "updated": "Updated",
-    "edit": "Edit"
+    "edit": "Edit",
+    "button": {
+      "update": "Update",
+      "add": "Add Child"
+    }
   },
   "dao": {
     "milestone": {

@@ -214,81 +214,86 @@ export const AddChild = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    
-    
+    console.log('this');
+
     const formData = new FormData();
-    if (values.id_ngo) {
-      formData.append('ngo_id', values.id_ngo);
+    if (values.ngo_id) {
+      formData.set('ngo_id', values.ngo_id);
     }
-    if (values.id_social_worker) {
-      formData.append('sw_id', values.id_social_worker);
+    if (values.sw_id) {
+      formData.set('sw_id', values.sw_id);
     }
     if (values.awakeAvatarUrl) {
-      formData.append('awakeAvatarUrl', values.awakeAvatarUrl);
+      formData.set('awakeAvatarUrl', values.awakeAvatarUrl);
     }
     if (values.sleptAvatarUrl) {
-      formData.append('sleptAvatarUrl', values.sleptAvatarUrl);
+      formData.set('sleptAvatarUrl', values.sleptAvatarUrl);
     }
     if (values.voiceUrl) {
-      formData.append('voiceUrl', values.voiceUrl);
+      formData.set('voiceUrl', values.voiceUrl);
     }
     if (values.firstName) {
-      formData.append('firstName_translations', values.firstName_translations);
+      formData.set('firstName_translations', values.firstName);
     }
     if (values.lastName) {
-      formData.append('lastName_translations', values.lastName_translations);
+      formData.set('lastName_translations', values.lastName);
+    }
+    if (values.sayName) {
+      formData.set('sayname_translations', values.sayName);
     }
     if (values.bio_translations) {
-      formData.append('sayname_translations', values.sayname_translations);
+      formData.set('bio_translations', values.bio_translations);
     }
-    if (values.lastName) {
-      formData.append('bio_translations', values.bio_translations);
-    }
-    if (values.lastName) {
-      formData.append('bio_summary_translations', values.bio_summary_translations);
+    if (values.bio_summary_translations) {
+      formData.set('bio_summary_translations', values.bio_summary_translations);
     }
     if (values.phoneNumber) {
-      formData.append('phoneNumber', values.phoneNumber);
+      formData.set('phoneNumber', values.phoneNumber);
     }
     if (values.nationality) {
-      formData.append('nationality', values.nationality);
+      formData.set('birthPlace', values.nationality);
     }
     if (values.country) {
-      formData.append('country', values.country);
+      formData.set('country', values.country);
     }
     if (values.city) {
-      formData.append('city', values.city);
+      formData.set('city', values.city);
+    }
+    if (values.education) {
+      formData.set('education', values.education);
     }
     if (values.birthPlace) {
-      formData.append('birthPlace', values.birthPlace);
+      formData.set('birthPlace', values.birthPlace);
     }
     if (values.birthDate) {
-      formData.append('birthDate', values.birthDate);
+      formData.set('birthDate', values.birthDate);
+    }
+    if (values.sex) {
+      formData.set('gender', values.sex);
     }
     if (values.address) {
-      formData.append('address', values.address);
+      formData.set('address', values.address);
     }
     if (values.familyCount) {
-      formData.append('familyCount', values.familyCount);
+      formData.set('familyCount', values.familyCount);
     }
-    if (values.education || values.school_type) {
-      formData.append(
-        'education',
-        values.education === '-2' ? `-${values.school_type}2` : values.school_type + values.education,
-      ); // because "int-2" cannot be stored. temporarily solution!
-    }
+    // if (values.education || values.school_type) {
+    //   formData.set(
+    //     'education',
+    //     values.education === '-2' ? `-${values.school_type}2` : values.school_type + values.education,
+    //   ); // because "int-2" cannot be stored. temporarily solution!
+    // }
     if (values.housingStatus) {
-      formData.append('housingStatus', values.housingStatus);
+      formData.set('housingStatus', values.housingStatus);
     }
- 
-    console.log('child');
+
     console.log(values);
 
-    const { data } = await publicApi.post(`/child/add`, formData, config);
+    const { data } = await publicApi.post(`/child/add/`, formData, config);
     dispatch({
       type: ADD_CHILD_SUCCESS,
       payload: data,

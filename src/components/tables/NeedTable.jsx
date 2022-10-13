@@ -375,7 +375,7 @@ const NeedTable = () => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const [ngoId, setNgoId] = useState();
   const [childId, setChildId] = useState();
@@ -1009,7 +1009,7 @@ const NeedTable = () => {
                     </Table>
                   </TableContainer>
                   <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[5, 10, 25, 50]}
                     component="div"
                     count={theNeeds.needs.length}
                     rowsPerPage={rowsPerPage}

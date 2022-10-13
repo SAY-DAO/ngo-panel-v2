@@ -50,6 +50,7 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
+import { getOrganizedNeeds } from '../../utils/helpers';
 
 const BCrumb = [
   {
@@ -111,8 +112,8 @@ const NeedAdd = () => {
 
   // one need
   useEffect(() => {
-    if (theNeed && theNeed.id) {
-      dispatch(fetchChildOneNeed(theNeed.id));
+    if (theNeed && theNeed.flaskNeedId) {
+      dispatch(fetchChildOneNeed(theNeed.flaskNeedId));
     }
   }, [theNeed]);
 
@@ -173,12 +174,12 @@ const NeedAdd = () => {
     if (!openPreNeed) {
       setOptionsPreNeed([]);
     } else if (openPreNeed) {
-      dispatch(fetchExampleNeeds());
+      dispatch(fetchExampleNeeds(childId));
     }
     return () => {
       dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
     };
-  }, [openPreNeed]);
+  }, [openPreNeed, childId]);
 
   // theChild
   useEffect(() => {
@@ -188,29 +189,9 @@ const NeedAdd = () => {
   }, [childId]);
 
   // sort needs
-  // urgent ==> index 0
-  // growth 0 ==> index 1
-  // joy 1 ==> index 2
-  // health 2 ==> index 3
-  // surroundings 3 ==> index 4
-  // isDone ==> index 5
-  // isConfirmed ==> index 6
-  // unpayable ==> index 7
   useEffect(() => {
     if (successChildrenNeeds) {
-      const needData = [[], [], [], [], [], [], [], []];
-      for (let i = 0; i < theNeeds.needs.length; i += 1) {
-        if (theNeeds.needs[i].isUrgent) {
-          needData[0].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].isDone) {
-          needData[5].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].isConfirmed) {
-          needData[6].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].unpayable) {
-          needData[7].push(theNeeds.needs[i]);
-        }
-        needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
-      }
+      const needData = getOrganizedNeeds(theNeeds);
       setNeedsData(needData);
     }
   }, [childId, successChildrenNeeds]);
@@ -331,12 +312,12 @@ const NeedAdd = () => {
             onClose={() => {
               setOpenChildren(false);
             }}
+            options={optionsChildren}
             onChange={(e, value) => setChildId(value && value.id)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) =>
               `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
             }
-            options={optionsChildren}
             loading={isLoadingChildren}
             renderOption={(props, option) => (
               <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -479,7 +460,7 @@ const NeedAdd = () => {
                     </Typography>
                     <form onSubmit={handleSubmit(onSubmit)} noValidate>
                       <Autocomplete
-                        sx={{ maxWidth: '350px', m: 'auto' }}
+                        sx={{ maxWidth: '500px', m: 'auto' }}
                         id="asynchronous-preNeed"
                         open={openPreNeed}
                         onOpen={() => {
@@ -489,12 +470,43 @@ const NeedAdd = () => {
                           setOpenPreNeed(false);
                         }}
                         onChange={(e, value) => setTheNeed(value)}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        isOptionEqualToValue={(option, value) =>
+                          option.flaskNeedId === value.flaskNeedId
+                        }
                         getOptionLabel={(option) =>
-                          `${option.id} - ${option.name} - ${option.title}`
+                          `${option.flaskNeedId} - ${option.title} - ${option.titleTranslations.fa}`
                         }
                         options={optionsPreNeed}
                         loading={isLoadingPreNeed}
+                        renderOption={(props, option) => (
+                          <Box
+                            component="li"
+                            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                            {...props}
+                          >
+                            <Avatar
+                              src={option.imageUrl}
+                              sx={{
+                                borderRadius: '10px',
+                                width: '50px',
+                                height: '50px',
+                                m: 1,
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                maxWidth: '400px',
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                width: '360px',
+                                height: '1.2em',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {option.flaskNeedId} - {option.title} - {option.titleTranslations.fa}
+                            </Typography>
+                          </Box>
+                        )}
                         renderInput={(params) => (
                           <TextField
                             {...params}

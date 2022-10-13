@@ -280,7 +280,7 @@ const NgoTable = ({ ngoList }) => {
   const navigate = useNavigate();
 
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('status');
+  const [orderBy, setOrderBy] = useState('created');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
