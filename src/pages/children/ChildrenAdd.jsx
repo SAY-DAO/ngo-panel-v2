@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Avatar,
@@ -42,17 +41,14 @@ import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/act
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import { AddChild } from '../../redux/actions/childrenAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
-import {
-  fetchSocialWorkerById,
-  fetchSocialWorkersList,
-} from '../../redux/actions/socialWorkerAction';
+import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
 import getAge, { EducationEnum, HousingStatusEnum } from '../../utils/helpers';
 
 const BCrumb = [
   {
-    to: '/child/list',
+    to: '/children/list',
     title: 'Children List',
   },
   {
@@ -60,7 +56,7 @@ const BCrumb = [
   },
 ];
 
-const Children = () => {
+const ChildAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
@@ -75,7 +71,6 @@ const Children = () => {
   const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
   const [birthDate, setBirthDate] = useState(new Date());
   const [education, setEducation] = useState('');
-  const [housingStatus, setHousingStatus] = useState('');
   const [sex, setSex] = useState('');
 
   const [ngoId, setNgoId] = useState();
@@ -101,25 +96,25 @@ const Children = () => {
   const { ngoList, success: successNgoList } = ngoAll;
 
   const validationSchema = Yup.object().shape({
-    // housingStatus: Yup.string().required('Please enter your address'),
-    // address: Yup.string().required('Please enter your address'),
-    // sex: Yup.string().required('Please enter your address'),
-    // education: Yup.number().required('Please enter your address'),
-    // familyCount: Yup.string().required('Please enter your address'),
-    // birthPlace: Yup.string().required('Please enter your address'),
-    // city: Yup.string().required('Please enter your address'),
-    // state: Yup.string().required('Please enter your address'),
-    // country: Yup.string().required('Please enter your address'),
-    // lastName_translations_en: Yup.string().required('Please enter your address'),
-    // lastName_translations_fa: Yup.string().required('Please enter your address'),
-    // firstName_translations_fa: Yup.string().required('Please enter your address'),
-    // firstName_translations_en: Yup.string().required('Please enter your address'),
-    // sayname_translations_fa: Yup.string().required('Please enter your address'),
-    // sayname_translations_en: Yup.string().required('Please enter your address'),
-    // bio_translations_en: Yup.string().required('Please enter your address'),
-    // bio_translations_fa: Yup.string().required('Please enter your address'),
-    // bio_summary_translations_en: Yup.string().required('Please enter your address'),
-    // bio_summary_translations_fa: Yup.string().required('Please enter your address'),
+    housingStatus: Yup.string().required('Please enter your address'),
+    address: Yup.string().required('Please enter your address'),
+    sex: Yup.string().required('Please enter your address'),
+    education: Yup.number().required('Please enter your address'),
+    familyCount: Yup.string().required('Please enter your address'),
+    birthPlace: Yup.string().required('Please enter your address'),
+    city: Yup.string().required('Please enter your address'),
+    state: Yup.string().required('Please enter your address'),
+    country: Yup.string().required('Please enter your address'),
+    lastName_translations_en: Yup.string().required('Please enter your address'),
+    lastName_translations_fa: Yup.string().required('Please enter your address'),
+    firstName_translations_fa: Yup.string().required('Please enter your address'),
+    firstName_translations_en: Yup.string().required('Please enter your address'),
+    sayname_translations_fa: Yup.string().required('Please enter your address'),
+    sayname_translations_en: Yup.string().required('Please enter your address'),
+    bio_translations_en: Yup.string().required('Please enter your address'),
+    bio_translations_fa: Yup.string().required('Please enter your address'),
+    bio_summary_translations_en: Yup.string().required('Please enter your address'),
+    bio_summary_translations_fa: Yup.string().required('Please enter your address'),
   });
 
   const {
@@ -132,13 +127,6 @@ const Children = () => {
     resolver: yupResolver(validationSchema),
   });
   console.log(errors);
-
-  // social worker
-  useEffect(() => {
-    if (swId) {
-      dispatch(fetchSocialWorkerById(swId));
-    }
-  }, [swId]);
 
   // country
   useEffect(() => {
@@ -301,10 +289,6 @@ const Children = () => {
 
   const handleChangeEducation = (event) => {
     setEducation(event.target.value);
-  };
-
-  const handleChangeHousing = (event) => {
-    setHousingStatus(event.target.value);
   };
 
   const handleChangeSex = (event) => {
@@ -578,7 +562,7 @@ const Children = () => {
                     <Card sx={{ p: 3, textAlign: 'center' }}>
                       <Grid container sx={{ m: 'auto' }}>
                         <Grid item xs={6} sx={{ width: '100%' }}>
-                          <VoiceBar url="theChild.voiceUrl" />
+                          <VoiceBar url={uploadVoice} />
                         </Grid>
                         <Grid item xs={6} sx={{ m: 'auto', width: '100%' }}>
                           <label htmlFor="upload-voice">
@@ -1019,7 +1003,6 @@ const Children = () => {
                                 labelId="housingStatus"
                                 id="multiple-education"
                                 value={watch('housingStatus') || ''}
-                                onChange={handleChangeHousing}
                                 control={control}
                                 register={{ ...register('housingStatus') }}
                                 error={!!errors.housingStatus}
@@ -1108,4 +1091,4 @@ const Children = () => {
   );
 };
 
-export default Children;
+export default ChildAdd;

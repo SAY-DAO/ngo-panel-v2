@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import { getMileStones } from '../../redux/actions/dao/DaoAction';
-import DaoMileStoneTimeLine from '../../components/tables/DaoMileStoneTimeLine';
+import DaoMileStoneTimeLine from '../../components/DaoMileStoneTimeLine';
 
 const BCrumb = [
   {

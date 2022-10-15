@@ -11,7 +11,7 @@ import {
   TimelineOppositeContent,
 } from '@mui/lab';
 
-import DashboardCard from '../DashboardCard';
+import DashboardCard from './DashboardCard';
 
 const options = ['Action', 'Another Action', 'Something else here'];
 

@@ -37,8 +37,9 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 const NeedEdit = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { t } = useTranslation();
   const { needId, childId } = useParams();
+  const { t } = useTranslation();
+
   const BCrumb = [
     {
       to: '/need/list',

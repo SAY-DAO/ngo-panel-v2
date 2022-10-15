@@ -48,24 +48,26 @@ export default function VoiceBar({ url }) {
   const [sound, setSound] = useState();
 
   useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const theSound = soundManager.getSoundById(soundManager.soundIDs[0]);
-    setSound(theSound);
     return () => {
       setStatus('STOPPED');
       setSound('');
     };
-  }, []);
+  }, [url]);
 
   const timeHandler = () => {
     const w = document.getElementsByClassName('MuiSlider-track')[0].style.width;
-    const newTime = (w.split('%')[0] / 100) * sound.duration;
-    // this.setState({ from: newTime });
-    sound.setPosition(newTime);
+    if (sound != null) {
+      const newTime = (w.split('%')[0] / 100) * sound.duration;
+      // this.setState({ from: newTime });
+      sound.setPosition(newTime);
+    }
   };
 
   const handleChange = () => {
-    const p = document.getElementById('demo');
+    // eslint-disable-next-line no-undef
+    const theSound = soundManager.getSoundById(soundManager.soundIDs[0]);
+    setSound(theSound);
+    const p = document.getElementById('childVoice');
     // let pb = document.getElementById("pb1");
     if (sound != null && p != null) {
       const theInterval = setInterval(() => {
@@ -77,10 +79,10 @@ export default function VoiceBar({ url }) {
 
         try {
           document.getElementsByClassName(
-            'MuiSlider-track'
+            'MuiSlider-track',
           )[0].style.width = `${percent.toString()}%`;
           document.getElementsByClassName(
-            'MuiSlider-thumb'
+            'MuiSlider-thumb',
           )[0].style.left = `${percent.toString()}%`;
         } catch (error) {
           clearInterval(theInterval);
@@ -149,7 +151,7 @@ export default function VoiceBar({ url }) {
                 onClick={timeHandler}
               />
             </div>
-            <p id="demo" className="progressBarTime" />
+            <p id="childVoice" className="progressBarTime" />
           </div>
         </>
       )}
@@ -158,5 +160,5 @@ export default function VoiceBar({ url }) {
 }
 
 VoiceBar.propTypes = {
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string,
 };

@@ -744,6 +744,10 @@
       "fa": "Biography Summary (fa)",
       "en": "Biography Summary (en)"
     },
+    "divider": {
+      "housing": "Living at",
+      "origin": "Born at"
+    },
     "awakeAvatarUrl": "Awake",
     "sleptAvatarUrl": "Sleep",
     "uploadVoice": "Upload Voice",

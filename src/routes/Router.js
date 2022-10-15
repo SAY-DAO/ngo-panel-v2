@@ -56,7 +56,7 @@ const Router = [
       { path: '/ngo/edit/:id', exact: true, element: <NgoEdit /> },
       { path: '/ngo/add', exact: true, element: <NgoAdd /> },
       { path: '/children/list', exact: true, element: <ChildrenList /> },
-      { path: '/children/edit/:id', exact: true, element: <ChildrenEdit /> },
+      { path: '/children/edit/:childId', exact: true, element: <ChildrenEdit /> },
       { path: '/children/add', exact: true, element: <ChildrenAdd /> },
       { path: '/need/list', exact: true, element: <NeedList /> },
       { path: '/need/edit/:childId/:needId', exact: true, element: <NeedEdit /> },
