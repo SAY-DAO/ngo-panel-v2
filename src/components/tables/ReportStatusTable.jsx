@@ -27,6 +27,8 @@ import {
   Avatar,
   Snackbar,
   Alert,
+  CardMedia,
+  Link,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -101,6 +103,20 @@ function EnhancedTableHead(props) {
       disablePadding: false,
       label: t('need.img.product'),
       width: '250px',
+    },
+    {
+      id: 'affiliateLinkUrl',
+      numeric: false,
+      disablePadding: true,
+      label: t('need.affiliateLinkUrl'),
+      width: '100px',
+    },
+    {
+      id: 'link',
+      numeric: false,
+      disablePadding: true,
+      label: t('need.link'),
+      width: '100px',
     },
     {
       id: 'sayName',
@@ -492,8 +508,9 @@ const ReportStatusTable = () => {
           </TableCell>
           <TableCell>
             <Box display="flex" alignItems="center">
-              <Avatar
-                src={row.img}
+              <CardMedia
+                component="img"
+                image={row.img}
                 alt={row.img}
                 sx={{
                   borderRadius: '10px',
@@ -511,6 +528,20 @@ const ReportStatusTable = () => {
                 </Typography>
               </Box>
             </Box>
+          </TableCell>
+          <TableCell align="center">
+            {row.affiliateLinkUrl && (
+              <Link href={row.affiliateLinkUrl} target="_blank">
+                Link
+              </Link>
+            )}
+          </TableCell>
+          <TableCell align="center">
+            {row.link && (
+              <Link href={row.link} target="_blank">
+                Link
+              </Link>
+            )}
           </TableCell>
           <TableCell component="th" scope="row">
             {row.childSayName}
@@ -780,6 +811,8 @@ const ReportStatusTable = () => {
       bank_track_id: PropTypes.string,
       dkc: PropTypes.string,
       payments: PropTypes.array,
+      affiliateLinkUrl: PropTypes.string,
+      link: PropTypes.string,
     }),
   };
 

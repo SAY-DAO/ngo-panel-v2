@@ -35,7 +35,6 @@ export function getOrganizedNeeds(theNeeds) {
   return needData;
 }
 
-  
 //  -3:Deprived of education | -2:Kindergarten | -1:Not attending | 0:Pre-school | 1:1st grade | 2:2nd grade | ... | 13:University
 export const EducationEnum = {
   Deprived: -3,
@@ -62,4 +61,15 @@ export const HousingStatusEnum = {
   homeless: 0,
   Resident: 1,
   'Care Centers': 2,
+};
+
+export const RolesEnum = {
+  NO_ROLE: 'no role',
+  SUPER_ADMIN: 'super admin',
+  SOCIAL_WORKER: 'social worker',
+  COORDINATOR: 'coordinator',
+  NGO_SUPERVISOR: 'NGO supervisor',
+  SAY_SUPERVISOR: 'SAY supervisor',
+  ADMIN: 'admin',
+  USER: 'user',
 };

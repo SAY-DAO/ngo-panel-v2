@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -303,7 +302,7 @@ const NgoTable = ({ ngoList }) => {
 
   const handleClick = (event, id) => {
     // const selectedIndex = selected.indexOf(id);
-    const newSelected = [];
+    setSelected([]);
     // setSelected(selectedIndex);
     // if (selectedIndex === -1) {
     //   newSelected = newSelected.concat(selected, id);

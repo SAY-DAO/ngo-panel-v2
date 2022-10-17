@@ -41,6 +41,7 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
+import { RolesEnum } from '../../utils/helpers';
 
 const BCrumb = [
   {
@@ -522,7 +523,7 @@ const SocialWorkerAdd = () => {
                       control={control}
                       register={{ ...register('typeId') }}
                     >
-                      <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
+                      <MenuItem value={1}>{RolesEnum.SUPER_ADMIN}</MenuItem>
                       <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
                       <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
                       <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>

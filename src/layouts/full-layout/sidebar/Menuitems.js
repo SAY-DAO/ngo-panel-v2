@@ -12,14 +12,16 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 const Menuitems = [
   {
     navlabel: true,
-    subheader: 'DASHBOARDS',
+    subheader: 'Social Worker',
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
+    admin: false,
   },
   {
     title: 'My Page',
     icon: 'user',
     href: '/profile/view',
+    admin: false,
   },
 
   {
@@ -27,6 +29,7 @@ const Menuitems = [
     icon: <ChildCareIcon />,
     href: '/children',
     collapse: true,
+    admin: false,
     children: [
       {
         title: 'List',
@@ -44,6 +47,7 @@ const Menuitems = [
     title: 'Needs',
     icon: <InterestsIcon />,
     href: '/need',
+    admin: false,
     collapse: true,
     children: [
       {
@@ -58,35 +62,47 @@ const Menuitems = [
       },
     ],
   },
+
   {
-    title: 'Reports',
-    icon: <MenuBookIcon />,
-    href: '/reports',
+    title: 'MileStone',
+    icon: <RouteIcon />,
+    href: '/dao/milestone',
     collapse: true,
+    admin: true,
     children: [
       {
-        title: 'Paid List',
+        title: 'List',
         icon: 'list',
-        href: '/report/needs/paid',
+        href: '/dao/milestone/list',
       },
       {
-        title: 'Paid',
-        icon: 'edit',
-        href: '/reports/needs/paid',
+        title: 'Add',
+        icon: 'plus',
+        href: '/dao/milestone/add',
       },
     ],
   },
+  {
+    title: 'Reports',
+    icon: <MenuBookIcon />,
+    href: '/report/needs/paid',
+    collapse: true,
+    admin: false,
+  },
+  // Admin
   {
     navlabel: true,
     subheader: 'ADMIN',
     icon: 'mdi mdi-dots-horizontal',
     href: 'Reports',
+    admin: true,
   },
   {
     title: 'NGOs',
     icon: <HouseIcon />,
     href: '/ngo',
     collapse: true,
+    admin: true,
     children: [
       {
         title: 'List',
@@ -105,6 +121,7 @@ const Menuitems = [
     icon: <StorefrontIcon />,
     href: '/provider',
     collapse: true,
+    admin: true,
     children: [
       {
         title: 'List',
@@ -123,6 +140,7 @@ const Menuitems = [
     icon: 'users',
     href: '/sw',
     collapse: true,
+    admin: true,
     children: [
       {
         title: 'List',
@@ -146,6 +164,7 @@ const Menuitems = [
     icon: <HiveIcon />,
     href: '/admin/catagories',
     collapse: true,
+    admin: true,
     children: [
       {
         title: 'List',
@@ -163,29 +182,13 @@ const Menuitems = [
     navlabel: true,
     subheader: 'DAO',
     href: 'DAO',
+    admin: true,
   },
   {
     title: 'Dashboard',
     icon: <HubIcon />,
     href: '/dao',
-  },
-  {
-    title: 'MileStone',
-    icon: <RouteIcon />,
-    href: '/dao/milestone',
-    collapse: true,
-    children: [
-      {
-        title: 'List',
-        icon: 'list',
-        href: '/dao/milestone/list',
-      },
-      {
-        title: 'Add',
-        icon: 'plus',
-        href: '/dao/milestone/add',
-      },
-    ],
+    admin: true,
   },
 ];
 
