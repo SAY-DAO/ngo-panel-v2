@@ -7,7 +7,7 @@ let envApiDao = '';
 if (env === 'prod') {
   envApiUrl = `https://${process.env.REACT_APP_DOMAIN_PROD}/api/v2`;
   envApiUrl3 = `https://${process.env.REACT_APP_DOMAIN_PROD}/api/v3`;
-  envApiDao = `https://${process.env.REACT_APP_NEST_SERVER_PROD}/api/dao`;
+  envApiDao = `http://${process.env.REACT_APP_NEST_SERVER_PROD}/api/dao`;
 } else if (env === 'stag') {
   envApiUrl = `https://${process.env.REACT_APP_DOMAIN_STAGING}/api/v2`;
   envApiUrl3 = `https://${process.env.REACT_APP_DOMAIN_STAGING}/api/v3`;
