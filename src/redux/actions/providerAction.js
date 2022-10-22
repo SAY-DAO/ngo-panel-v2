@@ -51,6 +51,7 @@ export const fetchProviderList = () => async (dispatch) => {
     const config = {
       headers: {
         'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': true,
       },
     };
     const { data } = await daoApi.get(`/providers/all`, config);
