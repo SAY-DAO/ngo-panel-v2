@@ -44,17 +44,13 @@ export const fetchProviderById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const fetchProviderList = () => async (dispatch, getState) => {
+export const fetchProviderList = () => async (dispatch) => {
   try {
     dispatch({ type: PROVIDER_LIST_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
 
     const config = {
       headers: {
         'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
       },
     };
     const { data } = await daoApi.get(`/providers/all`, config);
