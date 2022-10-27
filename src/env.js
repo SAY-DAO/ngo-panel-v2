@@ -4,11 +4,11 @@ let envApiUrl = '';
 let envApiUrl3 = '';
 let envApiDao = '';
 
-if (env === 'prod') {
+if (env === 'production') {
   envApiUrl = `https://${process.env.REACT_APP_DOMAIN_PROD}/api/v2`;
   envApiUrl3 = `https://${process.env.REACT_APP_DOMAIN_PROD}/api/v3`;
   envApiDao = `https://${process.env.REACT_APP_NEST_SERVER_PROD}/api/dao`;
-} else if (env === 'stag') {
+} else if (env === 'staging') {
   envApiUrl = `https://${process.env.REACT_APP_DOMAIN_STAGING}/api/v2`;
   envApiUrl3 = `https://${process.env.REACT_APP_DOMAIN_STAGING}/api/v3`;
   envApiDao = `http://${process.env.REACT_APP_NEST_SERVER_STAG}/api/dao`;
