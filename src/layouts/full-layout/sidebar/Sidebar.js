@@ -40,12 +40,13 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   };
 
   useEffect(() => {
-    console.log(Object.keys(RolesEnum)[1]);
-    if (swInfo === RolesEnum.ADMIN || swInfo === RolesEnum.SUPER_ADMIN) {
-      const adminMenuitems = Menuitems.filter((m) => m.admin === false || m.typeId === 6);
-      setMyMenuItems(adminMenuitems);
-    } else {
-      setMyMenuItems(Menuitems);
+    if (swInfo) {
+      if (swInfo.typeId === RolesEnum.ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN) {
+        setMyMenuItems(Menuitems);
+      } else {
+        const adminMenuitems = Menuitems.filter((m) => m.admin === false);
+        setMyMenuItems(adminMenuitems);
+      }
     }
   }, [Menuitems, swInfo]);
 

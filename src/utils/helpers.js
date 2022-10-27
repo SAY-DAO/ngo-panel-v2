@@ -63,7 +63,7 @@ export const HousingStatusEnum = {
   'Care Centers': 2,
 };
 
-export const RolesEnum = {
+export const RolesEnumDefine = {
   NO_ROLE: 'no role',
   SUPER_ADMIN: 'super admin',
   SOCIAL_WORKER: 'social worker',
@@ -72,4 +72,15 @@ export const RolesEnum = {
   SAY_SUPERVISOR: 'SAY supervisor',
   ADMIN: 'admin',
   USER: 'user',
+};
+
+export const RolesEnum = {
+  NO_ROLE: 0,
+  SUPER_ADMIN: 1,
+  SOCIAL_WORKER: 2,
+  COORDINATOR: 3,
+  NGO_SUPERVISOR: 4,
+  SAY_SUPERVISOR: 5,
+  ADMIN: 6,
+  USER: 7,
 };
