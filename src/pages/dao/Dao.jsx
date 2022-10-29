@@ -8,7 +8,7 @@ import {
   fetchNestNeeds,
   fetchNestUsers,
   updateNestServer,
-} from '../../redux/actions/dao/DaoAction';
+} from '../../redux/actions/DaoAction';
 import DaoNeedStatus from './DaoNeedStatus';
 import DaoChildStatus from './DaoChildstatus.';
 import DaoUserStatus from './DaoUserStatus';

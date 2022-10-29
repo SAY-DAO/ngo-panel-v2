@@ -47,7 +47,7 @@ import { fetchNgoList } from '../../redux/actions/ngoAction';
 import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
-import { signTransaction } from '../../redux/actions/dao/DaoAction';
+import { signTransaction } from '../../redux/actions/DaoAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {

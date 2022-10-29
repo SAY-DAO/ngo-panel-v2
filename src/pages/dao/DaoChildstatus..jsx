@@ -5,7 +5,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { fetchNestChildren } from '../../redux/actions/dao/DaoAction';
+import { fetchNestChildren } from '../../redux/actions/DaoAction';
 
 const DaoChildStatus = () => {
   const dispatch = useDispatch();
