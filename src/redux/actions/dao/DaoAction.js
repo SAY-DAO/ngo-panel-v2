@@ -273,7 +273,7 @@ export const updateOneNeedNestServer = (need) => async (dispatch, getState) => {
     };
     console.log('needRequest');
     console.log(needRequest);
-    const responseNeed = await daoApi.post(`/sync/update/one`, theNeed); // create
+    const responseNeed = await daoApi.post(`/sync/update/one/`, theNeed); // create
     console.log('responseNeed');
     console.log(responseNeed);
 
