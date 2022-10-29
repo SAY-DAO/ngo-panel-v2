@@ -173,6 +173,8 @@ export const deleteProvider = (providerId) => async (dispatch) => {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
 
     const config = {
+      method: 'DELETE',
+      mode: 'cors',
       headers: {
         'Access-Control-Allow-Headers': '*',
         'Access-Control-Allow-Origin': '*',
@@ -180,12 +182,12 @@ export const deleteProvider = (providerId) => async (dispatch) => {
         'Content-type': 'application/json',
       },
     };
-    // const { data } = await daoApi.delete(`/providers/${providerId}/`, config);
-    const data = await daoApi.delete(`/providers/${providerId}/`, config, {});
-    const data2 = await daoApi.delete(`/providers/${providerId}/`, { config });
-    const data3 = await daoApi.delete(`/providers/${providerId}/`, {}, config);
-    console.log(data2)
-    console.log(data3)
+    const { data } = await daoApi.delete(`/providers/${providerId}/`, config);
+    // const data = await daoApi.delete(`/providers/${providerId}/`, config, {});
+    // const data2 = await daoApi.delete(`/providers/${providerId}/`, { config });
+    // const data3 = await daoApi.delete(`/providers/${providerId}/`, {}, config);
+    // console.log(data2);
+    // console.log(data3);
     dispatch({
       type: DELETE_PROVIDER_SUCCESS,
       payload: data,
