@@ -182,7 +182,7 @@ export const deleteProvider = (providerId) => async (dispatch) => {
         'Content-type': 'application/json',
       },
     };
-    const { data } = await daoApi.delete(`/providers/${providerId}`, config);
+    const { data } = await daoApi.delete(`/providers/${providerId}`, {}, config);
     // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
     // const { data } = await daoApi.delete(`/providers/${providerId}`, { config });
     // const { data } = await daoApi.delete(`/providers/${providerId}`, {}, config);
