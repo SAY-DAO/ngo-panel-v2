@@ -17,12 +17,9 @@ import {
   UPDATE_PROVIDER_SUCCESS,
 } from '../constants/providerConstants';
 
-export const fetchProviderById = (id) => async (dispatch, getState) => {
+export const fetchProviderById = (id) => async (dispatch) => {
   try {
     dispatch({ type: PROVIDER_BY_ID_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
 
     const config = {
       headers: {
