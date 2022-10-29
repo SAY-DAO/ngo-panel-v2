@@ -182,10 +182,19 @@ export const deleteProvider = (providerId) => async (dispatch) => {
         'Content-type': 'application/json',
       },
     };
+    const { data } = await fetch('https://api.request.com/api_resource', {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer: ${"token"}`,
+        'Content-Type': 'application/json',
+      },
+      body: {},
+    });
     // const { data } = await daoApi.delete(`/providers/${providerId}/`, config);
     // const {data} = await daoApi.delete(`/providers/${providerId}/`, config, {});
     // const { data } = await daoApi.delete(`/providers/${providerId}/`, { config });
-    const { data } = await daoApi.delete(`/providers/${providerId}/`, {}, config);
+    // const { data } = await daoApi.delete(`/providers/${providerId}/`, {}, config);
     // console.log(data2);
     // console.log(data3);
     dispatch({
