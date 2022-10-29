@@ -184,6 +184,9 @@ export const deleteProvider = (providerId) => async (dispatch) => {
     const data1 = await daoApi.delete(`/providers/${providerId}/`, config, {});
     const data2 = await daoApi.delete(`/providers/${providerId}/`, { config });
     const data3 = await daoApi.delete(`/providers/${providerId}/`, {}, config);
+    console.log(data1)
+    console.log(data2)
+    console.log(data3)
     dispatch({
       type: DELETE_PROVIDER_SUCCESS,
       payload: data,
