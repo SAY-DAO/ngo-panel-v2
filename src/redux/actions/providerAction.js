@@ -172,19 +172,14 @@ export const deleteProvider = (providerId) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
 
-    const config = {
-      method: 'DELETE',
-      mode: 'cors',
-      headers: {
-        Authorization: 'authorizationToken',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
-        'Content-type': 'application/json',
-        data: {},
-      },
-    };
-    const { data } = await daoApi.delete(`/providers/${providerId}`, config);
+    // const config = {
+    //   headers: {
+    //     'Content-type': 'application/json',
+    //     Authorization: 'authorizationToken',
+    //     data: {},
+    //   },
+    // };
+    const { data } = await daoApi.delete(`/providers/${providerId}`, { data: { foo: "bar" } });
     // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
     // const { data } = await daoApi.delete(`/providers/${providerId}`, { config });
     // const { data } = await daoApi.delete(`/providers/${providerId}`, {}, config);
