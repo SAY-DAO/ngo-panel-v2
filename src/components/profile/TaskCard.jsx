@@ -18,7 +18,7 @@ import img1 from '../../assets/images/user2.svg';
 
 const options = ['Action', 'Another Action', 'Something else here'];
 
-const ImgPost = () => {
+const TaskCard = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -253,4 +253,4 @@ const ImgPost = () => {
   );
 };
 
-export default ImgPost;
+export default TaskCard;

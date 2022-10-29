@@ -27,7 +27,6 @@ export const fetchProviderById = (id) => async (dispatch, getState) => {
     const config = {
       headers: {
         'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
       },
     };
     const { data } = await daoApi.get(`/providers/${id}`, config);

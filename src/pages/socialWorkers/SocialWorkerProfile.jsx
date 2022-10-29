@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
-import { CircularProgress, Grid } from '@mui/material';
+import { Card, CircularProgress, Divider, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import CoverCard from '../../components/profile/CoverCard';
-import PhotosCard from '../../components/profile/PhotosCard';
-import NewPost from '../../components/profile/NewPost';
-import ImgPost from '../../components/profile/ImgPost';
-import TypographyPost from '../../components/profile/TypographyPost';
+import TaskCard from '../../components/profile/TaskCard';
 import { fetchSwNeedList } from '../../redux/actions/needsAction';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { RolesEnum } from '../../utils/helpers';
@@ -29,11 +26,11 @@ const SocialWorkerProfile = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const swById = useSelector((state) => state.swById);
-  const { children } = swById;
+  // const swById = useSelector((state) => state.swById);
+  // const { children } = swById;
 
-  const childAll = useSelector((state) => state.childAll);
-  const { myChildren } = childAll;
+  // const childAll = useSelector((state) => state.childAll);
+  // const { myChildren } = childAll;
 
   useEffect(() => {
     if (swInfo) {
@@ -51,19 +48,25 @@ const SocialWorkerProfile = () => {
       {/* breadcrumb */}
       <Breadcrumb title="User Profile" items={BCrumb} />
       {/* end breadcrumb */}
-      {swInfo && (children || myChildren) ? (
+      {swInfo ? (
         <>
           <CoverCard swInfo={swInfo} />
           <Grid container spacing={0}>
-            <Grid item sm={12} lg={4} xs={12}>
-              {/* <IntroCard /> */}
-              <PhotosCard myChildren={(children && children.children) || myChildren} />
-            </Grid>
-            <Grid item sm={12} lg={8} xs={12}>
-              <NewPost />
-              <ImgPost />
-              <TypographyPost />
-            </Grid>
+            <Card sx={{ width: '100%', minHeight: '500px' }}>
+              hi
+              <Divider />
+              <Grid container spacing={0}>
+                <Grid item xs={4}>
+                  <TaskCard />
+                </Grid>
+                <Grid item xs={4}>
+                  <TaskCard />
+                </Grid>
+                <Grid item xs={4}>
+                  <TaskCard />
+                </Grid>
+              </Grid>
+            </Card>
           </Grid>
         </>
       ) : (
