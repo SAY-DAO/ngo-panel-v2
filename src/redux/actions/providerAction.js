@@ -184,6 +184,7 @@ export const deleteProvider = (providerId) => async (dispatch, getState) => {
     // };
     const { data } = await daoApi.delete(`/providers/${providerId}`, {
       headers: {
+        Origin: 'https://panel.saydao.org',
         'Access-Control-Allow-Headers': '*',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
@@ -191,6 +192,7 @@ export const deleteProvider = (providerId) => async (dispatch, getState) => {
         'Content-type': 'application/json',
       },
     });
+
     // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
     // const { data } = await daoApi.delete(`/providers/${providerId}`, { config });
     // const { data } = await daoApi.delete(`/providers/${providerId}`, {}, config);
