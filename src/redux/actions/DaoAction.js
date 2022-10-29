@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { ethers } from 'ethers';
-import { daoApi, publicApi } from '../../../apis/sayBase';
+import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   FAMILY_NETWORK_REQUEST,
   FAMILY_NETWORK_SUCCESS,
@@ -35,7 +35,7 @@ import {
   GET_ONE_SERVER_REQUEST,
   UPDATE_ONE_SERVER_SUCCESS,
   UPDATE_ONE_SERVER_FAIL,
-} from '../../constants/daoConstants';
+} from '../constants/daoConstants';
 
 export const updateNestServer = (counter, skip) => async (dispatch, getState) => {
   let child = {};
@@ -117,7 +117,6 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       needList.push(need);
     }
 
-
     const responseDead = await publicApi.get(`/child/all/confirm=2?existence_status=0`, config);
     console.log(responseDead.data);
 
@@ -126,23 +125,23 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       config,
     );
     console.log(responseAlivePresent.data);
-    const array1 =responseDead.data.children.concat(responseAlivePresent.data.children);
+    const array1 = responseDead.data.children.concat(responseAlivePresent.data.children);
 
     const responseAliveGone = await publicApi.get(
       `/child/all/confirm=2?existence_status=2`,
       config,
     );
     console.log(responseAliveGone.data);
-    const array2 =array1.concat(responseAliveGone.data.children);
+    const array2 = array1.concat(responseAliveGone.data.children);
 
     const responseTempGone = await publicApi.get(`/child/all/confirm=2?existence_status=3`, config);
     console.log(responseTempGone.data);
-    const array4 =array2.concat(responseTempGone.data.children);
+    const array4 = array2.concat(responseTempGone.data.children);
 
     dispatch({ type: UPDATE_SERVER_REQUEST });
 
-      console.log(array4);
-      for (let i = 0; i < array4.length; i++) {
+    console.log(array4);
+    for (let i = 0; i < array4.length; i++) {
       child = {
         childId: array4[i].id,
         address: array4[i].address,
@@ -271,9 +270,16 @@ export const updateOneNeedNestServer = (need) => async (dispatch, getState) => {
       needData: [theNeed],
       childData: [],
     };
-    console.log('needRequest');
-    console.log(needRequest);
-    const responseNeed = await daoApi.post(`/sync/update/one/`, theNeed); // create
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
+
+    const responseNeed = await daoApi.post(`/sync/update/one/`, theNeed, {
+      config,
+    }); // create
     console.log('responseNeed');
     console.log(responseNeed);
 

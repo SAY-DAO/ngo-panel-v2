@@ -183,9 +183,9 @@ export const deleteProvider = (providerId) => async (dispatch) => {
       },
     };
     const { data } = await daoApi.delete(`/providers/${providerId}`, config);
-    // const {data} = await daoApi.delete(`/providers/${providerId}/`, config, {});
-    // const { data } = await daoApi.delete(`/providers/${providerId}/`, { config });
-    // const { data } = await daoApi.delete(`/providers/${providerId}/`, {}, config);
+    // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
+    // const { data } = await daoApi.delete(`/providers/${providerId}`, { config });
+    // const { data } = await daoApi.delete(`/providers/${providerId}`, {}, config);
     // console.log(data2);
     // console.log(data3);
     dispatch({
