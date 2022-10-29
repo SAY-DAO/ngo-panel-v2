@@ -173,13 +173,13 @@ export const deleteProvider = (providerId) => async (dispatch) => {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
 
     const config = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
       headers: {
-        "Access-Control-Allow-Origin": '*',
-        'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
         'Content-type': 'application/json',
       },
     };
-    const { data } = await daoApi.delete(`/providers/${providerId}/`,config);
+    const { data } = await daoApi.delete(`/providers/${providerId}/`, config);
     dispatch({
       type: DELETE_PROVIDER_SUCCESS,
       payload: data,
