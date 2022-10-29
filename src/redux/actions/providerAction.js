@@ -174,7 +174,7 @@ export const deleteProvider = (providerId) => async (dispatch) => {
 
     const config = {
       headers: {
-        "Access-Control-Allow-Origin": '*' ,
+        "Access-Control-Allow-Origin": '*',
         'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
         'Content-type': 'application/json',
       },
