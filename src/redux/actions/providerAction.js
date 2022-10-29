@@ -26,7 +26,7 @@ export const fetchProviderById = (id) => async (dispatch) => {
         'Content-type': 'application/json',
       },
     };
-    const { data } = await daoApi.get(`/providers/${id}`, config);
+    const { data } = await daoApi.get(`/providers/${id}/`, config);
 
     dispatch({
       type: PROVIDER_BY_ID_SUCCESS,
