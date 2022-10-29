@@ -184,8 +184,11 @@ export const deleteProvider = (providerId) => async (dispatch, getState) => {
     // };
     const { data } = await daoApi.delete(`/providers/${providerId}`, {
       headers: {
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
+        Authorization: userInfo && userInfo.access_token,
         'Content-type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     });
     // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
