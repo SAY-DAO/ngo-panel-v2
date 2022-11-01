@@ -186,7 +186,7 @@ export const deleteProvider = (providerId) => async (dispatch, getState) => {
       headers: {
         Origin: 'https://panel.saydao.org',
         'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'https://s.nest.saydao.org',
         'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
         Authorization: userInfo && userInfo.access_token,
         'Content-type': 'application/json',
