@@ -171,9 +171,9 @@ export const addProvider = (values) => async (dispatch) => {
 export const deleteProvider = (providerId) => async (dispatch, getState) => {
   try {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
 
     // const config = {
     //   headers: {
