@@ -168,7 +168,8 @@ export const addProvider = (values) => async (dispatch) => {
   }
 };
 
-export const deleteProvider = (providerId) => async (dispatch, getState) => {
+// export const deleteProvider = (providerId) => async (dispatch, getState) => {
+export const deleteProvider = (providerId) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
     // const {
