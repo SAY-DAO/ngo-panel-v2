@@ -182,16 +182,17 @@ export const deleteProvider = (providerId) => async (dispatch, getState) => {
     //     data: {},
     //   },
     // };
-    const { data } = await daoApi.delete(`/providers/${providerId}`, {
-      headers: {
-        "Origin": 'https://panel.saydao.org',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Origin': 'https://s.nest.saydao.org',
-        'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
-        Authorization: userInfo && userInfo.access_token,
-        'Content-type': 'application/json',
-      },
-    });
+
+    // const configs = {headers: {
+    //     "Origin": 'https://panel.saydao.org',
+    //     'Access-Control-Allow-Headers': '*',
+    //     'Access-Control-Allow-Origin': 'https://s.nest.saydao.org',
+    //     'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
+    //     Authorization: userInfo && userInfo.access_token,
+    //     'Content-type': 'application/json',
+    //   },
+    // }
+    const { data } = await daoApi.delete(`/providers/${providerId}`);
 
     // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
     // const { data } = await daoApi.delete(`/providers/${providerId}`, { config });
