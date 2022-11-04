@@ -13,7 +13,6 @@ import {
   Tooltip,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
-import CommentsCard from './CommentsCard';
 import img1 from '../../assets/images/user2.svg';
 
 const options = ['Action', 'Another Action', 'Something else here'];
@@ -247,7 +246,6 @@ const TaskCard = () => {
             </Link>
           </Box>
         </Box>
-        <CommentsCard />
       </Card>
     </Box>
   );

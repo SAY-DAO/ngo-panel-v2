@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, CircularProgress, Divider, Grid } from '@mui/material';
+import { Card, CircularProgress, Divider, Grid, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
@@ -53,17 +53,25 @@ const SocialWorkerProfile = () => {
           <CoverCard swInfo={swInfo} />
           <Grid container spacing={0}>
             <Card sx={{ width: '100%', minHeight: '500px' }}>
-              hi
               <Divider />
               <Grid container spacing={0}>
                 <Grid item xs={4}>
-                  <TaskCard />
+                  <Card elevation={4}>
+                    <Typography>To Do</Typography>
+                    <TaskCard />
+                  </Card>
                 </Grid>
                 <Grid item xs={4}>
-                  <TaskCard />
+                  <Card elevation={4}>
+                    <Typography>In Progress</Typography>
+                    <TaskCard />
+                  </Card>
                 </Grid>
                 <Grid item xs={4}>
-                  <TaskCard />
+                  <Card elevation={4}>
+                    <Typography>Done</Typography>
+                    <TaskCard />
+                  </Card>
                 </Grid>
               </Grid>
             </Card>
