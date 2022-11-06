@@ -18,6 +18,7 @@ import {
   swAddReducer,
   swMigrateReducer,
   swMigrateOneReducer,
+  swProfileReducer,
 } from './socialWorkerReducer';
 import {
   childAddReducer,
@@ -48,6 +49,7 @@ import { providerAddReducer, providerByIdReducer, providerDeleteReducer, provide
 export default combineReducers({
   CustomizerReducer,
   countryList: countryListReducer,
+  swProfile: swProfileReducer,
   userLogin: userLoginReducer,
   swDetails: swDetailsReducer,
   swById: swByIdReducer,

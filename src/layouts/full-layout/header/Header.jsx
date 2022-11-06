@@ -22,7 +22,7 @@ import ProfileDropdown from './ProfileDropdown';
 import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
 import { logout } from '../../../redux/actions/userAction';
-import { fetchSocialWorkerProfile } from '../../../redux/actions/socialWorkerAction';
+import { fetchSocialWorkerDetails } from '../../../redux/actions/socialWorkerAction';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -43,7 +43,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   useEffect(() => {
     if (!successSwDetails) {
-      dispatch(fetchSocialWorkerProfile());
+      dispatch(fetchSocialWorkerDetails());
     }
   }, [successSwDetails]);
 

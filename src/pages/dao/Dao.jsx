@@ -6,6 +6,7 @@ import PageContainer from '../../components/container/PageContainer';
 import {
   fetchNestChildren,
   fetchNestNeeds,
+  fetchNestNgos,
   fetchNestUsers,
   updateNestServer,
 } from '../../redux/actions/DaoAction';
@@ -28,6 +29,7 @@ const Dao = () => {
     dispatch(fetchNestNeeds());
     dispatch(fetchNestChildren());
     dispatch(fetchNestUsers());
+    dispatch(fetchNestNgos());
   }, [updated]);
 
   let count;

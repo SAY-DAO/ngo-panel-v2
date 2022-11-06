@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
-import { fetchSocialWorkerProfile } from '../../redux/actions/socialWorkerAction';
+import { fetchSocialWorkerDetails } from '../../redux/actions/socialWorkerAction';
 import NeedTable from '../../components/tables/NeedTable';
 
 const NeedList = () => {
@@ -13,7 +13,7 @@ const NeedList = () => {
 
   useEffect(() => {
     if (!successSwDetails) {
-      dispatch(fetchSocialWorkerProfile());
+      dispatch(fetchSocialWorkerDetails());
     }
   }, [successSwDetails]);
 

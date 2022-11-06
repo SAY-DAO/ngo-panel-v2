@@ -1,4 +1,4 @@
-import { publicApi } from '../../apis/sayBase';
+import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   SW_DETAILS_REQUEST,
   SW_LIST_REQUEST,
@@ -27,9 +27,40 @@ import {
   MIGRATE_ONE_CHILD_REQUEST,
   MIGRATE_ONE_CHILD_SUCCESS,
   MIGRATE_ONE_CHILD_FAIL,
+  SW_PROFILE_REQUEST,
+  SW_PROFILE_SUCCESS,
+  SW_PROFILE_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: SW_PROFILE_REQUEST });
+    const {
+      // eslint-disable-next-line no-unused-vars
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
+    // const { data } = await daoApi.get(`/users/social-worker/tasks/${userInfo.id}`, config);
+    const { data } = await daoApi.get(`/users/social-worker/tasks/13`, config);
+
+    dispatch({
+      type: SW_PROFILE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: SW_PROFILE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const fetchSocialWorkerDetails = () => async (dispatch, getState) => {
   try {
     dispatch({ type: SW_DETAILS_REQUEST });
     const {

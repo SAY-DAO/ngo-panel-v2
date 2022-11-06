@@ -4,25 +4,28 @@ import {
   Card,
   CardContent,
   Typography,
-  Button,
   Avatar,
   Link,
   IconButton,
   Menu,
   MenuItem,
   Tooltip,
+  Chip,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
-import img1 from '../../assets/images/user2.svg';
+import PropTypes from 'prop-types';
+import getAge from '../../utils/helpers';
 
 const options = ['Action', 'Another Action', 'Something else here'];
 
-const TaskCard = () => {
+const TaskCard = ({ need }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  console.log(need);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -33,14 +36,10 @@ const TaskCard = () => {
           p: 0,
         }}
       >
-        <CardContent
-          sx={{
-            p: '30px 30px 15px',
-          }}
-        >
+        <CardContent>
           <Box display="flex" alignItems="center">
             <Avatar
-              src={img1}
+              src={need.child.awakeAvatarUrl}
               sx={{
                 borderRadius: '50%',
                 width: '50px',
@@ -59,10 +58,10 @@ const TaskCard = () => {
                   whiteSpace: 'nowrap',
                 }}
               >
-                Julia Roberts
+                {need.child.sayName}
               </Typography>
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                38 minutes ago
+              <Typography color="textSecondary" variant="h6" fontWeight="200">
+                {getAge(need.child.birthDate)} yrs
               </Typography>
             </Box>
             <Box
@@ -107,7 +106,7 @@ const TaskCard = () => {
         </CardContent>
         <CardContent
           sx={{
-            p: '30px',
+            p: '20px',
             pt: 0,
           }}
         >
@@ -116,40 +115,32 @@ const TaskCard = () => {
             variant="h5"
             fontWeight="400"
             sx={{
-              mt: 2,
+              mt: 1,
             }}
           >
-            How you can become kickass web developer in 2021?{' '}
-            <Link href="/" underline="none">
-              #web development trends
-            </Link>
-            <Link
-              href="/"
-              underline="none"
-              sx={{
-                ml: 1,
-              }}
-            >
-              #web trends
-            </Link>{' '}
-            check out -
-            <Typography
-              component="span"
-              fontWeight="500"
-              sx={{
-                color: (theme) =>
-                  `${
-                    theme.palette.mode === 'dark' ? theme.palette.grey.A200 : 'rgba(0, 0, 0, 0.87)'
-                  }`,
-              }}
-            >
-              {' '}
-              https://www.wrappixel.com
-            </Typography>
+            {need.title}
+          </Typography>
+          <Typography color="textSecondary" variant="h6" fontWeight="400">
+            Paid: {need.paid.toLocaleString()}
+          </Typography>
+          <Typography color="textSecondary" variant="h6" fontWeight="400">
+            Cost: {need.cost.toLocaleString()}
           </Typography>
         </CardContent>
 
-        <img srcSet={`${img1} 1x, ${img1} 2x`} alt={img1} width="100%" />
+        <Box sx={{ position: 'relative' }}>
+          <Chip sx={{ position: 'absolute', zIndex: 10 }} label="Small" size="small" />
+          <img
+            style={{ opacity: '50%' }}
+            srcSet={`${need.needRetailerImg} 1x, ${need.needRetailerImg} 2x`}
+            alt={need.needRetailerImg}
+            width="100%"
+          />
+        </Box>
+
+        <Link href={need.affiliateLinkUrl} underline="none">
+          Affiliate
+        </Link>
         <Box
           sx={{
             display: {
@@ -158,90 +149,21 @@ const TaskCard = () => {
               lg: 'flex',
             },
             alignItems: 'center',
-            pl: '35px',
-            pr: '35px',
+            pl: '20px',
+            pr: '20px',
             pt: '20px',
           }}
         >
-          <Box display="flex" alignItems="center">
-            <Tooltip title="Like" placement="top">
-              <Button
-                variant="contained"
-                color="secondary"
-                sx={{
-                  minWidth: '35px',
-                  height: '35px',
-                  borderRadius: '50%',
-                  p: 0,
-                  mr: '-5px',
-                }}
-              >
-                <FeatherIcon icon="thumbs-up" width="15" />
-              </Button>
-            </Tooltip>
-            <Tooltip title="React" placement="top">
-              <Button
-                variant="contained"
-                color="warning"
-                sx={{
-                  minWidth: '35px',
-                  height: '35px',
-                  borderRadius: '50%',
-                  mr: '-5px',
-                  p: 0,
-                }}
-              >
-                <FeatherIcon icon="smile" width="15" />
-              </Button>
-            </Tooltip>
-            <Tooltip title="Love" placement="top">
-              <Button
-                variant="contained"
-                color="error"
-                sx={{
-                  minWidth: '35px',
-                  height: '35px',
-                  borderRadius: '50%',
-                  ml: '-5px',
-                  p: 0,
-                }}
-              >
-                <FeatherIcon icon="heart" width="15" />
-              </Button>
-            </Tooltip>
-            <Typography
-              variant="h6"
-              fontWeight="600"
-              sx={{
-                ml: 1,
-              }}
-            >
-              315
-            </Typography>
-          </Box>
-
           <Box
             display="flex"
             alignItems="center"
             sx={{
-              ml: 'auto',
+              m: 'auto',
             }}
           >
             <Link href="/" color="inherit" underline="none">
               <Typography variant="h6" fontWeight="600">
                 6 Comments
-              </Typography>
-            </Link>
-            <Link
-              href="/"
-              color="inherit"
-              underline="none"
-              sx={{
-                ml: 2,
-              }}
-            >
-              <Typography variant="h6" fontWeight="600">
-                2 Shares
               </Typography>
             </Link>
           </Box>
@@ -252,3 +174,7 @@ const TaskCard = () => {
 };
 
 export default TaskCard;
+
+TaskCard.propTypes = {
+  need: PropTypes.object,
+};
