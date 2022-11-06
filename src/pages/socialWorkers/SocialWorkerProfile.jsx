@@ -57,13 +57,13 @@ const SocialWorkerProfile = () => {
               <Grid container spacing={0}>
                 <Grid item xs={4}>
                   <Card elevation={4}>
-                    <Typography>To Do</Typography>
+                    <Typography>Not Paid</Typography>
                     <TaskCard />
                   </Card>
                 </Grid>
                 <Grid item xs={4}>
                   <Card elevation={4}>
-                    <Typography>In Progress</Typography>
+                    <Typography>Payment Complete</Typography>
                     <TaskCard />
                   </Card>
                 </Grid>

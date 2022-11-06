@@ -10,8 +10,10 @@ import {
   updateNestServer,
 } from '../../redux/actions/DaoAction';
 import DaoNeedStatus from './DaoNeedStatus';
-import DaoChildStatus from './DaoChildstatus.';
-import DaoUserStatus from './DaoUserStatus';
+import DaoChildStatus from './DaoChildStatus';
+import DaoFamilyStatus from './DaoFamilyStatus';
+import DaoSocialWorkerStatus from './DaoSocialWorkerStatus';
+import DaoNgoStatus from './DaoNgoStatus';
 
 const Dao = () => {
   const dispatch = useDispatch();
@@ -59,7 +61,13 @@ const Dao = () => {
               <DaoChildStatus />
             </Grid>
             <Grid item xs={6}>
-              <DaoUserStatus />
+              <DaoFamilyStatus />
+            </Grid>
+            <Grid item xs={6}>
+              <DaoSocialWorkerStatus />
+            </Grid>
+            <Grid item xs={6}>
+              <DaoNgoStatus />
             </Grid>
           </Grid>
         </PageContainer>

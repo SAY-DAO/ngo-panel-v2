@@ -29,6 +29,9 @@ import {
   UPDATE_ONE_SERVER_REQUEST,
   UPDATE_ONE_SERVER_SUCCESS,
   UPDATE_ONE_SERVER_FAIL,
+  GET_SERVER_NGO_REQUEST,
+  GET_SERVER_NGO_SUCCESS,
+  GET_SERVER_NGO_FAIL,
 } from '../constants/daoConstants';
 
 export const serverReducer = (state = {}, action) => {
@@ -38,6 +41,12 @@ export const serverReducer = (state = {}, action) => {
     case GET_SERVER_USERS_SUCCESS:
       return { ...state, loading: false, success: true, userList: action.payload };
     case GET_SERVER_USERS_FAIL:
+      return { loading: false, error: action.payload };
+    case GET_SERVER_NGO_REQUEST:
+      return { ...state, loading: true, success: false };
+    case GET_SERVER_NGO_SUCCESS:
+      return { ...state, loading: false, success: true, ngoList: action.payload };
+    case GET_SERVER_NGO_FAIL:
       return { loading: false, error: action.payload };
     case GET_SERVER_CHILDREN_REQUEST:
       return { ...state, loading: true, success: false };

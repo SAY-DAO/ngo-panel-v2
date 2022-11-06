@@ -35,6 +35,9 @@ import {
   GET_ONE_SERVER_REQUEST,
   UPDATE_ONE_SERVER_SUCCESS,
   UPDATE_ONE_SERVER_FAIL,
+  GET_SERVER_NGO_REQUEST,
+  GET_SERVER_NGO_SUCCESS,
+  GET_SERVER_NGO_FAIL,
 } from '../constants/daoConstants';
 
 export const updateNestServer = (counter, skip) => async (dispatch, getState) => {
@@ -124,62 +127,58 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       `/child/all/confirm=2?existence_status=1`,
       config,
     );
-    console.log(responseAlivePresent.data);
     const array1 = responseDead.data.children.concat(responseAlivePresent.data.children);
-
     const responseAliveGone = await publicApi.get(
       `/child/all/confirm=2?existence_status=2`,
       config,
     );
-    console.log(responseAliveGone.data);
+
     const array2 = array1.concat(responseAliveGone.data.children);
 
     const responseTempGone = await publicApi.get(`/child/all/confirm=2?existence_status=3`, config);
-    console.log(responseTempGone.data);
-    const array4 = array2.concat(responseTempGone.data.children);
+    const array3 = array2.concat(responseTempGone.data.children);
 
     dispatch({ type: UPDATE_SERVER_REQUEST });
 
-    console.log(array4);
-    for (let i = 0; i < array4.length; i++) {
+    for (let i = 0; i < array3.length; i++) {
       child = {
-        childId: array4[i].id,
-        address: array4[i].address,
-        avatarUrl: array4[i].avatarUrl,
-        awakeAvatarUrl: array4[i].awakeAvatarUrl,
-        bio: array4[i].bio,
-        bioSummary: array4[i].bioSummary,
-        bioSummaryTranslations: array4[i].bio_summary_translations,
-        bioTranslations: array4[i].bio_translations,
-        birthDate: array4[i].birthDate,
-        birthPlace: array4[i].birthPlace,
-        city: array4[i].city,
-        confirmDate: array4[i].confirmDate,
-        confirmUser: array4[i].confirmUser,
-        country: array4[i].country,
-        created: array4[i].created,
-        doneNeedsCount: array4[i].done_needs_count,
-        education: array4[i].education,
-        existenceStatus: array4[i].existence_status,
-        familyCount: array4[i].familyCount,
-        generatedCode: array4[i].generatedCode,
-        housingStatus: array4[i].housingStatus,
-        ngoId: array4[i].id_ngo,
-        idSocialWorker: array4[i].id_social_worker,
-        isConfirmed: array4[i].isConfirmed,
-        isDeleted: array4[i].isDeleted,
-        isMigrated: array4[i].isMigrated,
-        isGone: array4[i].is_gone,
-        migrateDate: array4[i].migrateDate,
-        migratedId: array4[i].migratedId,
-        nationality: array4[i].nationality,
-        sayFamilyCount: array4[i].sayFamilyCount,
-        sayName: array4[i].sayName,
-        sayNameTranslations: array4[i].sayNameTranslations,
-        sleptAvatarUrl: array4[i].sleptAvatarUrl,
-        status: array4[i].status,
-        updated: array4[i].updated,
-        voiceUrl: array4[i].voiceUrl,
+        childId: array3[i].id,
+        address: array3[i].address,
+        avatarUrl: array3[i].avatarUrl,
+        awakeAvatarUrl: array3[i].awakeAvatarUrl,
+        bio: array3[i].bio,
+        bioSummary: array3[i].bioSummary,
+        bioSummaryTranslations: array3[i].bio_summary_translations,
+        bioTranslations: array3[i].bio_translations,
+        birthDate: array3[i].birthDate,
+        birthPlace: array3[i].birthPlace,
+        city: array3[i].city,
+        confirmDate: array3[i].confirmDate,
+        confirmUser: array3[i].confirmUser,
+        country: array3[i].country,
+        created: array3[i].created,
+        doneNeedsCount: array3[i].done_needs_count,
+        education: array3[i].education,
+        existenceStatus: array3[i].existence_status,
+        familyCount: array3[i].familyCount,
+        generatedCode: array3[i].generatedCode,
+        housingStatus: array3[i].housingStatus,
+        ngoId: array3[i].id_ngo,
+        idSocialWorker: array3[i].id_social_worker,
+        isConfirmed: array3[i].isConfirmed,
+        isDeleted: array3[i].isDeleted,
+        isMigrated: array3[i].isMigrated,
+        isGone: array3[i].is_gone,
+        migrateDate: array3[i].migrateDate,
+        migratedId: array3[i].migratedId,
+        nationality: array3[i].nationality,
+        sayFamilyCount: array3[i].sayFamilyCount,
+        sayName: array3[i].sayName,
+        sayNameTranslations: array3[i].sayNameTranslations,
+        sleptAvatarUrl: array3[i].sleptAvatarUrl,
+        status: array3[i].status,
+        updated: array3[i].updated,
+        voiceUrl: array3[i].voiceUrl,
       };
       childList.push(child);
     }
@@ -348,6 +347,25 @@ export const fetchNestChildren = () => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: GET_SERVER_CHILDREN_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+    });
+  }
+};
+
+export const fetchNestNgos = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_SERVER_NGO_REQUEST });
+
+    const response = await daoApi.get(`/ngo/all`);
+
+    dispatch({
+      type: GET_SERVER_NGO_SUCCESS,
+      payload: { ngos: response.data },
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_SERVER_NGO_FAIL,
       payload:
         e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });

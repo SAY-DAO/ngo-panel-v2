@@ -85,7 +85,7 @@ const DaoChildStatus = () => {
               }}
               gutterBottom
             >
-              Nest Server Children
+              Children
             </Typography>
             <Typography
               variant="h2"

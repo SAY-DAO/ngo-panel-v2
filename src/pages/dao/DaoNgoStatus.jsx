@@ -5,15 +5,15 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { fetchNestNeeds } from '../../redux/actions/DaoAction';
+import { fetchNestNgos } from '../../redux/actions/DaoAction';
 
-const DaoUserStatus = () => {
+const DaoNgoStatus = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const primary = theme.palette.primary.main;
 
   const server = useSelector((state) => state.server);
-  const { userList, loading: loadingServer } = server;
+  const { ngoList, loading: loadingServer } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -85,7 +85,7 @@ const DaoUserStatus = () => {
               }}
               gutterBottom
             >
-              Nest Server Users
+              NGOs
             </Typography>
             <Typography
               variant="h2"
@@ -96,7 +96,7 @@ const DaoUserStatus = () => {
               gutterBottom
             >
               {/*  meta.totalItemsfrom pagination */}
-              {!userList ? <CircularProgress /> : userList.users && userList.users.length}
+              {!ngoList ? <CircularProgress /> : ngoList.ngos && ngoList.ngos.length}
             </Typography>
           </Box>
 
@@ -109,7 +109,7 @@ const DaoUserStatus = () => {
               loading={loadingServer}
               aria-label="children=refresh"
               color="secondary"
-              onClick={() => dispatch(fetchNestNeeds())}
+              onClick={() => dispatch(fetchNestNgos())}
             >
               <RefreshIcon />
             </LoadingButton>
@@ -121,4 +121,4 @@ const DaoUserStatus = () => {
   );
 };
 
-export default DaoUserStatus;
+export default DaoNgoStatus;

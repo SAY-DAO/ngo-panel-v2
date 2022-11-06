@@ -7,13 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { fetchNestNeeds } from '../../redux/actions/DaoAction';
 
-const DaoNeedStatus = () => {
+const DaoFamilyStatus = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const primary = theme.palette.primary.main;
 
   const server = useSelector((state) => state.server);
-  const { needList, loading: loadingServer } = server;
+  const { userList, loading: loadingServer } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -85,10 +85,10 @@ const DaoNeedStatus = () => {
               }}
               gutterBottom
             >
-              Need Ratio
+              Virtual Families
             </Typography>
             <Typography
-              variant="body2"
+              variant="h2"
               sx={{
                 mt: '1px',
                 mb: '0px',
@@ -96,23 +96,10 @@ const DaoNeedStatus = () => {
               gutterBottom
             >
               {/*  meta.totalItemsfrom pagination */}
-              {!needList ? <CircularProgress /> : needList.totalDone} {''}/ {''}
-              {!needList ? <CircularProgress /> : needList.needs && needList.needs.meta.totalItems}
-              {''} ~ {''}
-              {!needList ? (
+              {!userList ? (
                 <CircularProgress />
               ) : (
-                <Typography
-                  component="span"
-                  variant="h2"
-                  sx={{
-                    marginBottom: '0',
-                  }}
-                  gutterBottom
-                >
-                  {needList.needs &&
-                    (needList.totalDone / needList.needs.meta.totalItems).toFixed(2)}
-                </Typography>
+                userList.users && userList.users.families && userList.users.families.length
               )}
             </Typography>
           </Box>
@@ -138,4 +125,4 @@ const DaoNeedStatus = () => {
   );
 };
 
-export default DaoNeedStatus;
+export default DaoFamilyStatus;
