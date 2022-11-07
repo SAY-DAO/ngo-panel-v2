@@ -36,7 +36,6 @@ export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
   try {
     dispatch({ type: SW_PROFILE_REQUEST });
     const {
-      // eslint-disable-next-line no-unused-vars
       userLogin: { userInfo },
     } = getState();
 
@@ -45,8 +44,7 @@ export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
         'Content-type': 'application/json',
       },
     };
-    // const { data } = await daoApi.get(`/users/social-worker/tasks/${userInfo.id}`, config);
-    const { data } = await daoApi.get(`/users/social-worker/tasks/13`, config);
+    const { data } = await daoApi.get(`/users/social-worker/tasks/${userInfo.id}`, config);
 
     dispatch({
       type: SW_PROFILE_SUCCESS,

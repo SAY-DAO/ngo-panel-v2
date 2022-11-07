@@ -129,7 +129,16 @@ const TaskCard = ({ need }) => {
         </CardContent>
 
         <Box sx={{ position: 'relative' }}>
-          <Chip sx={{ position: 'absolute', zIndex: 10 }} label="Small" size="small" />
+          <Chip
+            sx={{
+              position: 'absolute',
+              m: 1,
+              color: '#00e8fd',
+              backgroundColor: '#006B75',
+            }}
+            label={need.typeName}
+            size="small"
+          />
           <img
             style={{ opacity: '50%' }}
             srcSet={`${need.needRetailerImg} 1x, ${need.needRetailerImg} 2x`}
