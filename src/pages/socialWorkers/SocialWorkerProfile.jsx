@@ -32,7 +32,7 @@ const SocialWorkerProfile = () => {
   const swProfile = useSelector((state) => state.swProfile);
   const { profile } = swProfile;
 
-  const organizedNeeds = [[], [], []]; // [[not paid], [payment], [purchased/delivered Ngo], [Done]]
+  const organizedNeeds = [[], [], [], []]; // [[not paid], [payment], [purchased/delivered Ngo], [Done]]
   if (profile && profile.items) {
     for (let i = 0; i < profile.items.length; i++) {
       // not Paid
@@ -66,7 +66,7 @@ const SocialWorkerProfile = () => {
           organizedNeeds[2].push(profile.items[i]);
         }
         // Delivered to child
-        if (profile.items[i].status === ProductStatusEnum.DELIVERED_TO_NGO) {
+        if (profile.items[i].status === ProductStatusEnum.DELIVERED) {
           organizedNeeds[3].push(profile.items[i]);
         }
       }
@@ -99,14 +99,14 @@ const SocialWorkerProfile = () => {
                 </Grid>
                 <Grid item xs={3}>
                   <Card elevation={4}>
-                    <Typography>Payment Complete</Typography>
+                    <Typography>Payment</Typography>
                     {organizedNeeds[1] &&
                       organizedNeeds[1].map((need) => <TaskCard key={need.id} need={need} />)}
                   </Card>
                 </Grid>
                 <Grid item xs={3}>
                   <Card elevation={4}>
-                    <Typography>Delivered/Purchased</Typography>
+                    <Typography>Transferred/Purchased</Typography>
                     {organizedNeeds[2] &&
                       organizedNeeds[2].map((need) => <TaskCard key={need.id} need={need} />)}
                   </Card>

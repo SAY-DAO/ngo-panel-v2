@@ -44,7 +44,7 @@ import { fetchNgoList } from '../../redux/actions/ngoAction';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import getAge, { EducationEnum, HousingStatusEnum } from '../../utils/helpers';
+import { getAge, EducationEnum, HousingStatusEnum } from '../../utils/helpers';
 
 const BCrumb = [
   {

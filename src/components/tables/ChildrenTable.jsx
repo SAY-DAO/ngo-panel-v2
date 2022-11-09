@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import getAge from '../../utils/helpers';
+import { getAge } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {

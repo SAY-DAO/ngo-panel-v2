@@ -41,7 +41,7 @@ import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import { AddChild, fetchMyChildById } from '../../redux/actions/childrenAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import getAge, { EducationEnum, HousingStatusEnum } from '../../utils/helpers';
+import { getAge, EducationEnum, HousingStatusEnum } from '../../utils/helpers';
 
 const ChildEdit = () => {
   const dispatch = useDispatch();
@@ -695,7 +695,7 @@ const ChildEdit = () => {
                         error={!!errors.familyCount}
                       />
                     </Grid>
-                    <Divider sx={{ width: '70%', m: 'auto', mt: 6}} variant="middle">
+                    <Divider sx={{ width: '70%', m: 'auto', mt: 6 }} variant="middle">
                       <Typography
                         sx={{ p: 1, color: (theme) => theme.palette.info.light }}
                         variant="body1"

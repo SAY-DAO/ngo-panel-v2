@@ -4,46 +4,76 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
   Link,
   IconButton,
   Menu,
   MenuItem,
   Tooltip,
   Chip,
+  ListItem,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
-import getAge from '../../utils/helpers';
-
-const options = ['Action', 'Another Action', 'Something else here'];
+import moment from 'moment';
+import {
+  PaymentStatusEnum,
+  getAge,
+  NeedTypeEnum,
+  ProductStatusEnum,
+  ServiceStatusEnum,
+} from '../../utils/helpers';
 
 const TaskCard = ({ need }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  console.log(need);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const options = ['Action', 'Another Action', `ID: ${need.flaskNeedId}`];
 
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  if (need) {
+    const diff = moment(new Date()).diff(moment(new Date(need.created)));
+    // const diff = (moment(new Date(need.created)).diff(moment(new Date())));
+    console.log(diff);
+
+    console.log('Total Duration in millis:', moment.duration(diff).asMilliseconds());
+    console.log('Days:', moment.duration(diff).days());
+    console.log('Hours:', moment.duration(diff).hours());
+    console.log('Minutes:', moment.duration(diff).minutes());
+    console.log('Seconds:', moment.duration(diff).seconds());
+  }
+
   return (
     <Box>
       <Card
         sx={{
           p: 0,
+          maxHeight: '300px',
+          '&:hover': {
+            maxHeight: '600px',
+          },
         }}
       >
         <CardContent>
           <Box display="flex" alignItems="center">
-            <Avatar
-              src={need.child.awakeAvatarUrl}
+            <Box
+              // src=
               sx={{
                 borderRadius: '50%',
                 width: '50px',
                 height: '50px',
+                background: `url(${need.child.awakeAvatarUrl})`,
+                '&:hover': {
+                  background: `url(${need.imageUrl})`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                },
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
               }}
             />
             <Box
@@ -113,71 +143,122 @@ const TaskCard = ({ need }) => {
           <Typography
             color="textSecondary"
             variant="h5"
-            fontWeight="400"
+            fontWeight="600"
             sx={{
               mt: 1,
             }}
           >
             {need.title}
           </Typography>
+
           <Typography color="textSecondary" variant="h6" fontWeight="400">
             Paid: {need.paid.toLocaleString()}
           </Typography>
           <Typography color="textSecondary" variant="h6" fontWeight="400">
             Cost: {need.cost.toLocaleString()}
           </Typography>
+          <Typography color="textSecondary" variant="h6" fontWeight="400">
+            Duration: 
+              {moment.duration(moment(new Date()).diff(moment(new Date(need.created)))).days()}
+          </Typography>
         </CardContent>
+        {need.affiliateLinkUrl && (
+          <Link href={need.affiliateLinkUrl} underline="none">
+            Affiliate
+          </Link>
+        )}
 
         <Box sx={{ position: 'relative' }}>
-          <Chip
+          <ListItem
             sx={{
               position: 'absolute',
-              m: 1,
-              color: '#00e8fd',
-              backgroundColor: '#006B75',
             }}
-            label={need.typeName}
-            size="small"
-          />
+          >
+            <Chip
+              sx={{
+                color: '#000000',
+                backgroundColor: need.type === NeedTypeEnum.PRODUCT ? '#ff9d23' : '#0397ff',
+              }}
+              label={need.typeName}
+              size="small"
+            />
+            <Chip
+              sx={{
+                m: 1,
+                color: '#000000',
+                backgroundColor:
+                  need.status === PaymentStatusEnum.PARTIAL_PAY
+                    ? '#ddf96a'
+                    : need.status === PaymentStatusEnum.COMPLETE_PAY
+                    ? '#00ffb8'
+                    : need.status === PaymentStatusEnum.NOT_PAID
+                    ? '#f331a6'
+                    : '#00ffb8',
+              }}
+              label={
+                need.status === PaymentStatusEnum.PARTIAL_PAY
+                  ? 'Partial Pay'
+                  : need.status === PaymentStatusEnum.NOT_PAID
+                  ? 'Not Paid'
+                  : 'Complete Pay'
+              }
+              size="small"
+            />
+          </ListItem>
+          {((need.type === NeedTypeEnum.PRODUCT && need.status === ProductStatusEnum.DELIVERED) ||
+            (need.type === NeedTypeEnum.SERVICE &&
+              need.status === ServiceStatusEnum.DELIVERED)) && (
+            <ListItem
+              sx={{
+                mt: '40px',
+                position: 'absolute',
+              }}
+            >
+              <Chip
+                sx={{
+                  color: '#000000',
+                  backgroundColor: '#1bf500',
+                }}
+                label="Delivered"
+                size="small"
+              />
+            </ListItem>
+          )}
           <img
-            style={{ opacity: '50%' }}
+            style={{ opacity: '50%', minHeight: '100px' }}
             srcSet={`${need.needRetailerImg} 1x, ${need.needRetailerImg} 2x`}
             alt={need.needRetailerImg}
             width="100%"
           />
         </Box>
-
-        <Link href={need.affiliateLinkUrl} underline="none">
-          Affiliate
-        </Link>
+      </Card>
+      {/* <Box
+        sx={{
+          display: {
+            sm: 'flex',
+            xs: 'block',
+            lg: 'flex',
+          },
+          alignItems: 'center',
+          pl: '20px',
+          pr: '20px',
+          pb: '20px',
+        }}
+      >
         <Box
+          display="flex"
+          alignItems="center"
           sx={{
-            display: {
-              sm: 'flex',
-              xs: 'block',
-              lg: 'flex',
-            },
-            alignItems: 'center',
-            pl: '20px',
-            pr: '20px',
-            pt: '20px',
+            m: 'auto',
           }}
         >
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{
-              m: 'auto',
-            }}
-          >
-            <Link href="/" color="inherit" underline="none">
-              <Typography variant="h6" fontWeight="600">
-                6 Comments
-              </Typography>
-            </Link>
-          </Box>
+          <Link href="/" color="inherit" underline="none">
+            <Typography variant="h6" fontWeight="600">
+              6 Comments
+            </Typography>
+          </Link>
         </Box>
-      </Card>
+      </Box> */}
     </Box>
   );
 };
