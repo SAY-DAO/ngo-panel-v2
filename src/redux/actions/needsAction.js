@@ -60,17 +60,13 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
   }
 };
 
-export const fetchExampleNeeds = (childId) => async (dispatch, getState) => {
+export const fetchExampleNeeds = (childId) => async (dispatch) => {
   try {
     dispatch({ type: CHILD_EXAMPLE_NEEDS_REQUEST });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
         'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
       },
     };
     const { data } = await daoApi.get(`/children/child/needs/templates/${childId}`, config);

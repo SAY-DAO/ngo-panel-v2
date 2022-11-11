@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Box, Card, CardContent, Typography, Button, Avatar } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import cover from '../../assets/images/cover.jpg';
+import { fetchSocialWorkerById } from '../../redux/actions/socialWorkerAction';
 
-const CoverCard = ({ swInfo }) => {
+const CoverCard = ({ swId }) => {
+  const dispatch = useDispatch();
+
   const swProfile = useSelector((state) => state.swProfile);
   const { profile } = swProfile;
+
+  const swById = useSelector((state) => state.swById);
+  const { result } = swById;
+
+  useEffect(() => {
+    if (swId) {
+      dispatch(fetchSocialWorkerById(swId));
+    }
+  }, [swId]);
 
   return (
     <Card
@@ -117,7 +129,7 @@ const CoverCard = ({ swInfo }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  Followers
+                  Children
                 </Typography>
               </Grid>
               <Grid
@@ -153,7 +165,7 @@ const CoverCard = ({ swInfo }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  Following
+                  NGO
                 </Typography>
               </Grid>
             </Grid>
@@ -195,7 +207,7 @@ const CoverCard = ({ swInfo }) => {
                   }}
                 >
                   <Avatar
-                    src={swInfo.avatarUrl}
+                    src={result && result.avatarUrl}
                     alt="Social worker avatar"
                     sx={{
                       borderRadius: '50%',
@@ -219,7 +231,7 @@ const CoverCard = ({ swInfo }) => {
                       textAlign: 'center',
                     }}
                   >
-                    {`${swInfo.firstName} ${swInfo.lastName}`}{' '}
+                    {`${result && result.firstName} ${result && result.lastName}`}{' '}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -229,7 +241,7 @@ const CoverCard = ({ swInfo }) => {
                       textAlign: 'center',
                     }}
                   >
-                    {swInfo.typeName}
+                    {result && result.typeName}
                   </Typography>
                 </Box>
               </Box>
@@ -306,7 +318,7 @@ const CoverCard = ({ swInfo }) => {
 };
 
 CoverCard.propTypes = {
-  swInfo: PropTypes.object,
+  swId: PropTypes.number,
 };
 
 export default CoverCard;

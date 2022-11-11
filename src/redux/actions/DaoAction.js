@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { ethers } from 'ethers';
 import { daoApi, publicApi } from '../../apis/sayBase';
+import needListSerializer from '../../utils/serializer';
 import {
   FAMILY_NETWORK_REQUEST,
   FAMILY_NETWORK_SUCCESS,
@@ -62,66 +63,11 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
     const { data } = await publicApi.get(`/needs`, config);
 
     for (let i = 0; i < data.needs.length; i++) {
-      need = {
-        needId: data.needs[i].id,
-        title: data.needs[i].name,
-        affiliateLinkUrl: data.needs[i].affiliateLinkUrl,
-        bankTrackId: data.needs[i].bank_track_id,
-        category: data.needs[i].category,
-        childGeneratedCode: data.needs[i].childGeneratedCode,
-        childSayName: data.needs[i].childSayName,
-        childDeliveryDate: data.needs[i].child_delivery_date,
-        childId: data.needs[i].child_id,
-        confirmDate: data.needs[i].confirmDate,
-        confirmUser: data.needs[i].confirmUser,
-        cost: data.needs[i].cost,
-        created: data.needs[i].created,
-        createdById: data.needs[i].created_by_id,
-        deletedAt: data.needs[i].deleted_at,
-        description: data.needs[i].description,
-        descriptionTranslations: data.needs[i].description_translations, // { en: '' , fa: ''}
-        titleTranslations: data.needs[i].name_translations, // { en: '' , fa: ''}
-        details: data.needs[i].details,
-        doingDuration: data.needs[i].doing_duration,
-        donated: data.needs[i].donated,
-        doneAt: data.needs[i].doneAt,
-        expectedDeliveryDate: data.needs[i].expected_delivery_date,
-        information: data.needs[i].information,
-        isConfirmed: data.needs[i].isConfirmed,
-        isDeleted: data.needs[i].isDeleted,
-        isDone: data.needs[i].isDone,
-        isReported: data.needs[i].isReported,
-        isUrgent: data.needs[i].isUrgent,
-        ngoId: data.needs[i].ngoId,
-        ngoAddress: data.needs[i].ngoAddress,
-        ngoName: data.needs[i].ngoName,
-        ngoDeliveryDate: data.needs[i].ngo_delivery_date,
-        oncePurchased: data.needs[i].oncePurchased,
-        paid: data.needs[i].paid,
-        purchaseCost: data.needs[i].purchase_cost,
-        purchaseDate: data.needs[i].purchase_date,
-        receiptCount: data.needs[i].receipt_count,
-        receipts: data.needs[i].receipts,
-        status: data.needs[i].status,
-        statusDescription: data.needs[i].status_description,
-        statusUpdatedAt: data.needs[i].status_updated_at,
-        type: data.needs[i].type,
-        typeName: data.needs[i].type_name,
-        unavailableFrom: data.needs[i].unavailable_from,
-        unconfirmedAt: data.needs[i].unconfirmed_at,
-        unpaidCost: data.needs[i].unpaid_cost,
-        unpayable: data.needs[i].unpayable,
-        unpayableFrom: data.needs[i].unpayable_from,
-        updated: data.needs[i].updated,
-        payments: data.needs[i].payments, // []
-        imageUrl: data.needs[i].imageUrl,
-        needRetailerImg: data.needs[i].img,
-      };
+      need = needListSerializer(data.needs, i);
       needList.push(need);
     }
 
     const responseDead = await publicApi.get(`/child/all/confirm=2?existence_status=0`, config);
-    console.log(responseDead.data);
 
     const responseAlivePresent = await publicApi.get(
       `/child/all/confirm=2?existence_status=1`,
@@ -187,7 +133,6 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       needData: needList,
       childData: childList,
     };
-    console.log(needRequest);
 
     const nestResponse = await daoApi.post(`/sync/update/multi`, needRequest);
     dispatch({
@@ -279,8 +224,6 @@ export const updateOneNeedNestServer = (need) => async (dispatch, getState) => {
     const responseNeed = await daoApi.post(`/sync/update/one/`, theNeed, {
       config,
     }); // create
-    console.log('responseNeed');
-    console.log(responseNeed);
 
     dispatch({
       type: UPDATE_ONE_SERVER_SUCCESS,
@@ -397,7 +340,6 @@ export const createMileStone = (localData) => async (dispatch) => {
       signature: 'TODO',
     };
 
-    console.log(mileStoneRequest);
     const { data } = await daoApi.post(`/milestone/create`, mileStoneRequest);
 
     dispatch({
@@ -492,12 +434,7 @@ export const signTransaction = (need) => async (dispatch, getState) => {
       flaskChildId: need.child_id,
       signerAddress,
     };
-    console.log('request');
-    console.log(request);
-
     const { data } = await daoApi.post(`/signature/sw/generate`, request);
-    console.log('data');
-    console.log(data);
 
     // eslint-disable-next-line no-underscore-dangle
     const signature = await signer._signTypedData(
@@ -513,7 +450,6 @@ export const signTransaction = (need) => async (dispatch, getState) => {
       payload: { data, signature },
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: SIGNATURE_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,

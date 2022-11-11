@@ -73,7 +73,6 @@ const NeedAdd = () => {
 
   const [openPreNeed, setOpenPreNeed] = useState(false);
   const [optionsPreNeed, setOptionsPreNeed] = useState([]);
-  const isLoadingPreNeed = openPreNeed && optionsPreNeed.length === 0;
   const [theNeed, setTheNeed] = useState();
 
   const [openChildren, setOpenChildren] = useState(false);
@@ -98,13 +97,15 @@ const NeedAdd = () => {
   const { providerList } = providerAll;
 
   const childExampleNeeds = useSelector((state) => state.childExampleNeeds);
-  const { exampleNeeds, success: successNeedEx } = childExampleNeeds;
+  const { exampleNeeds, loading: loadingNeedEx, success: successNeedEx } = childExampleNeeds;
 
   const childOneNeed = useSelector((state) => state.childOneNeed);
   const { oneNeed } = childOneNeed;
 
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, success: successChildrenNeeds } = childNeeds;
+
+  const isLoadingPreNeed = loadingNeedEx && openPreNeed && optionsPreNeed.length === 0;
 
   useEffect(() => {
     dispatch(fetchProviderList());
@@ -146,39 +147,31 @@ const NeedAdd = () => {
   useEffect(() => {
     if (!openChildren) {
       setOptionsChildren([]);
-    } else if (openChildren) {
+    } else if (!myChildren && openChildren) {
       dispatch(fetchChildList());
     }
   }, [openChildren, setOpenChildren, childId]);
 
   // Autocomplete pre need
   useEffect(() => {
-    let active = true;
-    if (!isLoadingPreNeed) {
-      return undefined;
-    }
-    if (active && successNeedEx) {
+    if (successNeedEx) {
       // sort my children
       const sortedNeeds = exampleNeeds.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
       setOptionsPreNeed([...sortedNeeds]);
     }
-    return () => {
-      active = false;
-    };
-  }, [isLoadingPreNeed, successNeedEx]);
+  }, [isLoadingPreNeed, successNeedEx, openPreNeed]);
 
   // preNeed open
   useEffect(() => {
+    console.log(openPreNeed);
     if (!openPreNeed) {
       setOptionsPreNeed([]);
+      dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
     } else if (openPreNeed) {
       dispatch(fetchExampleNeeds(childId));
     }
-    return () => {
-      dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
-    };
   }, [openPreNeed, childId]);
 
   // theChild

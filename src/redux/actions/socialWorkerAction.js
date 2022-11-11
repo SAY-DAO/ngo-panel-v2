@@ -1,4 +1,5 @@
 import { daoApi, publicApi } from '../../apis/sayBase';
+import needListSerializer from '../../utils/serializer';
 import {
   SW_DETAILS_REQUEST,
   SW_LIST_REQUEST,
@@ -32,19 +33,37 @@ import {
   SW_PROFILE_FAIL,
 } from '../constants/socialWorkerConstants';
 
-export const fetchSocialWorkerProfile = () => async (dispatch, getState) => {
+export const fetchSocialWorkerProfile = (swId, limit) => async (dispatch, getState) => {
   try {
     dispatch({ type: SW_PROFILE_REQUEST });
     const {
       userLogin: { userInfo },
     } = getState();
+    const needList = [];
 
     const config = {
       headers: {
         'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        'X-SKIP': 10, // just get last 10 in case they created them newly
+        'X-TAKE': 1, // pagination
       },
     };
-    const { data } = await daoApi.get(`/users/social-worker/tasks/${userInfo.id}`, config);
+    const response = await publicApi.get(`/socialworkers/${swId}/createdNeeds`, config);
+
+    for (let i = 0; i < response.data.length; i++) {
+      const need = needListSerializer(response.data, i);
+      needList.push(need);
+    }
+    const needRequest = {
+      needData: needList,
+    };
+
+    await daoApi.post(`/sync/update/multi`, needRequest);
+
+    const { data } = await daoApi.get(`/users/social-worker/${swId}/createdNeeds?limit=${limit}`, {
+      'Content-type': 'application/json',
+    });
 
     dispatch({
       type: SW_PROFILE_SUCCESS,

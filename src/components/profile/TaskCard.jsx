@@ -40,11 +40,11 @@ const TaskCard = ({ need }) => {
     // const diff = (moment(new Date(need.created)).diff(moment(new Date())));
     console.log(diff);
 
-    console.log('Total Duration in millis:', moment.duration(diff).asMilliseconds());
-    console.log('Days:', moment.duration(diff).days());
-    console.log('Hours:', moment.duration(diff).hours());
-    console.log('Minutes:', moment.duration(diff).minutes());
-    console.log('Seconds:', moment.duration(diff).seconds());
+    // console.log('Total Duration in millis:', moment.duration(diff).asMilliseconds());
+    // console.log('Days:', moment.duration(diff).days());
+    // console.log('Hours:', moment.duration(diff).hours());
+    // console.log('Minutes:', moment.duration(diff).minutes());
+    // console.log('Seconds:', moment.duration(diff).seconds());
   }
 
   return (
