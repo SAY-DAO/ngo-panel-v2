@@ -45,8 +45,8 @@ export const fetchSocialWorkerProfile = (swId, limit) => async (dispatch, getSta
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-SKIP': 10, // just get last 10 in case they created them newly
-        'X-TAKE': 1, // pagination
+        'X-SKIP': 0,
+        'X-TAKE': 10, // just get last 10 in case they created them newly
       },
     };
     const response = await publicApi.get(`/socialworkers/${swId}/createdNeeds`, config);
@@ -67,7 +67,65 @@ export const fetchSocialWorkerProfile = (swId, limit) => async (dispatch, getSta
 
     dispatch({
       type: SW_PROFILE_SUCCESS,
-      payload: data,
+      payload: {
+        needs: data,
+      },
+    });
+  } catch (e) {
+    dispatch({
+      type: SW_PROFILE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const fetchSupervisorProfile = (swId, limit) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: SW_PROFILE_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const needList = [];
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        'X-SKIP': 0,
+        'X-TAKE': 20, // just get last 10 in case they created them newly
+      },
+    };
+    const response = await publicApi.get(`/needs?isConfirmed=true`, config);
+    for (let i = 0; i < response.data.needs.length; i++) {
+      const need = needListSerializer(response.data.needs, i);
+      needList.push(need);
+    }
+    const needRequest = {
+      needData: needList,
+    };
+
+    await daoApi.post(`/sync/update/multi`, needRequest);
+
+    const response1 = await daoApi.get(
+      `/users/social-worker/${swId}/confirmedNeeds?limit=${limit}`,
+      {
+        'Content-type': 'application/json',
+      },
+    );
+
+    const response2 = await daoApi.get(
+      `/users/social-worker/${swId}/confirmedChildren?limit=${limit}`,
+      {
+        'Content-type': 'application/json',
+      },
+    );
+
+    dispatch({
+      type: SW_PROFILE_SUCCESS,
+      payload: {
+        needs: response1.data,
+        children: response2.data,
+      },
     });
   } catch (e) {
     dispatch({

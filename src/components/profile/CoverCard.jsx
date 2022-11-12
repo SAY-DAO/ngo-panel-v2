@@ -3,8 +3,11 @@ import { Grid, Box, Card, CardContent, Typography, Button, Avatar } from '@mui/m
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import InterestsIcon from '@mui/icons-material/Interests';
+import ChildCareIcon from '@mui/icons-material/ChildCare';
 import cover from '../../assets/images/cover.jpg';
 import { fetchSocialWorkerById } from '../../redux/actions/socialWorkerAction';
+import { RolesEnum } from '../../utils/helpers';
 
 const CoverCard = ({ swId }) => {
   const dispatch = useDispatch();
@@ -74,7 +77,7 @@ const CoverCard = ({ swId }) => {
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <FeatherIcon icon="file-text" width="20" />
+                  <InterestsIcon />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -83,17 +86,19 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {profile && profile.meta.totalItems}
+                  {Number(profile && profile.needs && profile.needs.meta.totalItems)}
                 </Typography>
                 <Typography
                   color="textSecondary"
-                  variant="h5"
+                  variant="h6"
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
                   }}
                 >
-                  Needs
+                  {result && result.type === RolesEnum.SAY_SUPERVISOR
+                    ? 'Confirmed Needs'
+                    : 'Created Needs'}
                 </Typography>
               </Grid>
               <Grid
@@ -110,7 +115,7 @@ const CoverCard = ({ swId }) => {
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <FeatherIcon icon="user-check" width="20" />
+                  <ChildCareIcon />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -119,17 +124,19 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  3,586
+                  {Number(profile && profile.children && (profile.children.meta.totalItems, 10))}
                 </Typography>
                 <Typography
                   color="textSecondary"
-                  variant="h5"
+                  variant="h6"
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
                   }}
                 >
-                  Children
+                  {result && result.type === RolesEnum.SAY_SUPERVISOR
+                    ? 'Confirmed Children'
+                    : 'Created Children'}
                 </Typography>
               </Grid>
               <Grid
@@ -159,7 +166,7 @@ const CoverCard = ({ swId }) => {
                 </Typography>
                 <Typography
                   color="textSecondary"
-                  variant="h5"
+                  variant="h6"
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',

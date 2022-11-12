@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { ethers } from 'ethers';
 import { daoApi, publicApi } from '../../apis/sayBase';
-import needListSerializer from '../../utils/serializer';
+import needListSerializer, { needSerializer } from '../../utils/serializer';
 import {
   FAMILY_NETWORK_REQUEST,
   FAMILY_NETWORK_SUCCESS,
@@ -128,6 +128,7 @@ export const updateNestServer = (counter, skip) => async (dispatch, getState) =>
       };
       childList.push(child);
     }
+    console.log(child);
 
     const needRequest = {
       needData: needList,
@@ -155,61 +156,8 @@ export const updateOneNeedNestServer = (need) => async (dispatch, getState) => {
       receiptList: { receipts },
     } = getState();
 
-    const theNeed = {
-      needId: need.id,
-      title: need.name,
-      affiliateLinkUrl: need.affiliateLinkUrl,
-      bankTrackId: need.bank_track_id,
-      category: need.category,
-      childGeneratedCode: need.childGeneratedCode,
-      childSayName: need.childSayName,
-      childDeliveryDate: need.child_delivery_date,
-      childId: need.child_id,
-      confirmDate: need.confirmDate,
-      confirmUser: need.confirmUser,
-      cost: need.cost,
-      created: need.created,
-      createdById: need.created_by_id,
-      deletedAt: need.deleted_at,
-      description: need.description,
-      descriptionTranslations: need.description_translations, // { en: '' , fa: ''}
-      titleTranslations: need.name_translations, // { en: '' , fa: ''}
-      details: need.details,
-      doingDuration: need.doing_duration,
-      donated: need.donated,
-      doneAt: need.doneAt,
-      expectedDeliveryDate: need.expected_delivery_date,
-      information: need.information,
-      isConfirmed: need.isConfirmed,
-      isDeleted: need.isDeleted,
-      isDone: need.isDone,
-      isReported: need.isReported,
-      isUrgent: need.isUrgent,
-      ngoId: need.ngoId,
-      ngoAddress: need.ngoAddress,
-      ngoName: need.ngoName,
-      ngoDeliveryDate: need.ngo_delivery_date,
-      oncePurchased: need.oncePurchased,
-      paid: need.paid,
-      purchaseCost: need.purchase_cost,
-      purchaseDate: need.purchase_date,
-      receiptCount: need.receipt_count,
-      receipts, // when accordion opens we request receipts
-      status: need.status,
-      statusDescription: need.status_description,
-      statusUpdatedAt: need.status_updated_at,
-      type: need.type,
-      typeName: need.type_name,
-      unavailableFrom: need.unavailable_from,
-      unconfirmedAt: need.unconfirmed_at,
-      unpaidCost: need.unpaid_cost,
-      unpayable: need.unpayable,
-      unpayableFrom: need.unpayable_from,
-      updated: need.updated,
-      payments: need.payments,
-      imageUrl: need.imageUrl,
-      needRetailerImg: need.img,
-    };
+    const theNeed = needSerializer({ ...need, receipts }, 0);
+
     const needRequest = {
       needData: [theNeed],
       childData: [],
@@ -221,7 +169,7 @@ export const updateOneNeedNestServer = (need) => async (dispatch, getState) => {
       },
     };
 
-    const responseNeed = await daoApi.post(`/sync/update/one/`, theNeed, {
+    const responseNeed = await daoApi.post(`/sync/update/one/`, needRequest, {
       config,
     }); // create
 

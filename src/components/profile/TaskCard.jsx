@@ -11,6 +11,7 @@ import {
   Tooltip,
   Chip,
   ListItem,
+  Grid,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
@@ -36,10 +37,8 @@ const TaskCard = ({ need }) => {
   };
 
   if (need) {
-    const diff = moment(new Date()).diff(moment(new Date(need.created)));
+    // const diff = moment(new Date()).diff(moment(new Date(need.created)));
     // const diff = (moment(new Date(need.created)).diff(moment(new Date())));
-    console.log(diff);
-
     // console.log('Total Duration in millis:', moment.duration(diff).asMilliseconds());
     // console.log('Days:', moment.duration(diff).days());
     // console.log('Hours:', moment.duration(diff).hours());
@@ -54,7 +53,7 @@ const TaskCard = ({ need }) => {
           p: 0,
           maxHeight: '300px',
           '&:hover': {
-            maxHeight: '600px',
+            maxHeight: '700px',
           },
         }}
       >
@@ -158,19 +157,54 @@ const TaskCard = ({ need }) => {
             Cost: {need.cost.toLocaleString()}
           </Typography>
           <Typography color="textSecondary" variant="h6" fontWeight="400">
-            Duration: 
-              {moment.duration(moment(new Date()).diff(moment(new Date(need.created)))).days()}
+            Duration: {need.duration || '-'}
           </Typography>
         </CardContent>
         {need.affiliateLinkUrl && (
-          <Link href={need.affiliateLinkUrl} underline="none">
-            Affiliate
+          <Link href={need.affiliateLinkUrl} underline="none" target="_blank">
+            <Typography color="textSecondary" variant="h6" fontWeight="400">
+              Affiliate
+            </Typography>
+          </Link>
+        )}
+        {need.link && (
+          <Link href={need.link} underline="none" target="_blank">
+            <Typography color="textSecondary" variant="h6" fontWeight="400">
+              Link
+            </Typography>
           </Link>
         )}
 
         <Box sx={{ position: 'relative' }}>
           <ListItem
             sx={{
+              position: 'absolute',
+            }}
+          >
+            {need.unpayable && (
+              <Chip
+                sx={{
+                  color: '#000000',
+                  backgroundColor: '#ff0000',
+                }}
+                label="unpayable"
+                size="small"
+              />
+            )}
+            {!need.isConfirmed && (
+              <Chip
+                sx={{
+                  color: '#000000',
+                  backgroundColor: '#ff0000',
+                }}
+                label="Not Confirmed"
+                size="small"
+              />
+            )}
+          </ListItem>
+          <ListItem
+            sx={{
+              mt: (need.unpayable || !need.isConfirmed) && '30px',
               position: 'absolute',
             }}
           >
@@ -230,6 +264,28 @@ const TaskCard = ({ need }) => {
             alt={need.needRetailerImg}
             width="100%"
           />
+          <Grid container sx={{ p: 1 }}>
+            {need.created && (
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                created: {moment().diff(moment(need.created, 'YYYY-MM-DD'), 'days')} days ago
+              </Typography>
+            )}
+            {need.updated && (
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                updated: {moment().diff(moment(need.updated, 'YYYY-MM-DD'), 'days')} days ago
+              </Typography>
+            )}
+            {need.confirmDate && (
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                confirmed: {moment().diff(moment(need.confirmDate, 'YYYY-MM-DD'), 'days')} days ago
+              </Typography>
+            )}
+              {need.paid && (
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                confirmed: {moment().diff(moment(need.confirmDate, 'YYYY-MM-DD'), 'days')} days ago
+              </Typography>
+            )}
+          </Grid>
         </Box>
       </Card>
       {/* <Box

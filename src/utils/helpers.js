@@ -60,7 +60,7 @@ export const EducationEnum = {
 export const HousingStatusEnum = {
   homeless: 0,
   Resident: 1,
-  'Care Centers': 2,
+  CareCenters: 2,
 };
 
 export const RolesEnumDefine = {
@@ -109,4 +109,12 @@ export const ServiceStatusEnum = {
   COMPLETE_PAY: PaymentStatusEnum.COMPLETE_PAY,
   MONEY_TO_NGO: 3,
   DELIVERED: 4, // done
+};
+
+
+export const ChildExistenceEnum = {
+  DEAD: 0,
+  ALIVE_PRESENT: 1,
+  ALIVE_GONE: 2,
+  TEMP_GONE: 3,
 };

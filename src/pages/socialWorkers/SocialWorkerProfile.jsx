@@ -15,13 +15,13 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
-import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import CoverCard from '../../components/profile/CoverCard';
 import TaskCard from '../../components/profile/TaskCard';
 import {
   fetchSocialWorkerProfile,
   fetchSocialWorkersList,
+  fetchSupervisorProfile,
 } from '../../redux/actions/socialWorkerAction';
 import {
   NeedTypeEnum,
@@ -31,15 +31,6 @@ import {
   ServiceStatusEnum,
 } from '../../utils/helpers';
 
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'User Profile',
-  },
-];
 
 const SocialWorkerProfile = () => {
   const dispatch = useDispatch();
@@ -48,7 +39,7 @@ const SocialWorkerProfile = () => {
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
-  const [swId, setSwId] = useState();
+  const [swNewDetails, setNewSwDetails] = useState();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -73,7 +64,7 @@ const SocialWorkerProfile = () => {
     return () => {
       active = false;
     };
-  }, [isLoadingSw, successSwAll, swId]);
+  }, [isLoadingSw, successSwAll, swNewDetails]);
 
   // social worker open
   useEffect(() => {
@@ -82,44 +73,44 @@ const SocialWorkerProfile = () => {
     } else if (openSocialWorkers) {
       dispatch(fetchSocialWorkersList());
     }
-  }, [openSocialWorkers, setOpenSocialWorker, swId]);
+  }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
 
   const organizedNeeds = [[], [], [], []]; // [[not paid], [payment], [purchased/delivered Ngo], [Done]]
-  if (profile && profile.items) {
-    for (let i = 0; i < profile.items.length; i++) {
+  if (profile && profile.needs && profile.needs.items) {
+    for (let i = 0; i < profile.needs.items.length; i++) {
       // not Paid
-      if (profile.items[i].status === 0) {
-        organizedNeeds[0].push(profile.items[i]);
+      if (profile.needs.items[i].status === 0) {
+        organizedNeeds[0].push(profile.needs.items[i]);
       }
       // Payment Received
       else if (
-        profile.items[i].status === PaymentStatusEnum.PARTIAL_PAY ||
-        profile.items[i].status === PaymentStatusEnum.COMPLETE_PAY
+        profile.needs.items[i].status === PaymentStatusEnum.PARTIAL_PAY ||
+        profile.needs.items[i].status === PaymentStatusEnum.COMPLETE_PAY
       ) {
-        organizedNeeds[1].push(profile.items[i]);
+        organizedNeeds[1].push(profile.needs.items[i]);
       }
 
-      if (profile.items[i].type === NeedTypeEnum.SERVICE) {
+      if (profile.needs.items[i].type === NeedTypeEnum.SERVICE) {
         // Payment sent to NGO
-        if (profile.items[i].status === ServiceStatusEnum.MONEY_TO_NGO) {
-          organizedNeeds[2].push(profile.items[i]);
+        if (profile.needs.items[i].status === ServiceStatusEnum.MONEY_TO_NGO) {
+          organizedNeeds[2].push(profile.needs.items[i]);
         }
         // Delivered to child
-        if (profile.items[i].status === ServiceStatusEnum.DELIVERED) {
-          organizedNeeds[3].push(profile.items[i]);
+        if (profile.needs.items[i].status === ServiceStatusEnum.DELIVERED) {
+          organizedNeeds[3].push(profile.needs.items[i]);
         }
-      } else if (profile.items[i].type === NeedTypeEnum.PRODUCT) {
+      } else if (profile.needs.items[i].type === NeedTypeEnum.PRODUCT) {
         // Purchased
-        if (profile.items[i].status === ProductStatusEnum.PURCHASED_PRODUCT) {
-          organizedNeeds[2].push(profile.items[i]);
+        if (profile.needs.items[i].status === ProductStatusEnum.PURCHASED_PRODUCT) {
+          organizedNeeds[2].push(profile.needs.items[i]);
         }
         // Delivered to Ngo
-        if (profile.items[i].status === ProductStatusEnum.DELIVERED_TO_NGO) {
-          organizedNeeds[2].push(profile.items[i]);
+        if (profile.needs.items[i].status === ProductStatusEnum.DELIVERED_TO_NGO) {
+          organizedNeeds[2].push(profile.needs.items[i]);
         }
         // Delivered to child
-        if (profile.items[i].status === ProductStatusEnum.DELIVERED) {
-          organizedNeeds[3].push(profile.items[i]);
+        if (profile.needs.items[i].status === ProductStatusEnum.DELIVERED) {
+          organizedNeeds[3].push(profile.needs.items[i]);
         }
       }
     }
@@ -128,22 +119,36 @@ const SocialWorkerProfile = () => {
   console.log(organizedNeeds);
 
   useEffect(() => {
-    if (!swId && swInfo && swInfo.typeId === RolesEnum.SUPER_ADMIN) {
-      dispatch(fetchSocialWorkerProfile(swInfo.id, limit));
+    if (!swNewDetails && swInfo) {
+      if (swInfo && swInfo.typeId === RolesEnum.SAY_SUPERVISOR) {
+        dispatch(fetchSupervisorProfile(swInfo.id, limit));
+      }
+      if (swInfo && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+        dispatch(fetchSocialWorkerProfile(swInfo.id, limit));
+      }
+      if (swInfo && swInfo.typeId === RolesEnum.COORDINATOR) {
+        // dispatch(fetchContributorProfile(swInfo.id, limit));
+      }
     }
-    if (swId) {
-      dispatch(fetchSocialWorkerProfile(swId, limit));
+    // using AutoComplete
+    if (swNewDetails) {
+      if (swNewDetails.typeId === RolesEnum.SAY_SUPERVISOR) {
+        dispatch(fetchSupervisorProfile(swNewDetails.id, limit));
+      }
+      if (swNewDetails.typeId === RolesEnum.SOCIAL_WORKER || swNewDetails.typeId === RolesEnum.NGO_SUPERVISOR) {
+        dispatch(fetchSocialWorkerProfile(swNewDetails.id, limit));
+      }
+      if (swNewDetails.typeId === RolesEnum.COORDINATOR) {
+        // dispatch(fetchContributorProfile(swNewDetails.id, limit));
+      }
     }
-  }, [swId, swInfo, limit]);
+  }, [swNewDetails, swInfo, limit]);
 
   const handleChange = (event) => {
     setLimit(event.target.value);
   };
   return (
     <PageContainer title="User Profile" description="this is User Profile page">
-      {/* breadcrumb */}
-      <Breadcrumb title="User Profile" items={BCrumb} />
-      {/* end breadcrumb */}
       <Grid container spacing={2} justifyContent="center">
         {swInfo && swInfo.typeId === RolesEnum.SUPER_ADMIN && (
           <Grid item>
@@ -158,7 +163,7 @@ const SocialWorkerProfile = () => {
                 setOpenSocialWorker(false);
               }}
               options={optionsSocialWorkers}
-              onChange={(e, value) => setSwId(value && value.id)}
+              onChange={(e, value) => setNewSwDetails(value && value)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) =>
                 `${option.id}. ${option.typeName} - ${option.firstName} ${option.lastName}`
@@ -204,7 +209,7 @@ const SocialWorkerProfile = () => {
       </Grid>
       {swInfo ? (
         <>
-          <CoverCard swId={swId || swInfo.id} />
+          <CoverCard swId={swNewDetails && swNewDetails.id || swInfo.id} />
           <Grid container spacing={0}>
             <Card sx={{ width: '100%', minHeight: '500px' }}>
               <Grid container justifyContent="center" sx={{ p: 2 }}>
