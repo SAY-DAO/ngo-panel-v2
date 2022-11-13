@@ -30,7 +30,7 @@ import {
   RolesEnum,
   ServiceStatusEnum,
 } from '../../utils/helpers';
-
+import { SW_PROFILE_RESET } from '../../redux/constants/socialWorkerConstants';
 
 const SocialWorkerProfile = () => {
   const dispatch = useDispatch();
@@ -135,13 +135,19 @@ const SocialWorkerProfile = () => {
       if (swNewDetails.typeId === RolesEnum.SAY_SUPERVISOR) {
         dispatch(fetchSupervisorProfile(swNewDetails.id, limit));
       }
-      if (swNewDetails.typeId === RolesEnum.SOCIAL_WORKER || swNewDetails.typeId === RolesEnum.NGO_SUPERVISOR) {
+      if (
+        swNewDetails.typeId === RolesEnum.SOCIAL_WORKER ||
+        swNewDetails.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
         dispatch(fetchSocialWorkerProfile(swNewDetails.id, limit));
       }
       if (swNewDetails.typeId === RolesEnum.COORDINATOR) {
         // dispatch(fetchContributorProfile(swNewDetails.id, limit));
       }
     }
+    return () => {
+      dispatch({ type: SW_PROFILE_RESET });
+    };
   }, [swNewDetails, swInfo, limit]);
 
   const handleChange = (event) => {
@@ -209,21 +215,21 @@ const SocialWorkerProfile = () => {
       </Grid>
       {swInfo ? (
         <>
-          <CoverCard swId={swNewDetails && swNewDetails.id || swInfo.id} />
+          <CoverCard swId={(swNewDetails && swNewDetails.id) || swInfo.id} />
           <Grid container spacing={0}>
             <Card sx={{ width: '100%', minHeight: '500px' }}>
               <Grid container justifyContent="center" sx={{ p: 2 }}>
                 <Grid item>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
-                      Display Recent Created needs
+                      Display Recent Needs
                     </InputLabel>
                     <Select
                       sx={{ minWidth: '200px' }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={limit}
-                      label="Display Recent Created needs"
+                      label="Display Recent Needs"
                       onChange={handleChange}
                     >
                       <MenuItem value={10}>Ten</MenuItem>

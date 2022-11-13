@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Grid, Box, Card, CardContent, Typography, Button, Avatar } from '@mui/material';
-import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import InterestsIcon from '@mui/icons-material/Interests';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 import cover from '../../assets/images/cover.jpg';
 import { fetchSocialWorkerById } from '../../redux/actions/socialWorkerAction';
 import { RolesEnum } from '../../utils/helpers';
@@ -77,7 +77,7 @@ const CoverCard = ({ swId }) => {
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <InterestsIcon />
+                  <InterestsIcon fontSize="medium" />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -86,7 +86,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {Number(profile && profile.needs && profile.needs.meta.totalItems)}
+                  {profile && profile.needs ? profile.needs.meta.totalItems : 0}
                 </Typography>
                 <Typography
                   color="textSecondary"
@@ -96,7 +96,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {result && result.type === RolesEnum.SAY_SUPERVISOR
+                  {result && result.typeId === RolesEnum.SAY_SUPERVISOR
                     ? 'Confirmed Needs'
                     : 'Created Needs'}
                 </Typography>
@@ -115,7 +115,7 @@ const CoverCard = ({ swId }) => {
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <ChildCareIcon />
+                  <ChildCareIcon fontSize="medium" />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -124,7 +124,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {Number(profile && profile.children && (profile.children.meta.totalItems, 10))}
+                  {profile && profile.children ? profile.children.meta.totalItems : 0}
                 </Typography>
                 <Typography
                   color="textSecondary"
@@ -134,7 +134,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {result && result.type === RolesEnum.SAY_SUPERVISOR
+                  {result && result.typeId === RolesEnum.SAY_SUPERVISOR
                     ? 'Confirmed Children'
                     : 'Created Children'}
                 </Typography>
@@ -153,7 +153,7 @@ const CoverCard = ({ swId }) => {
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <FeatherIcon icon="users" width="20" />
+                  <HandshakeIcon fontSize="medium" />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -172,7 +172,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  NGO
+                  Signed
                 </Typography>
               </Grid>
             </Grid>

@@ -16,6 +16,7 @@ import {
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 import {
   PaymentStatusEnum,
   getAge,
@@ -25,12 +26,13 @@ import {
 } from '../../utils/helpers';
 
 const TaskCard = ({ need }) => {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const options = ['Action', 'Another Action', `ID: ${need.flaskNeedId}`];
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -124,11 +126,14 @@ const TaskCard = ({ need }) => {
                   horizontal: 'right',
                 }}
               >
-                {options.map((option) => (
-                  <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-                    {option}
-                  </MenuItem>
-                ))}
+                <MenuItem onClick={() => navigate(`/children/edit/${need.flaskChildId}`)}>
+                  Edit Child
+                </MenuItem>
+                <MenuItem
+                  onClick={() => navigate(`/need/edit/${need.flaskChildId}/${need.flaskNeedId}`)}
+                >
+                  Edit Need
+                </MenuItem>
               </Menu>
             </Box>
           </Box>
@@ -280,7 +285,7 @@ const TaskCard = ({ need }) => {
                 confirmed: {moment().diff(moment(need.confirmDate, 'YYYY-MM-DD'), 'days')} days ago
               </Typography>
             )}
-              {need.paid && (
+            {need.paid && (
               <Typography color="textSecondary" variant="h6" fontWeight="400">
                 confirmed: {moment().diff(moment(need.confirmDate, 'YYYY-MM-DD'), 'days')} days ago
               </Typography>
@@ -288,7 +293,7 @@ const TaskCard = ({ need }) => {
           </Grid>
         </Box>
       </Card>
-      {/* <Box
+      <Box
         sx={{
           display: {
             sm: 'flex',
@@ -314,7 +319,7 @@ const TaskCard = ({ need }) => {
             </Typography>
           </Link>
         </Box>
-      </Box> */}
+      </Box>
     </Box>
   );
 };
