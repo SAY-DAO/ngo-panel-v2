@@ -619,6 +619,7 @@
     "id": "Need id",
     "titleEdit": "Edit Need Details",
     "titleAdd": "Add Need Details",
+    "titleStatus": "Need Title",
     "unpayable": "Payable",
     "update": "Edit",
     "imageUrl": "Icon",
@@ -677,6 +678,7 @@
       "update": "Update",
       "add": "Add Need"
     },
+    "needStatus_title": "Change Need Status",
     "needStatus": {
       "1": "Partial payment",
       "2": "Complete payment",
@@ -688,6 +690,21 @@
       "signature": "Signature",
       "sign": "Sign",
       "pending": "Not Delivered yet"
+    },
+    "needDialogue": {
+      "service": {
+        "1": "Partial payment",
+        "2": "Complete payment",
+        "3": "Money transferred to the NGO",
+        "4": "Delivered to child"
+      },
+      "product": {
+        "1": "Partial payment",
+        "2": "Complete payment",
+        "3": "Purchased product",
+        "4": "Delivered to NGO",
+        "5": "Delivered to child"
+      }
     }
   },
   "provider": {

@@ -48,6 +48,7 @@ import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/DaoAction';
+import StatusDialog from '../dialogs/ReportStatusDialog';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -311,6 +312,9 @@ const ReportStatusTable = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const [statusDialog, setStatusDialog] = useState(false);
+  const [statusNeed, setStatusNeed] = useState();
+
   const [ngoId, setNgoId] = useState();
   const [typeId, setTypeId] = useState(1);
   const [statusId, setStatusId] = useState(2);
@@ -468,6 +472,10 @@ const ReportStatusTable = () => {
     setDense(event.target.checked);
   };
 
+  const handleStatusChange = () => {
+    setStatusDialog(true);
+  };
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.needs.length) : 0;
 
@@ -483,6 +491,14 @@ const ReportStatusTable = () => {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
+
+    // set type name for status dialogue
+    useEffect(() => {
+      if (statusDialog && row && needs) {
+        setStatusNeed(needs.needs.find((n) => n.id === row.id));
+        console.log('here');
+      }
+    }, [statusDialog, row, needs]);
 
     const signReport = () => {
       dispatch(signTransaction(row));
@@ -550,7 +566,7 @@ const ReportStatusTable = () => {
           <TableCell align="center">{row.created_by_id}</TableCell>
           <TableCell align="center">
             <Box alignItems="center">
-              <IconButton aria-label="attachment" size="small">
+              <IconButton aria-label="attachment" size="small" onClick={handleStatusChange}>
                 <Avatar
                   src={
                     row.status === 2 // Complete payment
@@ -681,26 +697,34 @@ const ReportStatusTable = () => {
                       <TableCell align="right">
                         {row.payments[0] && (
                           <Tooltip
-                            title={row.payments.map((payment, index) => {
-                              if (payment.gateway_track_id && payment.verified) {
+                            title={row.payments.map((p, index) => {
+                              if (p.verified) {
                                 return (
-                                  <Typography variant="subtitle2" key={payment.id}>{`${
-                                    index + 1
-                                  }: ${
-                                    payment.gateway_track_id
-                                  } - ${payment.total_amount.toLocaleString()}`}</Typography>
+                                  <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                      backgroundColor: p.need_amount > 0 ? 'green' : 'red',
+                                    }}
+                                    key={p.id}
+                                  >
+                                    {p.gateway_track_id
+                                      ? `${index + 1}: ${
+                                          p.gateway_track_id
+                                        } => ${p.total_amount.toLocaleString()}`
+                                      : `Wallet => ${p.total_amount.toLocaleString()}`}
+                                  </Typography>
                                 );
                               }
                               return (
-                                <Typography variant="subtitle2" key={payment.id}>{`${
+                                <Typography variant="subtitle2" key={p.id}>{`${
                                   index + 1
-                                }: SAY- ${payment.total_amount.toLocaleString()}`}</Typography>
+                                }: SAY- ${p.total_amount.toLocaleString()}`}</Typography>
                               );
                             })}
                             placement="top-end"
                           >
                             <Typography color="textSecondary" variant="body1">
-                              {row.payments.length} {t('need.payers')}
+                              {row.payments.filter((p) => p.verified).length} {t('need.payers')}
                             </Typography>
                           </Tooltip>
                         )}
@@ -960,6 +984,13 @@ const ReportStatusTable = () => {
           </Alert>
         </Snackbar>
       </Stack>
+      {statusNeed && (
+        <StatusDialog
+          need={statusNeed}
+          statusDialog={statusDialog}
+          setStatusDialog={setStatusDialog}
+        />
+      )}
     </PageContainer>
   );
 };
