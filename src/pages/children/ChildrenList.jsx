@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CircularProgress, Grid, Autocomplete, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -20,6 +21,7 @@ const BCrumb = [
 ];
 
 const ChildrenList = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const [openNgo, setOpenNgo] = useState(false);
@@ -90,7 +92,7 @@ const ChildrenList = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Ngo"
+                label={t('common.ngoName')}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (

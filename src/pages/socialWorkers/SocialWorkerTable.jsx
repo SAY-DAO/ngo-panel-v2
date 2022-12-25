@@ -111,7 +111,7 @@ function EnhancedTableHead(props) {
       id: 'ngoName',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.ngoName'),
+      label: t('common.ngoName'),
     },
     {
       id: 'idNumber',

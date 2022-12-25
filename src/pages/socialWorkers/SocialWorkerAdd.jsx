@@ -495,7 +495,7 @@ const SocialWorkerAdd = () => {
                       helperText={errors && errors.lastName && errors.lastName.message}
                     />
                     <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
-                      {t('socialWorker.ngoName')}
+                      {t('common.ngoName')}
                     </CustomFormLabel>
                     <CustomSelect
                       labelId="ngoId-controlled-open-select-label"

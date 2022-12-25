@@ -18,6 +18,7 @@ import {
   FormHelperText,
   FormControlLabel,
   Switch,
+  Autocomplete,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -30,12 +31,12 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import HotelIcon from '@mui/icons-material/Hotel';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import MuiAudioPlayer from 'mui-audio-player-plus';
-// import { AudioCard } from 'material-ui-player';
 
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import { updateChild, fetchMyChildById } from '../../redux/actions/childrenAction';
+import { fetchNgoList } from '../../redux/actions/ngoAction';
 // import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadIdImage from '../../components/UploadImage';
@@ -68,12 +69,21 @@ const ChildrenEdit = () => {
     location.state && location.state.newImage,
   );
   const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
+  const [openNgo, setOpenNgo] = useState(false);
+  const [optionsNgo, setOptionsNgo] = useState([]);
+
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { ngoList, success: successNgoList } = ngoAll;
+
+  const loadingNgo = openNgo && optionsNgo.length === 0;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const childById = useSelector((state) => state.childById);
   const { result, loading: loadingChild, success: successChild } = childById;
+  const [ngoId, setNgoId] = useState(result.id_ngo);
+  console.log(ngoId);
 
   // const ngoStatusUpdate = useSelector((state) => state.ngoStatusUpdate);
   // const { status } = ngoStatusUpdate;
@@ -86,6 +96,29 @@ const ChildrenEdit = () => {
       dispatch(fetchMyChildById(id));
     }
   }, [id]);
+
+  // Autocomplete ngo
+  useEffect(() => {
+    let active = true;
+    if (!loadingNgo) {
+      return undefined;
+    }
+    if (active && successNgoList) {
+      setOptionsNgo([...ngoList]);
+    }
+    return () => {
+      active = false;
+    };
+  }, [loadingNgo, successNgoList]);
+
+  // ngo open
+  useEffect(() => {
+    if (!openNgo) {
+      setOptionsNgo([]);
+    } else {
+      dispatch(fetchNgoList());
+    }
+  }, [openNgo]);
 
   // isActive
   // useEffect(() => {
@@ -240,7 +273,10 @@ const ChildrenEdit = () => {
         result &&
         successChild && (
           <>
-            <Breadcrumb title="Edit page" subtitle="Children" />
+            <Breadcrumb
+              title={`Edit page - ${result.sayname_translations.en}_${result.generatedCode}`}
+              subtitle="Children"
+            />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
@@ -397,11 +433,6 @@ const ChildrenEdit = () => {
                       inline
                       src={uploadVoice ? URL.createObjectURL(uploadVoice) : result.voiceUrl}
                     />
-                    {/* <AudioCard
-                      src={uploadVoice ? URL.createObjectURL(uploadVoice) : result.voiceUrl}
-                      width="100%"
-                      thickness="thin"
-                    /> */}
                   </Badge>
 
                   <FormControlLabel
@@ -445,19 +476,76 @@ const ChildrenEdit = () => {
                     {t('ngo.titleEdit')}
                   </Typography>
                   <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="name">NGO Name</CustomFormLabel>
-                    <TextField
-                      required
-                      id="name"
-                      variant="outlined"
-                      defaultValue={result.name}
-                      fullWidth
-                      size="small"
-                      // onChange={handleChangeInput('name')}
-                      control={control}
-                      {...register('name')}
-                      error={!!errors.name}
-                    />
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="flex-start"
+                      alignItems="flex-end"
+                      spacing={2}
+                    >
+                      <Grid item xs={6}>
+                        {/* <CustomFormLabel htmlFor="name">{t('common.ngoName')}</CustomFormLabel> */}
+                        <Autocomplete
+                          id="asynchronous-ngo"
+                          open={openNgo}
+                          onOpen={() => {
+                            setOpenNgo(true);
+                          }}
+                          onClose={() => {
+                            setOpenNgo(false);
+                          }}
+                          onChange={(e, value) => setNgoId(value && value.id)}
+                          isOptionEqualToValue={(option, value) => option.id === value.id}
+                          getOptionLabel={(option) => `${option.id} - ${option.name}`}
+                          options={optionsNgo}
+                          loading={loadingNgo}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label={t('common.ngoName')}
+                              InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                  <>
+                                    {loadingNgo ? (
+                                      <CircularProgress color="inherit" size={20} />
+                                    ) : null}
+                                    {params.InputProps.endAdornment}
+                                  </>
+                                ),
+                              }}
+                            />
+                          )}
+                        />
+                        {/* <TextField
+                          required
+                          id="name"
+                          variant="outlined"
+                          defaultValue={result.name}
+                          fullWidth
+                          size="small"
+                          // onChange={handleChangeInput('name')}
+                          control={control}
+                          {...register('name')}
+                          error={!!errors.name}
+                        /> */}
+                      </Grid>
+                      <Grid item xs={6}>
+                        <CustomFormLabel htmlFor="name">{t('child.socialWorker')}</CustomFormLabel>
+                        <TextField
+                          required
+                          id="name"
+                          variant="outlined"
+                          defaultValue={result.name}
+                          fullWidth
+                          size="small"
+                          // onChange={handleChangeInput('name')}
+                          control={control}
+                          {...register('name')}
+                          error={!!errors.name}
+                        />
+                      </Grid>
+                    </Grid>
                     <CustomFormLabel htmlFor="Email">{t('ngo.emailAddress')}</CustomFormLabel>
                     <TextField
                       id="Email"

@@ -539,7 +539,6 @@
     "userName": "User Name",
     "avatarUrl": "Avatar",
     "typeName": "Type",
-    "ngoName": "NGO",
     "idNumber": "ID Number",
     "idCardUrl": "ID Image",
     "country": "Country",
@@ -725,6 +724,7 @@
     "created": "Created At",
     "confirmUser": "Confirmed By",
     "confirmDate": "Confirmed At",
-    "isConfirmed": "Confirm"
+    "isConfirmed": "Confirm",
+    "ngoName": "NGO"
   }
 }
