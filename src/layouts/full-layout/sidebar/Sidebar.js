@@ -14,12 +14,15 @@ import {
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+
 import { SidebarWidth } from '../../../assets/global/Theme-variable';
 import Menuitems from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
 import { RolesEnum } from '../../../utils/helpers';
 
 const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   const { pathname } = useLocation();
 
@@ -66,7 +69,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                         fontWeight="500"
                         sx={{ my: 2, mt: 0, opacity: '0.4' }}
                       >
-                        {item.subheader}
+                        {t(item.subheader)}
                       </Typography>
                     </li>
                   );
@@ -101,7 +104,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                             item.icon
                           )}
                         </ListItemIcon>
-                        <ListItemText>{item.title}</ListItemText>
+                        <ListItemText>{t(item.title)}</ListItemText>
                         {index === open || pathWithoutLastPart === item.href ? (
                           <FeatherIcon icon="chevron-down" size="16" />
                         ) : (
@@ -141,7 +144,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                                     child.icon
                                   )}
                                 </ListItemIcon>
-                                <ListItemText>{child.title}</ListItemText>
+                                <ListItemText>{t(child.title)}</ListItemText>
                               </ListItem>
                             );
                           })}
@@ -178,7 +181,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                             item.icon
                           )}
                         </ListItemIcon>
-                        <ListItemText onClick={onSidebarClose}>{item.title}</ListItemText>
+                        <ListItemText onClick={onSidebarClose}>{t(item.title)}</ListItemText>
                       </ListItem>
                     </List>
                   );

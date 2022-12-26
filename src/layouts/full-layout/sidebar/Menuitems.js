@@ -12,13 +12,13 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 const Menuitems = [
   {
     navlabel: true,
-    subheader: 'Social Worker',
+    subheader: 'sidebar.swHeader',
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
     admin: false,
   },
   {
-    title: 'My Page',
+    title: 'sidebar.myPage',
     icon: 'user',
     href: '/profile/view',
     admin: false,

@@ -511,5 +511,21 @@
     "address": "ایران - تهران - ایرانشهر - آذرشهر - پلاک 22 - واحد 4",
     "phoneNumber": "تلفن: <1>0 2 1 - 2 2 3 4 7 8 1 4</1>",
     "download": "دریافت گزارش"
+  },
+
+  "sidebar": {
+    "swHeader": "مددکار",
+    "myPage": "صفحه من",
+    "children": "کودکان",
+    "needs": "نیازها",
+    "milestone": "جدول نقاط عطف",
+    "reports": "گزارش‌ها",
+    "adminHeader": "ادمین",
+    "ngos": "انجمن‌ها",
+    "providers": "تامین کننده‌ها",
+    "socialWorkers": "مددکارها",
+    "categories": "دسته بندی‌ها",
+    "daoHeader": "DAO",
+    "dashboard": "داشبورد"
   }
 }

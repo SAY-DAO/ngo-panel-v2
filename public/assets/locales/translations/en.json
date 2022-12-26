@@ -528,6 +528,22 @@
       "description": "Description"
     }
   },
+
+  "sidebar": {
+    "swHeader": "Social Worker",
+    "myPage": "My Page",
+    "children": "Children",
+    "needs": "Needs",
+    "milestone": "MileStone",
+    "reports": "Reports",
+    "adminHeader": "ADMIN",
+    "ngos": "NGOs",
+    "providers": "Providers",
+    "socialWorkers": "Social Workers",
+    "categories": "Categories",
+    "daoHeader": "DAO",
+    "dashboard": "Dashboard"
+  },
   "socialWorker": {
     "noChildren": "No Children",
     "socialWorker": "Social Worker",
