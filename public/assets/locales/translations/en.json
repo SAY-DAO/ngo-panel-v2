@@ -532,17 +532,34 @@
   "sidebar": {
     "swHeader": "Social Worker",
     "myPage": "My Page",
-    "children": "Children",
-    "needs": "Needs",
-    "milestone": "MileStone",
+    "children": {
+      "title": "Children"
+    },
+    "needs": {
+      "title": "Needs"
+    },
+    "milestone": {
+      "title": "MileStone"
+    },
     "reports": "Reports",
     "adminHeader": "ADMIN",
-    "ngos": "NGOs",
-    "providers": "Providers",
-    "socialWorkers": "Social Workers",
-    "categories": "Categories",
+    "ngos": {
+      "title": "NGOs"
+    },
+    "providers": {
+      "title": "Providers"
+    },
+    "socialWorkers": {
+      "title": "Social Workers",
+      "migrate": "Migrate"
+    },
+    "categories": {
+      "title": "Categories"
+    },
     "daoHeader": "DAO",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "list": "List",
+    "add": "Add"
   },
   "socialWorker": {
     "noChildren": "No Children",

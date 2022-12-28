@@ -475,57 +475,49 @@
     "s2": "رسید انجام سرویس"
   },
   "report": {
-    "swId": "شماره شناسایی مددکار: SW-{{socialWorkerGeneratedCode}}",
-    "dkc": "شماره شناسایی سفارش: DKC-{{dkc}}",
-    "p2s2": {
-      "img": "https://sayapp.company/public/resources/img/done.jpg",
-      "title": "یکی از نیازهای {{childSayName}} کامل شد",
-      "paragraph": "در روز {{date}} با هم‌راهی شما هزینه‌ی {{needName}} برای {{childSayName}} پرداخت شد."
+    "history": {
+      "title": "تاریخچه"
     },
-    "p3": {
-      "img": "https://sayapp.company/public/resources/img/purchased.jpg",
-      "title": "رسید خرید کالای {{childSayName}} توسط SAY",
-      "paragraph": "در روز {{date}} {{needName}} از فروشگاه آنلاین برای {{childSayName}} سفارش داده شد."
+    "deleteModal": {
+      "confirm": "برای حذف اطمینان دارید؟"
     },
-    "p4": {
-      "img": "https://sayapp.company/public/resources/img/ngo_delivered.jpg",
-      "title": "اطلاع از تحویل کالا به انجمن",
-      "paragraph": "در روز {{date}} {{needName}} به مددکار انجمن تحویل داده شد."
-    },
-    "p5": {
-      "img": "https://sayapp.company/public/resources/img/child_delivered.jpg",
-      "title": "اطلاع از رسیدن کالا به دست {{childSayName}}",
-      "paragraph": "در روز {{date}} {{needName}} به دست {{childSayName}} رسید."
-    },
-    "s3": {
-      "img": "https://sayapp.company/public/resources/img/money.jpg",
-      "title": "رسید انتقال وجه به انجمن توسط SAY",
-      "paragraph": "در روز {{date}} مبلغ {{needCost}} تومان هزینه {{needName}} برای {{childSayName}} به حساب مددکار اجتماعی او واریز شد."
-    },
-    "s4": {
-      "img": "https://sayapp.company/public/resources/img/child_delivered.jpg",
-      "title": "هزینه‌ی {{needName}} برای {{childSayName}}",
-      "paragraph": "در روز {{date}} مبلغ {{needCost}} تومان هزینه‌ی {{needName}} برای {{childSayName}} توسط انجمن پرداخت شد."
-    },
-    "contact": "ما به شما گوش می‌دهیم، با ما تماس بگیرید.",
-    "address": "ایران - تهران - ایرانشهر - آذرشهر - پلاک 22 - واحد 4",
-    "phoneNumber": "تلفن: <1>0 2 1 - 2 2 3 4 7 8 1 4</1>",
-    "download": "دریافت گزارش"
+    "receipt": {
+      "code": "Receipt Unique Identifier",
+      "title": "عنوان",
+      "description": "توضیحات"
+    }
   },
 
   "sidebar": {
     "swHeader": "مددکار",
     "myPage": "صفحه من",
-    "children": "کودکان",
-    "needs": "نیازها",
-    "milestone": "جدول نقاط عطف",
+    "children": {
+      "title": "کودکان"
+    },
+    "needs": {
+      "title": "نیازها"
+    },
+    "milestone": {
+      "title": "جدول نقاط عطف"
+    },
     "reports": "گزارش‌ها",
     "adminHeader": "ادمین",
-    "ngos": "انجمن‌ها",
-    "providers": "تامین کننده‌ها",
-    "socialWorkers": "مددکارها",
-    "categories": "دسته بندی‌ها",
+    "ngos": {
+      "title": "انجمن‌ها"
+    },
+    "providers": {
+      "title": "تامین کننده‌ها"
+    },
+    "socialWorkers": {
+      "title": "مددکارها",
+      "migrate": "انتقال"
+    },
+    "categories": {
+      "title": "دسته بندی‌ها"
+    },
     "daoHeader": "DAO",
-    "dashboard": "داشبورد"
+    "dashboard": "داشبورد",
+    "list": "لیست",
+    "add": "اضافه کردن"
   }
 }
