@@ -12,51 +12,51 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 const Menuitems = [
   {
     navlabel: true,
-    subheader: 'Social Worker',
+    subheader: 'sidebar.swHeader',
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
     admin: false,
   },
   {
-    title: 'My Page',
+    title: 'sidebar.myPage',
     icon: 'user',
     href: '/profile/view',
     admin: false,
   },
 
   {
-    title: 'Children',
+    title: 'sidebar.children.title',
     icon: <ChildCareIcon />,
     href: '/children',
     collapse: true,
     admin: false,
     children: [
       {
-        title: 'List',
+        title: 'sidebar.list',
         icon: 'list',
         href: '/children/list',
       },
       {
-        title: 'Add',
+        title: 'sidebar.add',
         icon: 'edit',
         href: '/children/add',
       },
     ],
   },
   {
-    title: 'Needs',
+    title: 'sidebar.needs.title',
     icon: <InterestsIcon />,
     href: '/need',
     admin: false,
     collapse: true,
     children: [
       {
-        title: 'List',
+        title: 'sidebar.list',
         icon: 'list',
         href: '/need/list',
       },
       {
-        title: 'Add',
+        title: 'sidebar.add',
         icon: 'edit',
         href: '/need/add',
       },
@@ -64,26 +64,26 @@ const Menuitems = [
   },
 
   {
-    title: 'MileStone',
+    title: 'sidebar.milestone.title',
     icon: <RouteIcon />,
     href: '/dao/milestone',
     collapse: true,
     admin: true,
     children: [
       {
-        title: 'List',
+        title: 'sidebar.list',
         icon: 'list',
         href: '/dao/milestone/list',
       },
       {
-        title: 'Add',
+        title: 'sidebar.add',
         icon: 'plus',
         href: '/dao/milestone/add',
       },
     ],
   },
   {
-    title: 'Reports',
+    title: 'sidebar.reports',
     icon: <MenuBookIcon />,
     href: '/report/needs/paid',
     collapse: true,
@@ -92,87 +92,87 @@ const Menuitems = [
   // Admin
   {
     navlabel: true,
-    subheader: 'ADMIN',
+    subheader: 'sidebar.adminHeader',
     icon: 'mdi mdi-dots-horizontal',
     href: 'Reports',
     admin: true,
   },
   {
-    title: 'NGOs',
+    title: 'sidebar.ngos.title',
     icon: <HouseIcon />,
     href: '/ngo',
     collapse: true,
     admin: true,
     children: [
       {
-        title: 'List',
+        title: 'sidebar.list',
         icon: 'list',
         href: '/ngo/list',
       },
       {
-        title: 'Add',
+        title: 'sidebar.add',
         icon: 'plus',
         href: '/ngo/add',
       },
     ],
   },
   {
-    title: 'Providers',
+    title: 'sidebar.providers.title',
     icon: <StorefrontIcon />,
     href: '/provider',
     collapse: true,
     admin: true,
     children: [
       {
-        title: 'List',
+        title: 'sidebar.list',
         icon: 'list',
         href: '/provider/list',
       },
       {
-        title: 'Add',
+        title: 'sidebar.add',
         icon: 'plus',
         href: '/provider/add',
       },
     ],
   },
   {
-    title: 'Social Workers',
+    title: 'sidebar.socialWorkers.title',
     icon: 'users',
     href: '/sw',
     collapse: true,
     admin: true,
     children: [
       {
-        title: 'List',
+        title: 'sidebar.list',
         icon: 'list',
         href: '/sw/list',
       },
       {
-        title: 'Add',
+        title: 'sidebar.add',
         icon: 'plus',
         href: '/sw/add',
       },
       {
-        title: 'Migrate',
+        title: 'sidebar.socialWorkers.migrate',
         icon: <MoveDownIcon />,
         href: '/sw/migrate',
       },
     ],
   },
   {
-    title: 'Catagories',
+    title: 'sidebar.categories.title',
     icon: <HiveIcon />,
     href: '/admin/catagories',
     collapse: true,
     admin: true,
     children: [
       {
-        title: 'List',
+        title: 'sidebar.list',
         icon: 'list',
         href: '/categories/list',
       },
       {
-        title: 'Add',
+        title: 'sidebar.add',
         icon: 'plus',
         href: '/categories/add',
       },
@@ -180,12 +180,12 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: 'DAO',
+    subheader: 'sidebar.daoHeader',
     href: 'DAO',
     admin: true,
   },
   {
-    title: 'Dashboard',
+    title: 'sidebar.dashboard',
     icon: <HubIcon />,
     href: '/dao',
     admin: true,
