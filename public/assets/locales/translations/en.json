@@ -128,6 +128,39 @@
       "description": "Description"
     }
   },
+
+  "sidebar": {
+    "swHeader": "Social Worker",
+    "myPage": "My Page",
+    "children": {
+      "title": "Children"
+    },
+    "needs": {
+      "title": "Needs"
+    },
+    "milestone": {
+      "title": "MileStone"
+    },
+    "reports": "Reports",
+    "adminHeader": "ADMIN",
+    "ngos": {
+      "title": "NGOs"
+    },
+    "providers": {
+      "title": "Providers"
+    },
+    "socialWorkers": {
+      "title": "Social Workers",
+      "migrate": "Migrate"
+    },
+    "categories": {
+      "title": "Categories"
+    },
+    "daoHeader": "DAO",
+    "dashboard": "Dashboard",
+    "list": "List",
+    "add": "Add"
+  },
   "socialWorker": {
     "noChildren": "No Children",
     "socialWorker": "Social Worker",
@@ -334,7 +367,6 @@
   },
   "child": {
     "id": "Id",
-    "update": "Edit",
     "titleEdit": "Edit Details",
     "titleAdd": "Add Details",
     "isConfirmed": "Confirmation",
@@ -373,6 +405,7 @@
     "bioSummaryTranslations": "Translation",
     "birthDate": "Birthday",
     "age": "Age",
+    "years": "Years",
     "sex": "Sex",
     "birthPlace": "Origin",
     "city": "City",

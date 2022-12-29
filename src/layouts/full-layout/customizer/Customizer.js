@@ -12,12 +12,15 @@ import {
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
+import { useTranslation } from 'react-i18next';
+
 import { setTheme, setDir, setDarkMode } from '../../../redux/actions/custumizerAction';
 import CustomRadio from '../../../components/forms/custom-elements/CustomRadio';
 
 const SidebarWidth = '320px';
 
 const Customizer = () => {
+  const { t } = useTranslation();
   const [showDrawer, setShowDrawer] = useState(false);
   const customizer = useSelector((state) => state.CustomizerReducer);
   const dispatch = useDispatch();
@@ -76,7 +79,7 @@ const Customizer = () => {
         }}
       >
         <Box p={2}>
-          <Typography variant="h3">Settings</Typography>
+          <Typography variant="h3">{t('setting.title')}</Typography>
         </Box>
         <Divider />
         <Box p={2}>
