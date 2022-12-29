@@ -176,6 +176,20 @@ function EnhancedTableHead(props) {
       width: '250px',
     },
     {
+      id: 'affiliateLinkUrl',
+      numeric: false,
+      disablePadding: true,
+      label: t('need.affiliateLinkUrl'),
+      width: '100px',
+    },
+    {
+      id: 'link',
+      numeric: false,
+      disablePadding: true,
+      label: t('need.link'),
+      width: '100px',
+    },
+    {
       id: 'sayName',
       numeric: false,
       disablePadding: true,
@@ -526,8 +540,8 @@ const ReportStatusTable = () => {
             <Box display="flex" alignItems="center">
               <CardMedia
                 component="img"
-                image={row.img}
-                alt={row.img}
+                image={row.img || row.imageUrl}
+                alt={row.img || row.imageUrl}
                 sx={{
                   borderRadius: '10px',
                   height: '70px',
@@ -822,6 +836,7 @@ const ReportStatusTable = () => {
       status: PropTypes.number,
       type: PropTypes.number,
       img: PropTypes.string,
+      imageUrl: PropTypes.string,
       amount: PropTypes.number,
       created_by_id: PropTypes.number,
       created: PropTypes.string,

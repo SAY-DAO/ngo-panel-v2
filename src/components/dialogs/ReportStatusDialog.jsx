@@ -51,28 +51,34 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
         { title: t('need.needDialogue.product.5'), id: 5 },
       ]);
     }
-  }, [statusId, currentStatus]);
+  }, [need, statusId, currentStatus]);
 
   const handleClose = () => {
     setStatusDialog(false);
   };
-  console.log(currentStatus);
   return (
     <div>
       {currentStatus && (
         <Dialog open={statusDialog} onClose={handleClose}>
-          <DialogTitle>{t('need.needStatus_title')} </DialogTitle>
+          <DialogTitle sx={{ p: 2, textAlign: 'center', fontSize: '1.2rem' }}>
+            {t('need.needStatus_title')}{' '}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText sx={{ p: 2, textAlign: 'center' }}>{need.title}</DialogContentText>
             <Typography>From</Typography>
-            <TextField sx={{ p: 2 }} disabled id="outlined-disabled" defaultValue={currentStatus} />
+            <TextField
+              sx={{ p: 2 }}
+              disabled
+              id="outlined-disabled"
+              defaultValue={`${need.status} - ${currentStatus}`}
+            />
             <Typography>To</Typography>
-            <Grid container spacing={2} justifyContent="center">
+            <Grid container spacing={2} sx={{ p: 2 }} justifyContent="center">
               <Grid item>
                 {optionsStatus && (
                   <Autocomplete
-                    id="asynchronous-myChildren"
-                    sx={{ minWidth: '350px' }}
+                    id="asynchronous"
+                    sx={{ minWidth: '220px' }}
                     open={openStatus}
                     onOpen={() => {
                       setOpenStatus(true);
@@ -91,24 +97,15 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
                         </>
                       </Box>
                     )}
-                    renderInput={(params) => <TextField {...params} label="My Children" />}
+                    renderInput={(params) => <TextField {...params} label="New Status..." />}
                   />
                 )}
               </Grid>
             </Grid>
-            <TextField
-              autoFocus
-              margin="dense"
-              id=""
-              label="Email Address"
-              type="email"
-              fullWidth
-              variant="standard"
-            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Subscribe</Button>
+            <Button onClick={handleClose}>Update</Button>
           </DialogActions>
         </Dialog>
       )}
