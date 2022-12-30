@@ -12,7 +12,7 @@ import './assets/styles/css/style.css';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement); // createRoot(container!) if you use TypeScript
-console.log(root);
+
 root.render(
   <Provider store={store}>
     <Suspense fallback={<Spinner />}>

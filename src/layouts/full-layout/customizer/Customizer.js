@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Fab,
   Drawer,
@@ -10,6 +10,7 @@ import {
   Typography,
   Tooltip,
 } from '@mui/material';
+import i18next from 'i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import { setTheme, setDir, setDarkMode } from '../../../redux/actions/custumizerAction';
@@ -21,6 +22,15 @@ const Customizer = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const customizer = useSelector((state) => state.CustomizerReducer);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (customizer.activeDir === 'ltr') {
+      i18next.changeLanguage('en');
+    } else {
+      i18next.changeLanguage('fa');
+    }
+  }, [customizer]);
+
   const thColors = [
     {
       id: 1,

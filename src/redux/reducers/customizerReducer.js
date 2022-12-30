@@ -1,7 +1,7 @@
 import { THEME_COLOR, NAVBAR_BG, SIDEBAR_BG, DIRECTION, DARK_THEME } from '../constants';
 
 const INIT_STATE = {
-  activeDir: 'ltr',
+  activeDir: 'rtl',
   activeNavbarBg: '#0b70fb', // This can be any color,
   activeSidebarBg: '#ffffff', // This can be any color
   activeMode: 'dark', // This can be light or dark
