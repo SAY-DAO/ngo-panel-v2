@@ -1,5 +1,14 @@
 {
+  "error": {
+    "nestDown": "Nest server is not running"
+  },
+  "image":{
+    "edit": "Edit photo",
+    "scale": "Zoom",
+    "rotate": "Rotate"
+  },
   "button": {
+    "update": "Update",
     "skip": "Skip",
     "register": "Register",
     "login": "Login",
@@ -35,10 +44,27 @@
     },
     "timeout": "Retry",
     "continue": "Accept",
+    "close": "Close",
     "cancel": "Decline",
-    "delete": "Delete"
+    "delete": "Delete",
+    "wallet": {
+      "connect": "Connect Wallet"
+    }
   },
-
+  "table":{
+    "rowCount": "Rows per page",
+    "dense": "Dense padding"
+  },
+  "BCrumb":{
+    "home": "My Page",
+    "add": "Add",
+    "childrenEdit": "Edit Child",
+    "childrenList": "Children List",
+    "needsEdit": "Edit Need",
+    "needsList": "Needs List",
+    "ngosList": "NGOs List",
+    "reportsList": "Reports List"
+  },
   "currency": {
     "toman": " T"
   },
@@ -55,13 +81,11 @@
     },
     "farsiRelatives": false
   },
-
   "forgot-password": {
     "title": "Forgot password",
     "content": "Enter your email address.",
     "successNotif": "A link has been sent to you for changing your password."
   },
-
   "childData": {
     "needCategory": {
       "urgent": "Urgent",
@@ -74,14 +98,15 @@
     "growYourFamily": "Grow Your Family",
     "story": "Story"
   },
-
   "needPage": {
     "successBank": "Payment was successful"
   },
-
   "report": {
     "history": {
-      "title": "History"
+      "title": "History",
+      "status": "Status",
+      "receipt": "Receipts",
+      "date": "Date"
     },
     "deleteModal": {
       "confirm": "Are you sure you want to delete?"
@@ -128,7 +153,6 @@
       "description": "Description"
     }
   },
-
   "sidebar": {
     "swHeader": "Social Worker",
     "myPage": "My Page",
@@ -162,6 +186,8 @@
     "add": "Add"
   },
   "socialWorker": {
+    "title": "Social Worker",
+    "myChildren": "My Children",
     "noChildren": "No Children",
     "socialWorker": "Social Worker",
     "isActive": "Status",
@@ -169,6 +195,10 @@
     "update": "Edit",
     "updated": "Successfully Updated!",
     "migrated": "Successfully Migrated!",
+    "migrate":{
+      "from": "From",
+      "to": "To"
+    },
     "titleEdit": "Edit Details",
     "titleAdd": "Add Details",
     "generatedCode": "Code",
@@ -217,6 +247,7 @@
     }
   },
   "ngo": {
+    "title": "NGO",
     "isActive": "Status",
     "update": "Edit",
     "titleEdit": "Edit Details",
@@ -249,6 +280,14 @@
     }
   },
   "need": {
+    "title": "Needs",
+    "autoCompleteType": "Service/Product",
+    "autoCompleteStatus": "Status",
+    "pie":{
+      "ok": "OK",
+      "unpayable": "Unpayable",
+      "unconfirmed": "Not Confirmed"
+    },
     "id": "Need id",
     "titleEdit": "Edit Need Details",
     "titleAdd": "Add Need Details",
@@ -261,7 +300,7 @@
       "fa": "Need Name (fa)",
       "en": "Need Name (en)"
     },
-    "title": "E-commerce Title",
+    "etitle": "E-commerce Title",
     "cost": "Cost",
     "paid": "Paid",
     "progress": "Progress",
@@ -269,7 +308,11 @@
     "link": "Link",
     "affiliateLinkUrl": "Aff. Link",
     "type_name": "Type",
+    "stats": "Needs Stats",
+    "statsRatio": "Done / Total",
+    "newStatus": "New Status...",
     "provider": "Provider Name",
+    "providerSelect": "Please select Provider",
     "providers": {
       "service": "service",
       "product": "product"
@@ -311,7 +354,7 @@
       "update": "Update",
       "add": "Add Need"
     },
-    "needStatus_title": "Change Need Status",
+    "needStatusTitle": "Change Need Status",
     "needStatus": {
       "1": "Partial payment",
       "2": "Complete payment",
@@ -366,12 +409,13 @@
     }
   },
   "child": {
+    "title": "Child",
     "id": "Id",
     "titleEdit": "Edit Details",
     "titleAdd": "Add Details",
-    "isConfirmed": "Confirmation",
+    "isConfirmed": "Is Condirmed",
     "existence_status": "Existence",
-    "isDeleted": "Deletion",
+    "isDeleted": "Is Deleted",
     "status": "Status",
     "sayname_translations": {
       "fa": "Farsi SAY name (fa)",
@@ -407,14 +451,43 @@
     "age": "Age",
     "years": "Years",
     "sex": "Sex",
+    "sexKind": {
+      "male": "Male",
+      "female": "Female"
+    },
     "birthPlace": "Origin",
     "city": "City",
     "state": "State",
     "country": "Country",
     "housingStatus": "Housing",
+    "housingCondition":{
+      "none": "-",
+      "homeless": "Homeless",
+      "resident": "Resident",
+      "careCenters":"Care Centers"
+    },
     "phoneNumber": "Phone Number",
     "address": "Address",
     "education": "Education",
+    "educationondition":{
+      "deprived": "Deprived",
+      "kinderGarten": "KinderGarten",
+      "notAttending": "Not Attending",
+      "preSchool": "Pre School",
+      "firstGrade": "First Grade",
+      "secondGrade": "Second Grade",
+      "thirdGrade": "Third Grade",
+      "fourthGrade": "Fourth Grade",
+      "fifthGrade": "Fifth Grade",
+      "sixGrade": "Six Grade",
+      "sevenGrade": "Seven Grade",
+      "eightGrade": "Eight Grade",
+      "nineGrade": "Nine Grade",
+      "tenGrade": "Ten Grade",
+      "elevenGrade": "Eleven Grade",
+      "twelveGrade": "Twelve Grade",
+      "thirteenGrade": "Thirteen Grade"
+    },
     "confirmUser": "Confirm User",
     "confirmDate": "Confirm Date",
     "done_needs_count": "Done Count",
@@ -446,36 +519,26 @@
       }
     }
   },
-  "sidebar": {
-    "swHeader": "Social Worker Gateway",
-    "myPage": "My Profile",
-    "children": {
-      "title": "Children"
+  "myProfile": {
+    "viewAs": "View as ...",
+    "countRecent": {
+      "title": "Display Recent Needs",
+      "count": {
+        "ten": "Ten",
+        "fifty": "Fifty",
+        "hundred": "Hundred"
+      }
     },
-    "needs": {
-      "title": "Needs"
-    },
-    "milestone": {
-      "title": "Milestornes"
-    },
-    "reports": "Reports",
-    "adminHeader": "Admin",
-    "ngos": {
-      "title": "NGOs"
-    },
-    "providers": {
-      "title": "Providers"
-    },
-    "socialWorkers": {
-      "title": "Social Workers",
-      "migrate": "Migrate"
-    },
-    "categories": {
-      "title": "Categories"
-    },
-    "daoHeader": "DAO",
-    "dashboard": "Dashboard",
-    "list": "List",
-    "add": "Add"
+    "signed": "Signed",
+    "createdChildren": "Created Children",
+    "createdNeeds": "Created Needs",
+    "taskManager": {
+      "title": {
+        "notPaid": "Not Paid",
+        "paied": "Payment",
+        "purchased": "Transferred/Purchased",
+        "done": "Done"
+      }
+    }
   }
 }

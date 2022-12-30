@@ -52,20 +52,21 @@ import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
 import { getOrganizedNeeds } from '../../utils/helpers';
 
-const BCrumb = [
-  {
-    to: '/need/list',
-    title: 'Needs List',
-  },
-  {
-    title: 'Add',
-  },
-];
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
+
+  const BCrumb = [
+    {
+      to: '/need/list',
+      title: t("BCrumb.needsList"),
+    },
+    {
+      title:  t("BCrumb.add"),
+    },
+  ];
 
   const [isAffChecked, setIsAffChecked] = useState(false);
   const [isUrgentChecked, setIsUrgentChecked] = useState(false);
@@ -332,7 +333,7 @@ const NeedAdd = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="My Children"
+                label={t("socialWorker.myChildren")}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -347,7 +348,7 @@ const NeedAdd = () => {
           />
         </Grid>
       </Grid>
-      {!providerList || loadingChild || loadingChildren ? (
+      {(loadingChild || loadingChildren) ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -602,7 +603,7 @@ const NeedAdd = () => {
                                   onChange={handleUrgentChange}
                                 />
                               }
-                              label={`${t('need.isUrgent')}?`}
+                              label={`${t('need.isUrgent')}`}
                             />
                           </Grid>
                         </Grid>
@@ -669,7 +670,7 @@ const NeedAdd = () => {
                               control={control}
                               register={{ ...register('provider', { required: true }) }}
                             >
-                              {providerList
+                              {providerList ? providerList
                                 .filter((p) => p.isActive === true)
                                 .map((p) => (
                                   <MenuItem key={p.id} value={p.id}>
@@ -688,7 +689,15 @@ const NeedAdd = () => {
                                       </Grid>
                                     </Grid>
                                   </MenuItem>
-                                ))}
+                                )) : <MenuItem >
+                                <Grid container spacing={2}>
+                                  <Grid item>
+                                    <Typography color="error" variant="body1" sx={{ p: 1 }}>
+                                      {t('error.nestDown')}
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              </MenuItem>}
                             </CustomSelect>
                           </Grid>
                           <Grid item xs={6}>
@@ -701,10 +710,10 @@ const NeedAdd = () => {
                               id="type-controlled-open-select"
                             >
                               {watch('provider') &&
-                              providerList &&
-                              providerList.filter((p) => p.id === watch('provider'))[0]
+                                providerList &&
+                                providerList.filter((p) => p.id === watch('provider'))[0]
                                 ? providerList.filter((p) => p.id === watch('provider'))[0].typeName
-                                : 'Please select Provider'}
+                                : t('need.providerSelect')}
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
@@ -728,7 +737,7 @@ const NeedAdd = () => {
                                   onChange={handleAffChange}
                                 />
                               }
-                              label={`${t('need.affiliateLinkUrl')}?`}
+                              label={`${t('need.affiliateLinkUrl')}`}
                             />
                           </Grid>
                         </Grid>

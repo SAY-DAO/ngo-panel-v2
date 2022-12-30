@@ -118,42 +118,49 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('ngo.childrenCount'),
+      width: '150px',
     },
     {
       id: 'currentChildrenCount',
       numeric: false,
       disablePadding: false,
       label: t('ngo.currentChildrenCount'),
+      width: '200px',
     },
     {
       id: 'socialWorkerCount',
       numeric: false,
       disablePadding: false,
       label: t('ngo.socialWorkerCount'),
+      width: '200px',
     },
     {
       id: 'currentSocialWorkerCount',
       numeric: false,
       disablePadding: false,
       label: t('ngo.currentSocialWorkerCount'),
+      width: '200px',
     },
     {
       id: 'registerDate',
       numeric: false,
       disablePadding: false,
       label: t('ngo.registerDate'),
+      width: '180px',
     },
     {
       id: 'created',
       numeric: false,
       disablePadding: false,
       label: t('ngo.created'),
+      width: '180px',
     },
     {
       id: 'updated',
       numeric: false,
       disablePadding: false,
       label: t('ngo.updated'),
+      width: '180px',
     },
     {
       id: 'website',
@@ -181,7 +188,8 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-          >
+            sx={{ minWidth: headCell.width }}
+            >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
@@ -264,20 +272,22 @@ EnhancedTableToolbar.propTypes = {
   selected: PropTypes.array.isRequired,
 };
 
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'NGOs Table',
-  },
-];
 
 const NgoTable = ({ ngoList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
+
+  const BCrumb = [
+    {
+      to: '/',
+      title: t("BCrumb.home"),
+    },
+    {
+      title: t("BCrumb.ngosList"),
+    },
+  ];
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('created');
   const [selected, setSelected] = useState([]);
@@ -535,6 +545,7 @@ const NgoTable = ({ ngoList }) => {
               </TableContainer>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
+                labelRowsPerPage={t('table.rowCount')}
                 component="div"
                 count={ngoList.length}
                 rowsPerPage={rowsPerPage}
@@ -545,7 +556,7 @@ const NgoTable = ({ ngoList }) => {
             </Paper>
             <FormControlLabel
               control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
+              label={t('table.dense')}
             />
           </Box>
         </CardContent>

@@ -13,11 +13,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import FeatherIcon from 'feather-icons-react';
 import PageContainer from '../../components/container/PageContainer';
-import CoverCard from '../../components/profile/CoverCard';
-import TaskCard from '../../components/profile/TaskCard';
+import CoverCard from '../../components/my-profile/CoverCard';
+import TaskCard from '../../components/my-profile/TaskCard';
 import {
   fetchSocialWorkerProfile,
   fetchSocialWorkersList,
@@ -32,8 +33,9 @@ import {
 } from '../../utils/helpers';
 import { SW_PROFILE_RESET } from '../../redux/constants/socialWorkerConstants';
 
-const SocialWorkerProfile = () => {
+const MyProfile = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [limit, setLimit] = useState(10);
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
@@ -197,7 +199,7 @@ const SocialWorkerProfile = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="View As ..."
+                  label={t('myProfile.viewAs')}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
@@ -222,19 +224,19 @@ const SocialWorkerProfile = () => {
                 <Grid item>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
-                      Display Recent Needs
+                      {t('myProfile.countRecent.title')}
                     </InputLabel>
                     <Select
                       sx={{ minWidth: '200px' }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={limit}
-                      label="Display Recent Needs"
+                      label={t('myProfile.countRecent.title')}
                       onChange={handleChange}
                     >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={50}>Fifty</MenuItem>
-                      <MenuItem value={100}>Hundred</MenuItem>
+                      <MenuItem value={10}>{t('myProfile.countRecent.count.ten')}</MenuItem>
+                      <MenuItem value={50}>{t('myProfile.countRecent.count.fifty')}</MenuItem>
+                      <MenuItem value={100}>{t('myProfile.countRecent.count.hundred')}</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -249,28 +251,28 @@ const SocialWorkerProfile = () => {
                 <Grid container spacing={0}>
                   <Grid item xs={3}>
                     <Card elevation={4}>
-                      <Typography>Not Paid</Typography>
+                      <Typography>{t('myProfile.taskManager.title.notPaid')}</Typography>
                       {organizedNeeds[0] &&
                         organizedNeeds[0].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
                   </Grid>
                   <Grid item xs={3}>
                     <Card elevation={4}>
-                      <Typography>Payment</Typography>
+                      <Typography>{t('myProfile.taskManager.title.paid')}</Typography>
                       {organizedNeeds[1] &&
                         organizedNeeds[1].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
                   </Grid>
                   <Grid item xs={3}>
                     <Card elevation={4}>
-                      <Typography>Transferred/Purchased</Typography>
+                      <Typography>{t('myProfile.taskManager.title.purchased')}</Typography>
                       {organizedNeeds[2] &&
                         organizedNeeds[2].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
                   </Grid>
                   <Grid item xs={3}>
                     <Card elevation={4}>
-                      <Typography>Done</Typography>
+                      <Typography>{t('myProfile.taskManager.title.done')}</Typography>
                       {organizedNeeds[3] &&
                         organizedNeeds[3].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
@@ -289,4 +291,4 @@ const SocialWorkerProfile = () => {
   );
 };
 
-export default SocialWorkerProfile;
+export default MyProfile;

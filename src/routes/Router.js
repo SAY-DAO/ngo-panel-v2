@@ -15,9 +15,7 @@ const SocialWorkerAdd = Loadable(lazy(() => import('../pages/socialWorkers/Socia
 const SocialWorkerMigrate = Loadable(
   lazy(() => import('../pages/socialWorkers/SocialWorkerMigrate')),
 );
-const SocialWorkerProfile = Loadable(
-  lazy(() => import('../pages/socialWorkers/SocialWorkerProfile')),
-);
+const SocialWorkerProfile = Loadable(lazy(() => import('../pages/my-profile/MyProfile')));
 const ProviderList = Loadable(lazy(() => import('../pages/providers/ProviderList')));
 const ProviderEdit = Loadable(lazy(() => import('../pages/providers/ProviderEdit')));
 const ProviderAdd = Loadable(lazy(() => import('../pages/providers/ProviderAdd')));

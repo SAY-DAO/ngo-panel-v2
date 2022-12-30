@@ -97,6 +97,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.id'),
+      width: '150px',
     },
     {
       id: 'img',
@@ -110,7 +111,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: true,
       label: t('need.affiliateLinkUrl'),
-      width: '100px',
+      width: '200px',
     },
     {
       id: 'link',
@@ -130,7 +131,7 @@ function EnhancedTableHead(props) {
       id: 'title',
       numeric: false,
       disablePadding: false,
-      label: t('need.title'),
+      label: t('need.etitle'),
       width: '200px',
     },
     {
@@ -312,20 +313,20 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'Needs Table',
-  },
-];
-
 const ReportStatusTable = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+
+  const BCrumb = [
+    {
+      to: '/',
+      title: t("BCrumb.home"),
+    },
+    {
+      title: t("BCrumb.reportsList"),
+    },
+  ];
   const [statusDialog, setStatusDialog] = useState(false);
   const [statusNeed, setStatusNeed] = useState();
 
@@ -586,10 +587,10 @@ const ReportStatusTable = () => {
                     row.status === 2 // Complete payment
                       ? '/images/hand-orange.svg'
                       : row.status === 3 && typeId === 1 // Purchased Product
-                      ? '/images/package-orange.svg'
-                      : (row.status === 4 && typeId === 1) || (row.status === 3 && typeId === 0) // Sent product to NGO
-                      ? '/images/package-orange.svg'
-                      : '/images/child-orange.svg' // Delivered to Child
+                        ? '/images/package-orange.svg'
+                        : (row.status === 4 && typeId === 1) || (row.status === 3 && typeId === 0) // Sent product to NGO
+                          ? '/images/package-orange.svg'
+                          : '/images/child-orange.svg' // Delivered to Child
                   }
                   alt="icon"
                   sx={{
@@ -655,10 +656,9 @@ const ReportStatusTable = () => {
                     backgroundColor: (theme) => theme.palette.grey.A700,
                     p: '5px 15px',
                     color: (theme) =>
-                      `${
-                        theme.palette.mode === 'dark'
-                          ? theme.palette.grey.A200
-                          : 'rgba(0, 0, 0, 0.87)'
+                      `${theme.palette.mode === 'dark'
+                        ? theme.palette.grey.A200
+                        : 'rgba(0, 0, 0, 0.87)'
                       }`,
                   }}
                 >
@@ -667,9 +667,9 @@ const ReportStatusTable = () => {
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Date</TableCell>
-                      <TableCell align="right">Receipt</TableCell>
+                      <TableCell sx={{fontWeight: 600}}>{t('report.history.status')}</TableCell>
+                      <TableCell sx={{fontWeight: 600}}>{t('report.history.date')}</TableCell>
+                      <TableCell align="right" sx={{fontWeight: 600}}>{t('report.history.receipt')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -722,17 +722,15 @@ const ReportStatusTable = () => {
                                     key={p.id}
                                   >
                                     {p.gateway_track_id
-                                      ? `${index + 1}: ${
-                                          p.gateway_track_id
-                                        } => ${p.total_amount.toLocaleString()}`
+                                      ? `${index + 1}: ${p.gateway_track_id
+                                      } => ${p.total_amount.toLocaleString()}`
                                       : `Wallet => ${p.total_amount.toLocaleString()}`}
                                   </Typography>
                                 );
                               }
                               return (
-                                <Typography variant="subtitle2" key={p.id}>{`${
-                                  index + 1
-                                }: SAY- ${p.total_amount.toLocaleString()}`}</Typography>
+                                <Typography variant="subtitle2" key={p.id}>{`${index + 1
+                                  }: SAY- ${p.total_amount.toLocaleString()}`}</Typography>
                               );
                             })}
                             placement="top-end"
@@ -881,7 +879,7 @@ const ReportStatusTable = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Ngo"
+                  label={t("ngo.title")}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
@@ -908,7 +906,10 @@ const ReportStatusTable = () => {
               getOptionLabel={(option) => `${option.title}`}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               options={optionsType}
-              renderInput={(params) => <TextField {...params} label="Service/Product" />}
+              renderInput={(params) => <TextField {...params}
+                label={t("need.autoCompleteType")}
+
+              />}
             />
           </Grid>
           <Grid item md={3} xs={12}>
@@ -920,7 +921,9 @@ const ReportStatusTable = () => {
                 getOptionLabel={(option) => `${option.id} - ${option.title}`}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 options={optionStatus}
-                renderInput={(params) => <TextField {...params} label="Status" />}
+                renderInput={(params) => <TextField {...params}
+                  label={t("need.autoCompleteStatus")}
+                />}
               />
             )}
           </Grid>
@@ -975,6 +978,7 @@ const ReportStatusTable = () => {
                   </TableContainer>
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
+                    labelRowsPerPage={t('table.rowCount')}
                     component="div"
                     count={needs.needs.length}
                     rowsPerPage={rowsPerPage}
@@ -985,7 +989,7 @@ const ReportStatusTable = () => {
                 </Paper>
                 <FormControlLabel
                   control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-                  label="Dense padding"
+                  label={t('table.dense')}
                 />
               </Box>
             </CardContent>

@@ -52,11 +52,10 @@ const ChildEdit = () => {
   const BCrumb = [
     {
       to: '/children/list',
-      title: 'Children List',
-      state: childId,
+      title: t("BCrumb.childrenList"),
     },
     {
-      title: 'Edit',
+      title: t("BCrumb.childEdit"),
     },
   ];
 
@@ -655,8 +654,8 @@ const ChildEdit = () => {
                           register={{ ...register('sex') }}
                           error={!!errors.sex}
                         >
-                          <MenuItem value={1}>Female</MenuItem>
-                          <MenuItem value={2}>Male</MenuItem>
+                          <MenuItem value={1}>{t('child.sexKind.female')}</MenuItem>
+                          <MenuItem value={2}>{t('child.sexKind.male')}</MenuItem>
                         </CustomSelect>
                       </FormControl>
                     </Grid>
@@ -674,7 +673,7 @@ const ChildEdit = () => {
                         >
                           {Object.keys(EducationEnum).map((name, index) => (
                             <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
-                              {name}
+                              {t(`child.educationondition.${name}`)}
                             </MenuItem>
                           ))}
                         </CustomSelect>
@@ -717,7 +716,7 @@ const ChildEdit = () => {
                             opacity: '60%',
                           }}
                         >
-                          {getAge(birthDate)} Years
+                          {getAge(birthDate)} {t("child.years")}
                         </Typography>
                       </Grid>
                       <Grid item md={4} xs={12}>
@@ -899,11 +898,11 @@ const ChildEdit = () => {
                             error={!!errors.housingStatus}
                           >
                             <MenuItem value="">
-                              <em>None</em>
+                              <em>{t(`child.housingCondition.none`)}</em>
                             </MenuItem>
                             {Object.keys(HousingStatusEnum).map((name, index) => (
                               <MenuItem key={name} value={Object.values(HousingStatusEnum)[index]}>
-                                {name}
+                                {t(`child.housingCondition.${name}`)}
                               </MenuItem>
                             ))}
                           </CustomSelect>

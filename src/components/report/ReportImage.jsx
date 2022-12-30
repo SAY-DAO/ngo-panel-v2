@@ -161,7 +161,7 @@ export default function ReportImage({ row, statusId }) {
                             />
                           </>
                         }
-                        placement="left"
+                        placement="top"
                       >
                         <Box
                           sx={{
@@ -247,7 +247,9 @@ export default function ReportImage({ row, statusId }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleImageClose}>Close</Button>
+          <Button onClick={handleImageClose}>
+          {t('button.close')}
+          </Button>
         </DialogActions>
       </Dialog>
       <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />

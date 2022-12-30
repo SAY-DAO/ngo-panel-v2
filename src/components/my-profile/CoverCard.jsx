@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import InterestsIcon from '@mui/icons-material/Interests';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
+import { useTranslation } from 'react-i18next';
 import cover from '../../assets/images/cover.jpg';
 import { fetchSocialWorkerById } from '../../redux/actions/socialWorkerAction';
 import { RolesEnum } from '../../utils/helpers';
 
 const CoverCard = ({ swId }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const swProfile = useSelector((state) => state.swProfile);
   const { profile } = swProfile;
@@ -97,8 +99,8 @@ const CoverCard = ({ swId }) => {
                   }}
                 >
                   {result && result.typeId === RolesEnum.SAY_SUPERVISOR
-                    ? 'Confirmed Needs'
-                    : 'Created Needs'}
+                    ? t('myProfile.createdChildren')
+                    : t('myProfile.createdNeeds')}
                 </Typography>
               </Grid>
               <Grid
@@ -135,8 +137,8 @@ const CoverCard = ({ swId }) => {
                   }}
                 >
                   {result && result.typeId === RolesEnum.SAY_SUPERVISOR
-                    ? 'Confirmed Children'
-                    : 'Created Children'}
+                    ? t('myProfile.createdChildren')
+                    : t('myProfile.createdNeeds')}
                 </Typography>
               </Grid>
               <Grid
@@ -172,7 +174,8 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  Signed
+                  {t('myProfile.signed')}
+
                 </Typography>
               </Grid>
             </Grid>
@@ -314,7 +317,7 @@ const CoverCard = ({ swId }) => {
                   },
                 }}
               >
-                Connect Wallet
+                {t('button.wallet.connect')}
               </Button>
             </Box>
           </Grid>

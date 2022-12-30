@@ -235,6 +235,7 @@ const BCrumb = [
 const ProviderTable = ({ providerList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
@@ -259,6 +260,7 @@ const ProviderTable = ({ providerList }) => {
   };
 
   const handleClick = (event, id) => {
+
     // const selectedIndex = selected.indexOf(id);
     // const newSelected = [];
     // setSelected(selectedIndex);
@@ -448,6 +450,7 @@ const ProviderTable = ({ providerList }) => {
               </TableContainer>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
+                labelRowsPerPage={t('table.rowCount')}
                 component="div"
                 count={providerList.length}
                 rowsPerPage={rowsPerPage}
@@ -458,7 +461,7 @@ const ProviderTable = ({ providerList }) => {
             </Paper>
             <FormControlLabel
               control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
+              label={t('table.dense')}
             />
           </Box>
         </CardContent>

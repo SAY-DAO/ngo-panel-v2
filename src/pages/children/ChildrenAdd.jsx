@@ -46,21 +46,23 @@ import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
 import { getAge, EducationEnum, HousingStatusEnum } from '../../utils/helpers';
 
-const BCrumb = [
-  {
-    to: '/children/list',
-    title: 'Children List',
-  },
-  {
-    title: 'Add',
-  },
-];
+
 
 const ChildAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
 
+  const BCrumb = [
+    {
+      to: '/children/list',
+      title: t("BCrumb.childrenList"),
+    },
+    {
+      title:  t("BCrumb.add"),
+    },
+  ];
+  
   const [finalAvatarFile, setFinalAvatarFile] = useState();
   const [finalSleptAvatarFile, setFinalSleptAvatarFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
@@ -320,7 +322,7 @@ const ChildAdd = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Ngo"
+                label={t("ngo.title")}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -372,7 +374,7 @@ const ChildAdd = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Social Worker"
+                label={t("socialWorker.title")}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -789,7 +791,7 @@ const ChildAdd = () => {
                             >
                               {Object.keys(EducationEnum).map((name, index) => (
                                 <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
-                                  {name}
+                                {t(`child.educationondition.${name}`)}
                                 </MenuItem>
                               ))}
                             </CustomSelect>
@@ -833,7 +835,7 @@ const ChildAdd = () => {
                                 opacity: '60%',
                               }}
                             >
-                              {getAge(birthDate)} Years
+                              {getAge(birthDate)} {t("child.years")}
                             </Typography>
                           </Grid>
                           <Grid item md={4} xs={12}>
@@ -1008,14 +1010,14 @@ const ChildAdd = () => {
                                 error={!!errors.housingStatus}
                               >
                                 <MenuItem value="">
-                                  <em>None</em>
+                                <em>{t(`child.housingCondition.none`)}</em>
                                 </MenuItem>
                                 {Object.keys(HousingStatusEnum).map((name, index) => (
                                   <MenuItem
                                     key={name}
                                     value={Object.values(HousingStatusEnum)[index]}
                                   >
-                                    {name}
+                                    {t(`child.housingCondition.${name}`)}
                                   </MenuItem>
                                 ))}
                               </CustomSelect>

@@ -282,6 +282,7 @@ const BCrumb = [
 const SocialWorkerTable = ({ swList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
@@ -534,6 +535,7 @@ const SocialWorkerTable = ({ swList }) => {
               </TableContainer>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
+                labelRowsPerPage={t('table.rowCount')}
                 component="div"
                 count={swList.length}
                 rowsPerPage={rowsPerPage}
@@ -544,7 +546,7 @@ const SocialWorkerTable = ({ swList }) => {
             </Paper>
             <FormControlLabel
               control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
+              label={t('table.dense')}
             />
           </Box>
         </CardContent>

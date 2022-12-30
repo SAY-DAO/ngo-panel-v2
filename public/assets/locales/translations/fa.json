@@ -1,43 +1,6 @@
 {
-  "button": {
-    "skip": "می‌دانم",
-    "register": "ثبت نام",
-    "login": "ورود",
-    "confirm": "تایید",
-    "submit": "ارسال کد",
-    "understand": "فهمیدم",
-    "save": "ثبت",
-    "pay": "پرداخت کنید",
-    "addToCart": "افزودن به سبد خرید",
-    "continueShopping": "ادامه خرید",
-    "goToCart": "سبد خرید",
-    "unpayable": "ناموجود",
-    "payFromCredit": "پرداخت از کیف پول",
-    "leave": {
-      "yes": "می‌دانم",
-      "no": "می‌مانم"
-    },
-    "accept": {
-      "yes": "می‌خواهم",
-      "no": "نمی‌خواهم"
-    },
-    "inviteRoleSelect": {
-      "yes": "بله، می‌تونه",
-      "no": "هنوز زوده"
-    },
-    "changeLanguage": {
-      "show": "EN",
-      "key": "en"
-    },
-    "joinOption": {
-      "byPhone": "ثبت نام با شماره تلفن",
-      "byEmail": "ثبت نام با ایمیل"
-    },
-    "timeout": "تلاش دوباره",
-    "continue": "ادامه",
-    "cancel": "انصراف"
-  },
   "error": {
+    "nestDown": "مشکل ارتباط با سرور Nest",
     "weak": "ضعیف",
     "okay": "متوسط",
     "good": "خوب",
@@ -73,18 +36,72 @@
     "timeout": "ای وای ... <1/>یه چیزی از کار افتاده، ممکنه بعدا بیای؟",
     "emptyCart": "سبد خرید شما خالی است"
   },
+  "image":{
+    "edit": "ویرایش عکس",
+    "scale": "بزرگ‌نمایی",
+    "rotate": "چرخش"
+  },
+  "button": {
+    "update": "ویرایش",
+    "skip": "می‌دانم",
+    "register": "ثبت نام",
+    "login": "ورود",
+    "confirm": "تایید",
+    "submit": "ارسال کد",
+    "understand": "فهمیدم",
+    "save": "ثبت",
+    "pay": "پرداخت کنید",
+    "addToCart": "افزودن به سبد خرید",
+    "continueShopping": "ادامه خرید",
+    "goToCart": "سبد خرید",
+    "unpayable": "ناموجود",
+    "payFromCredit": "پرداخت از کیف پول",
+    "leave": {
+      "yes": "می‌دانم",
+      "no": "می‌مانم"
+    },
+    "accept": {
+      "yes": "می‌خواهم",
+      "no": "نمی‌خواهم"
+    },
+    "inviteRoleSelect": {
+      "yes": "بله، می‌تونه",
+      "no": "هنوز زوده"
+    },
+    "changeLanguage": {
+      "show": "EN",
+      "key": "en"
+    },
+    "joinOption": {
+      "byPhone": "ثبت نام با شماره تلفن",
+      "byEmail": "ثبت نام با ایمیل"
+    },
+    "timeout": "تلاش دوباره",
+    "delete": "حذف",
+    "continue": "ادامه",
+    "cancel": "انصراف",
+    "close": "بستن",
+    "wallet": {
+      "connect": "اتصال کیف پول"
+    }
+  },
+  "table": {
+    "rowCount": "ردیف در هر صفحه",
+    "dense": "فشرده کردن ردیف‌ها"
+  },
+  "BCrumb": {
+    "home": "صفحه من",
+    "add": "اضافه کردن",
+    "childEdit": "ویرایس کودک",
+    "childrenList": "لیست کودکان",
+    "needEdit": "ویرایس نیاز",
+    "needsList": "لیست نیازها",
+    "ngoEdit": "ویرایس کودک",
+    "ngosList": "لیست سمن‌ها",
+    "reportsList": "لیست گزارش‌ها"
+  },
   "divider": {
     "register": "یا"
-  },
-  "placeholder": {
-    "name": "نام",
-    "lastName": "نام خانوادگی",
-    "userName": "نام کاربری",
-    "password": "گذرواژه",
-    "repeatPassword": "تکرار گذرواژه",
-    "email": "ایمیل",
-    "phoneNumber": "شماره تلفن",
-    "code": "کد"
   },
   "currency": {
     "toman": " تومان"
@@ -100,173 +117,12 @@
       "others": "دیگران",
       "say": "SAY"
     },
-    "rolesRelative": {
-      "e": "ِ",
-      "ye": "‌ی"
-    },
     "farsiRelatives": true
-  },
-  "assets": {
-    "language": "fa",
-    "languages": {
-      "en": "انگلیسی",
-      "fa": "فارسی"
-    },
-    "age": " ساله ",
-    "readMore": {
-      "more": "بیش‌تر",
-      "less": "کم‌تر"
-    },
-    "css": {
-      "direction": "rtl",
-      "flex": "flex-row-rev",
-      "eng": "eng",
-      "jus-right": "jus-right",
-      "jus-left": "jus-left",
-      "fontFamily": "iranyekan, roboto !important",
-      "paddingSpace": "padding-right"
-    }
-  },
-  "splash": {
-    "say": "SAY",
-    "title": "صدایی که به گوش شما می‌رسد واقعی است",
-    "content": "بنیانِ بنیادی برای امید و آسودگی"
-  },
-  "add": {
-    "modalDesc": "استفاده از SAY در موبایل ساده‌تر است.",
-    "android": "Android",
-    "androidDesc1": "دکمه Menu را لمس کنید.",
-    "androidDesc2": "گزینه add to home screen را انتخاب کنید.",
-    "ios": "IOS",
-    "iosDesc1": "دکمه Share را لمس کنید.",
-    "iosDesc2": "گزینه add to home screen را انتخاب کنید.",
-    "iosDesc3": "گزینه Add را از سمت راست انتخاب کنید."
-  },
-  "intro": {
-    "title": "خوش آمدید",
-    "slideTitle1": "کودکان واقعی، خانواده‌های مجازی داشته باشند",
-    "slideDesc1": "با SAY کاربران می‌توانند برای کودکان جهان واقعی خانواده‌ای مجازی بسازند، خانواده‌ای بزرگ که بتواند حمایت و مراقبت کافی را برای کودک ایجاد کند."
-  },
-  "join": {
-    "title": "هم‌راهی",
-    "alreadyJoined": "اگر ثبت‌نام کرده‌اید از <1>اینجا</1> وارد شوید."
-  },
-  "comeback": {
-    "title": "ورود",
-    "noAccount": "ثبت نام نکرده‌اید؟ <1>به ما بپیوندید</1>"
   },
   "forgot-password": {
     "title": "فراموشی گذرواژه",
     "content": "ایمیل خود را وارد کنید.",
     "successNotif": "درخواست شما ثبت و لینک تغییر گذرواژه برای شما ارسال شد."
-  },
-  "change-password": {
-    "title": "تغییر گذرواژه",
-    "successNotif": "تغییر گذرواژه با موفقیت انجام شد."
-  },
-  "verify": {
-    "title": "تایید",
-    "content": {
-      "byPhone": "کد تایید به شماره موبایل <1>{{verificationMethod}}</1> ارسال شد.",
-      "byEmail": "کد تایید به نشانی ایمیل <1>{{verificationMethod}}</1> ارسال شد."
-    },
-    "notReceiveCode": "کد را دریافت نکردید؟",
-    "resendCode": "ارسال مجدد کد",
-    "pleaseWait": "کد برای شما دوباره ارسال شد",
-    "wrongEmail": "نشانی ایمیل درست نیست؟",
-    "changeEmail": "تغییر نشانی ایمیل",
-    "wrongPhone": "شماره موبایل درست نیست؟",
-    "changePhone": "تغییر شماره موبایل"
-  },
-  "userLayout": {
-    "home": "خانه",
-    "search": "جستجو",
-    "notifications": "اعلان‌ها",
-    "cart": "سبد خرید",
-    "profile": "پروفایل",
-    "dao": "DAO"
-  },
-  "home": {
-    "title": "کودکان"
-  },
-  "cart": {
-    "title": "سبد خرید",
-    "subtitle": "سبد خرید"
-  },
-  "search": {
-    "title": "سرپرستی کودک",
-    "content": "شما می‌توانید عضوی از یک خانواده باشید یا خانواده‌ی خودتان را بسازید.",
-    "randomSearch": "انتخاب تصادفی",
-    "or": "یا",
-    "brainContent": "در آینده خواهید توانست از هوش مصنوعی SAY‌ استفاده کنید تا از میان تمام کودکان سرپرست کودکی شوید که دنیایی شبیه‌تر به شما دارد.",
-    "brainSearch": "تشخیص SAY Brain",
-    "justRegisterModalDesc": "شما همیشه می‌توانید اطلاعات خود را از قسمت پروفایل ویرایش کنید!"
-  },
-  "search-result": {
-    "exitQuote": {
-      "1": "شما یک کودک را از دست دادید",
-      "2": "آنچه خواندید واقعی بود",
-      "3": "فرصت یک کودک کم‌تر شد",
-      "4": "انسان با انسان برابر است",
-      "5": "تنهایی تا همیشه طول نخواهد کشید"
-    },
-    "title": "اعضای خانواده",
-    "tab1": "اعضای خانواده",
-    "tab2": " انتخاب نقش",
-    "getRole": "باشم",
-    "adoptModal": {
-      "desc": "شما {{roles}}{{rolesRelative}} {{childSayName}} خواهید شد."
-    },
-    "authWarn": {
-      "desc": "اگر می‌خواهید {{roles}}{{rolesRelative}} {{childSayName}} باشید لطفا وارد شوید."
-    },
-    "takenRole": {
-      "1": "متاسفیم، در زمانی که گذشت کاربر دیگری {{roles}}{{rolesRelative}} {{childSayName}} شد.",
-      "2": "دیر شد و یک نفر زودتر از شما {{roles}}{{rolesRelative}} {{childSayName}} شد.",
-      "3": "برای {{roles}}{{rolesRelative}} {{childSayName}} شدن دیر شد."
-    }
-  },
-  "profile": {
-    "editProfile": {
-      "title": "ویرایش",
-      "firstName": "نام",
-      "lastName": "نام خانوادگی",
-      "phoneNumber": "شماره موبایل",
-      "email": "ایمیل",
-      "userName": "نام کاربری",
-      "gender": {
-        "title": "جنسیت",
-        "male": "مرد",
-        "female": "زن",
-        "other": "دیگر!",
-        "none": "-"
-      },
-      "country": "کشور",
-      "city": "شهر",
-      "birthday": "تاریخ تولد!",
-      "pass": "گذرواژه",
-      "pass2": "تکرار گذرواژه",
-      "avatar": {
-        "title": "ویرایش عکس",
-        "scale": "بزرگ‌نمایی",
-        "rotate": "چرخاندن"
-      },
-      "address": "آدرس",
-      "postalCode": "کد پستی"
-    },
-    "badges": "نشان‌ها",
-    "doneNeeds": "انجام شده‌ها",
-    "credit": " اعتبار کیف پول",
-    "content": "با کامل کردن پروفایل، SAY Brain قادر است نتایج بهتری بیابد.",
-    "advanceProfile": "تکمیل اطلاعات",
-    "creditModal": {
-      "thumbnail": "کیف پول شما امکان شارژ مستقیم ندارد...",
-      "modalTitle": "کیف پول",
-      "modalDesc": "این کیف پول امکان شارژ مستقیم ندارد و زمانی شارژ می‌شود که نیازهای پرداخت شده کاهش قیمت یا تخفیف داشته باشند. در این صورت مابه‌التفاوت به کیف پول برگشت داده می‌شود."
-    }
-  },
-  "setting": {
-    "title": "تنظیمات"
   },
   "childData": {
     "needCategory": {
@@ -287,28 +143,58 @@
       "title": "هم‌راهان"
     }
   },
-  "needStatus": {
-    "0": "رسید دریافت پول",
-    "p1": "رسید سفارش کالا",
-    "p2": "رسید تحویل کالا به انجمن",
-    "p3": "رسید تحویل کالا به کودک",
-    "s1": "رسید واریز پول به انجمن",
-    "s2": "رسید انجام سرویس"
-  },
   "report": {
     "history": {
-      "title": "تاریخچه"
+      "title": "آنچه گذشت",
+      "status": "وضعیت",
+      "receipt": "رسیدها",
+      "date": "تاریخ"
     },
     "deleteModal": {
-      "confirm": "برای حذف اطمینان دارید؟"
+      "confirm": "آیا مطمين به حذف رسید هستید؟"
     },
+    "swId": "Social worker’s identification: SW-{{socialWorkerGeneratedCode}}",
+    "dkc": "Order: DKC-{{dkc}}",
+    "p2s2": {
+      "img": "https://sayapp.company/public/resources/img/done.jpg",
+      "title": "One of {{childSayName}}’s needs is completely done",
+      "paragraph": "With your collaborations, all expenses for {{needName}} has been paid for on {{date}}."
+    },
+    "p3": {
+      "img": "https://sayapp.company/public/resources/img/purchased.jpg",
+      "title": "Purchase receipt for {{childSayName}}’s needs",
+      "paragraph": "On {{date}} {{needName}} has been ordered for {{childSayName}} from online retailer."
+    },
+    "p4": {
+      "img": "https://sayapp.company/public/resources/img/ngo_delivered.jpg",
+      "title": "Product delivered to the NGO notification",
+      "paragraph": "On {{date}} {{needName}} is delivered to the NGO."
+    },
+    "p5": {
+      "img": "https://sayapp.company/public/resources/img/child_delivered.jpg",
+      "title": "Product delivered to {{childSayName}}",
+      "paragraph": "{{needName}} is delivered to {{childSayName}} on {{date}}."
+    },
+    "s3": {
+      "img": "https://sayapp.company/public/resources/img/money.jpg",
+      "title": "Money transfer to the NGO by SAY",
+      "paragraph": "The amount of {{needCost}} Tomans for purchasing {{childSayName}}’s {{needName}}, has been transferred into the NGO’s bank account, on {{date}}."
+    },
+    "s4": {
+      "img": "https://sayapp.company/public/resources/img/child_delivered.jpg",
+      "title": "{{childSayName}}’s {{needName}} has been paid for",
+      "paragraph": "The amount of {{needCost}} Tomans for {{childSayName}}’s {{needName}}, has been paid by the NGO on {{date}}."
+    },
+    "contact": "At SAY, we listen to you.",
+    "address": "4th Floor, No 22, Azarshahr St, Iranshahr St, Karimkhan Zand St, Tehran, Iran",
+    "phoneNumber": "Tel: <1>0 2 1 - 2 2 3 4 7 8 1 4</1>",
+    "download": "Download Report",
     "receipt": {
-      "code": "Receipt Unique Identifier",
-      "title": "عنوان",
+      "code": "شماره رسید",
+      "title": "عنوان رسید",
       "description": "توضیحات"
     }
   },
-
   "sidebar": {
     "swHeader": "مددکار",
     "myPage": "صفحه من",
@@ -341,15 +227,239 @@
     "list": "لیست",
     "add": "اضافه کردن"
   },
+  "socialWorker": {
+    "title": "مددکار",
+    "myChildren": "کودکان من",
+    "noChildren": "No Children",
+    "socialWorker": "Social Worker",
+    "isActive": "Status",
+    "isCoordinator": "Coordinator Status",
+    "update": "Edit",
+    "updated": "Successfully Updated!",
+    "migrate":{
+      "from": "از",
+      "to": "به"
+    },
+    "migrated": "Successfully Migrated!",
+    "titleEdit": "Edit Details",
+    "titleAdd": "Add Details",
+    "generatedCode": "Code",
+    "name": "First Name",
+    "lastName": "Last Name",
+    "nameAndEmail": "Name & Email",
+    "userName": "User Name",
+    "avatarUrl": "Avatar",
+    "typeName": "Type",
+    "ngoName": "NGO",
+    "idNumber": "ID Number",
+    "idCardUrl": "ID Image",
+    "country": "Country",
+    "city": "City",
+    "typeId": "User Permission",
+    "birthDate": "Birthday",
+    "phoneNumber": "Phone Number",
+    "emergencyPhoneNumber": "Urgent Phone",
+    "email": "Email",
+    "telegramId": "Telegram ID",
+    "postalAddress": "Address",
+    "childCount": "Children Count",
+    "needCount": "Needs Count",
+    "lastLoginDate": "Last Log",
+    "button": {
+      "update": "Update",
+      "migrate": "Migrate"
+    },
+    "migrateModal": {
+      "confirm": "Are you sure you want to migrate?"
+    },
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "SOCIAL_WORKER": "Social Worker",
+      "COORDINATOR": "Coordinator",
+      "NGO_SUPERVISOR": "NGO Supervisor",
+      "SAY_SUPERVISOR": "SAY Supervisor",
+      "ADMIN": "Admin",
+      "USER": "User"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
+  },
+  "ngo": {
+    "title": "سازمان مردم نهاد",
+    "isActive": "وضعیت",
+    "update": "ویرایش",
+    "titleEdit": "ویرایش جريیات",
+    "titleAdd": "اضافه کردن",
+    "childrenCount": "تعداد کودکان",
+    "country": "کشور",
+    "state": "استان",
+    "city": "شهر",
+    "currentChildrenCount": "تعداد کودکان فعال",
+    "socialWorkerCount": "تعداد مددکارها",
+    "currentSocialWorkerCount": "تعداد مددکاران فعال",
+    "emailAddress": "ایمیل",
+    "id": "آی‌دی",
+    "name": "نام",
+    "phoneNumber": "تلفن",
+    "postalAddress": "آدرس",
+    "registerDate": "تاریخ ثبت شده",
+    "created": "تاریخ ایجاد",
+    "updated": "تاریخ ویرایش",
+    "website": "وبسایت",
+    "button": {
+      "update": "به‌روزرسانی",
+      "add": "اضافه کردن سمن"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
+  },
+  "need": {
+    "title": "نیازها",
+    "autoCompleteType": "خدمات/کالا",
+    "autoCompleteStatus": "وضعیت",
+    "pie":{
+      "ok": "خوب",
+      "unpayable": "غیر قابل پرداخت",
+      "unconfirmed": "تایید نشده"
+    },
+    "id": "آی‌دی نیاز",
+    "titleEdit": "ویرایش نیاز",
+    "titleAdd": "اضافه کردی نیاز",
+    "titleStatus": "عنوان",
+    "unpayable": "قابل پرداخت",
+    "update": "ویرایش",
+    "imageUrl": "آیکون",
+    "childSayName": "SAY نام",
+    "name": {
+      "fa": "نام نیاز (fa)",
+      "en": "نام نیاز (en)"
+    },
+    "etitle": "عنوان در فروشگاه",
+    "cost": "قیمت",
+    "paid": "پرداختی",
+    "progress": "پیشرفت",
+    "status": "وضعیت",
+    "link": "لینک",
+    "affiliateLinkUrl": "لینک همکاری فروش",
+    "type_name": "نوع",
+    "stats": "آمار نیازها",
+    "newStatus": "وضعیت جدید ...",
+    "statsRatio": "انجام شده / تمام نیازها",
+    "providerSelect": "لطفا تامیین کننده انتخاب کنید",
+    "provider": "اسم تامین کننده",
+    "providers": {
+      "service": "خدمات",
+      "product": "کالا"
+    },
+    "types": {
+      "service": "خدمات",
+      "product": "کالا"
+    },
+    "isUrgent": "ضروری",
+    "informations": "اطلاعات بیشتز",
+    "details": "یادداشت مددکار",
+    "category": "دسته‌بندی",
+    "categories": {
+      "growth": "رشد",
+      "joy": "تفریح",
+      "health": "سلامت",
+      "surroundings": "پیرامون"
+    },
+    "description": "توضیحات",
+    "descriptions": {
+      "fa": "توضیحات فارسی(fa)",
+      "en": "توضیحات انگلیسی((en)"
+    },
+    "img": {
+      "service": "عکس",
+      "product": "عکس از فروشگاه"
+    },
+    "created": "زمان ایجاد",
+    "isConfirmed": "وضعیت تایید",
+    "confirmUser": "تایید کننده",
+    "confirmDate": "زمان تایید",
+    "updated": "زمان آخرین ویرایش",
+    "doneAt": "زمان اتمام",
+    "child_delivery_date": "زمان انتقال به کودک",
+    "preNeed": "الگو",
+    "doing_duration": "مدت زمان انجام",
+    "payers": "پرداخت کننده‌ها",
+    "button": {
+      "update": "به‌روزرسانی",
+      "add": "اضافه کردی نیاز"
+    },
+    "needStatusTitle": "تغییر وضعیت",
+    "needStatus": {
+      "1": "نیم‌پرداخت",
+      "2": "پرداخت کامل",
+      "p3": "کالا خریده شده",
+      "p4": "به سمن ارسال شده",
+      "p5": "به کودک ارسال شده",
+      "s3": "هزینه به سمن ارسال شده",
+      "s4": "به کودک ارسال شده",
+      "signature": "امضا",
+      "sign": "امضا",
+      "pending": "ارسال نشده"
+    },
+    "needDialogue": {
+      "service": {
+        "1": "نیم‌پرداخت",
+        "2": "پرداخت کامل",
+        "3": "هزینه به سمن ارسال شده",
+        "4": "به کودک ارسال شده"
+      },
+      "product": {
+        "1": "نیم‌پرداخت",
+        "2": "پرداخت کامل",
+        "3": "کالا خریده شده",
+        "4": "به سمن ارسال شده",
+        "5": "به کودک ارسال شده"
+      }
+    }
+  },
+  "provider": {
+    "update": "Edit",
+    "titleEdit": "Edit Details",
+    "titleAdd": "Add Details",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "isActive": "Status",
+    "description": "Description",
+    "emailAddress": "Email",
+    "name": "Name",
+    "website": "website",
+    "type": "type",
+    "updated": "Updated",
+    "button": {
+      "update": "Update",
+      "add": "Add Provider"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
+  },
   "child": {
-    "id": "Id",
+    "title": "کودک",
+    "id": "آی‌دی",
     "isConfirmed": "وضعیت تایید",
     "existence_status": "وضعیت کودک",
-    "isDeleted": "حذف",
+    "isDeleted": "وضعیت حذف",
     "status": "وضعیت",
     "sayname_translations": {
-      "fa": "SAY name فارسی (fa)",
-      "en": "SAY name انگلیسی (en)"
+      "fa": "SAY نام فارسی (fa)",
+      "en": "SAY نام انگلیسی (en)"
     },
     "firstName_translations": {
       "fa": "نام فارسی",
@@ -368,8 +478,8 @@
       "en": "خلاصه داستان انگلیسی کودک"
     },
     "divider": {
-      "housing": "Living at",
-      "origin": "Born at"
+      "housing": "جزییات محل زندگی",
+      "origin": "جزییات تولد"
     },
     "awakeAvatarUrl": "آواتار کودک",
     "sleptAvatarUrl": "آواتار خواب کودک",
@@ -381,14 +491,43 @@
     "age": "سن",
     "years": "ساله",
     "sex": "جنسیت",
+    "sexKind": {
+      "male": "پسر",
+      "female": "دختر"
+    },
     "birthPlace": "مکان تولد",
     "city": "شهر",
-    "state": "ایالت",
+    "state": "استان",
     "country": "کشور",
     "housingStatus": "وضعیت مسکن",
+    "housingCondition":{
+      "none": "-",
+      "homeless": "بی‌خانمان",
+      "Resident": "دارای محل زندگی",
+      "CareCenters":"تحت پوشش"
+    },
     "phoneNumber": "شماره تماس",
     "address": "آدرس",
     "education": "تحصیلات",
+    "educationondition":{
+      "deprived": "بازمانده از تحصیل",
+      "kinderGarten": "مهد کودک",
+      "notAttending": "عدم حضور در مدرسه",
+      "preSchool": "آمادگی",
+      "firstGrade": "سال اول",
+      "secondGrade":"سال دوم",
+      "thirdGrade": "سال سوم",
+      "fourthGrade": "سال چهارم",
+      "fifthGrade": "سال پنجم",
+      "sixGrade": "سال ششم",
+      "sevenGrade": "سال هفتم",
+      "eightGrade":"سال هشتم",
+      "nineGrade": "سال نهم",
+      "tenGrade": "سال دهم",
+      "elevenGrade": "سال یازدهم",
+      "twelveGrade": "سال دوازدهم",
+      "thirteenGrade": "سال سیزدهم"
+    },
     "confirmUser": "تایید کننده",
     "confirmDate": "تاریخ تایید",
     "done_needs_count": "تعداد نیازهای انجام شده",
@@ -398,7 +537,7 @@
     "spent_credit": "مبلغ هزینه شده",
     "id_ngo": "انجمن",
     "isMigrated": "وضعیت انتقال",
-    "is_gone": "رفته",
+    "is_gone": "وضعیت رفته",
     "nationality": "ملیت",
     "voiceUrl": "صدای کودک",
     "created": "تاریخ ایجاد",
@@ -407,6 +546,39 @@
     "button": {
       "update": "ویرایش",
       "add": "اضافه کردن"
+    }
+  },
+  "dao": {
+    "milestone": {
+      "duetime": "Step due time",
+      "title": "Step title",
+      "description": "short description",
+      "button": {
+        "next": "Next",
+        "finish": "Finish"
+      }
+    }
+  },
+  "myProfile": {
+    "viewAs": "نمایش مددکار ...",
+    "countRecent": {
+      "title": "نمایش آخرین نیازها",
+      "count": {
+        "ten": "ده",
+        "fifty": "پنجاه",
+        "hundred": "صد"
+      }
+    },
+    "signed": "امضا شده",
+    "createdChildren": "کودکان اضافه شده",
+    "createdNeeds": "نیازهای اضافه شده",
+    "taskManager": {
+      "title": {
+        "notPaid": "پرداخت نشده",
+        "paid": "پرداخت‌ها",
+        "purchased": "خریدها / انتقال داده شده",
+        "done": "انجام شده"
+      }
     }
   }
 }

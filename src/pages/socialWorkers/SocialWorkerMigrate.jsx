@@ -176,7 +176,7 @@ export default function SocialWorkerMigrate() {
                 return (
                   <TextField
                     {...params}
-                    label="From"
+                    label={`${t('socialWorker.migrate.from')}`}
                     InputProps={{
                       ...params.InputProps,
                       endAdornment: (
@@ -215,7 +215,7 @@ export default function SocialWorkerMigrate() {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="To"
+                  label={`${t('socialWorker.migrate.to')}`}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (

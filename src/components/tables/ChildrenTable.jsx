@@ -84,6 +84,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('child.status'),
+      width: '200px',
     },
     {
       id: 'generatedCode',
@@ -240,6 +241,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ minWidth: headCell.width }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -316,20 +318,21 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'Children Table',
-  },
-];
+
 
 const ChildrenTable = ({ childList }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const BCrumb = [
+    {
+      to: '/',
+      title: t("BCrumb.home"),
+    },
+    {
+      title: t("BCrumb.childrenList"),
+    },
+  ];
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
   const [selected, setSelected] = useState([]);
@@ -757,6 +760,7 @@ const ChildrenTable = ({ childList }) => {
               </TableContainer>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
+                labelRowsPerPage={t('table.rowCount')}
                 component="div"
                 count={childList.length}
                 rowsPerPage={rowsPerPage}
@@ -767,7 +771,7 @@ const ChildrenTable = ({ childList }) => {
             </Paper>
             <FormControlLabel
               control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
+              label={t('table.dense')}
             />
           </Box>
         </CardContent>

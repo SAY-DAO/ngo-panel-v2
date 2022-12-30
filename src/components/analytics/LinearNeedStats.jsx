@@ -60,7 +60,7 @@ const LinearNeedStats = ({ needsData, totalNeeds }) => {
     >
       {stats && (
         <CardContent>
-          <WidgetCard title="Needs stats" />
+          <WidgetCard title= {t('need.stats') }/>
           <Box sx={{ mt: -1 }}>
             {stats.map((stat) => (
               <Box

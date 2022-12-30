@@ -43,21 +43,22 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import { RolesEnum } from '../../utils/helpers';
 
-const BCrumb = [
-  {
-    to: '/sw/list',
-    title: 'Social Workers List',
-  },
-  {
-    title: 'Add',
-  },
-];
 
 const SocialWorkerAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
 
+  const BCrumb = [
+    {
+      to: '/sw/list',
+      title: 'Social Workers List',
+    },
+    {
+      title: 'Add',
+    },
+  ];
+  
   const [coordChecked, setCoordChecked] = useState(false);
   const [finalImageFile, setFinalImageFile] = useState();
   const [finalIdImageFile, setFinalIdImageFile] = useState();

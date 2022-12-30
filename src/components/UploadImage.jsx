@@ -156,7 +156,7 @@ export default function UploadImage({
             textAlign: 'center',
           }}
         >
-          {t('profile.editProfile.avatar.title')}
+          {t('image.edit')}
         </Typography>
         {isLoading ? (
           <CircularProgress
@@ -200,9 +200,9 @@ export default function UploadImage({
 
           <Grid container sx={{ margin: 2 }}>
             <Typography variant="subtitle1" sx={{ margin: 'auto', marginLeft: 1, marginRight: 1 }}>
-              {t('profile.editProfile.avatar.scale')}
+            {t('image.scale')}
             </Typography>
-            <div className="flex-row" style={{ width: '70%' }}>
+            <div className="flex-row" style={{ width: '100%' }}>
               <PrettySlider
                 valueLabelDisplay="auto"
                 aria-label="pretto slider"
@@ -215,9 +215,9 @@ export default function UploadImage({
 
           <Grid container sx={{ margin: 2 }}>
             <Typography variant="subtitle1" sx={{ margin: 'auto', marginLeft: 1, marginRight: 1 }}>
-              {t('profile.editProfile.avatar.rotate')}
+            {t('image.rotate')}
             </Typography>
-            <div className="flex-row" style={{ width: '70%' }}>
+            <div className="flex-row" style={{ width: '100%' }}>
               <PrettySlider
                 valueLabelDisplay="auto"
                 aria-label="pretto slider"

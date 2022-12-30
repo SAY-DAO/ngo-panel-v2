@@ -2,9 +2,12 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import { Card, CardContent, Box, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import PageContainer from '../container/PageContainer';
 
 const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
+  const { t } = useTranslation();
+
   let unpayableCount = 0;
   for (let i = 0; i < allNeeds.length; i += 1) {
     if (allNeeds[i].unpayable) {
@@ -43,7 +46,7 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
       position: 'bottom',
       width: '80px',
     },
-    labels: ['OK', 'Unpayable', 'Not Confirmed'],
+    labels: [t('need.pie.ok'), t('need.pie.unpayable'), t('need.pie.unconfirmed')],
     colors: ['rgb(0, 194, 146)', 'rgb(254, 201, 15)', 'rgb(237, 77 ,96)'],
     tooltip: {
       fillSeriesColor: false,
@@ -77,7 +80,7 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
                 }}
                 gutterBottom
               >
-                Needs
+                {t('need.title')}
               </Typography>
               <Typography
                 variant="h1"
@@ -100,7 +103,7 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
                 }}
                 gutterBottom
               >
-                Done / Total
+                {t('need.statsRatio')}
               </Typography>
             </CardContent>
           </Card>

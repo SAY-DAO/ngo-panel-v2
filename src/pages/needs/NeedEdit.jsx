@@ -43,11 +43,11 @@ const NeedEdit = () => {
   const BCrumb = [
     {
       to: '/need/list',
-      title: 'Needs List',
+      title: t("BCrumb.needsList"),
       state: childId,
     },
     {
-      title: 'Edit',
+      title: t("BCrumb.needEdit"),
     },
   ];
 
@@ -185,7 +185,6 @@ const NeedEdit = () => {
         <>
           {successChild && childId && (
             <>
-              <Breadcrumb title="Edit page" subtitle="Need" />
               <Grid container spacing={0}>
                 <Grid item lg={4} md={12} xs={12}>
                   <Card sx={{ pb: 6 }}>
@@ -365,7 +364,7 @@ const NeedEdit = () => {
                                 onChange={handleUrgentChange}
                               />
                             }
-                            label={`${t('need.isUrgent')}?`}
+                            label={`${t('need.isUrgent')}`}
                           />
                         </Grid>
                       </Grid>
@@ -438,7 +437,7 @@ const NeedEdit = () => {
                                 onChange={handleAffChange}
                               />
                             }
-                            label={`${t('need.affiliateLinkUrl')}?`}
+                            label={`${t('need.affiliateLinkUrl')}`}
                           />
                         </Grid>
                       </Grid>

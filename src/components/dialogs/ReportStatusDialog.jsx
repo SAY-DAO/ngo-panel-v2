@@ -61,18 +61,18 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
       {currentStatus && (
         <Dialog open={statusDialog} onClose={handleClose}>
           <DialogTitle sx={{ p: 2, textAlign: 'center', fontSize: '1.2rem' }}>
-            {t('need.needStatus_title')}{' '}
+            {t('need.needStatusTitle')}{' '}
           </DialogTitle>
           <DialogContent>
             <DialogContentText sx={{ p: 2, textAlign: 'center' }}>{need.title}</DialogContentText>
-            <Typography>From</Typography>
+            <Typography>{t('socialWorker.migrate.from')}</Typography>
             <TextField
               sx={{ p: 2 }}
               disabled
               id="outlined-disabled"
               defaultValue={`${need.status} - ${currentStatus}`}
             />
-            <Typography>To</Typography>
+            <Typography>{t('socialWorker.migrate.to')}</Typography>
             <Grid container spacing={2} sx={{ p: 2 }} justifyContent="center">
               <Grid item>
                 {optionsStatus && (
@@ -97,15 +97,15 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
                         </>
                       </Box>
                     )}
-                    renderInput={(params) => <TextField {...params} label="New Status..." />}
+                    renderInput={(params) => <TextField {...params} label={t('need.newStatus')} />}
                   />
                 )}
               </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Update</Button>
+            <Button onClick={handleClose}>{t('button.cancel')}</Button>
+            <Button onClick={handleClose}>{t('button.update')}</Button>
           </DialogActions>
         </Dialog>
       )}

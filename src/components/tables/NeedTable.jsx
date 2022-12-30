@@ -96,12 +96,14 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.isConfirmed'),
+      width: '150px',
     },
     {
       id: 'unpayable',
       numeric: false,
       disablePadding: true,
       label: t('need.unpayable'),
+      width: '150px',
     },
     {
       id: 'sayName',
@@ -126,14 +128,14 @@ function EnhancedTableHead(props) {
       id: 'name',
       numeric: false,
       disablePadding: false,
-      label: t('need.name.en'),
+      label: t('need.name.fa'),
       width: '200px',
     },
     {
       id: 'title',
       numeric: false,
       disablePadding: false,
-      label: t('need.title'),
+      label: t('need.etitle'),
       width: '200px',
     },
 
@@ -211,7 +213,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.affiliateLinkUrl'),
-      width: '150px',
+      width: '200px',
     },
     {
       id: 'created',
@@ -239,21 +241,21 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.updated'),
-      width: '150px',
+      width: '200px',
     },
     {
       id: 'doneAt',
       numeric: false,
       disablePadding: false,
       label: t('need.doneAt'),
-      width: '150px',
+      width: '200px',
     },
     {
       id: 'doing_duration',
       numeric: false,
       disablePadding: false,
       label: t('need.doing_duration'),
-      width: '100px',
+      width: '180px',
     },
     {
       id: 'child_delivery_date',
@@ -321,26 +323,16 @@ const EnhancedTableToolbar = (props) => {
         }),
       }}
     >
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
           {numSelected} selected
         </Typography>
-      ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          Filter
-        </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton onClick={handleDelete}>
             <FeatherIcon icon="trash-2" width="18" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FeatherIcon icon="filter" width="18" />
           </IconButton>
         </Tooltip>
       )}
@@ -353,21 +345,24 @@ EnhancedTableToolbar.propTypes = {
   selected: PropTypes.array.isRequired,
 };
 
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'Needs Table',
-  },
-];
 
 const NeedTable = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const location = useLocation();
   const theChildId = location.state;
+
+
+  const BCrumb = [
+    {
+      to: '/',
+      title: t("BCrumb.home"),
+    },
+    {
+      title: t("BCrumb.needsList"),
+    },
+  ];
 
   const [needsData, setNeedsData] = useState();
   const [order, setOrder] = useState('asc');
@@ -575,7 +570,7 @@ const NeedTable = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Ngo"
+                label={t("ngo.title")}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -627,7 +622,7 @@ const NeedTable = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Children"
+                label={t("child.title")}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -1010,6 +1005,7 @@ const NeedTable = () => {
                   </TableContainer>
                   <TablePagination
                     rowsPerPageOptions={[5, 10, 25, 50]}
+                    labelRowsPerPage={t('table.rowCount')}
                     component="div"
                     count={theNeeds.needs.length}
                     rowsPerPage={rowsPerPage}
@@ -1020,7 +1016,7 @@ const NeedTable = () => {
                 </Paper>
                 <FormControlLabel
                   control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-                  label="Dense padding"
+                  label={t('table.dense')}
                 />
               </Box>
             </CardContent>
