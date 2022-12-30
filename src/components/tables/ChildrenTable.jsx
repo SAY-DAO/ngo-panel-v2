@@ -97,12 +97,14 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('child.awakeAvatarUrl'),
+      width: '180px',
     },
     {
       id: 'sleptAvatarUrl',
       numeric: false,
       disablePadding: false,
       label: t('child.sleptAvatarUrl'),
+      width: '180px',
     },
     {
       id: 'birthDate',
@@ -127,6 +129,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('child.bioSummaryTranslations'),
+      width: '180px',
     },
     {
       id: 'bioSummary',
@@ -139,6 +142,7 @@ function EnhancedTableHead(props) {
       numeric: true,
       disablePadding: false,
       label: t('child.birthPlace'),
+      width: '150px',
     },
     {
       id: 'city',
@@ -157,30 +161,35 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('child.confirmDate'),
+      width: '150px',
     },
     {
       id: 'confirmUser',
       numeric: false,
       disablePadding: false,
       label: t('child.confirmUser'),
+      width: '150px',
     },
     {
       id: 'id_ngo',
       numeric: true,
       disablePadding: false,
       label: t('child.id_ngo'),
+      width: '150px',
     },
     {
       id: 'done_needs_count',
       numeric: true,
       disablePadding: false,
       label: t('child.done_needs_count'),
+      width: '220px',
     },
     {
       id: 'familyCount',
       numeric: true,
       disablePadding: false,
       label: t('child.familyCount'),
+      width: '150px',
     },
 
     {
@@ -194,6 +203,7 @@ function EnhancedTableHead(props) {
       numeric: true,
       disablePadding: false,
       label: t('child.spent_credit'),
+      width: '180px',
     },
 
     {
@@ -207,18 +217,21 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('child.created'),
+      width: '150px',
     },
     {
       id: 'updated',
       numeric: false,
       disablePadding: false,
       label: t('child.updated'),
+      width: '150px',
     },
     {
       id: 'voiceUrl',
       numeric: false,
       disablePadding: false,
       label: t('child.voiceUrl'),
+      width: '150px',
     },
   ];
 
