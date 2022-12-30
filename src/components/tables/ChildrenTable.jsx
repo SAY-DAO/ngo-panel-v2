@@ -596,7 +596,7 @@ const ChildrenTable = ({ childList }) => {
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                {getAge(row.birthDate)} Years
+                                {getAge(row.birthDate)} {t('child.years')}
                               </Typography>
                             </TableCell>
 

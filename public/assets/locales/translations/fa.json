@@ -340,5 +340,73 @@
     "dashboard": "داشبورد",
     "list": "لیست",
     "add": "اضافه کردن"
+  },
+  "child": {
+    "id": "Id",
+    "isConfirmed": "وضعیت تایید",
+    "existence_status": "وضعیت کودک",
+    "isDeleted": "حذف",
+    "status": "وضعیت",
+    "sayname_translations": {
+      "fa": "SAY name فارسی (fa)",
+      "en": "SAY name انگلیسی (en)"
+    },
+    "firstName_translations": {
+      "fa": "نام فارسی",
+      "en": "نام انگلیسی"
+    },
+    "lastName_translations": {
+      "fa": "نام خانوادگی فارسی",
+      "en": "نام خانوادگی انگلیسی"
+    },
+    "bio_translations": {
+      "fa": "داستان فارسی کودک",
+      "en": "داستان انگلیسی کودک"
+    },
+    "bio_summary_translations": {
+      "fa": "خلاصه داستان فارسی کودک",
+      "en": "خلاصه داستان انگلیسی کودک"
+    },
+    "divider": {
+      "housing": "Living at",
+      "origin": "Born at"
+    },
+    "awakeAvatarUrl": "آواتار کودک",
+    "sleptAvatarUrl": "آواتار خواب کودک",
+    "uploadVoice": "آپلود صدای کودک",
+    "bio": "داستان کودک",
+    "bioSummary": "خلاصه داستان کودک",
+    "bioSummaryTranslations": "ترجمه خلاصه داستان کودک",
+    "birthDate": "تاریخ تولد",
+    "age": "سن",
+    "years": "ساله",
+    "sex": "جنسیت",
+    "birthPlace": "مکان تولد",
+    "city": "شهر",
+    "state": "ایالت",
+    "country": "کشور",
+    "housingStatus": "وضعیت مسکن",
+    "phoneNumber": "شماره تماس",
+    "address": "آدرس",
+    "education": "تحصیلات",
+    "confirmUser": "تایید کننده",
+    "confirmDate": "تاریخ تایید",
+    "done_needs_count": "تعداد نیازهای انجام شده",
+    "familyCount": "تعداد خانوار",
+    "generatedCode": "کد کودک",
+    "id_social_worker": "مددکار",
+    "spent_credit": "مبلغ هزینه شده",
+    "id_ngo": "انجمن",
+    "isMigrated": "وضعیت انتقال",
+    "is_gone": "رفته",
+    "nationality": "ملیت",
+    "voiceUrl": "صدای کودک",
+    "created": "تاریخ ایجاد",
+    "updated": "تاریخ آخرین ویرایش",
+    "edit": "ویرایش",
+    "button": {
+      "update": "ویرایش",
+      "add": "اضافه کردن"
+    }
   }
 }
