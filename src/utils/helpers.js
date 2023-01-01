@@ -21,9 +21,6 @@ export function getAge(DOB) {
 export function getOrganizedNeeds(theNeeds) {
   const needData = [[], [], [], [], [], [], [], []];
   for (let i = 0; i < theNeeds.needs.length; i += 1) {
-    if (!theNeeds.needs[i].category) {
-      console(theNeeds.needs[i].id);
-    }
     if (theNeeds.needs[i].isUrgent) {
       needData[0].push(theNeeds.needs[i]);
     } else if (theNeeds.needs[i].isDone) {
