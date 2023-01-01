@@ -599,20 +599,22 @@ const NeedTable = () => {
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) =>
               option.isConfirmed
-                ? `${option.id} - ${option.sayName}`
-                : `${option.id} - ${option.sayName}`
+                ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
+                : `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
             }
             renderOption={(props, option) => (
               <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                 {option.isConfirmed ? (
                   <>
                     <FeatherIcon color="green" icon="check" width="18" />
-                    <Typography>{`${option.id} - ${option.sayName}`}</Typography>
+                    <Typography>
+                      {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
+                    </Typography>
                   </>
                 ) : (
                   <>
                     <FeatherIcon color="red" icon="x" width="18" />
-                    <Typography>{`${option.id} - ${option.sayName} `}</Typography>
+                    <Typography> {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}</Typography>
                   </>
                 )}
               </Box>

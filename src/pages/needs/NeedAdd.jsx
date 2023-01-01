@@ -181,6 +181,7 @@ const NeedAdd = () => {
   useEffect(() => {
     if (successChildrenNeeds) {
       const needData = getOrganizedNeeds(theNeeds);
+      console.log(theNeeds)
       setNeedsData(needData);
     }
   }, [childId, successChildrenNeeds]);
