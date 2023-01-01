@@ -60,7 +60,7 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
   }
 };
 
-export const fetchExampleNeeds = (childId) => async (dispatch) => {
+export const fetchExampleNeeds = () => async (dispatch) => {
   try {
     dispatch({ type: CHILD_EXAMPLE_NEEDS_REQUEST });
 
@@ -69,7 +69,7 @@ export const fetchExampleNeeds = (childId) => async (dispatch) => {
         'Content-type': 'application/json',
       },
     };
-    const { data } = await daoApi.get(`/children/child/needs/templates/${childId}`, config);
+    const { data } = await daoApi.get(`/needs/flask/preneed`, config);
 
     dispatch({
       type: CHILD_EXAMPLE_NEEDS_SUCCESS,

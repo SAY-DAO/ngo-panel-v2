@@ -52,7 +52,6 @@ import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
 import { getOrganizedNeeds } from '../../utils/helpers';
 
-
 const NeedAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -61,10 +60,10 @@ const NeedAdd = () => {
   const BCrumb = [
     {
       to: '/need/list',
-      title: t("BCrumb.needsList"),
+      title: t('BCrumb.needsList'),
     },
     {
-      title:  t("BCrumb.add"),
+      title: t('BCrumb.add'),
     },
   ];
 
@@ -114,8 +113,8 @@ const NeedAdd = () => {
 
   // one need
   useEffect(() => {
-    if (theNeed && theNeed.flaskNeedId) {
-      dispatch(fetchChildOneNeed(theNeed.flaskNeedId));
+    if (theNeed && theNeed.id) {
+      dispatch(fetchChildOneNeed(theNeed.id));
     }
   }, [theNeed]);
 
@@ -156,11 +155,7 @@ const NeedAdd = () => {
   // Autocomplete pre need
   useEffect(() => {
     if (successNeedEx) {
-      // sort my children
-      const sortedNeeds = exampleNeeds.sort(
-        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
-      );
-      setOptionsPreNeed([...sortedNeeds]);
+      setOptionsPreNeed(exampleNeeds);
     }
   }, [isLoadingPreNeed, successNeedEx, openPreNeed]);
 
@@ -192,13 +187,13 @@ const NeedAdd = () => {
 
   const validationSchema = Yup.object().shape({
     // name_fa: Yup.string().required('Please enter needs name'),
-    name_en: Yup.string().required('Please enter needs name'),
+    // name_en: Yup.string().required('Please enter needs name'),
     cost: Yup.number().required('Please enter needs cost').moreThan(0, 'Cost can not be zero'),
     type: Yup.string().required('Please enter type'),
-    doing_duration: Yup.number().required('Please enter estimated finishing time'),
-    category: Yup.string().required('Please enter needs category'),
+    // doing_duration: Yup.number().required('Please enter estimated finishing time'),
+    // category: Yup.string().required('Please enter needs category'),
     link: Yup.string().url().required('Please enter needs link'),
-    imageUrl: Yup.string().required('Please choose an icon'),
+    // imageUrl: Yup.string().required('Please choose an icon'),
   });
 
   const {
@@ -226,6 +221,7 @@ const NeedAdd = () => {
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
       setValue('cost', oneNeed.cost);
       setValue('doing_duration', oneNeed.doing_duration);
+      // setValue('imageUrl', oneNeed.doing_duration);
     }
   }, [successNeedEx, oneNeed]);
 
@@ -251,7 +247,7 @@ const NeedAdd = () => {
         cost: data.cost,
         type: data.type,
         category: data.category,
-        imageUrl: finalImageFile,
+        imageUrl: finalImageFile || oneNeed.doing_duration,
         details: data.details,
         information: data.informations,
         doing_duration: data.doing_duration,
@@ -298,7 +294,7 @@ const NeedAdd = () => {
         <Grid item>
           <Autocomplete
             id="asynchronous-myChildren"
-            sx={{ minWidth: '350px' }}
+            sx={{ minWidth: '340px' }}
             open={openChildren}
             onOpen={() => {
               setOpenChildren(true);
@@ -318,14 +314,14 @@ const NeedAdd = () => {
                 {option.isConfirmed ? (
                   <>
                     <FeatherIcon color="green" icon="check" width="18" />
-                    <Typography>
-                      {`${option.id} - ${option.generatedCode} - ${option.sayName}`}
+                    <Typography variant="body1" sx={{fontSize: 13}}>
+                      {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
                     </Typography>
                   </>
                 ) : (
                   <>
                     <FeatherIcon color="red" icon="x" width="18" />
-                    <Typography>{`${option.id} - ${option.sayName} `}</Typography>
+                    <Typography>{`${option.id}  - ${option.firstName} ${option.lastName}`}</Typography>
                   </>
                 )}
               </Box>
@@ -333,7 +329,7 @@ const NeedAdd = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={t("socialWorker.myChildren")}
+                label={t('socialWorker.myChildren')}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -348,7 +344,7 @@ const NeedAdd = () => {
           />
         </Grid>
       </Grid>
-      {(loadingChild || loadingChildren) ? (
+      {loadingChild || loadingChildren ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -465,10 +461,10 @@ const NeedAdd = () => {
                         }}
                         onChange={(e, value) => setTheNeed(value)}
                         isOptionEqualToValue={(option, value) =>
-                          option.flaskNeedId === value.flaskNeedId
+                          option.id === value.id
                         }
                         getOptionLabel={(option) =>
-                          `${option.flaskNeedId} - ${option.title} - ${option.titleTranslations.fa}`
+                          `${option.id} - ${option.title} - ${option.name}`
                         }
                         options={optionsPreNeed}
                         loading={isLoadingPreNeed}
@@ -478,7 +474,7 @@ const NeedAdd = () => {
                             sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                             {...props}
                           >
-                            <Avatar
+                            {/* <Avatar
                               src={option.imageUrl}
                               sx={{
                                 borderRadius: '10px',
@@ -486,7 +482,7 @@ const NeedAdd = () => {
                                 height: '50px',
                                 m: 1,
                               }}
-                            />
+                            /> */}
                             <Typography
                               sx={{
                                 maxWidth: '400px',
@@ -497,7 +493,7 @@ const NeedAdd = () => {
                                 whiteSpace: 'nowrap',
                               }}
                             >
-                              {option.flaskNeedId} - {option.title} - {option.titleTranslations.fa}
+                              {option.id} - {option.title} - {option.name}
                             </Typography>
                           </Box>
                         )}
@@ -670,34 +666,38 @@ const NeedAdd = () => {
                               control={control}
                               register={{ ...register('provider', { required: true }) }}
                             >
-                              {providerList ? providerList
-                                .filter((p) => p.isActive === true)
-                                .map((p) => (
-                                  <MenuItem key={p.id} value={p.id}>
-                                    <Grid container spacing={2}>
-                                      <Grid item>
-                                        <Avatar
-                                          alt="provider logo"
-                                          src={`${apiDao}/providers/images/${p.logoUrl}`}
-                                          sx={{ width: 30, height: 30, display: 'inline-block' }}
-                                        />
+                              {providerList ? (
+                                providerList
+                                  .filter((p) => p.isActive === true)
+                                  .map((p) => (
+                                    <MenuItem key={p.id} value={p.id}>
+                                      <Grid container spacing={2}>
+                                        <Grid item>
+                                          <Avatar
+                                            alt="provider logo"
+                                            src={`${apiDao}/providers/images/${p.logoUrl}`}
+                                            sx={{ width: 30, height: 30, display: 'inline-block' }}
+                                          />
+                                        </Grid>
+                                        <Grid item>
+                                          <Typography variant="body1" sx={{ p: 1 }}>
+                                            {p.name}
+                                          </Typography>
+                                        </Grid>
                                       </Grid>
-                                      <Grid item>
-                                        <Typography variant="body1" sx={{ p: 1 }}>
-                                          {p.name}
-                                        </Typography>
-                                      </Grid>
+                                    </MenuItem>
+                                  ))
+                              ) : (
+                                <MenuItem>
+                                  <Grid container spacing={2}>
+                                    <Grid item>
+                                      <Typography color="error" variant="body1" sx={{ p: 1 }}>
+                                        {t('error.nestDown')}
+                                      </Typography>
                                     </Grid>
-                                  </MenuItem>
-                                )) : <MenuItem >
-                                <Grid container spacing={2}>
-                                  <Grid item>
-                                    <Typography color="error" variant="body1" sx={{ p: 1 }}>
-                                      {t('error.nestDown')}
-                                    </Typography>
                                   </Grid>
-                                </Grid>
-                              </MenuItem>}
+                                </MenuItem>
+                              )}
                             </CustomSelect>
                           </Grid>
                           <Grid item xs={6}>
@@ -710,8 +710,8 @@ const NeedAdd = () => {
                               id="type-controlled-open-select"
                             >
                               {watch('provider') &&
-                                providerList &&
-                                providerList.filter((p) => p.id === watch('provider'))[0]
+                              providerList &&
+                              providerList.filter((p) => p.id === watch('provider'))[0]
                                 ? providerList.filter((p) => p.id === watch('provider'))[0].typeName
                                 : t('need.providerSelect')}
                             </Typography>
