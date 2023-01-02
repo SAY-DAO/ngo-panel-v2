@@ -109,6 +109,9 @@ const NeedAdd = () => {
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, success: successChildrenNeeds } = childNeeds;
 
+  const swById = useSelector((state) => state.swById);
+  const { children } = swById;
+
   const isLoadingPreNeed = loadingNeedEx && openPreNeed && optionsPreNeed.length === 0;
 
   useEffect(() => {
@@ -135,9 +138,9 @@ const NeedAdd = () => {
     if (!isLoadingChildren) {
       return undefined;
     }
-    if (active && successChildren) {
+    if (active && (successChildren || (children && children.children))) {
       // sort myChildren
-      const sortedChildren = myChildren.sort(
+      const sortedChildren = (myChildren || children.children).sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
       setOptionsChildren([...sortedChildren]);
@@ -145,7 +148,7 @@ const NeedAdd = () => {
     return () => {
       active = false;
     };
-  }, [isLoadingChildren, successChildren, childId]);
+  }, [isLoadingChildren, successChildren, childId, children]);
 
   // child open
   useEffect(() => {
