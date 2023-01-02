@@ -25,7 +25,7 @@ const ChildrenList = () => {
       if (swInfo.typeId === 1) {
         dispatch(fetchChildList()); // all => confirm=2, existence_status=1
       } else if (swInfo.typeId !== 1) {
-        dispatch(fetchSwChildList(swInfo.id));
+        dispatch(fetchSwChildList());
       }
     }
   }, [swInfo]);

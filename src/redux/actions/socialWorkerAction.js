@@ -269,11 +269,18 @@ export const fetchSwChildList = (swId) => async (dispatch, getState) => {
       },
     };
     // both confirmed and not confirmed children
-    const { data } = await publicApi.get(`/child/all/confirm=${2}?sw_id=${swId}`, config);
+    let response
+    if(swId){
+       response = await publicApi.get(`/child/all/confirm=${2}?sw_id=${swId}`, config);
+
+  } else{
+    response = await publicApi.get(`/child/all/confirm=${1}`, config);
+
+  }
 
     dispatch({
       type: SW_CHILD_LIST_SUCCESS,
-      payload: data,
+      payload: response.data,
     });
   } catch (e) {
     dispatch({
