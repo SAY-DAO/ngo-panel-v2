@@ -41,7 +41,6 @@ const Menuitems = [
         title: 'sidebar.add',
         icon: 'edit',
         href: '/children/add',
-        admin: true,
       },
     ],
   },
