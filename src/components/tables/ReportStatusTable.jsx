@@ -412,19 +412,49 @@ const ReportStatusTable = () => {
       return undefined;
     }
 
-    if (active && successNgoList) {
-      const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
-      setOptionsNgo([...activeNgoList]);
+    if (active && swInfo) {
+      // super admin
+      if (swInfo.typeId === 1 && successNgoList) {
+        const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
+        setOptionsNgo([...activeNgoList]);
+      }
+      // social worker
+      else if (swInfo.typeId !== 1) {
+        setOptionsNgo([{
+          id: swInfo.ngoId,
+          name: swInfo.ngoName
+        }])
+      }
     }
     return () => {
       active = false;
     };
-  }, [loadingNgo, successNgoList]);
+  }, [loadingNgo, successNgoList, swInfo]);
 
+  // ngo open
+  useEffect(() => {
+    if (!openNgo) {
+      setOptionsNgo([]);
+    } else if (swInfo) {
+      if (swInfo.typeId === 1) {
+        dispatch(fetchNgoList());
+      } else if (swInfo.typeId !== 1) {
+        setOptionsNgo([{
+          id: swInfo.ngoId,
+          name: swInfo.ngoName
+        }])
+      }
+
+    }
+
+  }, [openNgo]);
   // ngo LIST
   useEffect(() => {
-    dispatch(fetchNgoList());
-  }, []);
+    // only super admin
+    if (swInfo && swInfo.typeId === 1) {
+      dispatch(fetchNgoList());
+    }
+  }, [swInfo]);
 
   // for the very first load
   useEffect(() => {
@@ -511,7 +541,6 @@ const ReportStatusTable = () => {
     useEffect(() => {
       if (statusDialog && row && needs) {
         setStatusNeed(needs.needs.find((n) => n.id === row.id));
-        console.log('here');
       }
     }, [statusDialog, row, needs]);
 
@@ -667,9 +696,9 @@ const ReportStatusTable = () => {
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell sx={{fontWeight: 600}}>{t('report.history.status')}</TableCell>
-                      <TableCell sx={{fontWeight: 600}}>{t('report.history.date')}</TableCell>
-                      <TableCell align="right" sx={{fontWeight: 600}}>{t('report.history.receipt')}</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>{t('report.history.status')}</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>{t('report.history.date')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 600 }}>{t('report.history.receipt')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -858,11 +887,11 @@ const ReportStatusTable = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {ngoList && (
+      {swInfo && (
         <Grid container spacing={2} justifyContent="center">
           <Grid item md={3} xs={12}>
             <Autocomplete
-              defaultValue={ngoList.filter((ngo) => ngo.isActive)[0]} // only active one
+              defaultValue={optionsNgo && optionsNgo.filter((ngo) => ngo.isActive)[0]} // only active one
               id="asynchronous-ngo"
               open={openNgo}
               onOpen={() => {
