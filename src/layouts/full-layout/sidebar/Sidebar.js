@@ -113,41 +113,43 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                       </ListItem>
                       <Collapse in={index === open} timeout="auto" unmountOnExit>
                         <List component="li" disablePadding>
-                          {item.children.map((child) => {
-                            return (
-                              <ListItem
-                                key={child.title}
-                                button
-                                component={NavLink}
-                                to={child.href}
-                                onClick={onSidebarClose}
-                                selected={pathDirect === child.href}
-                                sx={{
-                                  mb: 1,
-                                  ...(pathDirect === child.href && {
-                                    color: 'primary.main',
-                                    backgroundColor: 'transparent!important',
-                                  }),
-                                }}
-                              >
-                                <ListItemIcon
+                          {item.children
+                            .filter((c) => c.admin)
+                            .map((child) => {
+                              return (
+                                <ListItem
+                                  key={child.title}
+                                  button
+                                  component={NavLink}
+                                  to={child.href}
+                                  onClick={onSidebarClose}
+                                  selected={pathDirect === child.href}
                                   sx={{
-                                    svg: { width: '16px', marginLeft: '3px' },
+                                    mb: 1,
                                     ...(pathDirect === child.href && {
                                       color: 'primary.main',
+                                      backgroundColor: 'transparent!important',
                                     }),
                                   }}
                                 >
-                                  {typeof child.icon === 'string' ? (
-                                    <FeatherIcon icon={child.icon} width="20" height="20" />
-                                  ) : (
-                                    child.icon
-                                  )}
-                                </ListItemIcon>
-                                <ListItemText>{t(child.title)}</ListItemText>
-                              </ListItem>
-                            );
-                          })}
+                                  <ListItemIcon
+                                    sx={{
+                                      svg: { width: '16px', marginLeft: '3px' },
+                                      ...(pathDirect === child.href && {
+                                        color: 'primary.main',
+                                      }),
+                                    }}
+                                  >
+                                    {typeof child.icon === 'string' ? (
+                                      <FeatherIcon icon={child.icon} width="20" height="20" />
+                                    ) : (
+                                      child.icon
+                                    )}
+                                  </ListItemIcon>
+                                  <ListItemText>{t(child.title)}</ListItemText>
+                                </ListItem>
+                              );
+                            })}
                         </List>
                       </Collapse>
                     </React.Fragment>

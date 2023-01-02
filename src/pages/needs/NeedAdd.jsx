@@ -86,7 +86,7 @@ const NeedAdd = () => {
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
 
   const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo } = swDetails;
+  const { swInfo, loading: loadingSw } = swDetails;
 
   const needAdd = useSelector((state) => state.needAdd);
   const { success: successAddNeed, loading: loadingAddNeed, error: errorAddNeed } = needAdd;
@@ -320,7 +320,7 @@ const NeedAdd = () => {
             getOptionLabel={(option) =>
               `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
             }
-            loading={isLoadingChildren}
+            loading={loadingSw || isLoadingChildren}
             renderOption={(props, option) => (
               <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                 {option.isConfirmed ? (

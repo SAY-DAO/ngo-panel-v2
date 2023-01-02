@@ -398,7 +398,7 @@ const NeedTable = () => {
 
   // for social worker with limited permission
   const swById = useSelector((state) => state.swById);
-  const { children } = swById;
+  const { children, loading: loadingSw, success: successSwChildren } = swById;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
@@ -605,7 +605,7 @@ const NeedTable = () => {
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => `${option.id} - ${option.name}`}
             options={optionsNgo}
-            loading={loadingNgo}
+            loading={loadingSw || loadingNgo}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -659,7 +659,7 @@ const NeedTable = () => {
               </Box>
             )}
             options={(successNgoList && ngoId) || children ? options : []}
-            loading={loadingChildren}
+            loading={loadingSw || loadingChildren}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -684,7 +684,7 @@ const NeedTable = () => {
         </Grid>
       ) : (
         needsData &&
-        (successChildren || successChild) &&
+        (successChildren || successChild || successSwChildren) &&
         successChildrenNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
             <Grid container direction="row">

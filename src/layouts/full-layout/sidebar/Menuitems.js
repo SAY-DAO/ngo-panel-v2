@@ -35,6 +35,7 @@ const Menuitems = [
         title: 'sidebar.list',
         icon: 'list',
         href: '/children/list',
+        admin: true,
       },
       {
         title: 'sidebar.add',
@@ -54,11 +55,13 @@ const Menuitems = [
         title: 'sidebar.list',
         icon: 'list',
         href: '/need/list',
+        admin: true,
       },
       {
         title: 'sidebar.add',
         icon: 'edit',
         href: '/need/add',
+        admin: true,
       },
     ],
   },
