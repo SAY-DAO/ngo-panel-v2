@@ -9,14 +9,15 @@ import { fetchChildList } from '../../redux/actions/childrenAction';
 const ChildrenList = () => {
   const dispatch = useDispatch();
 
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+
   const childAll = useSelector((state) => state.childAll);
   const { myChildren } = childAll;
 
   const swById = useSelector((state) => state.swById);
   const { children } = swById;
 
-  const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo } = swDetails;
 
   // fetch children
   useEffect(() => {

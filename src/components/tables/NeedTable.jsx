@@ -43,6 +43,7 @@ import LinearNeedStats from '../analytics/LinearNeedStats';
 import PieChart from '../analytics/PieChart';
 import { deleteNeed, fetchChildNeeds, updateNeedConfirm } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
+import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -382,6 +383,10 @@ const NeedTable = () => {
   const [optionsNgo, setOptionsNgo] = useState([]);
   const loadingNgo = openNgo && optionsNgo.length === 0;
 
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, loading: loadingChildrenNeeds, success: successChildrenNeeds } = childNeeds;
 
@@ -390,6 +395,10 @@ const NeedTable = () => {
 
   const childrenByNgo = useSelector((state) => state.childrenByNgo);
   const { childList, loading: loadingChildren, success: successChildren } = childrenByNgo;
+
+  // for social worker with limited permission
+  const swById = useSelector((state) => state.swById);
+  const { children } = swById;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
@@ -456,9 +465,19 @@ const NeedTable = () => {
   useEffect(() => {
     if (!openNgo) {
       setOptionsNgo([]);
-    } else {
-      dispatch(fetchNgoList());
+    } else if (swInfo) {
+      // super admin
+      if (swInfo.typeId === 1) {
+        dispatch(fetchNgoList());
+      } else if (swInfo.typeId !== 1) {
+        setOptionsNgo([{
+          id: swInfo.ngoId,
+          name: swInfo.ngoName
+        }])
+      }
+
     }
+
   }, [openNgo]);
 
   // Autocomplete children
@@ -467,6 +486,7 @@ const NeedTable = () => {
     if (loadingChildren) {
       return undefined;
     }
+    // super admin
     if (active && successChildren) {
       // sort children
       const sortedChildren = childList.children.sort(
@@ -474,19 +494,38 @@ const NeedTable = () => {
       );
       setOptions([...sortedChildren]);
     }
+    // social worker
+    if (active && children) {
+      // sort children
+      const sortedChildren = children.children.sort(
+        (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
+      );
+      console.log(children)
+
+      setOptions([...sortedChildren]);
+    }
     return () => {
       active = false;
     };
-  }, [loadingChildren, successChildren, ngoId]);
+  }, [loadingChildren, successChildren, children, ngoId]);
 
   // child open
   useEffect(() => {
     if (!open || openNgo) {
       setOptions([]);
     } else if (ngoId && (open || !openNgo)) {
-      dispatch(fetchChildrenByNgo({ ngoId }));
+      // super admin
+      if (swInfo.typeId === 1) {
+        dispatch(fetchChildrenByNgo({ ngoId }));
+      } else if (swInfo.typeId !== 1) {
+        dispatch(fetchSwChildList());
+        setOptions([{
+          id: swInfo.ngoId,
+          name: swInfo.ngoName
+        }])
+      }
     }
-  }, [open, openNgo, ngoId]);
+  }, [open, openNgo, ngoId, swInfo]);
 
   // when click on Breadcrumb use the state to retrieve the child
   useEffect(() => {
@@ -619,7 +658,7 @@ const NeedTable = () => {
                 )}
               </Box>
             )}
-            options={successNgoList && ngoId ? options : []}
+            options={(successNgoList && ngoId) || children ? options : []}
             loading={loadingChildren}
             renderInput={(params) => (
               <TextField

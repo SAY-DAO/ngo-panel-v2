@@ -51,6 +51,7 @@ import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
 import { getOrganizedNeeds } from '../../utils/helpers';
+import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
@@ -83,6 +84,9 @@ const NeedAdd = () => {
   const [finalImageFile, setFinalImageFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const needAdd = useSelector((state) => state.needAdd);
   const { success: successAddNeed, loading: loadingAddNeed, error: errorAddNeed } = needAdd;
@@ -148,9 +152,17 @@ const NeedAdd = () => {
     if (!openChildren) {
       setOptionsChildren([]);
     } else if (!myChildren && openChildren) {
-      dispatch(fetchChildList());
+      if (swInfo) {
+        // super admin
+        if (swInfo.typeId === 1) {
+          dispatch(fetchChildList()); // all => confirm=2, existence_status=1
+        } else if (swInfo.typeId !== 1) {
+          dispatch(fetchSwChildList());
+        }
+      }
     }
-  }, [openChildren, setOpenChildren, childId]);
+  }, [openChildren, setOpenChildren, childId, swInfo]);
+
 
   // Autocomplete pre need
   useEffect(() => {
@@ -314,7 +326,7 @@ const NeedAdd = () => {
                 {option.isConfirmed ? (
                   <>
                     <FeatherIcon color="green" icon="check" width="18" />
-                    <Typography variant="body1" sx={{fontSize: 13}}>
+                    <Typography variant="body1" sx={{ fontSize: 13 }}>
                       {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
                     </Typography>
                   </>
@@ -710,8 +722,8 @@ const NeedAdd = () => {
                               id="type-controlled-open-select"
                             >
                               {watch('provider') &&
-                              providerList &&
-                              providerList.filter((p) => p.id === watch('provider'))[0]
+                                providerList &&
+                                providerList.filter((p) => p.id === watch('provider'))[0]
                                 ? providerList.filter((p) => p.id === watch('provider'))[0].typeName
                                 : t('need.providerSelect')}
                             </Typography>

@@ -274,7 +274,7 @@ export const fetchSwChildList = (swId) => async (dispatch, getState) => {
        response = await publicApi.get(`/child/all/confirm=${2}?sw_id=${swId}`, config);
 
   } else{
-    response = await publicApi.get(`/child/all/confirm=${1}`, config);
+    response = await publicApi.get(`/child/all/confirm=${2}`, config);
 
   }
 
