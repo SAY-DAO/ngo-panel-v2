@@ -344,9 +344,8 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     if (values.description) {
       formData.append('description_translations', values.description);
     }
-    if (values.category) {
-      formData.append('category', parseInt(values.category, 10));
-    }
+    // category could be zero
+    formData.append('category', parseInt(values.category, 10));
     if (values.isUrgent) {
       formData.append('isUrgent', values.isUrgent);
     } else {
@@ -379,10 +378,10 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     for (const value of formData.values()) {
       console.log(value);
     }
-    const { data } = await publicApi.post(`/need/`, formData, config);
+    // const { data } = await publicApi.post(`/need/`, formData, config);
     dispatch({
       type: ADD_ONE_NEED_SUCCESS,
-      payload: data,
+      // payload: data,
     });
   } catch (e) {
     dispatch({
