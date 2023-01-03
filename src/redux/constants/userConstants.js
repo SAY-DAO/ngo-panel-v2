@@ -1,3 +1,8 @@
+export const MY_PAGE_REQUEST = 'MY_PAGE_REQUEST';
+export const MY_PAGE_SUCCESS = 'MY_PAGE_SUCCESS';
+export const MY_PAGE_FAIL = 'MY_PAGE_FAIL';
+export const MY_PAGE_RESET = 'MY_PAGE_RESET';
+
 export const USER_LOGIN_REQUEST = 'USER_LOGIN_REQUEST';
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 export const USER_LOGIN_FAIL = 'USER_LOGIN_FAIL';

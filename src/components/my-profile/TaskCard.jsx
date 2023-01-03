@@ -67,7 +67,7 @@ const TaskCard = ({ need }) => {
                 borderRadius: '50%',
                 width: '50px',
                 height: '50px',
-                background: `url(${need.child.awakeAvatarUrl})`,
+                // background: `url(${need.child.awakeAvatarUrl})`,
                 '&:hover': {
                   background: `url(${need.imageUrl})`,
                   backgroundPosition: 'center',
@@ -89,10 +89,10 @@ const TaskCard = ({ need }) => {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {need.child.sayName}
+                {/* {need.child.sayName} */}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="200">
-                {getAge(need.child.birthDate)} yrs
+                {/* {getAge(need.child.birthDate)} yrs */}
               </Typography>
             </Box>
             <Box

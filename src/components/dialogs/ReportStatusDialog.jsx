@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { Autocomplete, Box, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
 
 export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
   const { t } = useTranslation();
@@ -19,14 +20,14 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
   const [currentStatus, setCurrentStatus] = useState();
   const [statusId, setStatusId] = useState();
 
-  // Autocomplete my Children
+  // Autocomplete status
   useEffect(() => {
-    if (need.type === 0) {
-      if (need.status === 2) {
+    if (need.type === NeedTypeEnum.SERVICE) {
+      if (need.status === ServiceStatusEnum.COMPLETE_PAY) {
         setCurrentStatus(t('need.needDialogue.service.2'));
-      } else if (need.status === 3) {
+      } else if (need.status === ServiceStatusEnum.MONEY_TO_NGO) {
         setCurrentStatus(t('need.needDialogue.service.3'));
-      } else if (need.status === 4) {
+      } else if (need.status === ServiceStatusEnum.DELIVERED) {
         setCurrentStatus(t('need.needDialogue.service.4'));
       }
       setOptionsStatus([
@@ -34,14 +35,14 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
         { title: t('need.needDialogue.service.3'), id: 3 },
         { title: t('need.needDialogue.service.4'), id: 4 },
       ]);
-    } else if (need.type === 1) {
-      if (need.status === 2) {
+    } else if (need.type === NeedTypeEnum.PRODUCT) {
+      if (need.status === ProductStatusEnum.COMPLETE_PAY) {
         setCurrentStatus(t('need.needDialogue.product.2'));
-      } else if (need.status === 3) {
+      } else if (need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
         setCurrentStatus(t('need.needDialogue.product.3'));
-      } else if (need.status === 4) {
+      } else if (need.status === ProductStatusEnum.DELIVERED_TO_NGO) {
         setCurrentStatus(t('need.needDialogue.product.4'));
-      } else if (need.status === 5) {
+      } else if (need.status === ProductStatusEnum.DELIVERED) {
         setCurrentStatus(t('need.needDialogue.product.4'));
       }
       setOptionsStatus([

@@ -1,5 +1,4 @@
-import { daoApi, publicApi } from '../../apis/sayBase';
-import needListSerializer from '../../utils/serializer';
+import {  publicApi } from '../../apis/sayBase';
 import {
   SW_DETAILS_REQUEST,
   SW_LIST_REQUEST,
@@ -28,112 +27,7 @@ import {
   MIGRATE_ONE_CHILD_REQUEST,
   MIGRATE_ONE_CHILD_SUCCESS,
   MIGRATE_ONE_CHILD_FAIL,
-  SW_PROFILE_REQUEST,
-  SW_PROFILE_SUCCESS,
-  SW_PROFILE_FAIL,
 } from '../constants/socialWorkerConstants';
-
-export const fetchSocialWorkerProfile = (swId, limit) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: SW_PROFILE_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const needList = [];
-
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-        'X-SKIP': 0,
-        'X-TAKE': 10, // just get last 10 in case they created them newly
-      },
-    };
-    const response = await publicApi.get(`/socialworkers/${swId}/createdNeeds`, config);
-
-    for (let i = 0; i < response.data.length; i++) {
-      const need = needListSerializer(response.data, i);
-      needList.push(need);
-    }
-    const needRequest = {
-      needData: needList,
-    };
-
-    await daoApi.post(`/sync/update/multi`, needRequest);
-
-    const { data } = await daoApi.get(`/users/social-worker/${swId}/createdNeeds?limit=${limit}`, {
-      'Content-type': 'application/json',
-    });
-
-    dispatch({
-      type: SW_PROFILE_SUCCESS,
-      payload: {
-        needs: data,
-      },
-    });
-  } catch (e) {
-    dispatch({
-      type: SW_PROFILE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
-    });
-  }
-};
-
-export const fetchSupervisorProfile = (swId, limit) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: SW_PROFILE_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const needList = [];
-
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-        'X-SKIP': 0,
-        'X-TAKE': 20, // just get last 10 in case they created them newly
-      },
-    };
-    const response = await publicApi.get(`/needs?isConfirmed=true`, config);
-    for (let i = 0; i < response.data.needs.length; i++) {
-      const need = needListSerializer(response.data.needs, i);
-      needList.push(need);
-    }
-    const needRequest = {
-      needData: needList,
-    };
-
-    await daoApi.post(`/sync/update/multi`, needRequest);
-
-    const response1 = await daoApi.get(
-      `/users/social-worker/${swId}/confirmedNeeds?limit=${limit}`,
-      {
-        'Content-type': 'application/json',
-      },
-    );
-
-    const response2 = await daoApi.get(
-      `/users/social-worker/${swId}/confirmedChildren?limit=${limit}`,
-      {
-        'Content-type': 'application/json',
-      },
-    );
-
-    dispatch({
-      type: SW_PROFILE_SUCCESS,
-      payload: {
-        needs: response1.data,
-        children: response2.data,
-      },
-    });
-  } catch (e) {
-    dispatch({
-      type: SW_PROFILE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
-    });
-  }
-};
 
 export const fetchSocialWorkerDetails = () => async (dispatch, getState) => {
   try {
@@ -269,14 +163,12 @@ export const fetchSwChildList = (swId) => async (dispatch, getState) => {
       },
     };
     // both confirmed and not confirmed children
-    let response
-    if(swId){
-       response = await publicApi.get(`/child/all/confirm=${2}?sw_id=${swId}`, config);
-
-  } else{
-    response = await publicApi.get(`/child/all/confirm=${2}`, config);
-
-  }
+    let response;
+    if (swId) {
+      response = await publicApi.get(`/child/all/confirm=${2}?sw_id=${swId}`, config);
+    } else {
+      response = await publicApi.get(`/child/all/confirm=${2}`, config);
+    }
 
     dispatch({
       type: SW_CHILD_LIST_SUCCESS,

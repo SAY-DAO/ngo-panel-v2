@@ -50,7 +50,7 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
-import { getOrganizedNeeds } from '../../utils/helpers';
+import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 
 const NeedAdd = () => {
@@ -156,8 +156,8 @@ const NeedAdd = () => {
       setOptionsChildren([]);
     } else if (!myChildren && openChildren) {
       if (swInfo) {
-        // super admin
-        if (swInfo.typeId === 1) {
+        // super admin & admin
+        if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
           dispatch(fetchChildList()); // all => confirm=2, existence_status=1
         } else if (swInfo.typeId !== 1) {
           dispatch(fetchSwChildList());

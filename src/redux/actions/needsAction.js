@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { daoApi, publicApi } from '../../apis/sayBase';
+import { RolesEnum } from '../../utils/helpers';
 import {
   CHILD_EXAMPLE_NEEDS_FAIL,
   CHILD_EXAMPLE_NEEDS_REQUEST,
@@ -158,8 +159,8 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
     };
 
     let url;
-    // super admin
-    if (swInfo.typeId === 1) {
+    // super admin & admin
+    if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
       url = `/needs`;
     } else {
       url = `/socialworkers/${userInfo.id}/createdNeeds`;

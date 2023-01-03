@@ -20,24 +20,19 @@ import PageContainer from '../../components/container/PageContainer';
 import CoverCard from '../../components/my-profile/CoverCard';
 import TaskCard from '../../components/my-profile/TaskCard';
 import {
-  fetchSocialWorkerProfile,
-  fetchSocialWorkersList,
-  fetchSupervisorProfile,
-} from '../../redux/actions/socialWorkerAction';
+  fetchMyPage,
+} from '../../redux/actions/userAction';
 import {
-  NeedTypeEnum,
-  PaymentStatusEnum,
-  ProductStatusEnum,
   RolesEnum,
-  ServiceStatusEnum,
 } from '../../utils/helpers';
-import { SW_PROFILE_RESET } from '../../redux/constants/socialWorkerConstants';
+import { MY_PAGE_RESET } from '../../redux/constants/userConstants';
+import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 
 const MyProfile = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const [limit, setLimit] = useState(10);
+  const [take, setTake] = useState(10);
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
@@ -46,8 +41,8 @@ const MyProfile = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const swProfile = useSelector((state) => state.swProfile);
-  const { profile, loading: loadingProfile } = swProfile;
+  const myPage = useSelector((state) => state.myPage);
+  const { data, loading: loadingProfile } = myPage;
 
   const swAll = useSelector((state) => state.swAll);
   const { swList, success: successSwAll } = swAll;
@@ -77,83 +72,17 @@ const MyProfile = () => {
     }
   }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
 
-  const organizedNeeds = [[], [], [], []]; // [[not paid], [payment], [purchased/delivered Ngo], [Done]]
-  if (profile && profile.needs && profile.needs.items) {
-    for (let i = 0; i < profile.needs.items.length; i++) {
-      // not Paid
-      if (profile.needs.items[i].status === 0) {
-        organizedNeeds[0].push(profile.needs.items[i]);
-      }
-      // Payment Received
-      else if (
-        profile.needs.items[i].status === PaymentStatusEnum.PARTIAL_PAY ||
-        profile.needs.items[i].status === PaymentStatusEnum.COMPLETE_PAY
-      ) {
-        organizedNeeds[1].push(profile.needs.items[i]);
-      }
-
-      if (profile.needs.items[i].type === NeedTypeEnum.SERVICE) {
-        // Payment sent to NGO
-        if (profile.needs.items[i].status === ServiceStatusEnum.MONEY_TO_NGO) {
-          organizedNeeds[2].push(profile.needs.items[i]);
-        }
-        // Delivered to child
-        if (profile.needs.items[i].status === ServiceStatusEnum.DELIVERED) {
-          organizedNeeds[3].push(profile.needs.items[i]);
-        }
-      } else if (profile.needs.items[i].type === NeedTypeEnum.PRODUCT) {
-        // Purchased
-        if (profile.needs.items[i].status === ProductStatusEnum.PURCHASED_PRODUCT) {
-          organizedNeeds[2].push(profile.needs.items[i]);
-        }
-        // Delivered to Ngo
-        if (profile.needs.items[i].status === ProductStatusEnum.DELIVERED_TO_NGO) {
-          organizedNeeds[2].push(profile.needs.items[i]);
-        }
-        // Delivered to child
-        if (profile.needs.items[i].status === ProductStatusEnum.DELIVERED) {
-          organizedNeeds[3].push(profile.needs.items[i]);
-        }
-      }
-    }
-  }
-  console.log('organized Needs');
-  console.log(organizedNeeds);
-
   useEffect(() => {
-    if (!swNewDetails && swInfo) {
-      if (swInfo && swInfo.typeId === RolesEnum.SAY_SUPERVISOR) {
-        dispatch(fetchSupervisorProfile(swInfo.id, limit));
-      }
-      if (swInfo && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
-        dispatch(fetchSocialWorkerProfile(swInfo.id, limit));
-      }
-      if (swInfo && swInfo.typeId === RolesEnum.COORDINATOR) {
-        // dispatch(fetchContributorProfile(swInfo.id, limit));
-      }
-    }
-    // using AutoComplete
-    if (swNewDetails) {
-      if (swNewDetails.typeId === RolesEnum.SAY_SUPERVISOR) {
-        dispatch(fetchSupervisorProfile(swNewDetails.id, limit));
-      }
-      if (
-        swNewDetails.typeId === RolesEnum.SOCIAL_WORKER ||
-        swNewDetails.typeId === RolesEnum.NGO_SUPERVISOR
-      ) {
-        dispatch(fetchSocialWorkerProfile(swNewDetails.id, limit));
-      }
-      if (swNewDetails.typeId === RolesEnum.COORDINATOR) {
-        // dispatch(fetchContributorProfile(swNewDetails.id, limit));
-      }
+    if (swInfo) {
+      dispatch(fetchMyPage(take));
     }
     return () => {
-      dispatch({ type: SW_PROFILE_RESET });
+      dispatch({ type: MY_PAGE_RESET });
     };
-  }, [swNewDetails, swInfo, limit]);
+  }, [swNewDetails, swInfo, take]);
 
   const handleChange = (event) => {
-    setLimit(event.target.value);
+    setTake(event.target.value);
   };
   return (
     <PageContainer title="User Profile" description="this is User Profile page">
@@ -230,7 +159,7 @@ const MyProfile = () => {
                       sx={{ minWidth: '200px' }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={limit}
+                      value={take}
                       label={t('myProfile.countRecent.title')}
                       onChange={handleChange}
                     >
@@ -252,29 +181,29 @@ const MyProfile = () => {
                   <Grid item xs={3}>
                     <Card elevation={4}>
                       <Typography>{t('myProfile.taskManager.title.notPaid')}</Typography>
-                      {organizedNeeds[0] &&
-                        organizedNeeds[0].map((need) => <TaskCard key={need.id} need={need} />)}
+                      {data && data.needs[0] &&
+                        data && data.needs[0].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
                   </Grid>
                   <Grid item xs={3}>
                     <Card elevation={4}>
                       <Typography>{t('myProfile.taskManager.title.paid')}</Typography>
-                      {organizedNeeds[1] &&
-                        organizedNeeds[1].map((need) => <TaskCard key={need.id} need={need} />)}
+                      {data && data.needs[1] &&
+                        data && data.needs[1].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
                   </Grid>
                   <Grid item xs={3}>
                     <Card elevation={4}>
                       <Typography>{t('myProfile.taskManager.title.purchased')}</Typography>
-                      {organizedNeeds[2] &&
-                        organizedNeeds[2].map((need) => <TaskCard key={need.id} need={need} />)}
+                      {data && data.needs[2] &&
+                        data && data.needs[2].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
                   </Grid>
                   <Grid item xs={3}>
                     <Card elevation={4}>
                       <Typography>{t('myProfile.taskManager.title.done')}</Typography>
-                      {organizedNeeds[3] &&
-                        organizedNeeds[3].map((need) => <TaskCard key={need.id} need={need} />)}
+                      {data && data.needs[3] &&
+                        data && data.needs[3].map((need) => <TaskCard key={need.id} need={need} />)}
                     </Card>
                   </Grid>
                 </Grid>

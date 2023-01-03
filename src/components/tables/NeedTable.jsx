@@ -44,6 +44,7 @@ import PieChart from '../analytics/PieChart';
 import { deleteNeed, fetchChildNeeds, updateNeedConfirm } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
+import { RolesEnum } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -466,8 +467,8 @@ const NeedTable = () => {
     if (!openNgo) {
       setOptionsNgo([]);
     } else if (swInfo) {
-      // super admin
-      if (swInfo.typeId === 1) {
+      // super admin & admin
+      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
         dispatch(fetchNgoList());
       } else if (swInfo.typeId !== 1) {
         setOptionsNgo([{
@@ -486,7 +487,7 @@ const NeedTable = () => {
     if (loadingChildren) {
       return undefined;
     }
-    // super admin
+    // super admin & admin
     if (active && successChildren) {
       // sort children
       const sortedChildren = childList.children.sort(
@@ -514,8 +515,8 @@ const NeedTable = () => {
     if (!open || openNgo) {
       setOptions([]);
     } else if (ngoId && (open || !openNgo)) {
-      // super admin
-      if (swInfo.typeId === 1) {
+      // super admin & admin
+      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
         dispatch(fetchChildrenByNgo({ ngoId }));
       } else if (swInfo.typeId !== 1) {
         dispatch(fetchSwChildList());

@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { getAge } from '../../utils/helpers';
+import { ChildExistenceEnum, getAge } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -500,7 +500,7 @@ const ChildrenTable = ({ childList }) => {
                                 <Box
                                   sx={{
                                     backgroundColor:
-                                      row.existence_status === 1
+                                      row.existence_status === ChildExistenceEnum.ALIVE_PRESENT
                                         ? (theme) => theme.palette.success.main
                                         : (theme) => theme.palette.error.main,
                                     borderRadius: '100%',

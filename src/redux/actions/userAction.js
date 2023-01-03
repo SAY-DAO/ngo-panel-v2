@@ -1,4 +1,4 @@
-import { publicApi } from '../../apis/sayBase';
+import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -16,6 +16,9 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_SUCCESS,
+  MY_PAGE_REQUEST,
+  MY_PAGE_SUCCESS,
+  MY_PAGE_FAIL
 } from '../constants/userConstants';
 
 export const register = (userName, password, theKey, value, otp) => async (dispatch) => {
@@ -207,3 +210,93 @@ export const userEditProfile =
       });
     }
   };
+
+export const fetchMyPage = ( take) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: MY_PAGE_REQUEST });
+    const {
+      userLogin: { userInfo },
+      swDetails: { swInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        'X-SKIP': 0,
+        'X-TAKE': 500,
+      },
+    };
+console.log(take)
+    const { data } = await daoApi.get(`/users/myPage/${swInfo.ngoId}/${swInfo.id}`, config);
+
+    dispatch({
+      type: MY_PAGE_SUCCESS,
+      payload: {
+        needs: data,
+      },
+    });
+  } catch (e) {
+    dispatch({
+      type: MY_PAGE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+
+// export const fetchSupervisorProfile = (swId, limit) => async (dispatch, getState) => {
+//   try {
+//     dispatch({ type: MY_PAGE_REQUEST });
+//     const {
+//       userLogin: { userInfo },
+//     } = getState();
+//     const needList = [];
+
+//     const config = {
+//       headers: {
+//         'Content-type': 'application/json',
+//         Authorization: userInfo && userInfo.access_token,
+//         'X-SKIP': 0,
+//         'X-TAKE': 20, // just get last 10 in case they created them newly
+//       },
+//     };
+//     const response = await publicApi.get(`/needs?isConfirmed=true`, config);
+//     for (let i = 0; i < response.data.needs.length; i++) {
+//       const need = needListSerializer(response.data.needs, i);
+//       needList.push(need);
+//     }
+//     const needRequest = {
+//       needData: needList,
+//     };
+
+//     await daoApi.post(`/sync/update/multi`, needRequest);
+
+//     const response1 = await daoApi.get(
+//       `/users/social-worker/${swId}/confirmedNeeds?limit=${limit}`,
+//       {
+//         'Content-type': 'application/json',
+//       },
+//     );
+
+//     const response2 = await daoApi.get(
+//       `/users/social-worker/${swId}/confirmedChildren?limit=${limit}`,
+//       {
+//         'Content-type': 'application/json',
+//       },
+//     );
+
+//     dispatch({
+//       type: MY_PAGE_SUCCESS,
+//       payload: {
+//         needs: response1.data,
+//         children: response2.data,
+//       },
+//     });
+//   } catch (e) {
+//     dispatch({
+//       type: MY_PAGE_FAIL,
+//       payload: e.response && e.response.status ? e.response : e.response.data.message,
+//     });
+//   }
+// };

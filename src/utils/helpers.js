@@ -18,6 +18,14 @@ export function getAge(DOB) {
 // isDone ==> index 5
 // isConfirmed ==> index 6
 // unpayable ==> index 7
+
+export const NeedCategoryEnum = {
+  GROWTH: 0,
+  JOY: 1,
+  HEALTH: 2,
+  SURRONDING: 3,
+};
+
 export function getOrganizedNeeds(theNeeds) {
   const needData = [[], [], [], [], [], [], [], []];
   for (let i = 0; i < theNeeds.needs.length; i += 1) {

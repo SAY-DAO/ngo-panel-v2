@@ -5,6 +5,7 @@ import PageContainer from '../../components/container/PageContainer';
 import ChildrenTable from '../../components/tables/ChildrenTable';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { fetchChildList } from '../../redux/actions/childrenAction';
+import { RolesEnum } from '../../utils/helpers';
 
 const ChildrenList = () => {
   const dispatch = useDispatch();
@@ -22,8 +23,8 @@ const ChildrenList = () => {
   // fetch children
   useEffect(() => {
     if (swInfo) {
-      // super admin
-      if (swInfo.typeId === 1) {
+      // super admin & admin
+      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
         dispatch(fetchChildList()); // all => confirm=2, existence_status=1
       } else if (swInfo.typeId !== 1) {
         dispatch(fetchSwChildList());

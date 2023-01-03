@@ -18,7 +18,6 @@ import {
   swAddReducer,
   swMigrateReducer,
   swMigrateOneReducer,
-  swProfileReducer,
 } from './socialWorkerReducer';
 import {
   childAddReducer,
@@ -27,7 +26,7 @@ import {
   childrenByNgoReducer,
   childUpdateReducer,
 } from './childrenReducer';
-import { userLoginReducer } from './userReducer';
+import { userLoginReducer, myPageReducer } from './userReducer';
 import {
   allNeedsReducer,
   childNeedsReducer,
@@ -44,12 +43,19 @@ import {
   serverReducer,
   signatureReducer,
 } from './daoReducer';
-import { providerAddReducer, providerByIdReducer, providerDeleteReducer, providerListReducer, providerUpdateIsActiveReducer, providerUpdateReducer } from './providerReducer';
+import {
+  providerAddReducer,
+  providerByIdReducer,
+  providerDeleteReducer,
+  providerListReducer,
+  providerUpdateIsActiveReducer,
+  providerUpdateReducer,
+} from './providerReducer';
 
 export default combineReducers({
   CustomizerReducer,
   countryList: countryListReducer,
-  swProfile: swProfileReducer,
+  myPage: myPageReducer,
   userLogin: userLoginReducer,
   swDetails: swDetailsReducer,
   swById: swByIdReducer,

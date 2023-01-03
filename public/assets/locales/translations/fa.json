@@ -564,14 +564,16 @@
     "countRecent": {
       "title": "نمایش آخرین نیازها",
       "count": {
-        "ten": "ده",
-        "fifty": "پنجاه",
-        "hundred": "صد"
+        "ten": "ده تا",
+        "fifty": "پنجاه تا",
+        "hundred": "صد تا"
       }
     },
-    "signed": "امضا شده",
-    "createdChildren": "کودکان اضافه شده",
+    "signed": "امضا",
+    "myChildren": "کودکان من",
+    "allChildren": "تمام کودکان",
     "createdNeeds": "نیازهای اضافه شده",
+    "confirmedNeeds": "نیازهای تایید شده",
     "taskManager": {
       "title": {
         "notPaid": "پرداخت نشده",

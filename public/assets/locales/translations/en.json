@@ -530,8 +530,10 @@
       }
     },
     "signed": "Signed",
-    "createdChildren": "Created Children",
+    "myChildren": "My Children",
+    "allChildren": "All Children",
     "createdNeeds": "Created Needs",
+    "confirmedNeeds": "Confirmed Needs",
     "taskManager": {
       "title": {
         "notPaid": "Not Paid",

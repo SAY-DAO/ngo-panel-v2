@@ -49,6 +49,7 @@ import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/DaoAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
+import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -220,10 +221,10 @@ function EnhancedTableHead(props) {
   ];
 
   useEffect(() => {
-    if (typeId === 1) {
+    if (typeId === NeedTypeEnum.PRODUCT) {
       setHeadCells(headCellsProduct);
     }
-    if (typeId === 0) {
+    if (typeId === NeedTypeEnum.SERVICE) {
       setHeadCells(headCellsService);
     }
   }, [typeId]);
@@ -397,10 +398,10 @@ const ReportStatusTable = () => {
 
   // set Service or Product titles
   useEffect(() => {
-    if (typeId === 1) {
+    if (typeId === NeedTypeEnum.PRODUCT) {
       setOptionStatus(optionsProduct);
     }
-    if (typeId === 0) {
+    if (typeId === NeedTypeEnum.SERVICE) {
       setOptionStatus(optionsService);
     }
   }, [typeId, openType]);
@@ -413,8 +414,8 @@ const ReportStatusTable = () => {
     }
 
     if (active && swInfo) {
-      // super admin
-      if (swInfo.typeId === 1 && successNgoList) {
+      // super admin & admin
+      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN && successNgoList) {
         const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
         setOptionsNgo([...activeNgoList]);
       }
@@ -436,7 +437,7 @@ const ReportStatusTable = () => {
     if (!openNgo) {
       setOptionsNgo([]);
     } else if (swInfo) {
-      if (swInfo.typeId === 1) {
+      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
         dispatch(fetchNgoList());
       } else if (swInfo.typeId !== 1) {
         setOptionsNgo([{
@@ -451,7 +452,7 @@ const ReportStatusTable = () => {
   // ngo LIST
   useEffect(() => {
     // only super admin
-    if (swInfo && swInfo.typeId === 1) {
+    if (swInfo && swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
       dispatch(fetchNgoList());
     }
   }, [swInfo]);
@@ -466,8 +467,8 @@ const ReportStatusTable = () => {
   // fetch needs
   useEffect(() => {
     if (successNgoList) {
-      // super admin
-      if (ngoId && swInfo.typeId === 1) {
+      // super admin & admin
+      if (ngoId && swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
         dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
       } else if (swInfo.typeId !== 1) {
         dispatch(fetchSwNeedList());
@@ -532,7 +533,7 @@ const ReportStatusTable = () => {
 
     // fetch needs receipt when open accordion
     useEffect(() => {
-      if (accOpen && ((typeId === 1 && statusId > 3) || (typeId === 0 && statusId > 3))) {
+      if (accOpen && ((typeId === NeedTypeEnum.PRODUCT && statusId > 3) || (typeId === NeedTypeEnum.SERVICE && statusId > 3))) {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
@@ -606,18 +607,18 @@ const ReportStatusTable = () => {
           <TableCell component="th" scope="row">
             {row.childSayName}
           </TableCell>
-          {typeId === 1 && <TableCell align="center">{row.title}</TableCell>}
+          {typeId === NeedTypeEnum.PRODUCT && <TableCell align="center">{row.title}</TableCell>}
           <TableCell align="center">{row.created_by_id}</TableCell>
           <TableCell align="center">
             <Box alignItems="center">
               <IconButton aria-label="attachment" size="small" onClick={handleStatusChange}>
                 <Avatar
                   src={
-                    row.status === 2 // Complete payment
+                    row.status === ProductStatusEnum.COMPLETE_PAY // Complete payment
                       ? '/images/hand-orange.svg'
-                      : row.status === 3 && typeId === 1 // Purchased Product
+                      : row.status === ProductStatusEnum.PURCHASED_PRODUCT && typeId === NeedTypeEnum.PRODUCT // Purchased Product
                         ? '/images/package-orange.svg'
-                        : (row.status === 4 && typeId === 1) || (row.status === 3 && typeId === 0) // Sent product to NGO
+                        : (row.status === ProductStatusEnum.DELIVERED_TO_NGO && typeId === NeedTypeEnum.PRODUCT) || (row.status === ServiceStatusEnum.MONEY_TO_NGO && typeId === NeedTypeEnum.SERVICE) // Sent product to NGO
                           ? '/images/package-orange.svg'
                           : '/images/child-orange.svg' // Delivered to Child
                   }
@@ -634,21 +635,21 @@ const ReportStatusTable = () => {
               </IconButton>
               <Box>
                 <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
-                  {row.status === 2 ? (
+                  {row.status === ProductStatusEnum.COMPLETE_PAY ? (
                     <>
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                     </>
-                  ) : row.status === 3 && typeId === 1 ? (
+                  ) : row.status === ProductStatusEnum.PURCHASED_PRODUCT && typeId === NeedTypeEnum.PRODUCT ? (
                     <>
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                     </>
-                  ) : (row.status === 4 && typeId === 1) || (row.status === 3 && typeId === 0) ? (
+                  ) : (row.status === ProductStatusEnum.DELIVERED_TO_NGO && typeId === NeedTypeEnum.PRODUCT) || (row.status === ServiceStatusEnum.MONEY_TO_NGO && typeId === NeedTypeEnum.SERVICE) ? (
                     <>
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
@@ -774,17 +775,17 @@ const ReportStatusTable = () => {
                     {/* 3 Product delivered to NGO - Money transferred to the NGO */}
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        {typeId === 1 ? t('need.needStatus.p3') : t('need.needStatus.s3')}
+                        {typeId === NeedTypeEnum.PRODUCT ? t('need.needStatus.p3') : t('need.needStatus.s3')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {typeId === 1 ? row.purchase_date : row.ngo_delivery_date}
+                        {typeId === NeedTypeEnum.PRODUCT ? row.purchase_date : row.ngo_delivery_date}
                       </TableCell>
                       <TableCell align="right">
                         {row.dkc &&
                           parseInt(convertor(row.dkc), 10)
                             .toLocaleString('en-US')
                             .replace(/,/g, '-')}
-                        {typeId === 0 &&
+                        {typeId === NeedTypeEnum.SERVICE &&
                           statusId > 2 &&
                           row.bank_track_id &&
                           parseInt(convertor(row.bank_track_id), 10)}
@@ -793,13 +794,13 @@ const ReportStatusTable = () => {
                     {/* 4 Product delivered to NGO - service delivery to child */}
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        {typeId === 1 ? t('need.needStatus.p4') : t('need.needStatus.s4')}
+                        {typeId === NeedTypeEnum.PRODUCT ? t('need.needStatus.p4') : t('need.needStatus.s4')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {typeId === 1 ? row.ngo_delivery_date : row.child_delivery_date}
+                        {typeId === NeedTypeEnum.PRODUCT ? row.ngo_delivery_date : row.child_delivery_date}
                       </TableCell>
                       <TableCell align="right">
-                        {typeId === 0 && statusId === 4 ? (
+                        {typeId === NeedTypeEnum.SERVICE && statusId === ServiceStatusEnum.DELIVERED ? (
                           <ReportImage row={row} statusId={statusId} />
                         ) : (
                           '-'
@@ -807,7 +808,7 @@ const ReportStatusTable = () => {
                       </TableCell>
                     </TableRow>
                     {/* 5 product delivery to child */}
-                    {typeId === 1 && (
+                    {typeId === NeedTypeEnum.PRODUCT && (
                       <TableRow>
                         <TableCell component="th" scope="row">
                           {t('need.needStatus.p5')}
@@ -831,12 +832,12 @@ const ReportStatusTable = () => {
                           loading={loadingOneNeed}
                           onClick={() => signReport()}
                           disabled={
-                            (typeId === 1 && statusId !== 5) || (typeId === 0 && statusId !== 4)
+                            (typeId === NeedTypeEnum.PRODUCT && statusId !== 5) || (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
                           }
                           variant="outlined"
                           fullWidth
                         >
-                          {(typeId === 1 && statusId !== 5) || (typeId === 0 && statusId !== 4)
+                          {(typeId === NeedTypeEnum.PRODUCT && statusId !== 5) || (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
                             ? t('need.needStatus.pending')
                             : t('need.needStatus.sign')}
                         </LoadingButton>
