@@ -378,10 +378,10 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     for (const value of formData.values()) {
       console.log(value);
     }
-    // const { data } = await publicApi.post(`/need/`, formData, config);
+    const { data } = await publicApi.post(`/need/`, formData, config);
     dispatch({
       type: ADD_ONE_NEED_SUCCESS,
-      // payload: data,
+      payload: data,
     });
   } catch (e) {
     dispatch({
