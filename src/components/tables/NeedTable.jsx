@@ -889,13 +889,27 @@ const NeedTable = () => {
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
-                                  <Typography
-                                    color="textSecondary"
-                                    variant="body1"
-                                    fontWeight="400"
+                                  <Tooltip
+                                    title={row.informations ? row.informations : ''}
+                                    placement="top-end"
                                   >
-                                    {row.informations}
-                                  </Typography>
+                                    <Typography
+                                      color="textSecondary"
+                                      variant="body1"
+                                      fontWeight="400"
+                                      sx={{
+                                        maxWidth: '400px',
+                                        textOverflow: 'ellipsis',
+                                        overflow: 'hidden',
+                                        width: '160px',
+                                        height: '1.2em',
+                                        whiteSpace: 'nowrap',
+                                      }}
+                                    >
+                                      {row.informations}
+                                    </Typography>
+                                  </Tooltip>
+
                                 </TableCell>
                                 <TableCell>
                                   <Tooltip
