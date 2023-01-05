@@ -953,7 +953,7 @@ const ChildEdit = () => {
               )}
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleImageClose}>Close</Button>
+              <Button onClick={handleImageClose}>{t('button.close')}</Button>
             </DialogActions>
           </Dialog>
           {/* <Grid>

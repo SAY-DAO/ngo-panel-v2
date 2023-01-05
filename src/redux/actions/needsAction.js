@@ -240,6 +240,7 @@ export const deleteNeed = (needId) => async (dispatch, getState) => {
 
 export const updateNeed = (values) => async (dispatch, getState) => {
   try {
+    console.log('haha');
     dispatch({ type: UPDATE_ONE_NEED_REQUEST });
     const {
       userLogin: { userInfo },
@@ -265,18 +266,10 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     if (values.description) {
       formData.append('description_translations', values.description);
     }
-    if (values.category) {
-      formData.append('category', values.category);
-    }
-    if (values.isUrgent) {
-      formData.append('isUrgent', values.isUrgent);
-    }
+    formData.append('category', values.category);
+    formData.append('isUrgent', values.isUrgent);
     if (values.cost) {
       formData.append('cost', values.cost);
-    }
-    // Can be append only in p3 (product status 3)
-    if (values.purchaseCost) {
-      formData.append('purchase_cost', values.purchaseCost);
     }
     if (values.type) {
       formData.append('type', values.type);
@@ -290,8 +283,8 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     if (values.receipts) {
       formData.append('receipts', values.receipts);
     }
-    if (values.doingDuration) {
-      formData.append('doing_duration', values.doingDuration);
+    if (values.doing_duration) {
+      formData.append('doing_duration', values.doing_duration);
     }
     if (values.details) {
       formData.append('details', values.details);
@@ -299,9 +292,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     if (values.information) {
       formData.append('informations', values.information);
     }
-    if (values.deliveryDate) {
-      formData.append('delivery_date', values.deliveryDate);
-    }
+
     if (values.finalImageFile) {
       formData.append('imageUrl', values.finalImageFile);
     }
@@ -350,13 +341,9 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     if (values.description) {
       formData.append('description_translations', values.description);
     }
-    // category could be zero
+    // category could be zero + isUrgent is a boolean 
     formData.append('category', parseInt(values.category, 10));
-    if (values.isUrgent) {
-      formData.append('isUrgent', values.isUrgent);
-    } else {
-      formData.append('isUrgent', false);
-    }
+    formData.append('isUrgent', values.isUrgent);
     if (values.cost) {
       formData.append('cost', values.cost);
     }
@@ -381,9 +368,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     if (values.imageUrl) {
       formData.append('imageUrl', values.imageUrl);
     }
-    for (const value of formData.values()) {
-      console.log(value);
-    }
+
     const { data } = await publicApi.post(`/need/`, formData, config);
     dispatch({
       type: ADD_ONE_NEED_SUCCESS,

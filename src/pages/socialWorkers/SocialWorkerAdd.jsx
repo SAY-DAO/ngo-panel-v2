@@ -58,7 +58,7 @@ const SocialWorkerAdd = () => {
       title: 'Add',
     },
   ];
-  
+
   const [coordChecked, setCoordChecked] = useState(false);
   const [finalImageFile, setFinalImageFile] = useState();
   const [finalIdImageFile, setFinalIdImageFile] = useState();
@@ -625,7 +625,7 @@ const SocialWorkerAdd = () => {
                 </Box>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleImageClose}>{t('button.close')}</Button>
               </DialogActions>
             </Dialog>
             {/* Social Worker ID Image */}
@@ -645,7 +645,7 @@ const SocialWorkerAdd = () => {
                 </Box>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleImageClose}>{t('button.close')}</Button>
               </DialogActions>
             </Dialog>
             <Grid>

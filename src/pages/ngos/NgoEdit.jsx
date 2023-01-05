@@ -477,7 +477,7 @@ const NgoEdit = () => {
                 </Box>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleImageClose}>{t('button.close')}</Button>
               </DialogActions>
             </Dialog>
             {/* Social Worker ID Image */}
@@ -491,7 +491,7 @@ const NgoEdit = () => {
                 {result && `${result.name} ${result.lastName}`}
               </DialogTitle>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleImageClose}>{t('button.close')}</Button>
               </DialogActions>
             </Dialog>
             <Grid>

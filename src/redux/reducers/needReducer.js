@@ -28,6 +28,7 @@ import {
   DELETE_NEED_REQUEST,
   DELETE_NEED_SUCCESS,
   DELETE_NEED_FAIL,
+  ADD_ONE_NEED_RESET,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -132,6 +133,8 @@ export const needAddReducer = (state = { success: false }, action) => {
       return { loading: false, success: true, added: action.payload };
     case ADD_ONE_NEED_FAIL:
       return { loading: false, error: action.payload };
+    case ADD_ONE_NEED_RESET:
+      return {};
     default:
       return state;
   }

@@ -397,7 +397,7 @@ const ProviderAdd = () => {
               </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleImageClose}>Close</Button>
+              <Button onClick={handleImageClose}>{t('button.close')}</Button>
             </DialogActions>
           </Dialog>
         </>

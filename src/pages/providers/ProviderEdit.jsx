@@ -231,12 +231,12 @@ const ProviderEdit = () => {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
       {!id ||
-      loadingProviderById ||
-      loadingProviderUpdate ||
-      !result ||
-      !countries ||
-      !states ||
-      !cities ? (
+        loadingProviderById ||
+        loadingProviderUpdate ||
+        !result ||
+        !countries ||
+        !states ||
+        !cities ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -493,7 +493,7 @@ const ProviderEdit = () => {
                 </Box>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleImageClose}>{t('button.close')}</Button>
               </DialogActions>
             </Dialog>
             {/* Social Worker ID Image */}
@@ -507,7 +507,7 @@ const ProviderEdit = () => {
                 {result && `${result.name} ${result.lastName}`}
               </DialogTitle>
               <DialogActions>
-                <Button onClick={handleImageClose}>Close</Button>
+                <Button onClick={handleImageClose}>{t('button.close')}</Button>
               </DialogActions>
             </Dialog>
             <Grid>

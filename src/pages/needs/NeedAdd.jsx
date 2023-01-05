@@ -42,6 +42,7 @@ import {
 import {
   CHILD_EXAMPLE_NEEDS_RESET,
   CHILD_ONE_NEED_RESET,
+  ADD_ONE_NEED_RESET,
 } from '../../redux/constants/needConstant';
 import { fetchActiveChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
@@ -95,7 +96,11 @@ const NeedAdd = () => {
   const { result, loading: loadingChild, success: successChild } = childById;
 
   const childAllActives = useSelector((state) => state.childAllActives);
-  const { activeChildren, loading: loadingActiveChildren, success: successActiveChildren } = childAllActives;
+  const {
+    activeChildren,
+    loading: loadingActiveChildren,
+    success: successActiveChildren,
+  } = childAllActives;
 
   const providerAll = useSelector((state) => state.providerAll);
   const { providerList } = providerAll;
@@ -116,6 +121,7 @@ const NeedAdd = () => {
 
   useEffect(() => {
     dispatch(fetchProviderList());
+    dispatch({ type: ADD_ONE_NEED_RESET });
   }, []);
 
   // one need
@@ -166,7 +172,6 @@ const NeedAdd = () => {
     }
   }, [openChildren, setOpenChildren, childId, swInfo]);
 
-
   // Autocomplete pre need
   useEffect(() => {
     if (successNeedEx) {
@@ -207,7 +212,7 @@ const NeedAdd = () => {
     type: Yup.string().required('Please enter type'),
     // doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
-    link: Yup.string().url().required('Please enter needs link'),
+    // link: Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
   });
 
@@ -240,7 +245,7 @@ const NeedAdd = () => {
     }
   }, [successNeedEx, oneNeed]);
 
-  console.log(oneNeed)
+  console.log(oneNeed);
   // set type when provider is changed
   useEffect(() => {
     setValue(
@@ -263,7 +268,7 @@ const NeedAdd = () => {
         cost: data.cost,
         type: data.type,
         category: data.category,
-        imageUrl: finalImageFile || oneNeed.imageUrl,
+        imageUrl: finalImageFile,
         details: data.details,
         information: data.informations,
         doing_duration: data.doing_duration,
@@ -381,15 +386,12 @@ const NeedAdd = () => {
                             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             overlap="circular"
                             badgeContent={
-
-
                               <div className="upload__image-wrapper">
                                 <Grid
                                   sx={{
                                     position: 'relative',
                                   }}
                                 >
-
                                   <label htmlFor="upload-image">
                                     <input
                                       accept="image/*"
@@ -416,37 +418,35 @@ const NeedAdd = () => {
                                   </label>
                                 </Grid>
                               </div>
-
                             }
                           >
-                            {
-                              oneNeed ? (
-                                <Avatar
-                                  variant="circle"
-                                  alt="user photo"
-                                  sx={{
-                                    width: 50,
-                                    height: 50,
-                                    boxShadow: '0px 7px 30px 0px',
-                                  }}
-                                  src={oneNeed.imageUrl}
-                                />
-                              ) : (
-                                <Avatar
-                                  variant="circle"
-                                  alt="icon image"
-                                  src={
-                                    finalImageFile && URL.createObjectURL(finalImageFile) // image preview
-                                  }
-                                  sx={{
-                                    width: 50,
-                                    height: 50,
-                                    boxShadow: '0px 7px 30px 0px',
-                                  }}
-                                >
-                                  <Typography sx={{ padding: 1 }}>Icon</Typography>
-                                </Avatar>
-                              )}
+                            {oneNeed ? (
+                              <Avatar
+                                variant="circle"
+                                alt="user photo"
+                                sx={{
+                                  width: 50,
+                                  height: 50,
+                                  boxShadow: '0px 7px 30px 0px',
+                                }}
+                                src={oneNeed.imageUrl}
+                              />
+                            ) : (
+                              <Avatar
+                                variant="circle"
+                                alt="icon image"
+                                src={
+                                  finalImageFile && URL.createObjectURL(finalImageFile) // image preview
+                                }
+                                sx={{
+                                  width: 50,
+                                  height: 50,
+                                  boxShadow: '0px 7px 30px 0px',
+                                }}
+                              >
+                                <Typography sx={{ padding: 1 }}>Icon</Typography>
+                              </Avatar>
+                            )}
                           </Badge>
                         }
                       >
@@ -493,9 +493,7 @@ const NeedAdd = () => {
                           setOpenPreNeed(false);
                         }}
                         onChange={(e, value) => setTheNeed(value)}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={(option) =>
                           `${option.id} - ${option.title} - ${option.name}`
                         }
@@ -934,7 +932,7 @@ const NeedAdd = () => {
                   </Box>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleImageClose}>Close</Button>
+                  <Button onClick={handleImageClose}>{t('button.close')}</Button>
                 </DialogActions>
               </Dialog>
               <Grid>
@@ -954,7 +952,7 @@ const NeedAdd = () => {
           )}
         </>
       )}
-    </PageContainer >
+    </PageContainer>
   );
 };
 

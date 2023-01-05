@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -34,6 +33,7 @@ import { fetchMyChildById } from '../../redux/actions/childrenAction';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
+import Message from '../../components/Message';
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
@@ -65,9 +65,13 @@ const NeedEdit = () => {
   const childOneNeed = useSelector((state) => state.childOneNeed);
   const { oneNeed } = childOneNeed;
 
+  const needUpdate = useSelector((state) => state.needUpdate);
+  const { success: successUpdateNeed, loading: loadingUpdateNeed, error: errorUpdateNeed } = needUpdate;
+
   // one need
   useEffect(() => {
     dispatch(fetchChildOneNeed(needId));
+    dispatch({ type: CHILD_ONE_NEED_RESET });
   }, []);
 
   // theChild
@@ -108,6 +112,7 @@ const NeedEdit = () => {
       setValue('desc_fa', oneNeed.description_translations.fa);
       setValue('desc_en', oneNeed.description_translations.en);
       setValue('informations', oneNeed.informations);
+      setValue('doing_duration', oneNeed.doing_duration);
       setValue('details', oneNeed.details); // social worker note on app
       setValue('link', oneNeed.link);
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
@@ -125,26 +130,25 @@ const NeedEdit = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    // dispatch(
-    //   updateNeed({
-    //     needId: oneNeed.id,
-    //     name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
-    //     description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
-    //     isUrgent: isUrgentChecked,
-    //     cost: data.cost,
-    //     type: data.type,
-    //     category: data.category,
-    //     imageUrl: finalImageFile || data.imageUrl,
-    //     details: data.details,
-    //     information: data.informations,
-    //     doing_duration: data.doing_duration,
-    //     link: data.link,
-    //     isUrgentDesc: data.isUrgentDesc,
-    //     affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
-    //     childId,
-    //   }),
-    // );
-    // dispatch({ type: CHILD_ONE_NEED_RESET });
+    dispatch(
+      updateNeed({
+        needId: oneNeed.id,
+        name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
+        description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
+        isUrgent: data.isUrgent,
+        cost: data.cost,
+        type: data.type,
+        category: data.category,
+        imageUrl: finalImageFile,
+        details: data.details,
+        information: data.informations,
+        doing_duration: data.doing_duration,
+        link: data.link,
+        isUrgentDesc: data.isUrgentDesc,
+        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
+        childId,
+      }),
+    );
   };
 
   // dialog image
@@ -171,6 +175,8 @@ const NeedEdit = () => {
 
   const handleUrgentChange = (e) => {
     setIsUrgentChecked(e.target.checked);
+    console.log(e.target.checked)
+    setValue('isUrgent', e.target.checked);
   };
 
   return (
@@ -511,7 +517,7 @@ const NeedEdit = () => {
                         </Grid>
                       </Grid>
                       <LoadingButton
-                        // loading={loadingAddNeed}
+                        loading={loadingUpdateNeed}
                         color="primary"
                         type="submit"
                         onClick={handleSubmit(onSubmit)}
@@ -599,22 +605,22 @@ const NeedEdit = () => {
                   </Box>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleImageClose}>Close</Button>
+                  <Button onClick={handleImageClose}>{t('button.close')}</Button>
                 </DialogActions>
               </Dialog>
-              {/* <Grid>
-                {(successAddNeed || errorAddNeed) && (
+              <Grid>
+                {(successUpdateNeed || errorUpdateNeed) && (
                   <Message
-                    severity={successAddNeed ? 'success' : 'error'}
+                    severity={successUpdateNeed ? 'success' : 'error'}
                     variant="filled"
                     input="addSw"
-                    backError={errorAddNeed}
+                    backError={errorUpdateNeed}
                     sx={{ width: '100%' }}
                   >
-                    {successAddNeed && t('socialWorker.updated')}
+                    {successUpdateNeed && t('socialWorker.updated')}
                   </Message>
                 )}
-              </Grid> */}
+              </Grid>
             </>
           )}
         </>

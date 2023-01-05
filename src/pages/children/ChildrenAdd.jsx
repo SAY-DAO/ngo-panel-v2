@@ -59,10 +59,10 @@ const ChildAdd = () => {
       title: t("BCrumb.childrenList"),
     },
     {
-      title:  t("BCrumb.add"),
+      title: t("BCrumb.add"),
     },
   ];
-  
+
   const [finalAvatarFile, setFinalAvatarFile] = useState();
   const [finalSleptAvatarFile, setFinalSleptAvatarFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
@@ -791,7 +791,7 @@ const ChildAdd = () => {
                             >
                               {Object.keys(EducationEnum).map((name, index) => (
                                 <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
-                                {t(`child.educationondition.${name}`)}
+                                  {t(`child.educationondition.${name}`)}
                                 </MenuItem>
                               ))}
                             </CustomSelect>
@@ -1010,7 +1010,7 @@ const ChildAdd = () => {
                                 error={!!errors.housingStatus}
                               >
                                 <MenuItem value="">
-                                <em>{t(`child.housingCondition.none`)}</em>
+                                  <em>{t(`child.housingCondition.none`)}</em>
                                 </MenuItem>
                                 {Object.keys(HousingStatusEnum).map((name, index) => (
                                   <MenuItem
@@ -1069,7 +1069,7 @@ const ChildAdd = () => {
                   )}
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleImageClose}>Close</Button>
+                  <Button onClick={handleImageClose}>{t('button.close')}</Button>
                 </DialogActions>
               </Dialog>
               <Grid>
