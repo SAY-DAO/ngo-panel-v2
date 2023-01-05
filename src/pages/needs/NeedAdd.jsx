@@ -43,7 +43,7 @@ import {
   CHILD_EXAMPLE_NEEDS_RESET,
   CHILD_ONE_NEED_RESET,
 } from '../../redux/constants/needConstant';
-import { fetchActiveChildList,  fetchMyChildById } from '../../redux/actions/childrenAction';
+import { fetchActiveChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
@@ -236,10 +236,11 @@ const NeedAdd = () => {
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
       setValue('cost', oneNeed.cost);
       setValue('doing_duration', oneNeed.doing_duration);
-      setValue('imageUrl', finalImageFile || oneNeed.imageUrl);
+      // setValue('imageUrl', finalImageFile || oneNeed.imageUrl);
     }
   }, [successNeedEx, oneNeed]);
 
+  console.log(oneNeed)
   // set type when provider is changed
   useEffect(() => {
     setValue(
@@ -397,26 +398,21 @@ const NeedAdd = () => {
                                       style={{ display: 'none' }}
                                       onChange={onImageChange}
                                     />
-                                    {
-                                      !oneNeed && (
-                                        <IconButton
-                                          name="upload-image"
-                                          id="upload-image"
-                                          color="primary"
-                                          component="div"
-                                        >
-                                          <AddCircleOutlineIcon
-                                            color="primary"
-                                            fontSize="medium"
-                                            sx={{
-                                              zIndex: 10,
-                                              borderRadius: '20%',
-                                            }}
-                                          />
-                                        </IconButton>
-                                      )
-                                    }
-
+                                    <IconButton
+                                      name="upload-image"
+                                      id="upload-image"
+                                      color="primary"
+                                      component="div"
+                                    >
+                                      <AddCircleOutlineIcon
+                                        color="primary"
+                                        fontSize="medium"
+                                        sx={{
+                                          zIndex: 10,
+                                          borderRadius: '20%',
+                                        }}
+                                      />
+                                    </IconButton>
                                   </label>
                                 </Grid>
                               </div>
