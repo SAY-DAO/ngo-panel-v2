@@ -236,11 +236,10 @@ const NeedAdd = () => {
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
       setValue('cost', oneNeed.cost);
       setValue('doing_duration', oneNeed.doing_duration);
-      setValue('imageUrl', oneNeed.imageUrl);
+      setValue('imageUrl', finalImageFile || oneNeed.imageUrl);
     }
   }, [successNeedEx, oneNeed]);
 
-  console.log(oneNeed)
   // set type when provider is changed
   useEffect(() => {
     setValue(
@@ -263,7 +262,7 @@ const NeedAdd = () => {
         cost: data.cost,
         type: data.type,
         category: data.category,
-        imageUrl: finalImageFile || oneNeed.doing_duration,
+        imageUrl: finalImageFile || oneNeed.imageUrl,
         details: data.details,
         information: data.informations,
         doing_duration: data.doing_duration,
