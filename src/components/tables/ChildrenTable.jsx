@@ -359,14 +359,14 @@ const ChildrenTable = ({ childList }) => {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = childList.map((n) => n.firstName);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = childList.map((n) => n.firstName);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   const handleClick = (event, id) => {
     // const selectedIndex = selected.indexOf(firstName);
@@ -385,7 +385,12 @@ const ChildrenTable = ({ childList }) => {
     //   );
     // }
 
-    setSelected([id]);
+    if (selected[0] === id) {
+      setSelected([])
+      } else {
+        setSelected([id]);
+  
+      }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -428,7 +433,7 @@ const ChildrenTable = ({ childList }) => {
                     numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
+                    // onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
                     rowCount={childList.length}
                   />

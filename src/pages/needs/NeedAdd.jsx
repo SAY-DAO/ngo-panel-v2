@@ -163,9 +163,9 @@ const NeedAdd = () => {
     } else if (!activeChildren && openChildren) {
       if (swInfo) {
         // super admin & admin
-        if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
+        if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
           dispatch(fetchActiveChildList());
-        } else if (swInfo.typeId !== 1) {
+        } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
           dispatch(fetchSwChildList());
         }
       }

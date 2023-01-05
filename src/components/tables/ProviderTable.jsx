@@ -250,14 +250,14 @@ const ProviderTable = ({ providerList }) => {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = providerList.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = providerList.map((n) => n.id);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   const handleClick = (event, id) => {
 
@@ -276,8 +276,12 @@ const ProviderTable = ({ providerList }) => {
     //     selected.slice(selectedIndex + 1),
     //   );
     // }
-    setSelected([id]);
-  };
+    if (selected[0] === id) {
+      setSelected([])
+      } else {
+        setSelected([id]);
+  
+      }  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -321,7 +325,7 @@ const ProviderTable = ({ providerList }) => {
                     numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
+                    // onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
                     rowCount={providerList.length}
                   />

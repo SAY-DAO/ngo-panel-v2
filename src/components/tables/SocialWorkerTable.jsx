@@ -297,14 +297,14 @@ const SocialWorkerTable = ({ swList }) => {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = swList.map((n) => n.firstName);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = swList.map((n) => n.firstName);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   const handleClick = (event, id) => {
     // const selectedIndex = selected.indexOf(id);
@@ -322,8 +322,12 @@ const SocialWorkerTable = ({ swList }) => {
     //     selected.slice(selectedIndex + 1),
     //   );
     // }
-    setSelected([id]);
-  };
+    if (selected[0] === id) {
+      setSelected([])
+      } else {
+        setSelected([id]);
+  
+      }  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -366,7 +370,7 @@ const SocialWorkerTable = ({ swList }) => {
                     numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
+                    // onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
                     rowCount={swList.length}
                   />

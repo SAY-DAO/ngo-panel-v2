@@ -468,9 +468,9 @@ const NeedTable = () => {
       setOptionsNgo([]);
     } else if (swInfo) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
+      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchNgoList());
-      } else if (swInfo.typeId !== 1) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -516,9 +516,9 @@ const NeedTable = () => {
       setOptions([]);
     } else if (ngoId && (open || !openNgo)) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
+      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchChildrenByNgo({ ngoId }));
-      } else if (swInfo.typeId !== 1) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
         dispatch(fetchSwChildList());
         setOptions([{
           id: swInfo.ngoId,
@@ -547,7 +547,7 @@ const NeedTable = () => {
 
   const handleClick = (event, id) => {
     // const selectedIndex = selected.indexOf(id);
-    // let newSelected = [];
+    // const newSelected = [];
 
     // if (selectedIndex === -1) {
     //   newSelected = newSelected.concat(selected, id);
@@ -562,8 +562,14 @@ const NeedTable = () => {
     //   );
     // }
 
-    setSelected([id]);
+    if (selected[0] === id) {
+      setSelected([])
+    } else {
+      setSelected([id]);
+
+    }
   };
+  // console.log(selected)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

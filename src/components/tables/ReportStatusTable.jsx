@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import {
   Box,
   Table,
@@ -11,7 +10,6 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-  Toolbar,
   Paper,
   IconButton,
   Tooltip,
@@ -33,7 +31,6 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import CircleIcon from '@mui/icons-material/Circle';
-import FeatherIcon from 'feather-icons-react';
 import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -269,50 +266,6 @@ EnhancedTableHead.propTypes = {
   typeId: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          Filter
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <FeatherIcon icon="trash-2" width="18" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FeatherIcon icon="filter" width="18" />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
 
 const ReportStatusTable = () => {
   const dispatch = useDispatch();
@@ -334,7 +287,7 @@ const ReportStatusTable = () => {
   const [ngoId, setNgoId] = useState();
   const [typeId, setTypeId] = useState(1);
   const [statusId, setStatusId] = useState(2);
-  const [optionStatus, setOptionStatus] = useState();
+  const [optionStatus, setOptionType] = useState();
 
   const [openType, setOpenType] = useState(false);
   const [openNgo, setOpenNgo] = useState(false);
@@ -343,7 +296,6 @@ const ReportStatusTable = () => {
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('isConfirmed');
-  const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -399,10 +351,10 @@ const ReportStatusTable = () => {
   // set Service or Product titles
   useEffect(() => {
     if (typeId === NeedTypeEnum.PRODUCT) {
-      setOptionStatus(optionsProduct);
+      setOptionType(optionsProduct);
     }
     if (typeId === NeedTypeEnum.SERVICE) {
-      setOptionStatus(optionsService);
+      setOptionType(optionsService);
     }
   }, [typeId, openType]);
 
@@ -415,12 +367,12 @@ const ReportStatusTable = () => {
 
     if (active && swInfo) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN && successNgoList) {
+      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) && successNgoList) {
         const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
         setOptionsNgo([...activeNgoList]);
       }
       // social worker
-      else if (swInfo.typeId !== 1) {
+      else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -437,9 +389,9 @@ const ReportStatusTable = () => {
     if (!openNgo) {
       setOptionsNgo([]);
     } else if (swInfo) {
-      if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
+      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchNgoList());
-      } else if (swInfo.typeId !== 1) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -452,7 +404,7 @@ const ReportStatusTable = () => {
   // ngo LIST
   useEffect(() => {
     // only super admin
-    if (swInfo && swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
+    if (swInfo && (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
       dispatch(fetchNgoList());
     }
   }, [swInfo]);
@@ -468,9 +420,9 @@ const ReportStatusTable = () => {
   useEffect(() => {
     if (successNgoList) {
       // super admin & admin
-      if (ngoId && swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
+      if (ngoId && (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
-      } else if (swInfo.typeId !== 1) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
         dispatch(fetchSwNeedList());
       }
     }
@@ -488,15 +440,6 @@ const ReportStatusTable = () => {
       return;
     }
     setToastOpen(false);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = needs.needs.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleRequestSort = (event, property) => {
@@ -527,9 +470,7 @@ const ReportStatusTable = () => {
 
   function Row(props) {
     const { row } = props;
-    const isSelected = (name) => selected.indexOf(name) !== -1;
     const [accOpen, setAccOpen] = useState(false);
-    const isItemSelected = isSelected(row.id);
 
     // fetch needs receipt when open accordion
     useEffect(() => {
@@ -554,9 +495,7 @@ const ReportStatusTable = () => {
         <TableRow
           hover
           role="checkbox"
-          aria-checked={isItemSelected}
           tabIndex={-1}
-          selected={isItemSelected}
           sx={{ '& > *': { borderBottom: 'unset' }, height: '100px' }}
         >
           <TableCell>
@@ -741,26 +680,45 @@ const ReportStatusTable = () => {
                       <TableCell align="right">
                         {row.payments[0] && (
                           <Tooltip
-                            title={row.payments.map((p, index) => {
-                              if (p.verified) {
+                            title={row.payments.map((p) => {
+                              if (p.verified && p.gateway_track_id) {
                                 return (
-                                  <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                      backgroundColor: p.need_amount > 0 ? 'green' : 'red',
-                                    }}
+                                  <Grid
                                     key={p.id}
                                   >
-                                    {p.gateway_track_id
-                                      ? `${index + 1}: ${p.gateway_track_id
-                                      } => ${p.total_amount.toLocaleString()}`
-                                      : `Wallet => ${p.total_amount.toLocaleString()}`}
-                                  </Typography>
+                                    <Typography
+                                      variant="subtitle2"
+                                      sx={{
+                                        backgroundColor: p.need_amount > 0 ? 'green' : 'red',
+                                      }}
+                                    >
+                                      {
+                                        `User:${p.id_user} Track Id:${p.gateway_track_id
+                                        } => ${(p.total_amount - p.donation_amount - p.credit_amount).toLocaleString()}`
+                                      }
+                                    </Typography>
+                                    <Typography
+                                      variant="subtitle2"
+                                      sx={{
+                                        backgroundColor: p.need_amount > 0 ? 'orange' : 'red',
+                                      }}
+                                    >
+                                      {`Donation => ${p.donation_amount.toLocaleString()}`}
+                                    </Typography>
+                                    <Typography
+                                      variant="subtitle2"
+                                      sx={{
+                                        backgroundColor: p.need_amount > 0 ? 'orange' : 'red',
+                                      }}
+                                    >
+                                      {`Wallet => ${p.credit_amount.toLocaleString()}`}
+                                    </Typography>
+                                  </Grid>
                                 );
                               }
                               return (
-                                <Typography variant="subtitle2" key={p.id}>{`${index + 1
-                                  }: SAY- ${p.total_amount.toLocaleString()}`}</Typography>
+
+                                <Typography variant="subtitle2" key={p.id}>{p.verified && (`SAY ${p.total_amount.toLocaleString()}`)}</Typography>
                               );
                             })}
                             placement="top-end"
@@ -882,7 +840,7 @@ const ReportStatusTable = () => {
       link: PropTypes.string,
     }),
   };
-
+  console.log(optionsNgo)
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
@@ -892,7 +850,6 @@ const ReportStatusTable = () => {
         <Grid container spacing={2} justifyContent="center">
           <Grid item md={3} xs={12}>
             <Autocomplete
-              defaultValue={optionsNgo && optionsNgo.filter((ngo) => ngo.isActive)[0]} // only active one
               id="asynchronous-ngo"
               open={openNgo}
               onOpen={() => {
@@ -928,7 +885,7 @@ const ReportStatusTable = () => {
               defaultValue={optionsType[1]}
               id="type"
               open={openType}
-              onOpen={() => setOpenType(true) && setOptionStatus()}
+              onOpen={() => setOpenType(true) && setOptionType()}
               onClose={() => {
                 setOpenType(false);
               }}
@@ -980,10 +937,8 @@ const ReportStatusTable = () => {
                       aria-label="sticky table"
                     >
                       <EnhancedTableHead
-                        numSelected={selected.length}
                         order={order}
                         orderBy={orderBy}
-                        onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
                         rowCount={needs.needs.length}
                         typeId={typeId}

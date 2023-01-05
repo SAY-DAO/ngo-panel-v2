@@ -31,7 +31,7 @@ const CoverCard = ({ swId }) => {
   }, [swId]);
 
   useEffect(() => {
-    if (swInfo && (swInfo.typeId === RolesEnum.ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SAY_SUPERVISOR)) {
+    if (swInfo && (swInfo.typeId === RolesEnum.ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN)) {
       dispatch(fetchChildList())
     } else {
       dispatch(fetchSwChildList())
@@ -110,7 +110,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {result && (result.typeId === RolesEnum.ADMIN || result.typeId === RolesEnum.SUPER_ADMIN || result.typeId === RolesEnum.SAY_SUPERVISOR)
+                  {result && (result.typeId === RolesEnum.ADMIN || result.typeId === RolesEnum.SUPER_ADMIN || result.typeId === RolesEnum.SUPER_ADMIN)
                     ? t('myProfile.confirmedNeeds')
                     : t('myProfile.createdNeeds')}
                 </Typography>
@@ -148,7 +148,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {result && (result.typeId === RolesEnum.ADMIN || result.typeId === RolesEnum.SUPER_ADMIN || result.typeId === RolesEnum.SAY_SUPERVISOR)
+                  {result && (result.typeId === RolesEnum.ADMIN || result.typeId === RolesEnum.SUPER_ADMIN || result.typeId === RolesEnum.SUPER_ADMIN)
                     ? t('myProfile.myChildren')
                     : t('myProfile.allChildren')}
                 </Typography>

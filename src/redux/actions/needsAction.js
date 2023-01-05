@@ -165,7 +165,7 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
 
     let url;
     // super admin & admin
-    if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
+    if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
       url = `/needs`;
     } else {
       url = `/socialworkers/${userInfo.id}/createdNeeds`;
@@ -341,7 +341,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     if (values.description) {
       formData.append('description_translations', values.description);
     }
-    // category could be zero + isUrgent is a boolean 
+    // category could be zero + isUrgent is a boolean
     formData.append('category', parseInt(values.category, 10));
     formData.append('isUrgent', values.isUrgent);
     if (values.cost) {
