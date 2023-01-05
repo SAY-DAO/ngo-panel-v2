@@ -420,7 +420,7 @@ const NeedAdd = () => {
                               </div>
                             }
                           >
-                            {oneNeed ? (
+                            {!finalImageFile && oneNeed ? (
                               <Avatar
                                 variant="circle"
                                 alt="user photo"
@@ -428,6 +428,7 @@ const NeedAdd = () => {
                                   width: 50,
                                   height: 50,
                                   boxShadow: '0px 7px 30px 0px',
+                                  opacity: '20%'
                                 }}
                                 src={oneNeed.imageUrl}
                               />
