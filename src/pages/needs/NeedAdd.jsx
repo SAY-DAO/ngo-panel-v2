@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -44,7 +43,7 @@ import {
   CHILD_EXAMPLE_NEEDS_RESET,
   CHILD_ONE_NEED_RESET,
 } from '../../redux/constants/needConstant';
-import { fetchActiveChildList, fetchChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
+import { fetchActiveChildList,  fetchMyChildById } from '../../redux/actions/childrenAction';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
@@ -256,24 +255,24 @@ const NeedAdd = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    // dispatch(
-    //   AddNeed({
-    //     name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
-    //     description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
-    //     isUrgent: isUrgentChecked,
-    //     cost: data.cost,
-    //     type: data.type,
-    //     category: data.category,
-    //     imageUrl: finalImageFile || oneNeed.doing_duration,
-    //     details: data.details,
-    //     information: data.informations,
-    //     doing_duration: data.doing_duration,
-    //     link: data.link,
-    //     affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
-    //     childId,
-    //   }),
-    // );
-    // dispatch({ type: CHILD_ONE_NEED_RESET });
+    dispatch(
+      AddNeed({
+        name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
+        description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
+        isUrgent: isUrgentChecked,
+        cost: data.cost,
+        type: data.type,
+        category: data.category,
+        imageUrl: finalImageFile || oneNeed.doing_duration,
+        details: data.details,
+        information: data.informations,
+        doing_duration: data.doing_duration,
+        link: data.link,
+        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
+        childId,
+      }),
+    );
+    dispatch({ type: CHILD_ONE_NEED_RESET });
   };
 
   // dialog image
