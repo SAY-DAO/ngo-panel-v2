@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -43,7 +44,7 @@ import {
   CHILD_EXAMPLE_NEEDS_RESET,
   CHILD_ONE_NEED_RESET,
 } from '../../redux/constants/needConstant';
-import { fetchChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
+import { fetchActiveChildList, fetchChildList, fetchMyChildById } from '../../redux/actions/childrenAction';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
@@ -94,8 +95,8 @@ const NeedAdd = () => {
   const childById = useSelector((state) => state.childById);
   const { result, loading: loadingChild, success: successChild } = childById;
 
-  const childAll = useSelector((state) => state.childAll);
-  const { myChildren, loading: loadingChildren, success: successChildren } = childAll;
+  const childAllActives = useSelector((state) => state.childAllActives);
+  const { activeChildren, loading: loadingActiveChildren, success: successActiveChildren } = childAllActives;
 
   const providerAll = useSelector((state) => state.providerAll);
   const { providerList } = providerAll;
@@ -138,9 +139,9 @@ const NeedAdd = () => {
     if (!isLoadingChildren) {
       return undefined;
     }
-    if (active && (successChildren || (children && children.children))) {
-      // sort myChildren
-      const sortedChildren = (myChildren || children.children).sort(
+    if (active && (successActiveChildren || (children && children.children))) {
+      // sort activeChildren
+      const sortedChildren = (activeChildren || children.children).sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
       setOptionsChildren([...sortedChildren]);
@@ -148,17 +149,17 @@ const NeedAdd = () => {
     return () => {
       active = false;
     };
-  }, [isLoadingChildren, successChildren, childId, children]);
+  }, [isLoadingChildren, successActiveChildren, childId, children]);
 
   // child open
   useEffect(() => {
     if (!openChildren) {
       setOptionsChildren([]);
-    } else if (!myChildren && openChildren) {
+    } else if (!activeChildren && openChildren) {
       if (swInfo) {
         // super admin & admin
         if (swInfo.typeId === RolesEnum.SAY_SUPERVISOR || RolesEnum.ADMIN) {
-          dispatch(fetchChildList()); // all => confirm=2, existence_status=1
+          dispatch(fetchActiveChildList());
         } else if (swInfo.typeId !== 1) {
           dispatch(fetchSwChildList());
         }
@@ -206,9 +207,9 @@ const NeedAdd = () => {
     cost: Yup.number().required('Please enter needs cost').moreThan(0, 'Cost can not be zero'),
     type: Yup.string().required('Please enter type'),
     // doing_duration: Yup.number().required('Please enter estimated finishing time'),
-    // category: Yup.string().required('Please enter needs category'),
+    category: Yup.string().required('Please enter needs category'),
     link: Yup.string().url().required('Please enter needs link'),
-    // imageUrl: Yup.string().required('Please choose an icon'),
+    imageUrl: Yup.string().required('Please choose an icon'),
   });
 
   const {
@@ -236,10 +237,11 @@ const NeedAdd = () => {
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
       setValue('cost', oneNeed.cost);
       setValue('doing_duration', oneNeed.doing_duration);
-      // setValue('imageUrl', oneNeed.doing_duration);
+      setValue('imageUrl', oneNeed.imageUrl);
     }
   }, [successNeedEx, oneNeed]);
 
+  console.log(oneNeed)
   // set type when provider is changed
   useEffect(() => {
     setValue(
@@ -254,24 +256,24 @@ const NeedAdd = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    dispatch(
-      AddNeed({
-        name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
-        description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
-        isUrgent: isUrgentChecked,
-        cost: data.cost,
-        type: data.type,
-        category: data.category,
-        imageUrl: finalImageFile || oneNeed.doing_duration,
-        details: data.details,
-        information: data.informations,
-        doing_duration: data.doing_duration,
-        link: data.link,
-        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
-        childId,
-      }),
-    );
-    dispatch({ type: CHILD_ONE_NEED_RESET });
+    // dispatch(
+    //   AddNeed({
+    //     name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
+    //     description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
+    //     isUrgent: isUrgentChecked,
+    //     cost: data.cost,
+    //     type: data.type,
+    //     category: data.category,
+    //     imageUrl: finalImageFile || oneNeed.doing_duration,
+    //     details: data.details,
+    //     information: data.informations,
+    //     doing_duration: data.doing_duration,
+    //     link: data.link,
+    //     affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
+    //     childId,
+    //   }),
+    // );
+    // dispatch({ type: CHILD_ONE_NEED_RESET });
   };
 
   // dialog image
@@ -308,7 +310,7 @@ const NeedAdd = () => {
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <Autocomplete
-            id="asynchronous-myChildren"
+            id="asynchronous-activeChildren"
             sx={{ minWidth: '340px' }}
             open={openChildren}
             onOpen={() => {
@@ -359,7 +361,7 @@ const NeedAdd = () => {
           />
         </Grid>
       </Grid>
-      {loadingChild || loadingChildren ? (
+      {loadingChild || loadingActiveChildren ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -380,12 +382,15 @@ const NeedAdd = () => {
                             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             overlap="circular"
                             badgeContent={
+
+
                               <div className="upload__image-wrapper">
                                 <Grid
                                   sx={{
                                     position: 'relative',
                                   }}
                                 >
+
                                   <label htmlFor="upload-image">
                                     <input
                                       accept="image/*"
@@ -394,41 +399,60 @@ const NeedAdd = () => {
                                       style={{ display: 'none' }}
                                       onChange={onImageChange}
                                     />
+                                    {
+                                      !oneNeed && (
+                                        <IconButton
+                                          name="upload-image"
+                                          id="upload-image"
+                                          color="primary"
+                                          component="div"
+                                        >
+                                          <AddCircleOutlineIcon
+                                            color="primary"
+                                            fontSize="medium"
+                                            sx={{
+                                              zIndex: 10,
+                                              borderRadius: '20%',
+                                            }}
+                                          />
+                                        </IconButton>
+                                      )
+                                    }
 
-                                    <IconButton
-                                      name="upload-image"
-                                      id="upload-image"
-                                      color="primary"
-                                      component="div"
-                                    >
-                                      <AddCircleOutlineIcon
-                                        color="primary"
-                                        fontSize="medium"
-                                        sx={{
-                                          zIndex: 10,
-                                          borderRadius: '20%',
-                                        }}
-                                      />
-                                    </IconButton>
                                   </label>
                                 </Grid>
                               </div>
+
                             }
                           >
-                            <Avatar
-                              variant="circle"
-                              alt="icon image"
-                              src={
-                                finalImageFile && URL.createObjectURL(finalImageFile) // image preview
-                              }
-                              sx={{
-                                width: 50,
-                                height: 50,
-                                boxShadow: '0px 7px 30px 0px',
-                              }}
-                            >
-                              <Typography sx={{ padding: 1 }}>Icon</Typography>
-                            </Avatar>
+                            {
+                              oneNeed ? (
+                                <Avatar
+                                  variant="circle"
+                                  alt="user photo"
+                                  sx={{
+                                    width: 50,
+                                    height: 50,
+                                    boxShadow: '0px 7px 30px 0px',
+                                  }}
+                                  src={oneNeed.imageUrl}
+                                />
+                              ) : (
+                                <Avatar
+                                  variant="circle"
+                                  alt="icon image"
+                                  src={
+                                    finalImageFile && URL.createObjectURL(finalImageFile) // image preview
+                                  }
+                                  sx={{
+                                    width: 50,
+                                    height: 50,
+                                    boxShadow: '0px 7px 30px 0px',
+                                  }}
+                                >
+                                  <Typography sx={{ padding: 1 }}>Icon</Typography>
+                                </Avatar>
+                              )}
                           </Badge>
                         }
                       >
@@ -936,7 +960,7 @@ const NeedAdd = () => {
           )}
         </>
       )}
-    </PageContainer>
+    </PageContainer >
   );
 };
 

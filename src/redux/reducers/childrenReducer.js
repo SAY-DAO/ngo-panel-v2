@@ -20,6 +20,10 @@ import {
   CHILD_LIST_SUCCESS,
   CHILD_LIST_FAIL,
   CHILD_LIST_RESET,
+  CHILD_ACTIVE_LIST_REQUEST,
+  CHILD_ACTIVE_LIST_SUCCESS,
+  CHILD_ACTIVE_LIST_FAIL,
+  CHILD_ACTIVE_LIST_RESET,
 } from '../constants/childrenConstants';
 
 export const childByIdReducer = (state = { success: false }, action) => {
@@ -31,6 +35,22 @@ export const childByIdReducer = (state = { success: false }, action) => {
     case CHILD_BY_ID_FAIL:
       return { loading: false, error: action.payload };
     case CHILD_BY_ID_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+// all actives
+export const childActiveListReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case CHILD_ACTIVE_LIST_REQUEST:
+      return { loading: true };
+    case CHILD_ACTIVE_LIST_SUCCESS:
+      return { loading: false, success: true, activeChildren: action.payload };
+    case CHILD_ACTIVE_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case CHILD_ACTIVE_LIST_RESET:
       return {};
     default:
       return state;

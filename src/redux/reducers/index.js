@@ -20,6 +20,7 @@ import {
   swMigrateOneReducer,
 } from './socialWorkerReducer';
 import {
+  childActiveListReducer,
   childAddReducer,
   childByIdReducer,
   childListReducer,
@@ -74,6 +75,7 @@ export default combineReducers({
   mileStone: mileStoneReducer,
   needUpdate: needUpdateReducer,
   needAdd: needAddReducer,
+  childAllActives: childActiveListReducer,
   childAll: childListReducer,
   childrenByNgo: childrenByNgoReducer,
   childUpdate: childUpdateReducer,

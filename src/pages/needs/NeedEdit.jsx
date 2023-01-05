@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -124,26 +125,26 @@ const NeedEdit = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    dispatch(
-      updateNeed({
-        needId: oneNeed.id,
-        name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
-        description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
-        isUrgent: isUrgentChecked,
-        cost: data.cost,
-        type: data.type,
-        category: data.category,
-        imageUrl: finalImageFile || data.imageUrl,
-        details: data.details,
-        information: data.informations,
-        doing_duration: data.doing_duration,
-        link: data.link,
-        isUrgentDesc: data.isUrgentDesc,
-        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
-        childId,
-      }),
-    );
-    dispatch({ type: CHILD_ONE_NEED_RESET });
+    // dispatch(
+    //   updateNeed({
+    //     needId: oneNeed.id,
+    //     name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
+    //     description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
+    //     isUrgent: isUrgentChecked,
+    //     cost: data.cost,
+    //     type: data.type,
+    //     category: data.category,
+    //     imageUrl: finalImageFile || data.imageUrl,
+    //     details: data.details,
+    //     information: data.informations,
+    //     doing_duration: data.doing_duration,
+    //     link: data.link,
+    //     isUrgentDesc: data.isUrgentDesc,
+    //     affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
+    //     childId,
+    //   }),
+    // );
+    // dispatch({ type: CHILD_ONE_NEED_RESET });
   };
 
   // dialog image
@@ -517,7 +518,7 @@ const NeedEdit = () => {
                         variant="contained"
                         sx={{ mt: 4 }}
                       >
-                        {t('need.button.add')}
+                        {t('need.button.update')}
                       </LoadingButton>
                       <ul>
                         {errors && errors.name_fa && (

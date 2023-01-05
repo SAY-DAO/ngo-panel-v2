@@ -18,6 +18,9 @@ import {
   UPDATE_CHILD_IS_ACTIVE_SUCCESS,
   UPDATE_CHILD_REQUEST,
   UPDATE_CHILD_SUCCESS,
+  CHILD_ACTIVE_LIST_REQUEST,
+  CHILD_ACTIVE_LIST_SUCCESS,
+  CHILD_ACTIVE_LIST_FAIL,
 } from '../constants/childrenConstants';
 
 export const fetchMyChildById = (childId) => async (dispatch, getState) => {
@@ -43,6 +46,34 @@ export const fetchMyChildById = (childId) => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_BY_ID_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const fetchActiveChildList = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CHILD_ACTIVE_LIST_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await publicApi.get(`/child/actives`, config);
+
+    dispatch({
+      type: CHILD_ACTIVE_LIST_SUCCESS,
+      payload: data,
+    });
+    
+  } catch (e) {
+    dispatch({
+      type: CHILD_ACTIVE_LIST_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
