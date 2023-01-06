@@ -49,11 +49,30 @@ import StatusDialog from '../dialogs/ReportStatusDialog';
 import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
+  if (
+    orderBy === 'updated' ||
+    orderBy === 'created' ||
+    orderBy === 'doneAt' ||
+    orderBy === 'confirmDate' ||
+    orderBy === 'purchase_date' ||
+    orderBy === 'status_updated_at' ||
+    orderBy === 'expected_delivery_date' ||
+    orderBy === 'ngo_delivery_date' ||
+    orderBy === 'child_delivery_date'
+  ) {
+    if (new Date(b[orderBy]).getTime() < new Date(a[orderBy]).getTime()) {
+      return -1;
+    }
+    if (new Date(b[orderBy]).getTime() > new Date(a[orderBy]).getTime()) {
+      return 1;
+    }
+  } else {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
   }
   return 0;
 }
@@ -294,8 +313,8 @@ const ReportStatusTable = () => {
   const [optionsNgo, setOptionsNgo] = useState([]);
   const loadingNgo = openNgo && optionsNgo.length === 0;
 
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('isConfirmed');
+  const [order, setOrder] = useState('desc');
+  const [orderBy, setOrderBy] = useState('updated');
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -840,7 +859,6 @@ const ReportStatusTable = () => {
       link: PropTypes.string,
     }),
   };
-  console.log(optionsNgo)
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
