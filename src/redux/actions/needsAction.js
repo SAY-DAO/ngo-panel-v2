@@ -44,14 +44,24 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
         'X-TAKE': 100,
       },
     };
-    const { data } = await publicApi.get(
-      `/needs?isDone=${isDone}&ngoId=${ngoId}&type=${type}&status=${status}`,
-      config,
-    );
+
+    let response;
+    if (!ngoId) {
+      // to get all ngos done need
+      response = await publicApi.get(
+        `/needs?isDone=${isDone}&type=${type}&status=${status}`,
+        config,
+      );
+    } else {
+      response = await publicApi.get(
+        `/needs?isDone=${isDone}&ngoId=${ngoId}&type=${type}&status=${status}`,
+        config,
+      );
+    }
 
     dispatch({
       type: ALL_NEEDS_SUCCESS,
-      payload: data,
+      payload: response.data,
     });
   } catch (e) {
     dispatch({

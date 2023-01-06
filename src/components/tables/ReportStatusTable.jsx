@@ -418,8 +418,8 @@ const ReportStatusTable = () => {
       }
 
     }
-
   }, [openNgo]);
+  
   // ngo LIST
   useEffect(() => {
     // only super admin
@@ -439,8 +439,12 @@ const ReportStatusTable = () => {
   useEffect(() => {
     if (successNgoList) {
       // super admin & admin
-      if (ngoId && (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
-        dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+        if (ngoId) {
+          dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
+        } else {
+          dispatch(fetchAllNeeds(true, null, typeId, statusId));
+        }
       } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
         dispatch(fetchSwNeedList());
       }

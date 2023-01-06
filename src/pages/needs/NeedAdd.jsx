@@ -213,7 +213,7 @@ const NeedAdd = () => {
     // doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
     // link: Yup.string().url().required('Please enter needs link'),
-    imageUrl: Yup.string().required('Please choose an icon'),
+    // imageUrl: Yup.string().required('Please choose an icon'),
   });
 
   const {
