@@ -86,9 +86,7 @@ export const updateProvider = (values) => async (dispatch) => {
     if (values.city) {
       formData.append('city', values.city);
     }
-    if (values.type) {
-      formData.append('type', values.type);
-    }
+    formData.append('type', values.type);
     if (values.state) {
       formData.append('state', values.state);
     }
@@ -138,9 +136,7 @@ export const addProvider = (values) => async (dispatch) => {
     if (values.city) {
       formData.append('city', values.city);
     }
-    if (values.type) {
-      formData.append('type', values.type);
-    }
+    formData.append('type', values.type);
     if (values.state) {
       formData.append('state', values.state);
     }
