@@ -248,6 +248,7 @@
   },
   "ngo": {
     "title": "NGO",
+    "allNgos": "All NGOs",
     "isActive": "Status",
     "update": "Edit",
     "titleEdit": "Edit Details",

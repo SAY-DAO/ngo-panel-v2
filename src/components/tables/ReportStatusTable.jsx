@@ -388,7 +388,10 @@ const ReportStatusTable = () => {
       // super admin & admin
       if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) && successNgoList) {
         const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
-        setOptionsNgo([...activeNgoList]);
+        setOptionsNgo([{
+          id: '',
+          name: t('ngo.allNgos')
+        }, ...activeNgoList]);
       }
       // social worker
       else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
@@ -407,7 +410,7 @@ const ReportStatusTable = () => {
   useEffect(() => {
     if (!openNgo) {
       setOptionsNgo([]);
-    } else if (swInfo) {
+    } else if (swInfo && !successNgoList) {
       if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchNgoList());
       } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
@@ -419,7 +422,7 @@ const ReportStatusTable = () => {
 
     }
   }, [openNgo]);
-  
+
   // ngo LIST
   useEffect(() => {
     // only super admin
@@ -872,6 +875,10 @@ const ReportStatusTable = () => {
         <Grid container spacing={2} justifyContent="center">
           <Grid item md={3} xs={12}>
             <Autocomplete
+              defaultValue={{
+                id: '',
+                name: t('ngo.allNgos')
+              }}
               id="asynchronous-ngo"
               open={openNgo}
               onOpen={() => {
