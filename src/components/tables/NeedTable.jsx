@@ -153,6 +153,19 @@ function EnhancedTableHead(props) {
       width: '200px',
     },
     {
+      id: 'link',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.link'),
+    },
+    {
+      id: 'affiliateLinkUrl',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.affiliateLinkUrl'),
+      width: '200px',
+    },
+    {
       id: 'title',
       numeric: false,
       disablePadding: false,
@@ -221,19 +234,6 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.description'),
-      width: '200px',
-    },
-    {
-      id: 'link',
-      numeric: false,
-      disablePadding: false,
-      label: t('need.link'),
-    },
-    {
-      id: 'affiliateLinkUrl',
-      numeric: false,
-      disablePadding: false,
-      label: t('need.affiliateLinkUrl'),
       width: '200px',
     },
     {
@@ -764,14 +764,15 @@ const NeedTable = () => {
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row.id)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
                                 key={row.id}
                                 selected={isItemSelected}
                               >
-                                <TableCell padding="checkbox">
+                                <TableCell padding="checkbox"
+                                  onClick={(event) => handleClick(event, row.id)}
+                                >
                                   <CustomCheckbox
                                     color="primary"
                                     checked={isItemSelected}
@@ -844,6 +845,26 @@ const NeedTable = () => {
                                     fontWeight="400"
                                   >
                                     {row.name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    fontWeight="400"
+                                  >
+                                    {row.link && <Link href={row.link}>Link</Link>}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    fontWeight="400"
+                                  >
+                                    {row.affiliateLinkUrl && (
+                                      <Link href={row.affiliateLinkUrl}>Affiliate</Link>
+                                    )}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -989,26 +1010,6 @@ const NeedTable = () => {
                                       {row.description}
                                     </Typography>
                                   </Tooltip>
-                                </TableCell>
-                                <TableCell>
-                                  <Typography
-                                    color="textSecondary"
-                                    variant="body1"
-                                    fontWeight="400"
-                                  >
-                                    {row.link && <Link href={row.link}>Link</Link>}
-                                  </Typography>
-                                </TableCell>
-                                <TableCell>
-                                  <Typography
-                                    color="textSecondary"
-                                    variant="body1"
-                                    fontWeight="400"
-                                  >
-                                    {row.affiliateLinkUrl && (
-                                      <Link href={row.affiliateLinkUrl}>Affiliate</Link>
-                                    )}
-                                  </Typography>
                                 </TableCell>
                                 <TableCell>
                                   <Typography
