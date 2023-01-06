@@ -372,7 +372,7 @@ const ReportStatusTable = () => {
         setOptionsNgo([...activeNgoList]);
       }
       // social worker
-      else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
+      else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -391,7 +391,7 @@ const ReportStatusTable = () => {
     } else if (swInfo) {
       if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchNgoList());
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -422,7 +422,7 @@ const ReportStatusTable = () => {
       // super admin & admin
       if (ngoId && (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
         dispatch(fetchSwNeedList());
       }
     }

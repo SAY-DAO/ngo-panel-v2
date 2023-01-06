@@ -165,7 +165,7 @@ const NeedAdd = () => {
         // super admin & admin
         if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
           dispatch(fetchActiveChildList());
-        } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
+        } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
           dispatch(fetchSwChildList());
         }
       }

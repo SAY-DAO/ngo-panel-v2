@@ -367,8 +367,8 @@ const NeedTable = () => {
   ];
 
   const [needsData, setNeedsData] = useState();
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('isConfirmed');
+  const [order, setOrder] = useState('desc');
+  const [orderBy, setOrderBy] = useState('updated');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
@@ -470,7 +470,7 @@ const NeedTable = () => {
       // super admin & admin
       if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchNgoList());
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR || RolesEnum.NGO_SUPERVISOR) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -518,7 +518,7 @@ const NeedTable = () => {
       // super admin & admin
       if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchChildrenByNgo({ ngoId }));
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER) {
+      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
         dispatch(fetchSwChildList());
         setOptions([{
           id: swInfo.ngoId,
