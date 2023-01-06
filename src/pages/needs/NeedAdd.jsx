@@ -496,7 +496,7 @@ const NeedAdd = () => {
                         onChange={(e, value) => setTheNeed(value)}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={(option) =>
-                          `${option.id} - ${option.title} - ${option.name}`
+                          option.type === 1 ? `${option.id} - ${option.title} - ${option.name}` : `${option.id} - ${option.name}`
                         }
                         options={optionsPreNeed}
                         loading={isLoadingPreNeed}
