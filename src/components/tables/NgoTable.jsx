@@ -36,11 +36,24 @@ import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 import { deleteNgo } from '../../redux/actions/ngoAction';
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
+  if (
+    orderBy === 'updated' ||
+    orderBy === 'created' ||
+    orderBy === 'registerDate'
+  ) {
+    if (new Date(b[orderBy]).getTime() < new Date(a[orderBy]).getTime()) {
+      return -1;
+    }
+    if (new Date(b[orderBy]).getTime() > new Date(a[orderBy]).getTime()) {
+      return 1;
+    }
+  } else {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
   }
   return 0;
 }
@@ -189,7 +202,7 @@ function EnhancedTableHead(props) {
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             sx={{ minWidth: headCell.width }}
-            >
+          >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
@@ -328,10 +341,11 @@ const NgoTable = ({ ngoList }) => {
     // }
     if (selected[0] === id) {
       setSelected([])
-      } else {
-        setSelected([id]);
-  
-      }  };
+    } else {
+      setSelected([id]);
+
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

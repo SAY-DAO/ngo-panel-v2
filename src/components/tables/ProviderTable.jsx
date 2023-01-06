@@ -36,11 +36,24 @@ import { deleteProvider } from '../../redux/actions/providerAction';
 import { PROVIDER_BY_ID_RESET } from '../../redux/constants/providerConstants';
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
+  if (
+    orderBy === 'updatedAt' ||
+    orderBy === 'createdAt' ||
+    orderBy === 'deletedAt'
+  ) {
+    if (new Date(b[orderBy]).getTime() < new Date(a[orderBy]).getTime()) {
+      return -1;
+    }
+    if (new Date(b[orderBy]).getTime() > new Date(a[orderBy]).getTime()) {
+      return 1;
+    }
+  } else {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
   }
   return 0;
 }

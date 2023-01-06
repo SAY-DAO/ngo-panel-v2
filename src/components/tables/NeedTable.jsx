@@ -47,11 +47,30 @@ import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { RolesEnum } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
+  if (
+    orderBy === 'updated' ||
+    orderBy === 'created' ||
+    orderBy === 'doneAt' ||
+    orderBy === 'confirmDate' ||
+    orderBy === 'purchase_date' ||
+    orderBy === 'status_updated_at' ||
+    orderBy === 'expected_delivery_date' ||
+    orderBy === 'ngo_delivery_date' ||
+    orderBy === 'child_delivery_date'
+  ) {
+    if (new Date(b[orderBy]).getTime() < new Date(a[orderBy]).getTime()) {
+      return -1;
+    }
+    if (new Date(b[orderBy]).getTime() > new Date(a[orderBy]).getTime()) {
+      return 1;
+    }
+  } else {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
   }
   return 0;
 }
@@ -347,7 +366,6 @@ EnhancedTableToolbar.propTypes = {
   selected: PropTypes.array.isRequired,
 };
 
-
 const NeedTable = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -355,14 +373,13 @@ const NeedTable = () => {
   const location = useLocation();
   const theChildId = location.state;
 
-
   const BCrumb = [
     {
       to: '/',
-      title: t("BCrumb.home"),
+      title: t('BCrumb.home'),
     },
     {
-      title: t("BCrumb.needsList"),
+      title: t('BCrumb.needsList'),
     },
   ];
 
@@ -383,7 +400,6 @@ const NeedTable = () => {
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
   const loadingNgo = openNgo && optionsNgo.length === 0;
-
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -468,17 +484,21 @@ const NeedTable = () => {
       setOptionsNgo([]);
     } else if (swInfo) {
       // super admin & admin
-      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         dispatch(fetchNgoList());
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR || RolesEnum.NGO_SUPERVISOR) {
-        setOptionsNgo([{
-          id: swInfo.ngoId,
-          name: swInfo.ngoName
-        }])
+      } else if (
+        swInfo.typeId !== RolesEnum.SOCIAL_WORKER ||
+        RolesEnum.NGO_SUPERVISOR ||
+        RolesEnum.NGO_SUPERVISOR
+      ) {
+        setOptionsNgo([
+          {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          },
+        ]);
       }
-
     }
-
   }, [openNgo]);
 
   // Autocomplete children
@@ -501,7 +521,7 @@ const NeedTable = () => {
       const sortedChildren = children.children.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
-      console.log(children)
+      console.log(children);
 
       setOptions([...sortedChildren]);
     }
@@ -516,14 +536,16 @@ const NeedTable = () => {
       setOptions([]);
     } else if (ngoId && (open || !openNgo)) {
       // super admin & admin
-      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         dispatch(fetchChildrenByNgo({ ngoId }));
       } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
         dispatch(fetchSwChildList());
-        setOptions([{
-          id: swInfo.ngoId,
-          name: swInfo.ngoName
-        }])
+        setOptions([
+          {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          },
+        ]);
       }
     }
   }, [open, openNgo, ngoId, swInfo]);
@@ -563,10 +585,9 @@ const NeedTable = () => {
     // }
 
     if (selected[0] === id) {
-      setSelected([])
+      setSelected([]);
     } else {
       setSelected([id]);
-
     }
   };
   // console.log(selected)
@@ -616,7 +637,7 @@ const NeedTable = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={t("ngo.title")}
+                label={t('ngo.title')}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -660,7 +681,10 @@ const NeedTable = () => {
                 ) : (
                   <>
                     <FeatherIcon color="red" icon="x" width="18" />
-                    <Typography> {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}</Typography>
+                    <Typography>
+                      {' '}
+                      {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
+                    </Typography>
                   </>
                 )}
               </Box>
@@ -670,7 +694,7 @@ const NeedTable = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={t("child.title")}
+                label={t('child.title')}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -916,7 +940,6 @@ const NeedTable = () => {
                                       {row.informations}
                                     </Typography>
                                   </Tooltip>
-
                                 </TableCell>
                                 <TableCell>
                                   <Tooltip
