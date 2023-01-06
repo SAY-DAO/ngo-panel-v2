@@ -124,13 +124,6 @@ function EnhancedTableHead(props) {
       width: '250px',
     },
     {
-      id: 'affiliateLinkUrl',
-      numeric: false,
-      disablePadding: true,
-      label: t('need.affiliateLinkUrl'),
-      width: '200px',
-    },
-    {
       id: 'link',
       numeric: false,
       disablePadding: true,
@@ -192,13 +185,6 @@ function EnhancedTableHead(props) {
       disablePadding: false,
       label: t('need.img.service'),
       width: '250px',
-    },
-    {
-      id: 'affiliateLinkUrl',
-      numeric: false,
-      disablePadding: true,
-      label: t('need.affiliateLinkUrl'),
-      width: '100px',
     },
     {
       id: 'link',
@@ -423,20 +409,14 @@ const ReportStatusTable = () => {
     }
   }, [openNgo]);
 
-  // ngo LIST
+  // ngo list to start
   useEffect(() => {
     // only super admin
-    if (swInfo && (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
+    if (!successNgoList && swInfo && (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
       dispatch(fetchNgoList());
     }
-  }, [swInfo]);
+  }, [swInfo, successNgoList]);
 
-  // for the very first load
-  useEffect(() => {
-    if (!ngoId && ngoList) {
-      setNgoId(ngoList.filter((ngo) => ngo.isActive)[0].id);
-    }
-  }, [ngoList]);
 
   // fetch needs
   useEffect(() => {
@@ -555,17 +535,18 @@ const ReportStatusTable = () => {
               </Box>
             </Box>
           </TableCell>
-          <TableCell align="center">
-            {row.affiliateLinkUrl && (
-              <Link href={row.affiliateLinkUrl} target="_blank">
-                Link
-              </Link>
-            )}
-          </TableCell>
+
           <TableCell align="center">
             {row.link && (
               <Link href={row.link} target="_blank">
                 Link
+              </Link>
+
+            )}
+            <br />
+            {row.affiliateLinkUrl && (
+              <Link href={row.affiliateLinkUrl} target="_blank">
+                affiliateLink
               </Link>
             )}
           </TableCell>

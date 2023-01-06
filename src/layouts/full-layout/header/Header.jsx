@@ -30,7 +30,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const navigate = useNavigate();
 
   const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo, success: successSwDetails } = swDetails;
+  const { swInfo, loading: loadingswDetails, success: successSwDetails } = swDetails;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { success: successLogin } = userLogin;
@@ -42,10 +42,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   }, [successLogin, location]);
 
   useEffect(() => {
-    if (!successSwDetails) {
+    if (!successSwDetails && !loadingswDetails) {
       dispatch(fetchSocialWorkerDetails());
     }
-  }, [successSwDetails]);
+  }, [successSwDetails, loadingswDetails]);
 
   // if mot active log out
   useEffect(() => {
