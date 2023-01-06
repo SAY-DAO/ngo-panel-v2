@@ -150,7 +150,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.name.fa'),
-      width: '200px',
+      width: '150px',
     },
     {
       id: 'link',
@@ -853,7 +853,7 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.link && <Link href={row.link}>Link</Link>}
+                                    {row.link && <Link href={row.link} target="_blank">Link</Link>}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -863,7 +863,7 @@ const NeedTable = () => {
                                     fontWeight="400"
                                   >
                                     {row.affiliateLinkUrl && (
-                                      <Link href={row.affiliateLinkUrl}>Affiliate</Link>
+                                      <Link href={row.affiliateLinkUrl} target="_blank">Affiliate</Link>
                                     )}
                                   </Typography>
                                 </TableCell>
