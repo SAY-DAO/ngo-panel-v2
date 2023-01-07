@@ -4,9 +4,11 @@ import FeatherIcon from 'feather-icons-react';
 
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ProfileDropdown = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -93,10 +95,10 @@ const ProfileDropdown = () => {
                     lineHeight: '1.235',
                   }}
                 >
-                  Edit Profile
+                  {t('myProfile.settings.edit')}
                 </Typography>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
-                  Account Settings
+                  {t('myProfile.settings.settings')}
                 </Typography>
               </Box>
             </Box>

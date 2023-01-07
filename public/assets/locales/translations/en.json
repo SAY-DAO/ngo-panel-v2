@@ -537,11 +537,12 @@
   },
   "myProfile": {
     "settings":{
-      "hi": "سلام",
-      "edit":"ویرایش پروفایل",
-      "settings":"جزییات پروفایل",
-      "logIn":"ورود",
-      "logOut": "خروج"
+      "hi": "Hi",
+      "title":"User Profile",
+      "edit":"Edit Profile",
+      "settings":"Account Settings",
+      "logIn":"Log in",
+      "logOut": "Log out"
     },
     "viewAs": "View as ...",
     "countRecent": {

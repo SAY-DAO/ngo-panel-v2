@@ -266,7 +266,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           >
             <Box display="flex" alignItems="center">
               <Typography variant="h4" fontWeight="500">
-                User Profile
+              {t("myProfile.settings.title")}
               </Typography>
             </Box>
           </Box>
@@ -288,7 +288,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               variant="contained"
               color="primary"
             >
-              Logout
+              {t("myProfile.settings.logOut")}
             </LoadingButton>
           </Link>
         </Menu>
