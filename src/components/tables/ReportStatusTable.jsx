@@ -332,8 +332,8 @@ const ReportStatusTable = () => {
  */
 
   const optionsType = [
-    { id: 0, title: 'Service' },
-    { id: 1, title: 'Product' },
+    { id: 0, title: t('need.types.service') },
+    { id: 1, title: t('need.types.product') },
   ];
 
   const optionsProduct = [

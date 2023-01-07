@@ -89,13 +89,13 @@ const Customizer = () => {
         }}
       >
         <Box p={2}>
-          <Typography variant="h3">{t('setting.title')}</Typography>
+          <Typography variant="h3">{t('settings.title')}</Typography>
         </Box>
         <Divider />
         <Box p={2}>
           {/* ------------ Dark light theme setting ------------- */}
           <Typography variant="h4" gutterBottom>
-            Theme Option
+            {t('settings.themeOption')}
           </Typography>
           <FormControl component="fieldset">
             <RadioGroup
@@ -104,14 +104,18 @@ const Customizer = () => {
               value={customizer.activeMode}
               onChange={(event) => dispatch(setDarkMode(event.target.value))}
             >
-              <FormControlLabel value="light" control={<CustomRadio />} label="Light" />
-              <FormControlLabel value="dark" control={<CustomRadio />} label="Dark" />
+              <FormControlLabel
+                value="light"
+                control={<CustomRadio />}
+                label={t('settings.light')}
+              />
+              <FormControlLabel value="dark" control={<CustomRadio />} label={t('settings.dark')} />
             </RadioGroup>
           </FormControl>
           <Box pt={3} />
           {/* ------------ RTL theme setting -------------*/}
           <Typography variant="h4" gutterBottom>
-            Theme Direction
+            {t('settings.themeDirection')}
           </Typography>
           <FormControl component="fieldset">
             <RadioGroup
@@ -120,14 +124,14 @@ const Customizer = () => {
               value={customizer.activeDir}
               onChange={(event) => dispatch(setDir(event.target.value))}
             >
-              <FormControlLabel value="ltr" control={<CustomRadio />} label="LTR" />
-              <FormControlLabel value="rtl" control={<CustomRadio />} label="RTL" />
+              <FormControlLabel value="ltr" control={<CustomRadio />} label={t('settings.ltr')} />
+              <FormControlLabel value="rtl" control={<CustomRadio />} label={t('settings.rtl')} />
             </RadioGroup>
           </FormControl>
           <Box pt={3} />
           {/* ------------ Navbar Color setting ------------- */}
           <Typography variant="h4" gutterBottom>
-            Theme Colors
+            {t('settings.themeColors')}
           </Typography>
           {thColors.map((thcolor) => (
             <Tooltip title={thcolor.disp} placement="top" key={thcolor.id}>

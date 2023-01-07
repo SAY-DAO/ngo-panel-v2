@@ -1,6 +1,13 @@
 {
-  "panel": {
-    "hi": "Hi"
+  "settings":{
+    "title":"Settings",
+    "themeOption":"Theme Option",
+    "themeDirection":"Theme Direction",
+    "themeColors":"Theme Colors",
+    "ltr":"LTR",
+    "rtl":"RTL",
+    "dark":"Dark",
+    "light":"Dark"
   },
   "error": {
     "nestDown": "Nest server is not running",

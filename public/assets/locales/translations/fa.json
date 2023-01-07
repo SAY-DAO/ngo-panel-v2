@@ -1,4 +1,14 @@
 {
+  "settings":{
+    "title":"تنظیمات",
+    "themeOption":"انتخاب تم",
+    "themeDirection":"چیدمان",
+    "themeColors":"رنگ‌",
+    "ltr":"چپ‌چین",
+    "rtl":"راست‌چین",
+    "dark":"تیره",
+    "light":"روشن"
+  },
   "error": {
     "nestDown": "مشکل ارتباط با سرور Nest",
     "weak": "ضعیف",
