@@ -57,7 +57,6 @@ export const fetchSocialWorkerDetails = () => async (dispatch, getState) => {
 };
 
 export const fetchSocialWorkerById = (id) => async (dispatch, getState) => {
-  console.log(id);
   try {
     dispatch({ type: SW_BY_ID_REQUEST });
     const {

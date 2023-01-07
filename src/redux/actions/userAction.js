@@ -224,10 +224,9 @@ export const fetchMyPage = ( take) => async (dispatch, getState) => {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         'X-SKIP': 0,
-        'X-TAKE': 500,
+        'X-TAKE': take,
       },
     };
-console.log(take)
     const { data } = await daoApi.get(`/users/myPage/${swInfo.ngoId}/${swInfo.id}`, config);
 
     dispatch({

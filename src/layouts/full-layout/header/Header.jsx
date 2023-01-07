@@ -24,6 +24,18 @@ import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
 import { logout } from '../../../redux/actions/userAction';
 import { fetchSocialWorkerDetails } from '../../../redux/actions/socialWorkerAction';
+import { SW_DETAILS_RESET } from '../../../redux/constants/socialWorkerConstants';
+import { RolesEnum } from '../../../utils/helpers';
+import {
+  CHILDREN_ADD,
+  DAO_HOME,
+  MILESTONE_ADD,
+  MILESTONE_LIST,
+  NGO_LIST,
+  PROFILE_VIEW,
+  PROVIDER_LIST,
+  SW_LIST,
+} from '../../../routes/RouteConstants';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -37,6 +49,24 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { success: successLogin } = userLogin;
 
+  // do not let non admin user to navigate to the folloing pages
+  useEffect(() => {
+    if (swInfo && (swInfo.typeId !== RolesEnum.ADMIN && swInfo.typeId !== RolesEnum.SUPER_ADMIN)) {
+      if (
+        location.pathname === DAO_HOME ||
+        location.pathname === SW_LIST ||
+        location.pathname === PROVIDER_LIST ||
+        location.pathname === NGO_LIST ||
+        location.pathname === CHILDREN_ADD ||
+        location.pathname === MILESTONE_LIST ||
+        location.pathname === MILESTONE_ADD
+      ) {
+        navigate(PROFILE_VIEW);
+      }
+      console.log(location.pathname);
+    }
+  }, [swInfo, location]);
+
   useEffect(() => {
     if (!successLogin) {
       navigate('/auth/login');
@@ -49,7 +79,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     }
   }, [successSwDetails, loadingswDetails]);
 
-  // if mot active log out
+  // if not active log out
   useEffect(() => {
     if (successSwDetails && !swInfo.isActive) {
       dispatch(logout());
@@ -77,6 +107,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   };
 
   const handleLogOut = () => {
+    dispatch({ type: SW_DETAILS_RESET });
     dispatch(logout());
   };
 
