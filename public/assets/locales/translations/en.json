@@ -535,6 +535,13 @@
     }
   },
   "myProfile": {
+    "settings":{
+      "hi": "سلام",
+      "edit":"ویرایش پروفایل",
+      "settings":"جزییات پروفایل",
+      "logIn":"ورود",
+      "logOut": "خروج"
+    },
     "viewAs": "View as ...",
     "countRecent": {
       "title": "Display Recent Needs",

@@ -227,7 +227,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               }}
             >
               <Typography color="textSecondary" variant="h5" fontWeight="400" sx={{ ml: 1 }}>
-                {t('panel.hi')},
+                {t('myProfile.settings.hi')},
               </Typography>
               <Typography
                 variant="h5"

@@ -44,7 +44,6 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
 import {
   SW_BY_ID_RESET,
   UPDATE_SW_IS_ACTIVE_RESET,
@@ -107,9 +106,6 @@ const SocialWorkerEdit = () => {
   const swUpdate = useSelector((state) => state.swUpdate);
   const { success: successSwUpdate, loading: loadingSwUpdate, error: errorSwUpdate } = swUpdate;
 
-  const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
-
   useEffect(() => {
     if (!id && userInfo) {
       // when .../profile/edit
@@ -120,9 +116,6 @@ const SocialWorkerEdit = () => {
   useEffect(() => {
     if ((!successSwById && (id || myId)) || status || successSwUpdate) {
       dispatch(fetchSocialWorkerById(id || myId));
-    }
-    if (!successNgoList) {
-      dispatch(fetchNgoList());
     }
   }, [status, successSwUpdate, id, myId]);
 
@@ -360,14 +353,13 @@ const SocialWorkerEdit = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {(!id && !myId) || loadingSwById || loadingNgoAll || loadingSwUpdate ? (
+      {(!id && !myId) || loadingSwById || loadingSwUpdate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
         result &&
-        result.ngoId &&
-        ngoList && (
+        result.ngoId && (
           <>
             <Breadcrumb title="Edit page" subtitle="Social Worker" />
             <Grid container spacing={0}>
@@ -660,25 +652,7 @@ const SocialWorkerEdit = () => {
                       {...register('idNumber')}
                       error={!!errors.idNumber}
                     />
-                    <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
-                      {t('socialWorker.ngoName')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="ngoId-controlled-open-select-label"
-                      id="ngoId-controlled-open-select"
-                      defaultValue={result.ngoId}
-                      onChange={handleChangeInput('ngoId')}
-                      register={{ ...register('ngoId') }}
-                      control={control}
-                      error={!!errors.ngoId}
-                    >
-                      {ngoList &&
-                        Object.keys(ngoList).map((key) => (
-                          <MenuItem key={key} value={ngoList[key].id}>
-                            {ngoList[key].name}
-                          </MenuItem>
-                        ))}
-                    </CustomSelect>
+
                     <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
                       {t('socialWorker.typeId')}
                     </CustomFormLabel>

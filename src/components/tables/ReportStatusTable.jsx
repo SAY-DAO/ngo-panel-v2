@@ -444,14 +444,14 @@ const ReportStatusTable = () => {
           if (ngoId) {
             dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
           } else {
-            dispatch(fetchAllNeeds(true, swInfo.ngoId, typeId, statusId));
+            dispatch(fetchAllNeeds(true, null, typeId, statusId));
           }
         }
       } else if (
         swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
-        dispatch(fetchAllNeeds(true, null, typeId, statusId));
+        dispatch(fetchAllNeeds(true, swInfo.ngoId, typeId, statusId));
       }
     }
   }, [ngoId, typeId, statusId, swInfo, successNgoList]);
