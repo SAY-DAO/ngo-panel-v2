@@ -37,6 +37,7 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import Message from '../../components/Message';
 import { apiDao } from '../../env';
+import { NeedTypeEnum } from '../../utils/helpers';
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
@@ -99,7 +100,7 @@ const NeedEdit = () => {
     type: Yup.string().required('Please enter needs name'),
     doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
-    link: Yup.string().url().required('Please enter needs link'),
+    link: NeedTypeEnum.PRODUCT && Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
     
   });
