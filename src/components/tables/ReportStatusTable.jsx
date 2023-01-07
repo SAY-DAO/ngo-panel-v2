@@ -295,7 +295,7 @@ const ReportStatusTable = () => {
   const [openType, setOpenType] = useState(false);
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
-  const loadingNgo = openNgo && optionsNgo.length === 0;
+  // const loadingNgo = openNgo && optionsNgo.length === 0;
 
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('updated');
@@ -497,11 +497,11 @@ const ReportStatusTable = () => {
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  let emptyRows;
-  emptyRows =
-    adminNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - adminNeeds.needs.length) : 0);
-  emptyRows =
-    swNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swNeeds.needs.length) : 0);
+  // let emptyRows;
+  // emptyRows =
+  //   adminNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - adminNeeds.needs.length) : 0);
+  // emptyRows =
+  //   swNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swNeeds.needs.length) : 0);
 
   function Row(props) {
     const { row } = props;
@@ -774,7 +774,7 @@ const ReportStatusTable = () => {
                             placement="top-end"
                           >
                             <Typography color="textSecondary" variant="body1">
-                              {row.payments.filter((p) => p.verified).length} {t('need.payers')}
+                              {/* {row.payments.filter((p) => p.verified).length} {t('need.payers')} */}
                             </Typography>
                           </Tooltip>
                         )}
@@ -990,8 +990,8 @@ const ReportStatusTable = () => {
           <CircularProgress />
         </Grid>
       ) : (
-        (adminNeeds || swNeeds) &&
-        (adminNeeds || swNeeds).needs.length > 0 && (
+        (adminNeeds && adminNeeds.needs.length > 0) ||
+        (swNeeds && swNeeds.needs.length > 0 && (
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>
@@ -1008,7 +1008,7 @@ const ReportStatusTable = () => {
                         order={order}
                         orderBy={orderBy}
                         onRequestSort={handleRequestSort}
-                        rowCount={(adminNeeds || swNeeds).needs.length}
+                        // rowCount={(adminNeeds || swNeeds).needs.length}
                         typeId={typeId}
                       />
                       <TableBody>
@@ -1033,7 +1033,7 @@ const ReportStatusTable = () => {
                     rowsPerPageOptions={[5, 10, 25]}
                     labelRowsPerPage={t('table.rowCount')}
                     component="div"
-                    count={(adminNeeds || swNeeds).needs.length}
+                    // count={(adminNeeds || swNeeds).needs.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -1047,7 +1047,7 @@ const ReportStatusTable = () => {
               </Box>
             </CardContent>
           </Card>
-        )
+        ))
       )}
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>

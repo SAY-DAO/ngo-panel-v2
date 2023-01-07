@@ -94,15 +94,14 @@ const NeedEdit = () => {
   }, [childId]);
 
   const validationSchema = Yup.object().shape({
-    name_fa: Yup.string().required('Please enter needs name'),
-    name_en: Yup.string().required('Please enter needs name'),
+    name_fa: Yup.string().required('Please enter needs name (fa)'),
+    name_en: Yup.string().required('Please enter needs name (en)'),
     cost: Yup.number().required('Please enter needs cost'),
-    type: Yup.string().required('Please enter needs name'),
+    type: Yup.string().required('Please enter needs type'),
     doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
     link: NeedTypeEnum.PRODUCT && Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
-    
   });
 
   const {
@@ -446,11 +445,11 @@ const NeedEdit = () => {
                               sx={{ width: '100%', color: 'gray' }}
                               labelId="provider-controlled-open-select-label"
                               id="provider-controlled-open-select"
-                              defaultValue="0"
+                              defaultValue={oneNeed && oneNeed.type}
                               control={control}
                               register={{ ...register('provider', { required: true }) }}
                             >
-                              {providerList ? (
+                              {oneNeed && providerList ? (
                                 providerList
                                   .filter((p) => p.isActive === true)
                                   .map((p) => (

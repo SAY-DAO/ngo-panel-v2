@@ -698,7 +698,7 @@ const NeedAdd = () => {
                               sx={{ width: '100%', color: 'gray' }}
                               labelId="provider-controlled-open-select-label"
                               id="provider-controlled-open-select"
-                              defaultValue="0"
+                              defaultValue={oneNeed && oneNeed.type}
                               control={control}
                               register={{ ...register('provider', { required: true }) }}
                             >
