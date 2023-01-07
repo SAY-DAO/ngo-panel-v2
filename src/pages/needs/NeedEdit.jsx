@@ -81,8 +81,8 @@ const NeedEdit = () => {
 
   // one need
   useEffect(() => {
-    dispatch(fetchChildOneNeed(needId));
     dispatch(fetchProviderList());
+    dispatch(fetchChildOneNeed(needId));
     dispatch({ type: CHILD_ONE_NEED_RESET });
   }, []);
 
@@ -117,10 +117,14 @@ const NeedEdit = () => {
 
   // set type when provider is changed
   useEffect(() => {
+    console.log('provider');
+    console.log(watch('provider'));
+    console.log(oneNeed && parseInt(oneNeed.type, 10));
+    console.log('provider');
     setValue(
       'type',
-      providerList && providerList.filter((p) => p.id === watch('provider'))[0]
-        ? providerList.filter((p) => p.id === watch('provider'))[0].type
+      providerList && providerList.filter((p) => p.type === watch('provider'))
+        ? providerList.filter((p) => p.type === watch('provider'))
         : '',
     );
   }, [watch('provider')]);
@@ -213,7 +217,7 @@ const NeedEdit = () => {
         </Grid>
       ) : (
         <>
-          {successChild && childId && (
+          {oneNeed && providerList && successChild && childId && (
             <>
               <Grid container spacing={0}>
                 <Grid item lg={4} md={12} xs={12}>
@@ -445,15 +449,15 @@ const NeedEdit = () => {
                               sx={{ width: '100%', color: 'gray' }}
                               labelId="provider-controlled-open-select-label"
                               id="provider-controlled-open-select"
-                              defaultValue={oneNeed && oneNeed.type}
+                              defaultValue={parseInt(oneNeed.type, 10)}
                               control={control}
                               register={{ ...register('provider', { required: true }) }}
                             >
-                              {oneNeed && providerList ? (
+                              {oneNeed ? (
                                 providerList
                                   .filter((p) => p.isActive === true)
                                   .map((p) => (
-                                    <MenuItem key={p.id} value={p.id}>
+                                    <MenuItem key={p.id} value={p.type}>
                                       <Grid container spacing={2}>
                                         <Grid item>
                                           <Avatar
@@ -492,10 +496,10 @@ const NeedEdit = () => {
                               sx={{ width: '100%', color: 'gray' }}
                               id="type-controlled-open-select"
                             >
-                              {watch('provider') &&
-                              providerList &&
-                              providerList.filter((p) => p.id === watch('provider'))[0]
-                                ? providerList.filter((p) => p.id === watch('provider'))[0].typeName
+                              {providerList.filter((p) => p.type === oneNeed.type)[0]
+                                ? providerList.filter((p) => p.type === oneNeed.type)[0].typeName
+                                : oneNeed
+                                ? oneNeed.type_name
                                 : t('need.providerSelect')}
                             </Typography>
                           </Grid>
