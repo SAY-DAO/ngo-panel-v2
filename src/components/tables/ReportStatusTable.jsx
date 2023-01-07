@@ -380,7 +380,7 @@ const ReportStatusTable = () => {
         }, ...activeNgoList]);
       }
       // social worker
-      else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
+      else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -399,7 +399,7 @@ const ReportStatusTable = () => {
     } else if (swInfo && !successNgoList) {
       if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
         dispatch(fetchNgoList());
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
+      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
         setOptionsNgo([{
           id: swInfo.ngoId,
           name: swInfo.ngoName
@@ -428,7 +428,7 @@ const ReportStatusTable = () => {
         } else {
           dispatch(fetchAllNeeds(true, null, typeId, statusId));
         }
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
+      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
         dispatch(fetchSwNeedList());
       }
     }

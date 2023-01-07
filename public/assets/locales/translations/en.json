@@ -1,6 +1,13 @@
 {
+  "panel": {
+    "hi": "Hi"
+  },
   "error": {
-    "nestDown": "Nest server is not running"
+    "nestDown": "Nest server is not running",
+    "report":{
+      "expectedDeliveryToNgo": "Please enter estimated arrival time.",
+      "retailerCode": "Please enter retialer unique code."
+    }
   },
   "image":{
     "edit": "Edit photo",
@@ -66,7 +73,7 @@
     "reportsList": "Reports List"
   },
   "currency": {
-    "toman": " T"
+    "toman": " Tooman"
   },
   "family": {
     "roles": {
@@ -102,6 +109,12 @@
     "successBank": "Payment was successful"
   },
   "report": {
+    "statusChange":{
+      "expectedDeliveryToNgo": "Date of Product arrival",
+      "retailerPaid": "Price paid to Retailer",
+      "retailerCode": "Retailer Code",
+      "deliveredToNgo": "Date of arrival to NGO"
+    },
     "history": {
       "title": "History",
       "status": "Status",

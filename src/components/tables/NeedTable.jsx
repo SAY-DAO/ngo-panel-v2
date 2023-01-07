@@ -487,9 +487,8 @@ const NeedTable = () => {
       if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         dispatch(fetchNgoList());
       } else if (
-        swInfo.typeId !== RolesEnum.SOCIAL_WORKER ||
-        RolesEnum.NGO_SUPERVISOR ||
-        RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
         setOptionsNgo([
           {
@@ -538,7 +537,10 @@ const NeedTable = () => {
       // super admin & admin
       if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         dispatch(fetchChildrenByNgo({ ngoId }));
-      } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
+      } else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
         dispatch(fetchSwChildList());
         setOptions([
           {
@@ -770,7 +772,8 @@ const NeedTable = () => {
                                 key={row.id}
                                 selected={isItemSelected}
                               >
-                                <TableCell padding="checkbox"
+                                <TableCell
+                                  padding="checkbox"
                                   onClick={(event) => handleClick(event, row.id)}
                                 >
                                   <CustomCheckbox
@@ -788,6 +791,10 @@ const NeedTable = () => {
                                 </TableCell>
                                 <TableCell>
                                   <Switch
+                                    disabled={
+                                      swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+                                      swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+                                    }
                                     checked={row.isConfirmed}
                                     onChange={() => dispatch(updateNeedConfirm(row.id))}
                                     inputProps={{ 'aria-label': 'controlled' }}
@@ -853,7 +860,11 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.link && <Link href={row.link} target="_blank">Link</Link>}
+                                    {row.link && (
+                                      <Link href={row.link} target="_blank">
+                                        Link
+                                      </Link>
+                                    )}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -863,7 +874,9 @@ const NeedTable = () => {
                                     fontWeight="400"
                                   >
                                     {row.affiliateLinkUrl && (
-                                      <Link href={row.affiliateLinkUrl} target="_blank">Affiliate</Link>
+                                      <Link href={row.affiliateLinkUrl} target="_blank">
+                                        Affiliate
+                                      </Link>
                                     )}
                                   </Typography>
                                 </TableCell>

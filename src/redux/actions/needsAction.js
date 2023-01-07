@@ -250,7 +250,6 @@ export const deleteNeed = (needId) => async (dispatch, getState) => {
 
 export const updateNeed = (values) => async (dispatch, getState) => {
   try {
-    console.log('haha');
     dispatch({ type: UPDATE_ONE_NEED_REQUEST });
     const {
       userLogin: { userInfo },

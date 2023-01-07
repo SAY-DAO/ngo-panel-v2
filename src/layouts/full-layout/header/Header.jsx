@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 // Dropdown Component
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import ProfileDropdown from './ProfileDropdown';
 import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
@@ -28,6 +29,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo, loading: loadingswDetails, success: successSwDetails } = swDetails;
@@ -194,7 +196,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               }}
             >
               <Typography color="textSecondary" variant="h5" fontWeight="400" sx={{ ml: 1 }}>
-                Hi,
+                {t('panel.hi')},
               </Typography>
               <Typography
                 variant="h5"

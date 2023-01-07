@@ -6,11 +6,26 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import * as Yup from 'yup';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import PropTypes from 'prop-types';
-import { Autocomplete, Box, Grid, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Card,
+  Grid,
+  InputAdornment,
+  OutlinedInput,
+  Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
+import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 
 export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
   const { t } = useTranslation();
@@ -19,6 +34,23 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
   const [optionsStatus, setOptionsStatus] = useState([]);
   const [currentStatus, setCurrentStatus] = useState();
   const [statusId, setStatusId] = useState();
+
+  const validationSchema = Yup.object().shape({
+    expProductToNgo:
+      statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
+      Yup.date().required(t('error.report.expectedDeliveryToNgo')),
+    retailerCode:
+      statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
+      Yup.string().required(t('error.report.retailerCode')),
+  });
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
   // Autocomplete status
   useEffect(() => {
@@ -57,57 +89,170 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
   const handleClose = () => {
     setStatusDialog(false);
   };
+
+  const onSubmit = async (data) => {
+    console.log(JSON.stringify(data, null, 2));
+    if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
+      console.log(data.expProductToNgo);
+      console.log(data.retailerPaid);
+      console.log(data.retailerCode);
+    }
+  };
+  console.log(errors);
   return (
     <div>
       {currentStatus && (
         <Dialog open={statusDialog} onClose={handleClose}>
           <DialogTitle sx={{ p: 2, textAlign: 'center', fontSize: '1.2rem' }}>
-            {t('need.needStatusTitle')}{' '}
+            {t('need.needStatusTitle')}
           </DialogTitle>
-          <DialogContent>
-            <DialogContentText sx={{ p: 2, textAlign: 'center' }}>{need.title}</DialogContentText>
-            <Typography>{t('socialWorker.migrate.from')}</Typography>
-            <TextField
-              sx={{ p: 2 }}
-              disabled
-              id="outlined-disabled"
-              defaultValue={`${need.status} - ${currentStatus}`}
-            />
-            <Typography>{t('socialWorker.migrate.to')}</Typography>
-            <Grid container spacing={2} sx={{ p: 2 }} justifyContent="center">
-              <Grid item>
-                {optionsStatus && (
-                  <Autocomplete
-                    id="asynchronous"
-                    sx={{ minWidth: '220px' }}
-                    open={openStatus}
-                    onOpen={() => {
-                      setOpenStatus(true);
-                    }}
-                    onClose={() => {
-                      setOpenStatus(false);
-                    }}
-                    options={optionsStatus}
-                    onChange={(e, value) => setStatusId(value && value.id)}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    getOptionLabel={(option) => `${option.id} - ${option.title} `}
-                    renderOption={(props, option) => (
-                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        <>
-                          <Typography>{`${option.id} - ${option.title} `}</Typography>
-                        </>
-                      </Box>
-                    )}
-                    renderInput={(params) => <TextField {...params} label={t('need.newStatus')} />}
+          <DialogContent sx={{ p: 0 }}>
+            <DialogContentText
+              sx={{
+                textAlign: 'center',
+                maxWidth: '400px',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                width: '250px',
+                whiteSpace: 'nowrap',
+                pb: 2,
+                margin: 'auto',
+              }}
+            >
+              {need.title}
+            </DialogContentText>
+            <Card sx={{ p: 1 }}>
+              <Grid container direction="row" spacing={2} sx={{ p: 2 }} justifyContent="center">
+                <Grid item lg={6} md={12} xs={12}>
+                  <TextField
+                    disabled
+                    label={t('socialWorker.migrate.from')}
+                    id="outlined-disabled"
+                    defaultValue={`${need.status} - ${currentStatus}`}
                   />
-                )}
+                </Grid>
+                <Grid item lg={6} md={12} xs={12}>
+                  {optionsStatus && (
+                    <Autocomplete
+                      id="asynchronous"
+                      open={openStatus}
+                      onOpen={() => {
+                        setOpenStatus(true);
+                      }}
+                      onClose={() => {
+                        setOpenStatus(false);
+                      }}
+                      options={optionsStatus}
+                      onChange={(e, value) => setStatusId(value && value.id)}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      getOptionLabel={(option) => `${option.id} - ${option.title} `}
+                      renderOption={(props, option) => (
+                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                          <>
+                            <Typography>{`${option.id} - ${option.title} `}</Typography>
+                          </>
+                        </Box>
+                      )}
+                      renderInput={(params) => (
+                        <TextField {...params} label={t('need.newStatus')} />
+                      )}
+                    />
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
+              <Grid item lg={8} md={12} xs={12}>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                  {statusId === ProductStatusEnum.PURCHASED_PRODUCT && (
+                    <Grid container spacing={2}>
+                      <Grid item lg={12} md={12} xs={12}>
+                        <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
+                          {t('report.statusChange.expectedDeliveryToNgo')}
+                        </CustomFormLabel>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DesktopDatePicker
+                            id="expProductToNgo"
+                            inputFormat="MM/dd/yyyy"
+                            control={control}
+                            {...register('expProductToNgo', { required: true })}
+                            renderInput={(params) => <TextField {...params} />}
+                          />
+                        </LocalizationProvider>
+                      </Grid>
+                      <Grid item lg={6} md={12} xs={12}>
+                        <CustomFormLabel htmlFor="retailerPaid">
+                          {t('report.statusChange.retailerPaid')}
+                        </CustomFormLabel>
+                        <OutlinedInput
+                          sx={{ width: '100%' }}
+                          id="retailerPaid"
+                          type="number"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          control={control}
+                          {...register('retailerPaid', { required: true })}
+                          endAdornment={
+                            <InputAdornment position="end">{t('currency.toman')}</InputAdornment>
+                          }
+                        />
+                      </Grid>
+                      <Grid item lg={6} md={12} xs={12}>
+                        <CustomFormLabel htmlFor="retailerCode">
+                          {t('report.statusChange.retailerCode')}
+                        </CustomFormLabel>
+                        <TextField
+                          required
+                          id="retailerCode"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          control={control}
+                          {...register('retailerCode')}
+                          error={!!errors.retailerCode}
+                          helperText={errors && errors.retailerCode && errors.retailerCode.message}
+                        />
+                      </Grid>
+                    </Grid>
+                  )}
+                  {statusId === ProductStatusEnum.DELIVERED_TO_NGO && (
+                    <Grid container spacing={2}>
+                      <Grid item lg={12} md={12} xs={12}>
+                        <CustomFormLabel htmlFor="product-delivery-to-ngo">
+                          {t('report.statusChange.deliveredToNgo')}
+                        </CustomFormLabel>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DesktopDatePicker
+                            id="productDeliveredToNgo"
+                            inputFormat="MM/dd/yyyy"
+                            control={control}
+                            {...register('productDeliveredToNgo', { required: true })}
+                            renderInput={(params) => <TextField {...params} />}
+                            error={!!errors.productDeliveredToNgo}
+                          />
+                        </LocalizationProvider>
+                      </Grid>
+                    </Grid>
+                  )}
+                </form>
+              </Grid>
+            </Card>
           </DialogContent>
+
           <DialogActions>
             <Button onClick={handleClose}>{t('button.cancel')}</Button>
-            <Button onClick={handleClose}>{t('button.update')}</Button>
+            <Button disabled={!statusId} onClick={handleSubmit(onSubmit)}>
+              {t('button.update')}
+            </Button>
           </DialogActions>
+          {errors && errors.expProductToNgo && (
+            <ul>
+              <li>
+                <Typography color="error" variant="span">
+                  {errors && errors.expProductToNgo?.message}
+                </Typography>
+              </li>
+            </ul>
+          )}
         </Dialog>
       )}
     </div>

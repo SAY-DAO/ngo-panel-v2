@@ -163,9 +163,9 @@ const NeedAdd = () => {
     } else if (!activeChildren && openChildren) {
       if (swInfo) {
         // super admin & admin
-        if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
+        if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
           dispatch(fetchActiveChildList());
-        } else if (swInfo.typeId !== RolesEnum.SOCIAL_WORKER || RolesEnum.NGO_SUPERVISOR) {
+        } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
           dispatch(fetchSwChildList());
         }
       }
@@ -428,7 +428,7 @@ const NeedAdd = () => {
                                   width: 50,
                                   height: 50,
                                   boxShadow: '0px 7px 30px 0px',
-                                  opacity: '20%'
+                                  opacity: '20%',
                                 }}
                                 src={oneNeed.imageUrl}
                               />
@@ -496,7 +496,9 @@ const NeedAdd = () => {
                         onChange={(e, value) => setTheNeed(value)}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={(option) =>
-                          option.type === 1 ? `${option.id} - ${option.title} - ${option.name}` : `${option.id} - ${option.name}`
+                          option.type === 1
+                            ? `${option.id} - ${option.title} - ${option.name}`
+                            : `${option.id} - ${option.name}`
                         }
                         options={optionsPreNeed}
                         loading={isLoadingPreNeed}
@@ -619,7 +621,11 @@ const NeedAdd = () => {
                               control={control}
                               {...register('cost', { required: true })}
                               error={!!errors.cost}
-                              endAdornment={<InputAdornment position="end">Toman</InputAdornment>}
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  {t('currency.toman')}
+                                </InputAdornment>
+                              }
                             />
                           </Grid>
                           <Grid item xs={3}>
@@ -742,8 +748,8 @@ const NeedAdd = () => {
                               id="type-controlled-open-select"
                             >
                               {watch('provider') &&
-                                providerList &&
-                                providerList.filter((p) => p.id === watch('provider'))[0]
+                              providerList &&
+                              providerList.filter((p) => p.id === watch('provider'))[0]
                                 ? providerList.filter((p) => p.id === watch('provider'))[0].typeName
                                 : t('need.providerSelect')}
                             </Typography>

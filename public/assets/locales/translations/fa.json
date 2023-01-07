@@ -1,4 +1,7 @@
 {
+  "panel": {
+    "hi": "سلام"
+  },
   "error": {
     "nestDown": "مشکل ارتباط با سرور Nest",
     "weak": "ضعیف",
@@ -34,7 +37,11 @@
       "FaMoTaken": "دیر رسیدید و یک نفر دیگر اکنون {{roles}}{{rolesRelative}} {{childSayName}} است."
     },
     "timeout": "ای وای ... <1/>یه چیزی از کار افتاده، ممکنه بعدا بیای؟",
-    "emptyCart": "سبد خرید شما خالی است"
+    "emptyCart": "سبد خرید شما خالی است",
+    "report":{
+      "expectedDeliveryToNgo":"انتخاب تاریخ تحویل ضروری است.",
+      "retailerCode": "لطفا کد سفارش را وارد کنید"
+    }
   },
   "image":{
     "edit": "ویرایش عکس",
@@ -144,6 +151,12 @@
     }
   },
   "report": {
+    "statusChange":{
+      "expectedDeliveryToNgo": "تاریخ انتظار تحویل کالا به انجمن",
+      "retailerPaid": "هزینه پرداخت شده واقعی",
+      "retailerCode": "شماره سفارش",
+      "deliveredToNgo":  "تاریخ رسیدن کالا به انجمن"
+    },
     "history": {
       "title": "آنچه گذشت",
       "status": "وضعیت",
