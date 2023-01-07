@@ -4,13 +4,14 @@ import { Card, CardContent, Box, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import PageContainer from '../container/PageContainer';
+import { PaymentStatusEnum } from '../../utils/helpers';
 
 const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
   const { t } = useTranslation();
 
   let unpayableCount = 0;
   for (let i = 0; i < allNeeds.length; i += 1) {
-    if (allNeeds[i].unpayable) {
+    if (allNeeds[i].unpayable && allNeeds[i].status <= PaymentStatusEnum.COMPLETE_PAY) {
       unpayableCount += 1;
     }
   }

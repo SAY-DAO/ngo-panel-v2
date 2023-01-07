@@ -44,7 +44,7 @@ import PieChart from '../analytics/PieChart';
 import { deleteNeed, fetchChildNeeds, updateNeedConfirm } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
-import { RolesEnum } from '../../utils/helpers';
+import { PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -62,6 +62,24 @@ function descendingComparator(a, b, orderBy) {
       return -1;
     }
     if (new Date(b[orderBy]).getTime() > new Date(a[orderBy]).getTime()) {
+      return 1;
+    }
+  } else if (orderBy === 'unpayable') {
+    const newA = a;
+    const newB = b;
+    if (newA.status > PaymentStatusEnum.COMPLETE_PAY) {
+      newA.unpayable = 0;
+    } else if (newA.status <= PaymentStatusEnum.COMPLETE_PAY) {
+      newA.unpayable = 2;
+    } else if (newB.status > PaymentStatusEnum.COMPLETE_PAY) {
+      newB.unpayable = 0;
+    } else if (newB.status <= PaymentStatusEnum.COMPLETE_PAY) {
+      newB.unpayable = 4;
+    }
+    if (newB[orderBy] < newA[orderBy]) {
+      return -1;
+    }
+    if (newB[orderBy] > newA[orderBy]) {
       return 1;
     }
   } else {
@@ -802,17 +820,21 @@ const NeedTable = () => {
                                 </TableCell>
                                 <TableCell>
                                   <Box display="flex" alignItems="center">
-                                    <Box
-                                      sx={{
-                                        backgroundColor:
-                                          row.unpayable === false
-                                            ? (theme) => theme.palette.success.main
-                                            : (theme) => theme.palette.error.main,
-                                        borderRadius: '100%',
-                                        height: '10px',
-                                        width: '10px',
-                                      }}
-                                    />
+                                    {row.status <= PaymentStatusEnum.COMPLETE_PAY ? (
+                                      <Box
+                                        sx={{
+                                          backgroundColor:
+                                            row.unpayable === false
+                                              ? (theme) => theme.palette.success.main
+                                              : (theme) => theme.palette.error.main,
+                                          borderRadius: '100%',
+                                          height: '10px',
+                                          width: '10px',
+                                        }}
+                                      />
+                                    ) : (
+                                      <Typography>{t('need.purchased')}</Typography>
+                                    )}
                                   </Box>
                                 </TableCell>
                                 <TableCell>
