@@ -498,8 +498,6 @@ const NeedEdit = () => {
                             >
                               {providerList.filter((p) => p.type === oneNeed.type)[0]
                                 ? providerList.filter((p) => p.type === oneNeed.type)[0].typeName
-                                : oneNeed
-                                ? oneNeed.type_name
                                 : t('need.providerSelect')}
                             </Typography>
                           </Grid>
