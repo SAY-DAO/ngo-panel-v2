@@ -39,7 +39,7 @@ const FullLayout = () => {
         sx={{
           paddingLeft: isSidebarOpen && lgUp ? '0' : '',
           backgroundColor: customizer.activeMode === 'dark' ? '#20232a' : '#ffffff',
-          boxShadow:'0px 7px 30px 0px rgb(90 114 123 / 11%)'
+          boxShadow: '0px 7px 30px 0px rgb(90 114 123 / 11%)',
         }}
         toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
         toggleMobileSidebar={() => setMobileSidebarOpen(true)}

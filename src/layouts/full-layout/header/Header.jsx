@@ -13,6 +13,7 @@ import {
   Button,
   useMediaQuery,
   Drawer,
+  Alert,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 // Dropdown Component
@@ -51,7 +52,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   // do not let non admin user to navigate to the folloing pages
   useEffect(() => {
-    if (swInfo && (swInfo.typeId !== RolesEnum.ADMIN && swInfo.typeId !== RolesEnum.SUPER_ADMIN)) {
+    if (swInfo && swInfo.typeId !== RolesEnum.ADMIN && swInfo.typeId !== RolesEnum.SUPER_ADMIN) {
       if (
         location.pathname === DAO_HOME ||
         location.pathname === SW_LIST ||
@@ -115,7 +116,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     <AppBar sx={sx} elevation={0} className={customClass}>
       <Toolbar>
         {mdUp ? <LogoIcon /> : ''}
-
         <IconButton
           edge="start"
           color="inherit"
@@ -159,6 +159,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="search" width="20" height="20" />
         </IconButton>
+        <Alert severity="info">
+          <Typography variant='body2'>
+            <strong>{t('alert.title')} </strong>— {t('alert.body')}
+          </Typography>
+        </Alert>
         <Drawer
           anchor="top"
           open={showDrawer2}
@@ -266,7 +271,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           >
             <Box display="flex" alignItems="center">
               <Typography variant="h4" fontWeight="500">
-              {t("myProfile.settings.title")}
+                {t('myProfile.settings.title')}
               </Typography>
             </Box>
           </Box>
@@ -288,7 +293,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               variant="contained"
               color="primary"
             >
-              {t("myProfile.settings.logOut")}
+              {t('myProfile.settings.logOut')}
             </LoadingButton>
           </Link>
         </Menu>

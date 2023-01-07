@@ -1,4 +1,8 @@
 {
+  "alert":{
+    "title": "Please be Advised!",
+    "body": "Up to End of Day We are working on some feature and you might encounter some mior issues"
+  },
   "settings":{
     "title":"Settings",
     "themeOption":"Theme Option",
