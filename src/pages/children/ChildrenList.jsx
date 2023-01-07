@@ -19,14 +19,16 @@ const ChildrenList = () => {
   const swById = useSelector((state) => state.swById);
   const { children } = swById;
 
-
   // fetch children
   useEffect(() => {
     if (swInfo) {
       // super admin & admin
-      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
-        dispatch(fetchChildList()); // all => confirm=2, existence_status=1
-      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+        dispatch(fetchChildList());
+      } else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
         dispatch(fetchSwChildList());
       }
     }

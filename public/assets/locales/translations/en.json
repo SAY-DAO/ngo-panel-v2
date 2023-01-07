@@ -5,8 +5,9 @@
   "error": {
     "nestDown": "Nest server is not running",
     "report":{
-      "expectedDeliveryToNgo": "Please enter estimated arrival time.",
-      "retailerCode": "Please enter retialer unique code."
+      "expectedDeliveryToNgo": "Please enter estimated arrival time to NGO.",
+      "retailerCode": "Please enter retialer unique code.",
+      "deliveredToNgo": "Please enter arrival time to NGO."
     }
   },
   "image":{

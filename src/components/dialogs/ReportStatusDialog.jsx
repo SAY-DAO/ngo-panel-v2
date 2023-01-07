@@ -37,11 +37,17 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
 
   const validationSchema = Yup.object().shape({
     expProductToNgo:
+      NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
       Yup.date().required(t('error.report.expectedDeliveryToNgo')),
     retailerCode:
+      NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
       Yup.string().required(t('error.report.retailerCode')),
+    productDeliveredToNgo:
+      NeedTypeEnum.PRODUCT &&
+      statusId === ProductStatusEnum.DELIVERED_TO_NGO &&
+      Yup.date().required(t('error.report.deliveredToNgo')),
   });
   const {
     register,
@@ -92,10 +98,34 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
-    if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-      console.log(data.expProductToNgo);
-      console.log(data.retailerPaid);
-      console.log(data.retailerCode);
+    if (NeedTypeEnum.SERVICE) {
+      if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
+        console.log(data.expProductToNgo);
+        console.log(data.retailerPaid);
+        console.log(data.retailerCode);
+      }
+      if (statusId === ServiceStatusEnum.DELIVERED) {
+        console.log(data.expProductToNgo);
+        console.log(data.retailerPaid);
+        console.log(data.retailerCode);
+      }
+    }
+    if (NeedTypeEnum.PRODUCT) {
+      if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
+        console.log(data.expProductToNgo);
+        console.log(data.retailerPaid);
+        console.log(data.retailerCode);
+      }
+      if (statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
+        console.log(data.expProductToNgo);
+        console.log(data.retailerPaid);
+        console.log(data.retailerCode);
+      }
+      if (statusId === ProductStatusEnum.DELIVERED) {
+        console.log(data.expProductToNgo);
+        console.log(data.retailerPaid);
+        console.log(data.retailerCode);
+      }
     }
   };
   console.log(errors);

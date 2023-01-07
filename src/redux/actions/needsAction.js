@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { daoApi, publicApi } from '../../apis/sayBase';
-import { RolesEnum } from '../../utils/helpers';
+import { NeedTypeEnum, ProductStatusEnum, RolesEnum } from '../../utils/helpers';
 import {
   CHILD_EXAMPLE_NEEDS_FAIL,
   CHILD_EXAMPLE_NEEDS_REQUEST,
@@ -17,6 +17,9 @@ import {
   UPDATE_ONE_NEED_REQUEST,
   UPDATE_ONE_NEED_SUCCESS,
   UPDATE_ONE_NEED_FAIL,
+  UPDATE_NEED_STATUS_REQUEST,
+  UPDATE_NEED_STATUS_SUCCESS,
+  UPDATE_NEED_STATUS_FAIL,
   ADD_ONE_NEED_REQUEST,
   ADD_ONE_NEED_SUCCESS,
   ADD_ONE_NEED_FAIL,
@@ -302,7 +305,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
       formData.append('informations', values.information);
     }
 
-    if (values.finalImageFile) {
+    if (values.imageUrl) {
       formData.append('imageUrl', values.finalImageFile);
     }
 
@@ -318,6 +321,56 @@ export const updateNeed = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_ONE_NEED_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const updateNeedStatus = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_NEED_STATUS_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const formData = new FormData();
+    if (values.typeId === NeedTypeEnum.SERVICE) {
+      formData.append('bank_track_id', values.bank_track_id);
+      formData.append('purchase_cost', values.purchase_cost);
+    }
+    if (values.typeId === NeedTypeEnum.PRODUCT) {
+      if (values.statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
+        formData.append('purchase_cost', values.purchase_cost);
+        formData.append('dkc', values.dkc);
+        formData.append('expected_delivery_date', values.expected_delivery_date);
+      }
+      if (values.statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
+        formData.append('ngo_delivery_date', values.ngo_delivery_date);
+      }
+      if (values.statusId === ProductStatusEnum.DELIVERED) {
+        formData.append('ngo_delivery_date', values.ngo_delivery_date);
+      }
+    }
+
+    const { data } = await publicApi.patch(
+      `/need/update/needId=${values.needId}`,
+      formData,
+      config,
+    );
+    dispatch({
+      type: UPDATE_NEED_STATUS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_NEED_STATUS_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
