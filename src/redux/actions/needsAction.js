@@ -261,7 +261,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -306,7 +306,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     }
 
     if (values.imageUrl) {
-      formData.append('imageUrl', values.finalImageFile);
+      formData.append('imageUrl', values.imageUrl);
     }
 
     const { data } = await publicApi.patch(

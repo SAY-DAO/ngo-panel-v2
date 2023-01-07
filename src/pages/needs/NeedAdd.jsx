@@ -241,11 +241,9 @@ const NeedAdd = () => {
       setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
       setValue('cost', oneNeed.cost);
       setValue('doing_duration', oneNeed.doing_duration);
-      // setValue('imageUrl', finalImageFile || oneNeed.imageUrl);
     }
   }, [successNeedEx, oneNeed]);
 
-  console.log(oneNeed);
   // set type when provider is changed
   useEffect(() => {
     setValue(

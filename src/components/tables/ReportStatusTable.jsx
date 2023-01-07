@@ -271,19 +271,17 @@ EnhancedTableHead.propTypes = {
   typeId: PropTypes.number.isRequired,
 };
 
-
 const ReportStatusTable = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-
   const BCrumb = [
     {
       to: '/',
-      title: t("BCrumb.home"),
+      title: t('BCrumb.home'),
     },
     {
-      title: t("BCrumb.reportsList"),
+      title: t('BCrumb.reportsList'),
     },
   ];
   const [statusDialog, setStatusDialog] = useState(false);
@@ -309,8 +307,11 @@ const ReportStatusTable = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
+  const swNeedList = useSelector((state) => state.swNeedList);
+  const { needs: swNeeds, loading: loadingSwNeeds } = swNeedList;
+
   const allNeeds = useSelector((state) => state.allNeeds);
-  const { needs, loading: loadingAllNeeds } = allNeeds;
+  const { needs: adminNeeds, loading: loadingAllNeeds } = allNeeds;
 
   const serverOneNeed = useSelector((state) => state.serverOneNeed);
   const { loading: loadingOneNeed, error: errorOneNeed } = serverOneNeed;
@@ -371,20 +372,32 @@ const ReportStatusTable = () => {
     }
 
     if (active && swInfo) {
+      console.log(swInfo.typeId);
       // super admin & admin
-      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) && successNgoList) {
+      if (
+        (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) &&
+        successNgoList
+      ) {
         const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
-        setOptionsNgo([{
-          id: '',
-          name: t('ngo.allNgos')
-        }, ...activeNgoList]);
+        setOptionsNgo([
+          {
+            id: '',
+            name: t('ngo.allNgos'),
+          },
+          ...activeNgoList,
+        ]);
       }
       // social worker
-      else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
-        setOptionsNgo([{
-          id: swInfo.ngoId,
-          name: swInfo.ngoName
-        }])
+      else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        setOptionsNgo([
+          {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          },
+        ]);
       }
     }
     return () => {
@@ -397,38 +410,50 @@ const ReportStatusTable = () => {
     if (!openNgo) {
       setOptionsNgo([]);
     } else if (swInfo && !successNgoList) {
-      if ((swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         dispatch(fetchNgoList());
-      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
-        setOptionsNgo([{
-          id: swInfo.ngoId,
-          name: swInfo.ngoName
-        }])
+      } else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        setOptionsNgo([
+          {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          },
+        ]);
       }
-
     }
   }, [openNgo]);
 
   // ngo list to start
   useEffect(() => {
     // only super admin
-    if (!successNgoList && swInfo && (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)) {
+    if (
+      !successNgoList &&
+      swInfo &&
+      (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)
+    ) {
       dispatch(fetchNgoList());
     }
   }, [swInfo, successNgoList]);
 
-
   // fetch needs
   useEffect(() => {
-    if (successNgoList) {
-      // super admin & admin
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
-        if (ngoId) {
-          dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
-        } else {
-          dispatch(fetchAllNeeds(true, null, typeId, statusId));
+    if (swInfo) {
+      if (successNgoList) {
+        // super admin & admin
+        if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+          if (ngoId) {
+            dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
+          } else {
+            dispatch(fetchAllNeeds(true, null, typeId, statusId));
+          }
         }
-      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
+      } else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
         dispatch(fetchSwNeedList());
       }
     }
@@ -472,7 +497,11 @@ const ReportStatusTable = () => {
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.needs.length) : 0;
+  let emptyRows;
+  emptyRows =
+    adminNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - adminNeeds.needs.length) : 0);
+  emptyRows =
+    swNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swNeeds.needs.length) : 0);
 
   function Row(props) {
     const { row } = props;
@@ -480,17 +509,21 @@ const ReportStatusTable = () => {
 
     // fetch needs receipt when open accordion
     useEffect(() => {
-      if (accOpen && ((typeId === NeedTypeEnum.PRODUCT && statusId > 3) || (typeId === NeedTypeEnum.SERVICE && statusId > 3))) {
+      if (
+        accOpen &&
+        ((typeId === NeedTypeEnum.PRODUCT && statusId > 3) ||
+          (typeId === NeedTypeEnum.SERVICE && statusId > 3))
+      ) {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
 
     // set type name for status dialogue
     useEffect(() => {
-      if (statusDialog && row && needs) {
-        setStatusNeed(needs.needs.find((n) => n.id === row.id));
+      if (statusDialog && row && (adminNeeds || swNeeds)) {
+        setStatusNeed((swNeeds || adminNeeds).needs.find((n) => n.id === row.id));
       }
-    }, [statusDialog, row, needs]);
+    }, [statusDialog, row, swNeeds, adminNeeds]);
 
     const signReport = () => {
       dispatch(signTransaction(row));
@@ -541,7 +574,6 @@ const ReportStatusTable = () => {
               <Link href={row.link} target="_blank">
                 Link
               </Link>
-
             )}
             <br />
             {row.affiliateLinkUrl && (
@@ -562,11 +594,15 @@ const ReportStatusTable = () => {
                   src={
                     row.status === ProductStatusEnum.COMPLETE_PAY // Complete payment
                       ? '/images/hand-orange.svg'
-                      : row.status === ProductStatusEnum.PURCHASED_PRODUCT && typeId === NeedTypeEnum.PRODUCT // Purchased Product
-                        ? '/images/package-orange.svg'
-                        : (row.status === ProductStatusEnum.DELIVERED_TO_NGO && typeId === NeedTypeEnum.PRODUCT) || (row.status === ServiceStatusEnum.MONEY_TO_NGO && typeId === NeedTypeEnum.SERVICE) // Sent product to NGO
-                          ? '/images/package-orange.svg'
-                          : '/images/child-orange.svg' // Delivered to Child
+                      : row.status === ProductStatusEnum.PURCHASED_PRODUCT &&
+                        typeId === NeedTypeEnum.PRODUCT // Purchased Product
+                      ? '/images/package-orange.svg'
+                      : (row.status === ProductStatusEnum.DELIVERED_TO_NGO &&
+                          typeId === NeedTypeEnum.PRODUCT) ||
+                        (row.status === ServiceStatusEnum.MONEY_TO_NGO &&
+                          typeId === NeedTypeEnum.SERVICE) // Sent product to NGO
+                      ? '/images/package-orange.svg'
+                      : '/images/child-orange.svg' // Delivered to Child
                   }
                   alt="icon"
                   sx={{
@@ -588,14 +624,18 @@ const ReportStatusTable = () => {
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                     </>
-                  ) : row.status === ProductStatusEnum.PURCHASED_PRODUCT && typeId === NeedTypeEnum.PRODUCT ? (
+                  ) : row.status === ProductStatusEnum.PURCHASED_PRODUCT &&
+                    typeId === NeedTypeEnum.PRODUCT ? (
                     <>
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                     </>
-                  ) : (row.status === ProductStatusEnum.DELIVERED_TO_NGO && typeId === NeedTypeEnum.PRODUCT) || (row.status === ServiceStatusEnum.MONEY_TO_NGO && typeId === NeedTypeEnum.SERVICE) ? (
+                  ) : (row.status === ProductStatusEnum.DELIVERED_TO_NGO &&
+                      typeId === NeedTypeEnum.PRODUCT) ||
+                    (row.status === ServiceStatusEnum.MONEY_TO_NGO &&
+                      typeId === NeedTypeEnum.SERVICE) ? (
                     <>
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
                       <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
@@ -632,9 +672,10 @@ const ReportStatusTable = () => {
                     backgroundColor: (theme) => theme.palette.grey.A700,
                     p: '5px 15px',
                     color: (theme) =>
-                      `${theme.palette.mode === 'dark'
-                        ? theme.palette.grey.A200
-                        : 'rgba(0, 0, 0, 0.87)'
+                      `${
+                        theme.palette.mode === 'dark'
+                          ? theme.palette.grey.A200
+                          : 'rgba(0, 0, 0, 0.87)'
                       }`,
                   }}
                 >
@@ -645,7 +686,9 @@ const ReportStatusTable = () => {
                     <TableRow>
                       <TableCell sx={{ fontWeight: 600 }}>{t('report.history.status')}</TableCell>
                       <TableCell sx={{ fontWeight: 600 }}>{t('report.history.date')}</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 600 }}>{t('report.history.receipt')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 600 }}>
+                        {t('report.history.receipt')}
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -690,19 +733,18 @@ const ReportStatusTable = () => {
                             title={row.payments.map((p) => {
                               if (p.verified && p.gateway_track_id) {
                                 return (
-                                  <Grid
-                                    key={p.id}
-                                  >
+                                  <Grid key={p.id}>
                                     <Typography
                                       variant="subtitle2"
                                       sx={{
                                         backgroundColor: p.need_amount > 0 ? 'green' : 'red',
                                       }}
                                     >
-                                      {
-                                        `User:${p.id_user} Track Id:${p.gateway_track_id
-                                        } => ${(p.total_amount - p.donation_amount - p.credit_amount).toLocaleString()}`
-                                      }
+                                      {`User:${p.id_user} Track Id:${p.gateway_track_id} => ${(
+                                        p.total_amount -
+                                        p.donation_amount -
+                                        p.credit_amount
+                                      ).toLocaleString()}`}
                                     </Typography>
                                     <Typography
                                       variant="subtitle2"
@@ -724,8 +766,9 @@ const ReportStatusTable = () => {
                                 );
                               }
                               return (
-
-                                <Typography variant="subtitle2" key={p.id}>{p.verified && (`SAY ${p.total_amount.toLocaleString()}`)}</Typography>
+                                <Typography variant="subtitle2" key={p.id}>
+                                  {p.verified && `SAY ${p.total_amount.toLocaleString()}`}
+                                </Typography>
                               );
                             })}
                             placement="top-end"
@@ -740,10 +783,14 @@ const ReportStatusTable = () => {
                     {/* 3 Product delivered to NGO - Money transferred to the NGO */}
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        {typeId === NeedTypeEnum.PRODUCT ? t('need.needStatus.p3') : t('need.needStatus.s3')}
+                        {typeId === NeedTypeEnum.PRODUCT
+                          ? t('need.needStatus.p3')
+                          : t('need.needStatus.s3')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {typeId === NeedTypeEnum.PRODUCT ? row.purchase_date : row.ngo_delivery_date}
+                        {typeId === NeedTypeEnum.PRODUCT
+                          ? row.purchase_date
+                          : row.ngo_delivery_date}
                       </TableCell>
                       <TableCell align="right">
                         {row.dkc &&
@@ -759,13 +806,18 @@ const ReportStatusTable = () => {
                     {/* 4 Product delivered to NGO - service delivery to child */}
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        {typeId === NeedTypeEnum.PRODUCT ? t('need.needStatus.p4') : t('need.needStatus.s4')}
+                        {typeId === NeedTypeEnum.PRODUCT
+                          ? t('need.needStatus.p4')
+                          : t('need.needStatus.s4')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {typeId === NeedTypeEnum.PRODUCT ? row.ngo_delivery_date : row.child_delivery_date}
+                        {typeId === NeedTypeEnum.PRODUCT
+                          ? row.ngo_delivery_date
+                          : row.child_delivery_date}
                       </TableCell>
                       <TableCell align="right">
-                        {typeId === NeedTypeEnum.SERVICE && statusId === ServiceStatusEnum.DELIVERED ? (
+                        {typeId === NeedTypeEnum.SERVICE &&
+                        statusId === ServiceStatusEnum.DELIVERED ? (
                           <ReportImage row={row} statusId={statusId} />
                         ) : (
                           '-'
@@ -797,12 +849,14 @@ const ReportStatusTable = () => {
                           loading={loadingOneNeed}
                           onClick={() => signReport()}
                           disabled={
-                            (typeId === NeedTypeEnum.PRODUCT && statusId !== 5) || (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
+                            (typeId === NeedTypeEnum.PRODUCT && statusId !== 5) ||
+                            (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
                           }
                           variant="outlined"
                           fullWidth
                         >
-                          {(typeId === NeedTypeEnum.PRODUCT && statusId !== 5) || (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
+                          {(typeId === NeedTypeEnum.PRODUCT && statusId !== 5) ||
+                          (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
                             ? t('need.needStatus.pending')
                             : t('need.needStatus.sign')}
                         </LoadingButton>
@@ -856,10 +910,17 @@ const ReportStatusTable = () => {
         <Grid container spacing={2} justifyContent="center">
           <Grid item md={3} xs={12}>
             <Autocomplete
-              defaultValue={{
-                id: '',
-                name: t('ngo.allNgos')
-              }}
+              defaultValue={
+                swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN
+                  ? {
+                      id: '',
+                      name: t('ngo.allNgos'),
+                    }
+                  : {
+                      id: swInfo.ngoId,
+                      name: swInfo.ngoName,
+                    }
+              }
               id="asynchronous-ngo"
               open={openNgo}
               onOpen={() => {
@@ -876,7 +937,7 @@ const ReportStatusTable = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label={t("ngo.title")}
+                  label={t('ngo.title')}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
@@ -903,10 +964,7 @@ const ReportStatusTable = () => {
               getOptionLabel={(option) => `${option.title}`}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               options={optionsType}
-              renderInput={(params) => <TextField {...params}
-                label={t("need.autoCompleteType")}
-
-              />}
+              renderInput={(params) => <TextField {...params} label={t('need.autoCompleteType')} />}
             />
           </Grid>
           <Grid item md={3} xs={12}>
@@ -918,22 +976,22 @@ const ReportStatusTable = () => {
                 getOptionLabel={(option) => `${option.id} - ${option.title}`}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 options={optionStatus}
-                renderInput={(params) => <TextField {...params}
-                  label={t("need.autoCompleteStatus")}
-                />}
+                renderInput={(params) => (
+                  <TextField {...params} label={t('need.autoCompleteStatus')} />
+                )}
               />
             )}
           </Grid>
         </Grid>
       )}
 
-      {loadingAllNeeds || loadingNgoList ? (
+      {loadingSwNeeds || loadingAllNeeds || loadingNgoList ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        needs &&
-        needs.needs.length > 0 && (
+        (adminNeeds || swNeeds) &&
+        (adminNeeds || swNeeds).needs.length > 0 && (
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>
@@ -950,11 +1008,11 @@ const ReportStatusTable = () => {
                         order={order}
                         orderBy={orderBy}
                         onRequestSort={handleRequestSort}
-                        rowCount={needs.needs.length}
+                        rowCount={(adminNeeds || swNeeds).needs.length}
                         typeId={typeId}
                       />
                       <TableBody>
-                        {stableSort(needs.needs, getComparator(order, orderBy))
+                        {stableSort((adminNeeds || swNeeds).needs, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
                             return <Row key={row.id} row={row} />;
@@ -975,7 +1033,7 @@ const ReportStatusTable = () => {
                     rowsPerPageOptions={[5, 10, 25]}
                     labelRowsPerPage={t('table.rowCount')}
                     component="div"
-                    count={needs.needs.length}
+                    count={(adminNeeds || swNeeds).needs.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
