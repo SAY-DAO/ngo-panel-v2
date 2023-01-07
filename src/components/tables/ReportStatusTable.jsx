@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -40,7 +39,7 @@ import { LoadingButton } from '@mui/lab';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { fetchAllNeeds, fetchSwNeedList } from '../../redux/actions/needsAction';
+import { fetchAllNeeds } from '../../redux/actions/needsAction';
 import { fetchNgoList } from '../../redux/actions/ngoAction';
 import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
@@ -85,6 +84,8 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+  console.log(array);
+
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -296,7 +297,7 @@ const ReportStatusTable = () => {
   const [openType, setOpenType] = useState(false);
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
-  // const loadingNgo = openNgo && optionsNgo.length === 0;
+  const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
 
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('updated');
@@ -307,9 +308,6 @@ const ReportStatusTable = () => {
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
-
-  const swNeedList = useSelector((state) => state.swNeedList);
-  const { needs: swNeeds, loading: loadingSwNeeds } = swNeedList;
 
   const allNeeds = useSelector((state) => state.allNeeds);
   const { needs: adminNeeds, loading: loadingAllNeeds } = allNeeds;
@@ -324,12 +322,10 @@ const ReportStatusTable = () => {
   ---- PAYMENT-----
   partial payment status = 1
   complete payment status = 2
-
   ---- PRODUCT ---type = 1---
   complete purchase for product status = 3
   complete delivery for product to NGO status = 4
   complete delivery to child status = 5
-
   ----- SERVICE ---type = 0---
   complete money transfer to NGO for service status = 3
   complete delivery to child for service status = 4
@@ -448,14 +444,14 @@ const ReportStatusTable = () => {
           if (ngoId) {
             dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
           } else {
-            dispatch(fetchAllNeeds(true, null, typeId, statusId));
+            dispatch(fetchAllNeeds(true, swInfo.ngoId, typeId, statusId));
           }
         }
       } else if (
         swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
-        dispatch(fetchSwNeedList());
+        dispatch(fetchAllNeeds(true, null, typeId, statusId));
       }
     }
   }, [ngoId, typeId, statusId, swInfo, successNgoList]);
@@ -498,11 +494,8 @@ const ReportStatusTable = () => {
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  // let emptyRows;
-  // emptyRows =
-  //   adminNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - adminNeeds.needs.length) : 0);
-  // emptyRows =
-  //   swNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - swNeeds.needs.length) : 0);
+  const emptyRows =
+    adminNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - adminNeeds.needs.length) : 0);
 
   function Row(props) {
     const { row } = props;
@@ -521,10 +514,10 @@ const ReportStatusTable = () => {
 
     // set type name for status dialogue
     useEffect(() => {
-      if (statusDialog && row && (adminNeeds || swNeeds)) {
-        setStatusNeed((swNeeds || adminNeeds).needs.find((n) => n.id === row.id));
+      if (statusDialog && row && adminNeeds.needs) {
+        setStatusNeed(adminNeeds.needs.find((n) => n.id === row.id));
       }
-    }, [statusDialog, row, swNeeds, adminNeeds]);
+    }, [statusDialog, row, adminNeeds]);
 
     const signReport = () => {
       dispatch(signTransaction(row));
@@ -729,7 +722,7 @@ const ReportStatusTable = () => {
                         {row.doneAt}
                       </TableCell>
                       <TableCell align="right">
-                        {row.payments[0] && (
+                        {row.payments && row.payments[0] && (
                           <Tooltip
                             title={row.payments.map((p) => {
                               if (p.verified && p.gateway_track_id) {
@@ -775,7 +768,7 @@ const ReportStatusTable = () => {
                             placement="top-end"
                           >
                             <Typography color="textSecondary" variant="body1">
-                              {/* {row.payments.filter((p) => p.verified).length} {t('need.payers')} */}
+                              {row.payments.filter((p) => p.verified).length} {t('need.payers')}
                             </Typography>
                           </Tooltip>
                         )}
@@ -986,13 +979,14 @@ const ReportStatusTable = () => {
         </Grid>
       )}
 
-      {loadingSwNeeds || loadingAllNeeds || loadingNgoList ? (
+      {loadingAllNeeds || loadingNgoList ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
-        (adminNeeds && adminNeeds.needs.length > 0) ||
-        (swNeeds && swNeeds.needs.length > 0 && (
+        adminNeeds &&
+        adminNeeds.needs &&
+        adminNeeds.needs.length > 0 && (
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>
@@ -1009,11 +1003,11 @@ const ReportStatusTable = () => {
                         order={order}
                         orderBy={orderBy}
                         onRequestSort={handleRequestSort}
-                        // rowCount={(adminNeeds || swNeeds).needs.length}
+                        rowCount={adminNeeds.needs.length}
                         typeId={typeId}
                       />
                       <TableBody>
-                        {stableSort((adminNeeds || swNeeds).needs, getComparator(order, orderBy))
+                        {stableSort(adminNeeds.needs, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
                             return <Row key={row.id} row={row} />;
@@ -1034,7 +1028,7 @@ const ReportStatusTable = () => {
                     rowsPerPageOptions={[5, 10, 25]}
                     labelRowsPerPage={t('table.rowCount')}
                     component="div"
-                    // count={(adminNeeds || swNeeds).needs.length}
+                    count={adminNeeds.needs.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -1048,7 +1042,7 @@ const ReportStatusTable = () => {
               </Box>
             </CardContent>
           </Card>
-        ))
+        )
       )}
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
