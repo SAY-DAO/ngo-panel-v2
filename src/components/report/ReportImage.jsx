@@ -113,9 +113,6 @@ export default function ReportImage({ row, statusId }) {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    console.log('------------------------');
-    console.log(finalImageFile);
-    console.log('-------------------------------');
     dispatch(
       addReceiptToNeed({
         needId: row.id,
