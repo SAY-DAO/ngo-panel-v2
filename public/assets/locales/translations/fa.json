@@ -170,7 +170,7 @@
       "retailerCode": "شماره سفارش",
       "deliveredToNgo":  "تاریخ رسیدن کالا به انجمن",
       "bankTrackId": "کد رهگیری بانک",
-      "purchasedCost": "هزینه پرداخت شده"
+      "purchasedCost": "هزینه پرداخت شده واقعی"
     },
     "history": {
       "title": "آنچه گذشت",
