@@ -46,8 +46,6 @@ import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
 import { getAge, EducationEnum, HousingStatusEnum } from '../../utils/helpers';
 
-
-
 const ChildAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -56,10 +54,10 @@ const ChildAdd = () => {
   const BCrumb = [
     {
       to: '/children/list',
-      title: t("BCrumb.childrenList"),
+      title: t('BCrumb.childrenList'),
     },
     {
-      title: t("BCrumb.add"),
+      title: t('BCrumb.add'),
     },
   ];
 
@@ -86,7 +84,7 @@ const ChildAdd = () => {
   const isLoadingNgo = openNgo && optionsNgo.length === 0;
 
   const childAdd = useSelector((state) => state.childAdd);
-  const { success: successAddChild, error: errorAddChild } = childAdd;
+  const { success: successAddChild, error: errorAddChild, loading: loadingAddChild } = childAdd;
 
   const countryList = useSelector((state) => state.countryList);
   const { countries, states, cities, success: successCountryList } = countryList;
@@ -128,7 +126,6 @@ const ChildAdd = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
-  console.log(errors);
 
   // country
   useEffect(() => {
@@ -322,7 +319,7 @@ const ChildAdd = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={t("ngo.title")}
+                label={t('ngo.title')}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -374,7 +371,7 @@ const ChildAdd = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={t("socialWorker.title")}
+                label={t('socialWorker.title')}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -835,7 +832,7 @@ const ChildAdd = () => {
                                 opacity: '60%',
                               }}
                             >
-                              {getAge(birthDate)} {t("child.years")}
+                              {getAge(birthDate)} {t('child.years')}
                             </Typography>
                           </Grid>
                           <Grid item md={4} xs={12}>
@@ -1026,7 +1023,7 @@ const ChildAdd = () => {
                         </Grid>
                       </Grid>
                       <LoadingButton
-                        // loading={loadingAddChild}
+                        loading={loadingAddChild}
                         color="primary"
                         type="submit"
                         onClick={handleSubmit(onSubmit)}

@@ -22,10 +22,14 @@ import {
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { LoadingButton } from '@mui/lab';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { addReceiptToNeed, fetchNeedReceipts } from '../../redux/actions/reportAction';
-import UploadImage from '../UploadImage';
+import ReportUploadImage from './ReportUploadImage';
 import DeleteDialog from '../dialogs/DeleteDialog';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 
@@ -41,10 +45,6 @@ export default function ReportImage({ row, statusId }) {
   const [dialogValues, setDialogValues] = useState();
   const [openDelete, setOpenDelete] = useState(false);
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [code, setCode] = useState('');
-
   const receiptList = useSelector((state) => state.receiptList);
   const { receipts, loading: loadingReceiptList } = receiptList;
 
@@ -54,20 +54,24 @@ export default function ReportImage({ row, statusId }) {
   const receiptDelete = useSelector((state) => state.receiptDelete);
   const { success: successDelete } = receiptDelete;
 
-  useEffect(() => {
-    if (finalImageFile && title) {
-      dispatch(
-        addReceiptToNeed({
-          needId: row.id,
-          title,
-          code,
-          needStatus: statusId,
-          description,
-          attachment: finalImageFile,
-        }),
-      );
-    }
-  }, [finalImageFile]);
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().required('Please enter receipt title'),
+  });
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  // useEffect(() => {
+  //   if (finalImageFile) {
+  //     setIsDisabled(true);
+  //   }
+  // }, [finalImageFile]);
 
   // after adding
   useEffect(() => {
@@ -78,8 +82,13 @@ export default function ReportImage({ row, statusId }) {
   }, [successAdd, successDelete]);
 
   // dialog image
-  const handleImageClickOpen = () => {
+  const handleImageClickOpen = (e) => {
     setOpenImageDialog(true);
+    console.log('openImageDialog');
+    if (e && e.target && e.target.files[0]) {
+      setUploadImage(e.target.files[0]);
+      handleImageClickOpen();
+    }
   };
   const handleImageClose = () => {
     setOpenImageDialog(false);
@@ -100,6 +109,28 @@ export default function ReportImage({ row, statusId }) {
       type: 'delete',
     });
   };
+
+  const onSubmit = async (data) => {
+    
+    console.log(JSON.stringify(data, null, 2));
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(300);
+    console.log('------------------------');
+    console.log(finalImageFile);
+    console.log('-------------------------------');
+    dispatch(
+      addReceiptToNeed({
+        needId: row.id,
+        title: data.title,
+        code: data.code,
+        needStatus: statusId,
+        description: data.description,
+        attachment: finalImageFile,
+      }),
+    );
+    handleImageClose();
+  };
+
   return (
     <Stack direction="row">
       {loadingReceiptList || loadingAdd ? (
@@ -116,6 +147,9 @@ export default function ReportImage({ row, statusId }) {
                   id={statusId}
                   type="file"
                   style={{ display: 'none' }}
+                  onClick={(e) =>
+                    e.target.files[0] ? handleImageClickOpen(e) : console.log('nah')
+                  }
                   onChange={onImageChange}
                 />
 
@@ -174,7 +208,7 @@ export default function ReportImage({ row, statusId }) {
                             <IconButton {...bindTrigger(popupState)}>
                               <Avatar
                                 alt="receipt"
-                                sx={{ width: 20, height: 20 }}
+                                sx={{ width: 20, height: 20, border: '1px solid gray' }}
                                 src={receipt.attachment}
                               />
                             </IconButton>
@@ -202,54 +236,66 @@ export default function ReportImage({ row, statusId }) {
       >
         <DialogContent>
           <Box>
-            <Grid container>
-              <CustomFormLabel htmlFor="title">{t('report.receipt.code')}</CustomFormLabel>
-              <TextField
-                id="code"
-                variant="outlined"
-                fullWidth
-                size="small"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Grid container>
+                <CustomFormLabel htmlFor="title">{t('report.receipt.code')}</CustomFormLabel>
+                <TextField
+                  id="code"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  control={control}
+                  {...register('code')}
+                  error={!!errors.code}
+                />
+                <CustomFormLabel htmlFor="title">{t('report.receipt.title')}</CustomFormLabel>
+                <TextField
+                  required
+                  id="title"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  control={control}
+                  {...register('title')}
+                  error={!!errors.title}
+                />
+                <CustomFormLabel htmlFor="description">
+                  {t('report.receipt.description')}
+                </CustomFormLabel>
+                <TextareaAutosize
+                  aria-label="minimum height"
+                  minRows={5}
+                  id="description"
+                  variant="outlined"
+                  size="small"
+                  sx={{ mb: 1 }}
+                  control={control}
+                  {...register('description')}
+                  style={{ width: '100%', background: 'transparent' }}
+                />
+              </Grid>
+              <ReportUploadImage
+                uploadImage={uploadImage}
+                finalImageFile={finalImageFile}
+                setFinalImageFile={setFinalImageFile}
+                customBorderRadius={1}
               />
-              <CustomFormLabel htmlFor="title">{t('report.receipt.title')}</CustomFormLabel>
-              <TextField
-                required
-                id="title"
-                variant="outlined"
-                fullWidth
-                size="small"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <CustomFormLabel htmlFor="description">
-                {t('report.receipt.description')}
-              </CustomFormLabel>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={5}
-                id="description"
-                variant="outlined"
-                size="small"
-                sx={{ mb: 1 }}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                style={{ width: '100%', background: 'transparent' }}
-              />
-            </Grid>
 
-            <UploadImage
-              uploadImage={uploadImage}
-              handleImageClose={handleImageClose}
-              setFinalImageFile={setFinalImageFile}
-              customBorderRadius={1}
-            />
+              <LoadingButton
+                // loading={loadingAddChild}
+                color="primary"
+                type="submit"
+                onClick={handleSubmit(onSubmit)}
+                variant="contained"
+                sx={{ mt: 4 }}
+              >
+                {t('child.button.add')}
+              </LoadingButton>
+            </form>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleImageClose}>
-          {t('button.close')}
-          </Button>
+          <Button onClick={handleImageClose}>{t('button.close')}</Button>
         </DialogActions>
       </Dialog>
       <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />

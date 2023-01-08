@@ -27,7 +27,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 
-export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
+export default function StatusDialog({ need, statusDialog, setStatusDialog, setStatusNeed }) {
   const { t } = useTranslation();
 
   const [openStatus, setOpenStatus] = useState(false);
@@ -68,11 +68,19 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
       } else if (need.status === ServiceStatusEnum.DELIVERED) {
         setCurrentStatus(t('need.needDialogue.service.4'));
       }
-      setOptionsStatus([
-        { title: t('need.needDialogue.service.2'), id: 2 },
-        { title: t('need.needDialogue.service.3'), id: 3 },
-        { title: t('need.needDialogue.service.4'), id: 4 },
-      ]);
+      if (need.status === ServiceStatusEnum.COMPLETE_PAY) {
+        setOptionsStatus([
+          { title: t('need.needDialogue.service.3'), id: ServiceStatusEnum.MONEY_TO_NGO },
+        ]);
+      } else if (need.status === ServiceStatusEnum.MONEY_TO_NGO) {
+        setOptionsStatus([
+          { title: t('need.needDialogue.service.4'), id: ServiceStatusEnum.DELIVERED },
+        ]);
+      } else if (need.status === ServiceStatusEnum.DELIVERED) {
+        setOptionsStatus([
+          { title: t('need.needDialogue.service.4'), id: ServiceStatusEnum.DELIVERED },
+        ]);
+      }
     } else if (need.type === NeedTypeEnum.PRODUCT) {
       if (need.status === ProductStatusEnum.COMPLETE_PAY) {
         setCurrentStatus(t('need.needDialogue.product.2'));
@@ -83,17 +91,33 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
       } else if (need.status === ProductStatusEnum.DELIVERED) {
         setCurrentStatus(t('need.needDialogue.product.4'));
       }
-      setOptionsStatus([
-        { title: t('need.needDialogue.product.2'), id: 2 },
-        { title: t('need.needDialogue.product.3'), id: 3 },
-        { title: t('need.needDialogue.product.4'), id: 4 },
-        { title: t('need.needDialogue.product.5'), id: 5 },
-      ]);
+      if (need.status === ProductStatusEnum.COMPLETE_PAY) {
+        setOptionsStatus([
+          { title: t('need.needDialogue.product.3'), id: ProductStatusEnum.PURCHASED_PRODUCT },
+        ]);
+      } else if (need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
+        // allow to update purchased products
+        setOptionsStatus([
+          { title: t('need.needDialogue.product.3'), id: ProductStatusEnum.PURCHASED_PRODUCT },
+          { title: t('need.needDialogue.product.4'), id: ProductStatusEnum.DELIVERED_TO_NGO },
+        ]);
+      } else if (need.status === ProductStatusEnum.DELIVERED_TO_NGO) {
+        // allow to update purchased products
+        setOptionsStatus([
+          { title: t('need.needDialogue.product.5'), id: ProductStatusEnum.DELIVERED },
+        ]);
+      } else if (need.status === ProductStatusEnum.DELIVERED) {
+        // allow to update purchased products
+        setOptionsStatus([
+          { title: t('need.needDialogue.product.5'), id: ProductStatusEnum.DELIVERED },
+        ]);
+      }
     }
   }, [need, statusId, currentStatus]);
 
   const handleClose = () => {
     setStatusDialog(false);
+    setStatusNeed();
   };
 
   const onSubmit = async (data) => {
@@ -150,9 +174,17 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog }) {
               }}
             >
               {need.title}
+              <br />
+              <strong>{need.name}</strong>
             </DialogContentText>
             <Card sx={{ p: 1 }}>
-              <Grid container direction="row" spacing={2} sx={{ p: 2 }} justifyContent="center">
+              <Grid
+                container
+                direction="row"
+                spacing={2}
+                sx={{ p: 2, width: window.innerWidth > 600 ? '500px' : '250px' }}
+                justifyContent="center"
+              >
                 <Grid item lg={6} md={12} xs={12}>
                   <TextField
                     disabled
@@ -293,4 +325,5 @@ StatusDialog.propTypes = {
   need: PropTypes.object,
   statusDialog: PropTypes.bool,
   setStatusDialog: PropTypes.func,
+  setStatusNeed: PropTypes.func,
 };

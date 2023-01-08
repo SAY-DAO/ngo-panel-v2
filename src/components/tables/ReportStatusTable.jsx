@@ -286,37 +286,6 @@ const ReportStatusTable = () => {
       title: t('BCrumb.reportsList'),
     },
   ];
-  const [statusDialog, setStatusDialog] = useState(false);
-  const [statusNeed, setStatusNeed] = useState();
-
-  const [ngoId, setNgoId] = useState();
-  const [typeId, setTypeId] = useState(1);
-  const [statusId, setStatusId] = useState(2);
-  const [optionStatus, setOptionType] = useState();
-
-  const [openType, setOpenType] = useState(false);
-  const [openNgo, setOpenNgo] = useState(false);
-  const [optionsNgo, setOptionsNgo] = useState([]);
-  const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
-
-  const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('updated');
-  const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [toastOpen, setToastOpen] = React.useState(false);
-
-  const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo } = swDetails;
-
-  const allNeeds = useSelector((state) => state.allNeeds);
-  const { needs: adminNeeds, loading: loadingAllNeeds } = allNeeds;
-
-  const serverOneNeed = useSelector((state) => state.serverOneNeed);
-  const { loading: loadingOneNeed, error: errorOneNeed } = serverOneNeed;
-
-  const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   /*   
   ---- PAYMENT-----
@@ -331,7 +300,7 @@ const ReportStatusTable = () => {
   complete delivery to child for service status = 4
  */
 
-  const optionsType = [
+  const needTypes = [
     { id: 0, title: t('need.types.service') },
     { id: 1, title: t('need.types.product') },
   ];
@@ -351,13 +320,51 @@ const ReportStatusTable = () => {
     { id: 4, title: t('need.needStatus.s4') },
   ];
 
+  const [statusDialog, setStatusDialog] = useState(false);
+  const [statusNeed, setStatusNeed] = useState();
+
+  const [ngoId, setNgoId] = useState();
+  const [typeId, setTypeId] = useState(1);
+  const [theTypes, setTheTypes] = useState(needTypes);
+  const [statusId, setStatusId] = useState(2);
+  const [optionStatus, setOptionStatus] = useState();
+
+  const [openType, setOpenType] = useState(false);
+  const [openNgo, setOpenNgo] = useState(false);
+  const [optionsNgo, setOptionsNgo] = useState([]);
+  const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
+
+  const [order, setOrder] = useState('desc');
+  const [orderBy, setOrderBy] = useState('updated');
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(true);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [toastOpen, setToastOpen] = React.useState(false);
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+
+  const allNeeds = useSelector((state) => state.allNeeds);
+  const { needs, loading: loadingAllNeeds } = allNeeds;
+
+  const serverOneNeed = useSelector((state) => state.serverOneNeed);
+  const { loading: loadingOneNeed, error: errorOneNeed } = serverOneNeed;
+
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
+
   // set Service or Product titles
   useEffect(() => {
+    setTheTypes(needTypes);
     if (typeId === NeedTypeEnum.PRODUCT) {
-      setOptionType(optionsProduct);
+      setOptionStatus(optionsProduct);
+    } else if (typeId === NeedTypeEnum.SERVICE) {
+      setOptionStatus(optionsService);
+    } else if (openType) {
+      setStatusId();
     }
-    if (typeId === NeedTypeEnum.SERVICE) {
-      setOptionType(optionsService);
+    if (openType) {
+      setOptionStatus();
     }
   }, [typeId, openType]);
 
@@ -489,13 +496,14 @@ const ReportStatusTable = () => {
     setDense(event.target.checked);
   };
 
-  const handleStatusChange = () => {
+  const handleStatusChange = (row) => {
     setStatusDialog(true);
+    setStatusNeed(row);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    adminNeeds && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - adminNeeds.needs.length) : 0);
+    needs && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.needs.length) : 0);
 
   function Row(props) {
     const { row } = props;
@@ -513,11 +521,11 @@ const ReportStatusTable = () => {
     }, [accOpen]);
 
     // set type name for status dialogue
-    useEffect(() => {
-      if (statusDialog && row && adminNeeds.needs) {
-        setStatusNeed(adminNeeds.needs.find((n) => n.id === row.id));
-      }
-    }, [statusDialog, row, adminNeeds]);
+    // useEffect(() => {
+    //   if (statusDialog && row && needs.needs) {
+    //     setStatusNeed(needs.needs.find((n) => n.id === row.id));
+    //   }
+    // }, [statusDialog, row, needs]);
 
     const signReport = () => {
       dispatch(signTransaction(row));
@@ -583,7 +591,11 @@ const ReportStatusTable = () => {
           <TableCell align="center">{row.created_by_id}</TableCell>
           <TableCell align="center">
             <Box alignItems="center">
-              <IconButton aria-label="attachment" size="small" onClick={handleStatusChange}>
+              <IconButton
+                aria-label="attachment"
+                size="small"
+                onClick={() => handleStatusChange(row)}
+              >
                 <Avatar
                   src={
                     row.status === ProductStatusEnum.COMPLETE_PAY // Complete payment
@@ -811,7 +823,8 @@ const ReportStatusTable = () => {
                       </TableCell>
                       <TableCell align="right">
                         {typeId === NeedTypeEnum.SERVICE &&
-                        statusId === ServiceStatusEnum.DELIVERED ? (
+                        (statusId === ServiceStatusEnum.MONEY_TO_NGO ||
+                          statusId === ServiceStatusEnum.DELIVERED) ? (
                           <ReportImage row={row} statusId={statusId} />
                         ) : (
                           '-'
@@ -947,24 +960,24 @@ const ReportStatusTable = () => {
           </Grid>
           <Grid item md={3} xs={12}>
             <Autocomplete
-              defaultValue={optionsType[1]}
+              defaultValue={theTypes[1]}
               id="type"
               open={openType}
-              onOpen={() => setOpenType(true) && setOptionType()}
+              onOpen={() => setOpenType(true) && setOptionStatus()}
               onClose={() => {
                 setOpenType(false);
               }}
               onChange={(e, value) => setTypeId(value && value.id)}
               getOptionLabel={(option) => `${option.title}`}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              options={optionsType}
+              options={theTypes}
               renderInput={(params) => <TextField {...params} label={t('need.autoCompleteType')} />}
             />
           </Grid>
           <Grid item md={3} xs={12}>
-            {optionsType && optionStatus && (
+            {theTypes && optionStatus && (
               <Autocomplete
-                defaultValue={optionStatus[1]}
+                defaultValue={optionStatus && optionStatus[1]}
                 id="status"
                 onChange={(e, value) => setStatusId(value && value.id)}
                 getOptionLabel={(option) => `${option.id} - ${option.title}`}
@@ -984,9 +997,9 @@ const ReportStatusTable = () => {
           <CircularProgress />
         </Grid>
       ) : (
-        adminNeeds &&
-        adminNeeds.needs &&
-        adminNeeds.needs.length > 0 && (
+        needs &&
+        needs.needs &&
+        needs.needs.length > 0 && (
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>
@@ -1003,11 +1016,11 @@ const ReportStatusTable = () => {
                         order={order}
                         orderBy={orderBy}
                         onRequestSort={handleRequestSort}
-                        rowCount={adminNeeds.needs.length}
+                        rowCount={needs.needs.length}
                         typeId={typeId}
                       />
                       <TableBody>
-                        {stableSort(adminNeeds.needs, getComparator(order, orderBy))
+                        {stableSort(needs.needs, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
                             return <Row key={row.id} row={row} />;
@@ -1028,7 +1041,7 @@ const ReportStatusTable = () => {
                     rowsPerPageOptions={[5, 10, 25]}
                     labelRowsPerPage={t('table.rowCount')}
                     component="div"
-                    count={adminNeeds.needs.length}
+                    count={needs.needs.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -1056,6 +1069,7 @@ const ReportStatusTable = () => {
           need={statusNeed}
           statusDialog={statusDialog}
           setStatusDialog={setStatusDialog}
+          setStatusNeed={setStatusNeed}
         />
       )}
     </PageContainer>

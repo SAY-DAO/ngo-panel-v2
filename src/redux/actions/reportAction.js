@@ -77,6 +77,7 @@ export const addReceiptToNeed = (values) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
+    console.log(values);
     const formData = new FormData();
 
     if (values.code) {
