@@ -358,9 +358,7 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
       if (values.statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
         formData.append('ngo_delivery_date', values.ngo_delivery_date);
       }
-      if (values.statusId === ProductStatusEnum.DELIVERED) {
-        formData.append('ngo_delivery_date', values.ngo_delivery_date);
-      }
+
     }
 
     const { data } = await publicApi.patch(

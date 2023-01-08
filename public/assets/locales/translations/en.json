@@ -127,7 +127,8 @@
       "retailerPaid": "Price paid to Retailer",
       "retailerCode": "Retailer Code",
       "deliveredToNgo": "Date of arrival to NGO",
-      "bankTrackId": "Bank Track Id"
+      "bankTrackId": "Bank Track Id",
+      "purchasedCost": "Price paid for service"
 
     },
     "history": {

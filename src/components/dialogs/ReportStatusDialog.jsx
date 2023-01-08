@@ -24,7 +24,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import { useSelector , useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
@@ -76,6 +76,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   useEffect(() => {
     if (need) {
       setValue('retailerPaid', need.cost);
+      setValue('purchasedCost', need.cost);
     }
   }, [need]);
 
@@ -148,12 +149,12 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     const values = {};
     if (NeedTypeEnum.SERVICE) {
       if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
-        values.bankTrackId = data.bankTrackId;
-        values.purchase_cost = data.retailerPaid;
-        values.statusId = statusId;
+        values.bank_track_id = data.bankTrackId;
+        values.status = statusId;
       }
       if (statusId === ServiceStatusEnum.DELIVERED) {
-        values.statusId = statusId;
+        values.purchase_cost = data.purchasedCost;
+        values.status = statusId;
       }
     }
     if (NeedTypeEnum.PRODUCT) {
@@ -161,14 +162,14 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
         values.expected_delivery_date = data.expProductToNgo;
         values.purchase_cost = data.retailerPaid;
         values.dkc = data.retailerCode;
-        values.statusId = statusId;
+        values.status = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
         values.ngo_delivery_date = data.productDeliveredToNgo;
-        values.statusId = statusId;
+        values.status = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED) {
-        values.statusId = statusId;
+        values.status = statusId;
       }
     }
     dispatch(updateNeedStatus(values));
@@ -338,6 +339,28 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                             {...register('bankTrackId')}
                             error={!!errors.bankTrackId}
                             helperText={errors && errors.bankTrackId && errors.bankTrackId.message}
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
+                    {statusId === ServiceStatusEnum.DELIVERED && (
+                      <Grid container spacing={2}>
+                        <Grid item lg={6} md={12} xs={12}>
+                          <CustomFormLabel htmlFor="purchasedCost">
+                            {t('report.statusChange.purchasedCost')}
+                          </CustomFormLabel>
+                          <TextField
+                            required
+                            id="purchasedCost"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            control={control}
+                            {...register('purchasedCost')}
+                            error={!!errors.purchasedCost}
+                            helperText={
+                              errors && errors.purchasedCost && errors.purchasedCost.message
+                            }
                           />
                         </Grid>
                       </Grid>
