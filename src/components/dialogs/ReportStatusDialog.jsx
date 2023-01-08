@@ -116,8 +116,6 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
       if (need.status === ProductStatusEnum.COMPLETE_PAY) {
         setOptionsStatus([
           { title: t('need.needDialogue.product.3'), id: ProductStatusEnum.PURCHASED_PRODUCT },
-          { title: t('need.needDialogue.product.4'), id: ProductStatusEnum.DELIVERED_TO_NGO },
-          { title: t('need.needDialogue.product.5'), id: ProductStatusEnum.DELIVERED },
         ]);
       } else if (need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
         // allow to update purchased products
