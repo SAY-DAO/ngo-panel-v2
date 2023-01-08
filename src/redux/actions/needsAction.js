@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { daoApi, publicApi } from '../../apis/sayBase';
-import { NeedTypeEnum, ProductStatusEnum, RolesEnum } from '../../utils/helpers';
+import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
 import {
   CHILD_EXAMPLE_NEEDS_FAIL,
   CHILD_EXAMPLE_NEEDS_REQUEST,
@@ -339,9 +339,15 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
+    formData.append('status', values.status);
+
     if (values.typeId === NeedTypeEnum.SERVICE) {
-      formData.append('bank_track_id', values.bank_track_id);
-      formData.append('purchase_cost', values.purchase_cost);
+      if (values.statusId === ServiceStatusEnum.MONEY_TO_NGO) {
+        formData.append('bank_track_id', values.bank_track_id);
+      }
+      if (values.statusId === ServiceStatusEnum.DELIVERED) {
+        formData.append('purchase_cost', values.purchase_cost);
+      }
     }
     if (values.typeId === NeedTypeEnum.PRODUCT) {
       if (values.statusId === ProductStatusEnum.PURCHASED_PRODUCT) {

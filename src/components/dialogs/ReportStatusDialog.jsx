@@ -24,11 +24,13 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch } from 'react-redux';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
+import { updateNeedStatus } from '../../redux/actions/needsAction';
 
 export default function StatusDialog({ need, statusDialog, setStatusDialog, setStatusNeed }) {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const [openStatus, setOpenStatus] = useState(false);
@@ -147,6 +149,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (NeedTypeEnum.SERVICE) {
       if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
         values.bankTrackId = data.bankTrackId;
+        values.purchase_cost = data.retailerPaid;
         values.statusId = statusId;
       }
       if (statusId === ServiceStatusEnum.DELIVERED) {
@@ -155,22 +158,21 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     }
     if (NeedTypeEnum.PRODUCT) {
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-        values.expProductToNgo = data.expProductToNgo;
-        values.retailerPaid = data.retailerPaid;
+        values.expected_delivery_date = data.expProductToNgo;
+        values.purchase_cost = data.retailerPaid;
         values.dkc = data.retailerCode;
         values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
-        values.expProductToNgo = data.productDeliveredToNgo;
+        values.ngo_delivery_date = data.productDeliveredToNgo;
         values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED) {
         values.statusId = statusId;
       }
     }
-    console.log(values);
+    dispatch(updateNeedStatus(values));
   };
-  console.log(errors);
   return (
     <div>
       {currentStatus && (
