@@ -12,7 +12,6 @@ import {
   CardMedia,
   Stack,
   DialogActions,
-  Button,
   DialogContent,
   Dialog,
   TextField,
@@ -52,7 +51,7 @@ export default function ReportImage({ row, statusId }) {
   const { loading: loadingAdd, success: successAdd } = receiptAdd;
 
   const receiptDelete = useSelector((state) => state.receiptDelete);
-  const { success: successDelete } = receiptDelete;
+  const { success: successDelete, loading: loadingDelete } = receiptDelete;
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Please enter receipt title'),
@@ -111,7 +110,6 @@ export default function ReportImage({ row, statusId }) {
   };
 
   const onSubmit = async (data) => {
-    
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
@@ -206,11 +204,13 @@ export default function ReportImage({ row, statusId }) {
                         >
                           <>
                             <IconButton {...bindTrigger(popupState)}>
-                              <Avatar
-                                alt="receipt"
-                                sx={{ width: 20, height: 20, border: '1px solid gray' }}
-                                src={receipt.attachment}
-                              />
+                              {!loadingDelete && (
+                                <Avatar
+                                  alt="receipt"
+                                  sx={{ width: 20, height: 20, border: '1px solid gray' }}
+                                  src={receipt.attachment}
+                                />
+                              )}
                             </IconButton>
                             <Menu {...bindMenu(popupState)}>
                               <MenuItem onClick={() => handleDeleteDialog(row.id, receipt.id)}>
@@ -280,22 +280,29 @@ export default function ReportImage({ row, statusId }) {
                 setFinalImageFile={setFinalImageFile}
                 customBorderRadius={1}
               />
-
-              <LoadingButton
-                // loading={loadingAddChild}
-                color="primary"
-                type="submit"
-                onClick={handleSubmit(onSubmit)}
-                variant="contained"
-                sx={{ mt: 4 }}
-              >
-                {t('child.button.add')}
-              </LoadingButton>
             </form>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleImageClose}>{t('button.close')}</Button>
+          <LoadingButton
+            loading={loadingAdd}
+            color="primary"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            variant="outlined"
+            sx={{ mt: 4 }}
+          >
+            {t('child.button.add')}
+          </LoadingButton>
+          <LoadingButton
+            variant="outlined"
+            color="secondary"
+            type="submit"
+            sx={{ mt: 4 }}
+            onClick={handleImageClose}
+          >
+            {t('button.close')}
+          </LoadingButton>
         </DialogActions>
       </Dialog>
       <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />

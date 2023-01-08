@@ -115,18 +115,6 @@ export default function ReportUploadImage({
 
   return (
     <Grid container maxWidth="50%" sx={{ margin: 'auto  ' }}>
-      <Grid item container justifyContent="space-between" alignItems="center">
-        <Typography
-          variant="h6"
-          sx={{
-            padding: 2,
-            fontWeight: 'lighter',
-            textAlign: 'center',
-          }}
-        >
-          {t('image.edit')}
-        </Typography>
-      </Grid>
       <Grid container sx={{ margin: 2 }}>
         <div className="setting body-content flex-col al-center">
           <AvatarEditor
