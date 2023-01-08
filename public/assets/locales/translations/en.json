@@ -11,14 +11,15 @@
     "ltr":"LTR",
     "rtl":"RTL",
     "dark":"Dark",
-    "light":"Dark"
+    "light":"Light"
   },
   "error": {
     "nestDown": "Nest server is not running",
     "report":{
       "expectedDeliveryToNgo": "Please enter estimated arrival time to NGO.",
       "retailerCode": "Please enter retialer unique code.",
-      "deliveredToNgo": "Please enter arrival time to NGO."
+      "deliveredToNgo": "Please enter arrival time to NGO.",
+      "bankTrackId": "Please enter the bank tracking id."
     }
   },
   "image":{
@@ -125,7 +126,9 @@
       "expectedDeliveryToNgo": "Date of Product arrival",
       "retailerPaid": "Price paid to Retailer",
       "retailerCode": "Retailer Code",
-      "deliveredToNgo": "Date of arrival to NGO"
+      "deliveredToNgo": "Date of arrival to NGO",
+      "bankTrackId": "Bank Track Id"
+
     },
     "history": {
       "title": "History",
@@ -307,6 +310,7 @@
   },
   "need": {
     "title": "Needs",
+    "updatedNeed": "Successfully Updated!",
     "autoCompleteType": "Service/Product",
     "autoCompleteStatus": "Status",
     "pie":{

@@ -29,6 +29,9 @@ import {
   DELETE_NEED_SUCCESS,
   DELETE_NEED_FAIL,
   ADD_ONE_NEED_RESET,
+  UPDATE_NEED_STATUS_REQUEST,
+  UPDATE_NEED_STATUS_SUCCESS,
+  UPDATE_NEED_STATUS_FAIL,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -125,6 +128,18 @@ export const needUpdateReducer = (state = { success: false }, action) => {
   }
 };
 
+export const needStatusUpdateReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case UPDATE_NEED_STATUS_REQUEST:
+      return { loading: true };
+    case UPDATE_NEED_STATUS_SUCCESS:
+      return { loading: false, success: true, statusUpdated: action.payload };
+    case UPDATE_NEED_STATUS_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
 export const needAddReducer = (state = { success: false }, action) => {
   switch (action.type) {
     case ADD_ONE_NEED_REQUEST:

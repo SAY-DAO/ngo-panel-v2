@@ -147,11 +147,18 @@ function EnhancedTableHead(props) {
       width: '200px',
     },
     {
+      id: 'ngo',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.title'),
+      width: '180px',
+    },
+    {
       id: 'socialWorker',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.roles.SOCIAL_WORKER'),
-      width: '200px',
+      label: t('socialWorker.title'),
+      width: '150px',
     },
     {
       id: 'status',
@@ -203,11 +210,18 @@ function EnhancedTableHead(props) {
       width: '150px',
     },
     {
+      id: 'ngo',
+      numeric: false,
+      disablePadding: false,
+      label: t('ngo.title'),
+      width: '180px',
+    },
+    {
       id: 'socialWorker',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.roles.SOCIAL_WORKER'),
-      width: '200px',
+      label: t('socialWorker.title'),
+      width: '150px',
     },
     {
       id: 'status',
@@ -588,6 +602,7 @@ const ReportStatusTable = () => {
             {row.childSayName}
           </TableCell>
           {typeId === NeedTypeEnum.PRODUCT && <TableCell align="center">{row.title}</TableCell>}
+          <TableCell align="center">{row.ngoId}</TableCell>
           <TableCell align="center">{row.created_by_id}</TableCell>
           <TableCell align="center">
             <Box alignItems="center">
@@ -892,6 +907,7 @@ const ReportStatusTable = () => {
       img: PropTypes.string,
       imageUrl: PropTypes.string,
       amount: PropTypes.number,
+      ngoId: PropTypes.number,
       created_by_id: PropTypes.number,
       created: PropTypes.string,
       updated: PropTypes.string,

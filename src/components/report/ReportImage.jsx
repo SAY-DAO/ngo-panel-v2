@@ -285,9 +285,9 @@ export default function ReportImage({ row, statusId }) {
             loading={loadingAdd}
             color="primary"
             type="submit"
-            onClick={handleSubmit(onSubmit)}
             variant="outlined"
             sx={{ mt: 4 }}
+            onClick={handleSubmit(onSubmit)}
           >
             {t('child.button.add')}
           </LoadingButton>

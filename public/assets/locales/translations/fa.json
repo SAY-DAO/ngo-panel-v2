@@ -51,7 +51,9 @@
     "emptyCart": "سبد خرید شما خالی است",
     "report":{
       "expectedDeliveryToNgo":"انتخاب تاریخ تحویل ضروری است.",
-      "retailerCode": "لطفا کد سفارش را وارد کنید"
+      "retailerCode": "لطفا کد سفارش را وارد کنید",
+      "deliveredToNgo": "انتخاب تاریخ دریافت ضروری است.",
+      "bankTrackId": "شماره پیگیری بانک ضروری است."
     }
   },
   "image":{
@@ -166,7 +168,8 @@
       "expectedDeliveryToNgo": "تاریخ انتظار تحویل کالا به انجمن",
       "retailerPaid": "هزینه پرداخت شده واقعی",
       "retailerCode": "شماره سفارش",
-      "deliveredToNgo":  "تاریخ رسیدن کالا به انجمن"
+      "deliveredToNgo":  "تاریخ رسیدن کالا به انجمن",
+      "bankTrackId": "کد رهگیری بانک"
     },
     "history": {
       "title": "آنچه گذشت",
@@ -254,12 +257,12 @@
   "socialWorker": {
     "title": "مددکار",
     "myChildren": "کودکان من",
-    "noChildren": "No Children",
-    "socialWorker": "Social Worker",
+    "noChildren": "کودکی ندارد",
+    "socialWorker": "مددکار",
     "isActive": "Status",
     "isCoordinator": "Coordinator Status",
-    "update": "Edit",
-    "updated": "Successfully Updated!",
+    "update": "ویرایش",
+    "updated": "با موفقیت انجام شد!",
     "migrate":{
       "from": "از",
       "to": "به"
@@ -348,6 +351,7 @@
   },
   "need": {
     "title": "نیازها",
+    "updatedNeed": "با موفقیت انجام شد!",
     "autoCompleteType": "خدمات/کالا",
     "autoCompleteStatus": "وضعیت",
     "pie":{

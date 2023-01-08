@@ -34,6 +34,7 @@ import {
   childOneNeedReducer,
   exampleNeedsReducer,
   needAddReducer,
+  needStatusUpdateReducer,
   needUpdateReducer,
   swNeedListReducer,
 } from './needReducer';
@@ -74,6 +75,7 @@ export default combineReducers({
   childById: childByIdReducer,
   mileStone: mileStoneReducer,
   needUpdate: needUpdateReducer,
+  needStatusUpdate: needStatusUpdateReducer,
   needAdd: needAddReducer,
   childAllActives: childActiveListReducer,
   childAll: childListReducer,

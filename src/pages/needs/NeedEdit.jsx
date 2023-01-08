@@ -97,7 +97,7 @@ const NeedEdit = () => {
     name_fa: Yup.string().required('Please enter needs name (fa)'),
     name_en: Yup.string().required('Please enter needs name (en)'),
     cost: Yup.number().required('Please enter needs cost'),
-    type: Yup.string().required('Please enter needs type'),
+    type: Yup.number().required('Please enter needs type/provider'),
     doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
     link: NeedTypeEnum.PRODUCT && Yup.string().url().required('Please enter needs link'),
@@ -108,26 +108,11 @@ const NeedEdit = () => {
     setValue,
     register,
     control,
-    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
-
-  // set type when provider is changed
-  useEffect(() => {
-    console.log('provider');
-    console.log(watch('provider'));
-    console.log(oneNeed && parseInt(oneNeed.type, 10));
-    console.log('provider');
-    setValue(
-      'type',
-      providerList && providerList.filter((p) => p.type === watch('provider'))
-        ? providerList.filter((p) => p.type === watch('provider'))
-        : '',
-    );
-  }, [watch('provider')]);
 
   useEffect(() => {
     if (oneNeed) {
@@ -442,7 +427,7 @@ const NeedEdit = () => {
                           mb={2}
                         >
                           <Grid item xs={6}>
-                            <CustomFormLabel htmlFor="provider">
+                            <CustomFormLabel htmlFor="type">
                               {t('need.provider')}
                             </CustomFormLabel>
                             <CustomSelect
@@ -451,7 +436,7 @@ const NeedEdit = () => {
                               id="provider-controlled-open-select"
                               defaultValue={parseInt(oneNeed.type, 10)}
                               control={control}
-                              register={{ ...register('provider', { required: true }) }}
+                              register={{ ...register('type', { required: true }) }}
                             >
                               {oneNeed ? (
                                 providerList

@@ -283,9 +283,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     if (values.cost) {
       formData.append('cost', values.cost);
     }
-    if (values.type) {
-      formData.append('type', values.type);
-    }
+    formData.append('type', values.type);
     if (values.link) {
       formData.append('link', values.link);
     }

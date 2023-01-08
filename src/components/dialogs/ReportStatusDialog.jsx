@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -24,6 +23,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { LoadingButton } from '@mui/lab';
+import { useSelector } from 'react-redux';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 
@@ -34,6 +35,12 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const [optionsStatus, setOptionsStatus] = useState([]);
   const [currentStatus, setCurrentStatus] = useState();
   const [statusId, setStatusId] = useState();
+
+  const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
+  const { statusUpdated, loading: loadingAStatusUpdate } = needStatusUpdate;
+
+  console.log(statusUpdated);
+  console.log(need.cost);
 
   const validationSchema = Yup.object().shape({
     expProductToNgo:
@@ -48,15 +55,27 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
       NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.DELIVERED_TO_NGO &&
       Yup.date().required(t('error.report.deliveredToNgo')),
+    bankTrackId:
+      NeedTypeEnum.SERVICE &&
+      statusId === ServiceStatusEnum.MONEY_TO_NGO &&
+      Yup.date().required(t('error.report.bankTrackId')),
   });
+
   const {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  useEffect(() => {
+    if (need) {
+      setValue('retailerPaid', need.cost);
+    }
+  }, [need]);
 
   // Autocomplete status
   useEffect(() => {
@@ -94,6 +113,8 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
       if (need.status === ProductStatusEnum.COMPLETE_PAY) {
         setOptionsStatus([
           { title: t('need.needDialogue.product.3'), id: ProductStatusEnum.PURCHASED_PRODUCT },
+          { title: t('need.needDialogue.product.4'), id: ProductStatusEnum.DELIVERED_TO_NGO },
+          { title: t('need.needDialogue.product.5'), id: ProductStatusEnum.DELIVERED },
         ]);
       } else if (need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
         // allow to update purchased products
@@ -122,35 +143,32 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
+    const values = {};
     if (NeedTypeEnum.SERVICE) {
       if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
-        console.log(data.expProductToNgo);
-        console.log(data.retailerPaid);
-        console.log(data.retailerCode);
+        values.bankTrackId = data.bankTrackId;
+        values.statusId = statusId;
       }
       if (statusId === ServiceStatusEnum.DELIVERED) {
-        console.log(data.expProductToNgo);
-        console.log(data.retailerPaid);
-        console.log(data.retailerCode);
+        values.statusId = statusId;
       }
     }
     if (NeedTypeEnum.PRODUCT) {
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-        console.log(data.expProductToNgo);
-        console.log(data.retailerPaid);
-        console.log(data.retailerCode);
+        values.expProductToNgo = data.expProductToNgo;
+        values.retailerPaid = data.retailerPaid;
+        values.dkc = data.retailerCode;
+        values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
-        console.log(data.expProductToNgo);
-        console.log(data.retailerPaid);
-        console.log(data.retailerCode);
+        values.expProductToNgo = data.productDeliveredToNgo;
+        values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED) {
-        console.log(data.expProductToNgo);
-        console.log(data.retailerPaid);
-        console.log(data.retailerCode);
+        values.statusId = statusId;
       }
     }
+    console.log(values);
   };
   console.log(errors);
   return (
@@ -223,88 +241,132 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                 </Grid>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
-                <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                  {statusId === ProductStatusEnum.PURCHASED_PRODUCT && (
-                    <Grid container spacing={2}>
-                      <Grid item lg={12} md={12} xs={12}>
-                        <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
-                          {t('report.statusChange.expectedDeliveryToNgo')}
-                        </CustomFormLabel>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                          <DesktopDatePicker
-                            id="expProductToNgo"
-                            inputFormat="MM/dd/yyyy"
+                {need.type === NeedTypeEnum.PRODUCT && (
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    {statusId === ProductStatusEnum.PURCHASED_PRODUCT && (
+                      <Grid container spacing={2}>
+                        <Grid item lg={12} md={12} xs={12}>
+                          <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
+                            {t('report.statusChange.expectedDeliveryToNgo')}
+                          </CustomFormLabel>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DesktopDatePicker
+                              id="expProductToNgo"
+                              inputFormat="MM/dd/yyyy"
+                              control={control}
+                              {...register('expProductToNgo', { required: true })}
+                              renderInput={(params) => <TextField {...params} />}
+                            />
+                          </LocalizationProvider>
+                        </Grid>
+                        <Grid item lg={6} md={12} xs={12}>
+                          <CustomFormLabel htmlFor="retailerPaid">
+                            {t('report.statusChange.retailerPaid')}
+                          </CustomFormLabel>
+                          <OutlinedInput
+                            sx={{ width: '100%' }}
+                            id="retailerPaid"
+                            type="number"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
                             control={control}
-                            {...register('expProductToNgo', { required: true })}
-                            renderInput={(params) => <TextField {...params} />}
+                            {...register('retailerPaid', { required: true })}
+                            endAdornment={
+                              <InputAdornment position="end">{t('currency.toman')}</InputAdornment>
+                            }
                           />
-                        </LocalizationProvider>
-                      </Grid>
-                      <Grid item lg={6} md={12} xs={12}>
-                        <CustomFormLabel htmlFor="retailerPaid">
-                          {t('report.statusChange.retailerPaid')}
-                        </CustomFormLabel>
-                        <OutlinedInput
-                          sx={{ width: '100%' }}
-                          id="retailerPaid"
-                          type="number"
-                          variant="outlined"
-                          fullWidth
-                          size="small"
-                          control={control}
-                          {...register('retailerPaid', { required: true })}
-                          endAdornment={
-                            <InputAdornment position="end">{t('currency.toman')}</InputAdornment>
-                          }
-                        />
-                      </Grid>
-                      <Grid item lg={6} md={12} xs={12}>
-                        <CustomFormLabel htmlFor="retailerCode">
-                          {t('report.statusChange.retailerCode')}
-                        </CustomFormLabel>
-                        <TextField
-                          required
-                          id="retailerCode"
-                          variant="outlined"
-                          fullWidth
-                          size="small"
-                          control={control}
-                          {...register('retailerCode')}
-                          error={!!errors.retailerCode}
-                          helperText={errors && errors.retailerCode && errors.retailerCode.message}
-                        />
-                      </Grid>
-                    </Grid>
-                  )}
-                  {statusId === ProductStatusEnum.DELIVERED_TO_NGO && (
-                    <Grid container spacing={2}>
-                      <Grid item lg={12} md={12} xs={12}>
-                        <CustomFormLabel htmlFor="product-delivery-to-ngo">
-                          {t('report.statusChange.deliveredToNgo')}
-                        </CustomFormLabel>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                          <DesktopDatePicker
-                            id="productDeliveredToNgo"
-                            inputFormat="MM/dd/yyyy"
+                        </Grid>
+                        <Grid item lg={6} md={12} xs={12}>
+                          <CustomFormLabel htmlFor="retailerCode">
+                            {t('report.statusChange.retailerCode')}
+                          </CustomFormLabel>
+                          <TextField
+                            required
+                            id="retailerCode"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
                             control={control}
-                            {...register('productDeliveredToNgo', { required: true })}
-                            renderInput={(params) => <TextField {...params} />}
-                            error={!!errors.productDeliveredToNgo}
+                            {...register('retailerCode')}
+                            error={!!errors.retailerCode}
+                            helperText={
+                              errors && errors.retailerCode && errors.retailerCode.message
+                            }
                           />
-                        </LocalizationProvider>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  )}
-                </form>
+                    )}
+                    {statusId === ProductStatusEnum.DELIVERED_TO_NGO && (
+                      <Grid container spacing={2}>
+                        <Grid item lg={12} md={12} xs={12}>
+                          <CustomFormLabel htmlFor="product-delivery-to-ngo">
+                            {t('report.statusChange.deliveredToNgo')}
+                          </CustomFormLabel>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DesktopDatePicker
+                              id="productDeliveredToNgo"
+                              inputFormat="MM/dd/yyyy"
+                              control={control}
+                              {...register('productDeliveredToNgo', { required: true })}
+                              renderInput={(params) => <TextField {...params} />}
+                              error={!!errors.productDeliveredToNgo}
+                            />
+                          </LocalizationProvider>
+                        </Grid>
+                      </Grid>
+                    )}
+                  </form>
+                )}
+                {need.type === NeedTypeEnum.SERVICE && (
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    {statusId === ServiceStatusEnum.MONEY_TO_NGO && (
+                      <Grid container spacing={2}>
+                        <Grid item lg={6} md={12} xs={12}>
+                          <CustomFormLabel htmlFor="bankTrackId">
+                            {t('report.statusChange.bankTrackId')}
+                          </CustomFormLabel>
+                          <TextField
+                            required
+                            id="bankTrackId"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            control={control}
+                            {...register('bankTrackId')}
+                            error={!!errors.bankTrackId}
+                            helperText={errors && errors.bankTrackId && errors.bankTrackId.message}
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
+                  </form>
+                )}
               </Grid>
             </Card>
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={handleClose}>{t('button.cancel')}</Button>
-            <Button disabled={!statusId} onClick={handleSubmit(onSubmit)}>
+            <LoadingButton
+              loading={loadingAStatusUpdate}
+              color="primary"
+              type="submit"
+              variant="outlined"
+              sx={{ mt: 4 }}
+              disabled={!statusId}
+              onClick={handleSubmit(onSubmit)}
+            >
               {t('button.update')}
-            </Button>
+            </LoadingButton>
+            <LoadingButton
+              variant="outlined"
+              color="secondary"
+              type="submit"
+              sx={{ mt: 4 }}
+              onClick={handleClose}
+            >
+              {t('button.cancel')}
+            </LoadingButton>
           </DialogActions>
           {errors && errors.expProductToNgo && (
             <ul>
