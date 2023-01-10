@@ -527,13 +527,13 @@ const ReportStatusTable = () => {
     useEffect(() => {
       if (
         accOpen &&
-        ((typeId === NeedTypeEnum.PRODUCT && statusId > 3) ||
-          (typeId === NeedTypeEnum.SERVICE && statusId > 3))
+        ((typeId === NeedTypeEnum.PRODUCT && statusId > ProductStatusEnum.PURCHASED_PRODUCT) ||
+          (typeId === NeedTypeEnum.SERVICE && statusId > ServiceStatusEnum.COMPLETE_PAY))
       ) {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
-
+    console.log(accOpen);
     // set type name for status dialogue
     // useEffect(() => {
     //   if (statusDialog && row && needs.needs) {
