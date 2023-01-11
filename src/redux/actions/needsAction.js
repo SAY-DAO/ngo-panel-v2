@@ -184,7 +184,7 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
     if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
       url = `/needs`;
     } else {
-      url = `/socialworkers/${userInfo.id}/createdNeeds`;
+      url = `/socialworkers/${swInfo.id}/createdNeeds`;
     }
     const { data } = await publicApi.get(url, config);
 
