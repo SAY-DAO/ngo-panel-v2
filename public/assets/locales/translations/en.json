@@ -442,6 +442,7 @@
   },
   "child": {
     "title": "Child",
+    "all": "All Children",
     "id": "Id",
     "titleEdit": "Edit Details",
     "titleAdd": "Add Details",

@@ -483,6 +483,7 @@
   },
   "child": {
     "title": "کودک",
+    "all": "تمام کودکان",
     "id": "آی‌دی",
     "isConfirmed": "وضعیت تایید",
     "existence_status": "وضعیت کودک",

@@ -40,10 +40,17 @@ import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { fetchChildrenByNgo, fetchMyChildById } from '../../redux/actions/childrenAction';
 import LinearNeedStats from '../analytics/LinearNeedStats';
 import PieChart from '../analytics/PieChart';
-import { deleteNeed, fetchChildNeeds, updateNeedConfirm } from '../../redux/actions/needsAction';
+import {
+  deleteNeed,
+  fetchAllNeeds,
+  fetchChildNeeds,
+  updateNeedConfirm,
+} from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { getOrganizedNeeds, PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
+import { ALL_NEEDS_RESET, CHILD_NEEDS_RESET } from '../../redux/constants/needConstant';
+import { CHILDREN_BY_NGO_RESET } from '../../redux/constants/childrenConstants';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -408,8 +415,17 @@ const NeedTable = () => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
-  const [ngoId, setNgoId] = useState();
-  const [childId, setChildId] = useState();
+  const [ngo, setNgo] = useState({
+    id: 2,
+    name: 'مهر و ماه',
+  });
+  const [child, setChild] = useState({
+    id: 0,
+    firstName: '',
+    lastName: '',
+    sayName: t('child.all'),
+    isConfirmed: true,
+  });
 
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
@@ -422,7 +438,7 @@ const NeedTable = () => {
   const { swInfo } = swDetails;
 
   const childNeeds = useSelector((state) => state.childNeeds);
-  const { theNeeds, loading: loadingChildrenNeeds, success: successChildrenNeeds } = childNeeds;
+  const { theNeeds, loading: loadingChildNeeds, success: successChildNeeds } = childNeeds;
 
   const childOneNeed = useSelector((state) => state.childOneNeed);
   const { confirmed, deleted } = childOneNeed;
@@ -430,15 +446,18 @@ const NeedTable = () => {
   const childrenByNgo = useSelector((state) => state.childrenByNgo);
   const { childList, loading: loadingChildren, success: successChildren } = childrenByNgo;
 
+  const allNeeds = useSelector((state) => state.allNeeds);
+  const { needs, loading: loadingAllNeeds, success: successAllNeeds } = allNeeds;
+
   // for social worker with limited permission
   const swById = useSelector((state) => state.swById);
-  const { children, loading: loadingSw, success: successSwChildren } = swById;
+  const { children, loading: loadingSw } = swById;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const childById = useSelector((state) => state.childById);
-  const { result, success: successChild } = childById;
+  const { result } = childById;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -448,18 +467,37 @@ const NeedTable = () => {
 
   // needs
   useEffect(() => {
-    if (childId || (result && result.id)) {
-      dispatch(fetchChildNeeds(childId || result.id));
+    if (swInfo) {
+      if (child.id > 0 || (result && result.id)) {
+        dispatch(fetchChildNeeds(child.id || result.id));
+        dispatch({ type: ALL_NEEDS_RESET });
+      } else if (ngo || child.id < 0) {
+        dispatch(fetchAllNeeds(null, ngo.id, null, null));
+        dispatch({ type: CHILD_NEEDS_RESET });
+      }
     }
-  }, [childId, result, confirmed, deleted]);
+  }, [swInfo, child, result, confirmed, deleted, ngo]);
+
+  useEffect(() => {
+    if (successChildNeeds) {
+      dispatch({ type: CHILD_NEEDS_RESET });
+    }
+    if (successAllNeeds) {
+      dispatch({ type: ALL_NEEDS_RESET });
+    }
+  }, [ngo]);
 
   // sort needs
   useEffect(() => {
-    if (successChildrenNeeds) {
+    if (successChildNeeds) {
       const needData = getOrganizedNeeds(theNeeds);
       setNeedsData(needData);
     }
-  }, [childId, successChildrenNeeds]);
+    if (successAllNeeds) {
+      const needData = getOrganizedNeeds(needs);
+      setNeedsData(needData);
+    }
+  }, [successChildNeeds, successAllNeeds]);
 
   // Autocomplete ngo
   useEffect(() => {
@@ -495,7 +533,10 @@ const NeedTable = () => {
       const sortedChildren = childList.children.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
-      setOptions([...sortedChildren]);
+      setOptions([
+        { id: 0, firstName: '', lastName: '', sayName: t('child.all'), isConfirmed: true },
+        ...sortedChildren,
+      ]);
     }
     // social worker
     if (active && children) {
@@ -503,35 +544,39 @@ const NeedTable = () => {
       const sortedChildren = children.children.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
-      setOptions([...sortedChildren]);
+      setOptions([
+        { id: 0, firstName: '', lastName: '', sayName: t('child.all'), isConfirmed: true },
+        ...sortedChildren,
+      ]);
     }
     return () => {
       active = false;
     };
-  }, [loadingChildren, successChildren, children, ngoId]);
+  }, [loadingChildren, successChildren, children, ngo]);
 
   // child open
   useEffect(() => {
-    if (!open || openNgo) {
-      setOptions([]);
-    } else if (ngoId) {
+    if (openNgo) {
+      dispatch({ type: CHILDREN_BY_NGO_RESET });
+    } else if (swInfo && ngo) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
-        dispatch(fetchChildrenByNgo({ ngoId }));
+      if (
+        (!childList && swInfo.typeId === RolesEnum.SUPER_ADMIN) ||
+        swInfo.typeId === RolesEnum.ADMIN
+      ) {
+        dispatch(fetchChildrenByNgo({ ngoId: ngo.id }));
       } else if (
         swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
-        dispatch(fetchSwChildList());
+        dispatch(fetchSwChildList(swInfo.id));
       }
-    } else {
-      dispatch(fetchChildrenByNgo({ ngoId: 2 }));
     }
-  }, [open, openNgo, ngoId, swInfo]);
+  }, [open, openNgo, ngo, swInfo]);
 
   // when click on Breadcrumb use the state to retrieve the child
   useEffect(() => {
-    if (!childId && theChildId) {
+    if (!child && theChildId) {
       dispatch(fetchMyChildById(theChildId));
     }
   }, [theChildId]);
@@ -586,11 +631,15 @@ const NeedTable = () => {
 
   const handleEdit = (row) => {
     dispatch({ type: SW_BY_ID_RESET });
-    navigate(`/need/edit/${childId || (result && result.id)}/${row.id}`);
+    navigate(`/need/edit/${child.id || (result && result.id)}/${row.id}`);
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - theNeeds.needs.length) : 0;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - (needs || theNeeds).needs.length) : 0;
+
+  const tableNeeds = needs ? needs.needs : theNeeds && theNeeds.needs;
+
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
@@ -599,19 +648,7 @@ const NeedTable = () => {
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <Autocomplete
-            defaultValue={
-              swInfo &&
-              ngoList &&
-              (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN
-                ? {
-                    id: ngoList[1].id,
-                    name: ngoList[1].name,
-                  }
-                : {
-                    id: swInfo.ngoId,
-                    name: swInfo.ngoName,
-                  })
-            }
+            value={ngo}
             id="asynchronous-ngo"
             sx={{ width: 300 }}
             open={openNgo}
@@ -621,7 +658,7 @@ const NeedTable = () => {
             onClose={() => {
               setOpenNgo(false);
             }}
-            onChange={(e, value) => setNgoId(value && value.id)}
+            onChange={(e, value) => setNgo(value)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => `${option.id} - ${option.name}`}
             options={optionsNgo}
@@ -645,6 +682,7 @@ const NeedTable = () => {
         </Grid>
         <Grid item>
           <Autocomplete
+            value={child}
             id="asynchronous-children"
             sx={{ width: 300 }}
             open={open}
@@ -654,7 +692,7 @@ const NeedTable = () => {
             onClose={() => {
               setOpen(false);
             }}
-            onChange={(e, value) => setChildId(value && value.id)}
+            onChange={(e, value) => setChild(value)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) =>
               option.isConfirmed
@@ -674,14 +712,13 @@ const NeedTable = () => {
                   <>
                     <FeatherIcon color="red" icon="x" width="18" />
                     <Typography>
-                      {' '}
                       {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
                     </Typography>
                   </>
                 )}
               </Box>
             )}
-            options={(successNgoList) || children ? options : []}
+            options={successNgoList || children ? options : []}
             loading={loadingSw || loadingChildren}
             renderInput={(params) => (
               <TextField
@@ -701,27 +738,23 @@ const NeedTable = () => {
           />
         </Grid>
       </Grid>
-      {loadingChildrenNeeds ? (
+      {loadingAllNeeds || loadingChildNeeds ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
         needsData &&
-        (successChildren || successChild || successSwChildren) &&
-        successChildrenNeeds && (
+        tableNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
             <Grid container direction="row">
               <Grid item xs={12} md={4}>
-                <LinearNeedStats
-                  needsData={needsData}
-                  totalNeeds={parseInt(theNeeds.total_count, 10)}
-                />
+                <LinearNeedStats needsData={needsData} totalNeeds={tableNeeds.length} />
               </Grid>
               <Grid item xs={12} md={8}>
                 <PieChart
                   donaNeeds={needsData[5]}
-                  allNeeds={theNeeds.needs}
-                  totalNeeds={parseInt(theNeeds.total_count, 10)}
+                  allNeeds={tableNeeds}
+                  totalNeeds={tableNeeds.length}
                 />
               </Grid>
             </Grid>
@@ -744,10 +777,10 @@ const NeedTable = () => {
                         orderBy={orderBy}
                         // onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
-                        rowCount={theNeeds.needs.length}
+                        rowCount={tableNeeds.length}
                       />
                       <TableBody>
-                        {stableSort(theNeeds.needs, getComparator(order, orderBy))
+                        {stableSort(tableNeeds, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
                             const isItemSelected = isSelected(row.id);
@@ -1100,7 +1133,7 @@ const NeedTable = () => {
                     rowsPerPageOptions={[5, 10, 25, 50]}
                     labelRowsPerPage={t('table.rowCount')}
                     component="div"
-                    count={theNeeds.needs.length}
+                    count={tableNeeds.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

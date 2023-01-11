@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { daoApi, publicApi } from '../../apis/sayBase';
 import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
 import {
@@ -49,15 +48,17 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
     };
 
     let response;
-    if (!ngoId && isDone && status) {
-      // to get all ngos done need
+    if (!isDone && !type && !status) {
+      // - need list page
+      response = await publicApi.get(`/needs?ngoId=${ngoId}&isChildConfirmed=true`, config);
+    } else if (!ngoId && isDone && status) {
+      // to get all ngos done need - reports page
       response = await publicApi.get(
         `/needs?isDone=${isDone}&type=${type}&status=${status}`,
         config,
       );
-    } else if (!ngoId && !isDone && !status) {
-      response = await publicApi.get(`/needs`, config);
     } else {
+      // - reports page
       response = await publicApi.get(
         `/needs?isDone=${isDone}&ngoId=${ngoId}&type=${type}&status=${status}`,
         config,

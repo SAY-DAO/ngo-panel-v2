@@ -63,3 +63,8 @@
   color: #666666;
   margin: 0 2px;
 }
+
+/* pie chart */
+.apexcharts-legend-marker {
+  margin: 4px
+}

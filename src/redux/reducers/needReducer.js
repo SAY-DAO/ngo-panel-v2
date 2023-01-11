@@ -71,7 +71,7 @@ export const childNeedsReducer = (state = {}, action) => {
     case CHILD_NEEDS_SUCCESS:
       return { loading: false, success: true, theNeeds: action.payload };
     case CHILD_NEEDS_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, error: action.payload, success: false };
     case CHILD_NEEDS_RESET:
       return {};
     default:
