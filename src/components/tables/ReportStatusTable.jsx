@@ -368,7 +368,7 @@ const ReportStatusTable = () => {
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
-  const { statusUpdated, error: errorStatusUpdate, success: successStatusUpdate } = needStatusUpdate;
+  const { error: errorStatusUpdate, success: successStatusUpdate } = needStatusUpdate;
 
   // set Service or Product titles
   useEffect(() => {
@@ -462,7 +462,7 @@ const ReportStatusTable = () => {
         dispatch(fetchAllNeeds(true, swInfo.ngoId, typeId, statusId));
       }
     }
-  }, [ngoId, typeId, statusId, swInfo, successNgoList, statusUpdated]);
+  }, [ngoId, typeId, statusId, swInfo, successNgoList, successStatusUpdate]);
 
   // toast
   useEffect(() => {
