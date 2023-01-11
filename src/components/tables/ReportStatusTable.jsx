@@ -353,7 +353,7 @@ const ReportStatusTable = () => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [toastOpen, setToastOpen] = React.useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -368,7 +368,8 @@ const ReportStatusTable = () => {
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
-  const { statusUpdated, error: errorStatusUpdate, dyayus: successStatusUpdate } = needStatusUpdate;
+  const { statusUpdated, error: errorStatusUpdate, success: successStatusUpdate } = needStatusUpdate;
+
   // set Service or Product titles
   useEffect(() => {
     setTheTypes(needTypes);
