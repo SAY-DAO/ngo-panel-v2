@@ -46,6 +46,7 @@ import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/DaoAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
 import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
+import { UPDATE_NEED_STATUS_RESET } from '../../redux/constants/needConstant';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -366,6 +367,8 @@ const ReportStatusTable = () => {
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
+  const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
+  const { statusUpdated, error: errorStatusUpdate } = needStatusUpdate;
   // set Service or Product titles
   useEffect(() => {
     setTheTypes(needTypes);
@@ -441,6 +444,7 @@ const ReportStatusTable = () => {
   // fetch needs
   useEffect(() => {
     if (swInfo) {
+      dispatch({ type: UPDATE_NEED_STATUS_RESET });
       if (successNgoList) {
         // super admin & admin
         if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
@@ -457,7 +461,7 @@ const ReportStatusTable = () => {
         dispatch(fetchAllNeeds(true, swInfo.ngoId, typeId, statusId));
       }
     }
-  }, [ngoId, typeId, statusId, swInfo, successNgoList]);
+  }, [ngoId, typeId, statusId, swInfo, successNgoList, statusUpdated]);
 
   // toast
   useEffect(() => {
@@ -1058,7 +1062,7 @@ const ReportStatusTable = () => {
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert onClose={handleCloseToast} severity="error" sx={{ width: '100%' }}>
-            {errorOneNeed}
+            {errorOneNeed || errorStatusUpdate}
           </Alert>
         </Snackbar>
       </Stack>

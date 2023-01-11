@@ -25,6 +25,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
+import { format } from 'date-fns';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
@@ -41,9 +42,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const [productDelivered, setProductDelivered] = useState(new Date());
 
   const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
-  const { statusUpdated, loading: loadingAStatusUpdate } = needStatusUpdate;
-
-  console.log(statusUpdated);
+  const { loading: loadingAStatusUpdate } = needStatusUpdate;
 
   const validationSchema = Yup.object().shape({
     expProductToNgo:
@@ -169,13 +168,13 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (NeedTypeEnum.PRODUCT) {
       values.typeId = NeedTypeEnum.PRODUCT;
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-        values.expected_delivery_date = data.expProductToNgo.toString();
+        values.expected_delivery_date = format(new Date(data.expProductToNgo), 'yyyy-MM-dd');
         values.purchase_cost = Number(data.retailerPaid);
         values.dkc = data.retailerCode.toString();
         values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
-        values.ngo_delivery_date = data.productDeliveredToNgo.toString();
+        values.ngo_delivery_date = format(new Date(data.productDeliveredToNgo), 'yyyy-MM-dd');
         values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED) {
@@ -265,7 +264,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DesktopDatePicker
                               id="expProductToNgo"
-                              inputFormat="MM/dd/yyyy"
+                              inputFormat="MM-dd-yyyy"
                               value={productExpDelivery}
                               control={control}
                               {...register('expProductToNgo', { required: true })}

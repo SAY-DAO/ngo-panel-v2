@@ -355,15 +355,12 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
       if (values.statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
         formData.append('purchase_cost', Number(values.purchase_cost));
         formData.append('dkc', values.dkc);
-        formData.append('expected_delivery_date', values.expected_delivery_date.toString());
+        formData.append('expected_delivery_date', values.expected_delivery_date);
       }
       if (values.statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
         formData.append('ngo_delivery_date', values.ngo_delivery_date);
       }
     }
-    console.log(values);
-    console.log(Number(values.purchase_cost));
-    console.log(values.purchase_cost);
 
     const { data } = await publicApi.patch(
       `/need/update/needId=${values.needId}`,
