@@ -37,6 +37,7 @@ import {
   PROVIDER_LIST,
   SW_LIST,
 } from '../../../routes/RouteConstants';
+import { fetchNgoList } from '../../../redux/actions/ngoAction';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -46,6 +47,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo, loading: loadingswDetails, success: successSwDetails } = swDetails;
+
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { success: successLogin } = userLogin;
@@ -78,7 +82,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (!successSwDetails && !loadingswDetails) {
       dispatch(fetchSocialWorkerDetails());
     }
-  }, [successSwDetails, loadingswDetails]);
+    if (!successNgoList && !loadingNgoList) {
+      dispatch(fetchNgoList());
+    }
+  }, [successSwDetails, successNgoList, loadingNgoList, loadingswDetails]);
 
   // if not active log out
   useEffect(() => {
@@ -160,7 +167,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           <FeatherIcon icon="search" width="20" height="20" />
         </IconButton>
         <Alert severity="info">
-          <Typography variant='body2'>
+          <Typography variant="body2">
             <strong>{t('alert.title')} </strong>— {t('alert.body')}
           </Typography>
         </Alert>

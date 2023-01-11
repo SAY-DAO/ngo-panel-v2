@@ -10,6 +10,13 @@ export function getAge(DOB) {
   return age;
 }
 
+export const NeedCategoryEnum = {
+  GROWTH: 0,
+  JOY: 1,
+  HEALTH: 2,
+  SURRONDING: 3,
+};
+
 // urgent ==> index 0
 // growth 0 ==> index 1
 // joy 1 ==> index 2
@@ -19,27 +26,37 @@ export function getAge(DOB) {
 // isConfirmed ==> index 6
 // unpayable ==> index 7
 
-export const NeedCategoryEnum = {
-  GROWTH: 0,
-  JOY: 1,
-  HEALTH: 2,
-  SURRONDING: 3,
-};
-
 export function getOrganizedNeeds(theNeeds) {
   const needData = [[], [], [], [], [], [], [], []];
-  for (let i = 0; i < theNeeds.needs.length; i += 1) {
-    if (theNeeds.needs[i].isUrgent) {
-      needData[0].push(theNeeds.needs[i]);
-    } else if (theNeeds.needs[i].isDone) {
-      needData[5].push(theNeeds.needs[i]);
-    } else if (theNeeds.needs[i].isConfirmed) {
-      needData[6].push(theNeeds.needs[i]);
-    } else if (theNeeds.needs[i].unpayable) {
-      needData[7].push(theNeeds.needs[i]);
+  if (theNeeds.needs) {
+    for (let i = 0; i < theNeeds.needs.length; i += 1) {
+      if (theNeeds.needs[i].isUrgent) {
+        needData[0].push(theNeeds.needs[i]);
+      } else if (theNeeds.needs[i].isDone) {
+        needData[5].push(theNeeds.needs[i]);
+      } else if (theNeeds.needs[i].isConfirmed) {
+        needData[6].push(theNeeds.needs[i]);
+      } else if (theNeeds.needs[i].unpayable) {
+        needData[7].push(theNeeds.needs[i]);
+      }
+      needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
     }
-    needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
+  } else {
+    for (let i = 0; i < theNeeds.length; i += 1) {
+      console.log(theNeeds.length);
+      if (theNeeds[i].isUrgent) {
+        needData[0].push(theNeeds[i]);
+      } else if (theNeeds[i].isDone) {
+        needData[5].push(theNeeds[i]);
+      } else if (theNeeds[i].isConfirmed) {
+        needData[6].push(theNeeds[i]);
+      } else if (theNeeds[i].unpayable) {
+        needData[7].push(theNeeds[i]);
+      }
+      needData[theNeeds[i].category + 1].push(theNeeds[i]);
+    }
   }
+
   return needData;
 }
 

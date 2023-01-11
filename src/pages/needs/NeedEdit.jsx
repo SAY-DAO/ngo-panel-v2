@@ -100,7 +100,9 @@ const NeedEdit = () => {
     type: Yup.number().required('Please enter needs type/provider'),
     doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
-    link: NeedTypeEnum.PRODUCT && Yup.string().url().required('Please enter needs link'),
+    link:
+      oneNeed && oneNeed.type === NeedTypeEnum.PRODUCT &&
+      Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
   });
 
@@ -427,9 +429,7 @@ const NeedEdit = () => {
                           mb={2}
                         >
                           <Grid item xs={6}>
-                            <CustomFormLabel htmlFor="type">
-                              {t('need.provider')}
-                            </CustomFormLabel>
+                            <CustomFormLabel htmlFor="type">{t('need.provider')}</CustomFormLabel>
                             <CustomSelect
                               sx={{ width: '100%', color: 'gray' }}
                               labelId="provider-controlled-open-select-label"

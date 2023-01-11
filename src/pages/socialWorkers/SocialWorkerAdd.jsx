@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   Card,
@@ -40,9 +40,7 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
 import { RolesEnum } from '../../utils/helpers';
-
 
 const SocialWorkerAdd = () => {
   const dispatch = useDispatch();
@@ -90,12 +88,6 @@ const SocialWorkerAdd = () => {
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
-
-  useEffect(() => {
-    if (!successNgoList) {
-      dispatch(fetchNgoList());
-    }
-  }, []);
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('Please enter your first name'),

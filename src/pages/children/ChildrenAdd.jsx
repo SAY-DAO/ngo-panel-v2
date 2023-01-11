@@ -40,7 +40,6 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import { AddChild } from '../../redux/actions/childrenAction';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
@@ -167,8 +166,6 @@ const ChildAdd = () => {
   useEffect(() => {
     if (!openNgo) {
       setOptionsNgo([]);
-    } else {
-      dispatch(fetchNgoList());
     }
   }, [openNgo]);
 

@@ -40,7 +40,6 @@ import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { fetchAllNeeds } from '../../redux/actions/needsAction';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
 import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
@@ -427,13 +426,8 @@ const ReportStatusTable = () => {
   useEffect(() => {
     if (!openNgo) {
       setOptionsNgo([]);
-    } else if (swInfo && !successNgoList) {
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
-        dispatch(fetchNgoList());
-      } else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
-      ) {
+    } else if (swInfo) {
+      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER || swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
         setOptionsNgo([
           {
             id: swInfo.ngoId,
@@ -443,18 +437,6 @@ const ReportStatusTable = () => {
       }
     }
   }, [openNgo]);
-
-  // ngo list to start
-  useEffect(() => {
-    // only super admin
-    if (
-      !successNgoList &&
-      swInfo &&
-      (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)
-    ) {
-      dispatch(fetchNgoList());
-    }
-  }, [swInfo, successNgoList]);
 
   // fetch needs
   useEffect(() => {

@@ -49,12 +49,14 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
     };
 
     let response;
-    if (!ngoId) {
+    if (!ngoId  && isDone && status) {
       // to get all ngos done need
       response = await publicApi.get(
         `/needs?isDone=${isDone}&type=${type}&status=${status}`,
         config,
       );
+    } else if (!ngoId && !isDone && !status) {
+      response = await publicApi.get(`/needs`, config);
     } else {
       response = await publicApi.get(
         `/needs?isDone=${isDone}&ngoId=${ngoId}&type=${type}&status=${status}`,
@@ -358,7 +360,6 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
       if (values.statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
         formData.append('ngo_delivery_date', values.ngo_delivery_date);
       }
-
     }
 
     const { data } = await publicApi.patch(

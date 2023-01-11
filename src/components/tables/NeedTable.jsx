@@ -38,13 +38,12 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { fetchChildrenByNgo, fetchMyChildById } from '../../redux/actions/childrenAction';
-import { fetchNgoList } from '../../redux/actions/ngoAction';
 import LinearNeedStats from '../analytics/LinearNeedStats';
 import PieChart from '../analytics/PieChart';
 import { deleteNeed, fetchChildNeeds, updateNeedConfirm } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
-import { PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
+import { getOrganizedNeeds, PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -436,7 +435,7 @@ const NeedTable = () => {
   const { children, loading: loadingSw, success: successSwChildren } = swById;
 
   const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, success: successNgoList } = ngoAll;
+  const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const childById = useSelector((state) => state.childById);
   const { result, success: successChild } = childById;
@@ -455,59 +454,25 @@ const NeedTable = () => {
   }, [childId, result, confirmed, deleted]);
 
   // sort needs
-  // urgent ==> index 0
-  // growth 0 ==> index 1
-  // joy 1 ==> index 2
-  // health 2 ==> index 3
-  // surroundings 3 ==> index 4
-  // isDone ==> index 5
-  // isConfirmed ==> index 6
-  // unpayable ==> index 7
   useEffect(() => {
     if (successChildrenNeeds) {
-      const needData = [[], [], [], [], [], [], [], []];
-      for (let i = 0; i < theNeeds.needs.length; i += 1) {
-        if (theNeeds.needs[i].isUrgent) {
-          needData[0].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].isDone) {
-          needData[5].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].isConfirmed) {
-          needData[6].push(theNeeds.needs[i]);
-        } else if (theNeeds.needs[i].unpayable) {
-          needData[7].push(theNeeds.needs[i]);
-        }
-        needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
-      }
+      const needData = getOrganizedNeeds(theNeeds);
       setNeedsData(needData);
     }
   }, [childId, successChildrenNeeds]);
 
   // Autocomplete ngo
   useEffect(() => {
-    let active = true;
-    if (!loadingNgo) {
-      return undefined;
-    }
-    if (active && successNgoList) {
+    if (successNgoList) {
       setOptionsNgo([...ngoList]);
     }
-    return () => {
-      active = false;
-    };
-  }, [loadingNgo, successNgoList]);
+  }, [successNgoList]);
 
-  // ngo open
+  // ngo
   useEffect(() => {
-    if (!openNgo) {
-      setOptionsNgo([]);
-    } else if (swInfo) {
+    if (swInfo) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
-        dispatch(fetchNgoList());
-      } else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
-      ) {
+      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER || swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
         setOptionsNgo([
           {
             id: swInfo.ngoId,
@@ -516,7 +481,7 @@ const NeedTable = () => {
         ]);
       }
     }
-  }, [openNgo]);
+  }, [openNgo, successNgoList, loadingNgoList]);
 
   // Autocomplete children
   useEffect(() => {
@@ -538,8 +503,6 @@ const NeedTable = () => {
       const sortedChildren = children.children.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
-      console.log(children);
-
       setOptions([...sortedChildren]);
     }
     return () => {
@@ -551,7 +514,7 @@ const NeedTable = () => {
   useEffect(() => {
     if (!open || openNgo) {
       setOptions([]);
-    } else if (ngoId && (open || !openNgo)) {
+    } else if (ngoId) {
       // super admin & admin
       if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         dispatch(fetchChildrenByNgo({ ngoId }));
@@ -560,13 +523,9 @@ const NeedTable = () => {
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
         dispatch(fetchSwChildList());
-        setOptions([
-          {
-            id: swInfo.ngoId,
-            name: swInfo.ngoName,
-          },
-        ]);
       }
+    } else {
+      dispatch(fetchChildrenByNgo({ ngoId: 2 }));
     }
   }, [open, openNgo, ngoId, swInfo]);
 
@@ -640,6 +599,19 @@ const NeedTable = () => {
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <Autocomplete
+            defaultValue={
+              swInfo &&
+              ngoList &&
+              (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN
+                ? {
+                    id: ngoList[1].id,
+                    name: ngoList[1].name,
+                  }
+                : {
+                    id: swInfo.ngoId,
+                    name: swInfo.ngoName,
+                  })
+            }
             id="asynchronous-ngo"
             sx={{ width: 300 }}
             open={openNgo}
@@ -653,7 +625,7 @@ const NeedTable = () => {
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => `${option.id} - ${option.name}`}
             options={optionsNgo}
-            loading={loadingSw || loadingNgo}
+            loading={loadingSw || loadingNgo || loadingNgoList}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -709,7 +681,7 @@ const NeedTable = () => {
                 )}
               </Box>
             )}
-            options={(successNgoList && ngoId) || children ? options : []}
+            options={(successNgoList) || children ? options : []}
             loading={loadingSw || loadingChildren}
             renderInput={(params) => (
               <TextField
