@@ -44,7 +44,6 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const { statusUpdated, loading: loadingAStatusUpdate } = needStatusUpdate;
 
   console.log(statusUpdated);
-  console.log(need.cost);
 
   const validationSchema = Yup.object().shape({
     expProductToNgo:
@@ -157,28 +156,30 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     const values = {};
     values.needId = need.id;
     if (NeedTypeEnum.SERVICE) {
+      values.typeId = NeedTypeEnum.SERVICE;
       if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
-        values.bank_track_id = data.bankTrackId;
-        values.status = statusId;
+        values.bank_track_id = data.bankTrackId.toString();
+        values.statusId = statusId;
       }
       if (statusId === ServiceStatusEnum.DELIVERED) {
-        values.purchase_cost = data.purchasedCost;
-        values.status = statusId;
+        values.purchase_cost = Number(data.purchasedCost);
+        values.statusId = statusId;
       }
     }
     if (NeedTypeEnum.PRODUCT) {
+      values.typeId = NeedTypeEnum.PRODUCT;
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-        values.expected_delivery_date = data.expProductToNgo;
-        values.purchase_cost = data.retailerPaid;
-        values.dkc = data.retailerCode;
-        values.status = statusId;
+        values.expected_delivery_date = data.expProductToNgo.toString();
+        values.purchase_cost = Number(data.retailerPaid);
+        values.dkc = data.retailerCode.toString();
+        values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
-        values.ngo_delivery_date = data.productDeliveredToNgo;
-        values.status = statusId;
+        values.ngo_delivery_date = data.productDeliveredToNgo.toString();
+        values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED) {
-        values.status = statusId;
+        values.statusId = statusId;
       }
     }
     dispatch(updateNeedStatus(values));
@@ -267,6 +268,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                               inputFormat="MM/dd/yyyy"
                               value={productExpDelivery}
                               control={control}
+                              {...register('expProductToNgo', { required: true })}
                               onChange={handleExpDeliveryChange}
                               renderInput={(params) => <TextField {...params} />}
                             />

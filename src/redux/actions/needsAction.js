@@ -49,7 +49,7 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
     };
 
     let response;
-    if (!ngoId  && isDone && status) {
+    if (!ngoId && isDone && status) {
       // to get all ngos done need
       response = await publicApi.get(
         `/needs?isDone=${isDone}&type=${type}&status=${status}`,
@@ -341,7 +341,7 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
-    formData.append('status', values.status);
+    formData.append('status', values.statusId);
 
     if (values.typeId === NeedTypeEnum.SERVICE) {
       if (values.statusId === ServiceStatusEnum.MONEY_TO_NGO) {
@@ -353,20 +353,24 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
     }
     if (values.typeId === NeedTypeEnum.PRODUCT) {
       if (values.statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-        formData.append('purchase_cost', values.purchase_cost);
+        formData.append('purchase_cost', Number(values.purchase_cost));
         formData.append('dkc', values.dkc);
-        formData.append('expected_delivery_date', values.expected_delivery_date);
+        formData.append('expected_delivery_date', values.expected_delivery_date.toString());
       }
       if (values.statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
         formData.append('ngo_delivery_date', values.ngo_delivery_date);
       }
     }
+    console.log(values);
+    console.log(Number(values.purchase_cost));
+    console.log(values.purchase_cost);
 
     const { data } = await publicApi.patch(
       `/need/update/needId=${values.needId}`,
       formData,
       config,
     );
+
     dispatch({
       type: UPDATE_NEED_STATUS_SUCCESS,
       payload: data,
