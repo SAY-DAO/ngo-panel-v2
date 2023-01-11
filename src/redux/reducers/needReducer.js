@@ -33,6 +33,7 @@ import {
   UPDATE_NEED_STATUS_SUCCESS,
   UPDATE_NEED_STATUS_FAIL,
   UPDATE_NEED_STATUS_RESET,
+  ALL_NEEDS_RESET,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -43,6 +44,8 @@ export const allNeedsReducer = (state = {}, action) => {
       return { loading: false, success: true, needs: action.payload };
     case ALL_NEEDS_FAIL:
       return { loading: false, error: action.payload };
+    case ALL_NEEDS_RESET:
+      return {};
     default:
       return state;
   }

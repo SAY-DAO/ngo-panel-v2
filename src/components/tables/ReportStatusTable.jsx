@@ -443,7 +443,7 @@ const ReportStatusTable = () => {
 
   // fetch needs
   useEffect(() => {
-    if (swInfo) {
+    if (swInfo && !loadingAllNeeds) {
       if (successNgoList) {
         // super admin & admin
         if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
