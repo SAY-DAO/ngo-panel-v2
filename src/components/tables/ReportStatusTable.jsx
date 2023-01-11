@@ -368,7 +368,7 @@ const ReportStatusTable = () => {
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
-  const { statusUpdated, error: errorStatusUpdate } = needStatusUpdate;
+  const { statusUpdated, error: errorStatusUpdate, dyayus: successStatusUpdate } = needStatusUpdate;
   // set Service or Product titles
   useEffect(() => {
     setTheTypes(needTypes);
@@ -1062,7 +1062,7 @@ const ReportStatusTable = () => {
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert onClose={handleCloseToast} severity="error" sx={{ width: '100%' }}>
-            {errorOneNeed || errorStatusUpdate}
+            {errorOneNeed || errorStatusUpdate || successStatusUpdate}
           </Alert>
         </Snackbar>
       </Stack>
