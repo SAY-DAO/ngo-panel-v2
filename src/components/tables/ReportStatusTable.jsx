@@ -46,7 +46,6 @@ import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/DaoAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
 import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
-import { UPDATE_NEED_STATUS_RESET } from '../../redux/constants/needConstant';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -445,7 +444,6 @@ const ReportStatusTable = () => {
   // fetch needs
   useEffect(() => {
     if (swInfo) {
-      dispatch({ type: UPDATE_NEED_STATUS_RESET });
       if (successNgoList) {
         // super admin & admin
         if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
@@ -464,12 +462,16 @@ const ReportStatusTable = () => {
     }
   }, [ngoId, typeId, statusId, swInfo, successNgoList, successStatusUpdate]);
 
-  // toast
+  // toast && dialog
   useEffect(() => {
     if (errorOneNeed) {
       setToastOpen(true);
     }
-  }, [errorOneNeed]);
+    if (successStatusUpdate) {
+      setStatusDialog(false);
+      setToastOpen(true);
+    }
+  }, [errorOneNeed, successStatusUpdate]);
 
   const handleCloseToast = (event, reason) => {
     if (reason === 'clickaway') {
@@ -500,6 +502,7 @@ const ReportStatusTable = () => {
   const handleStatusChange = (row) => {
     setStatusDialog(true);
     setStatusNeed(row);
+    setToastOpen(true);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -1062,7 +1065,11 @@ const ReportStatusTable = () => {
       )}
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
-          <Alert onClose={handleCloseToast} severity="error" sx={{ width: '100%' }}>
+          <Alert
+            onClose={handleCloseToast}
+            severity={errorStatusUpdate ? 'error' : 'success'}
+            sx={{ width: '100%' }}
+          >
             {errorOneNeed || errorStatusUpdate || successStatusUpdate}
           </Alert>
         </Snackbar>
