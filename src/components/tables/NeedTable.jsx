@@ -44,12 +44,17 @@ import {
   deleteNeed,
   fetchAllNeeds,
   fetchChildNeeds,
+  fetchSwNeedList,
   updateNeedConfirm,
 } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { getOrganizedNeeds, PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
-import { ALL_NEEDS_RESET, CHILD_NEEDS_RESET } from '../../redux/constants/needConstant';
+import {
+  ALL_NEEDS_RESET,
+  CHILD_NEEDS_RESET,
+  SW_NEED_LIST_RESET,
+} from '../../redux/constants/needConstant';
 import { CHILDREN_BY_NGO_RESET } from '../../redux/constants/childrenConstants';
 
 function descendingComparator(a, b, orderBy) {
@@ -415,10 +420,21 @@ const NeedTable = () => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
-  const [ngo, setNgo] = useState({
-    id: 2,
-    name: 'مهر و ماه',
-  });
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+  const [ngo, setNgo] = useState(
+    swInfo &&
+      (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN
+        ? {
+            id: 2,
+            name: 'مهر و ماه',
+          }
+        : {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          }),
+  );
+
   const [child, setChild] = useState({
     id: 0,
     firstName: '',
@@ -434,9 +450,6 @@ const NeedTable = () => {
   const [optionsNgo, setOptionsNgo] = useState([]);
   const loadingNgo = openNgo && optionsNgo.length === 0;
 
-  const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo } = swDetails;
-
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, loading: loadingChildNeeds, success: successChildNeeds } = childNeeds;
 
@@ -448,6 +461,9 @@ const NeedTable = () => {
 
   const allNeeds = useSelector((state) => state.allNeeds);
   const { needs, loading: loadingAllNeeds, success: successAllNeeds } = allNeeds;
+
+  const swNeedList = useSelector((state) => state.swNeedList);
+  const { needs: swNeeds, loading: loadingSwNeeds, success: successSwNeeds } = swNeedList;
 
   // for social worker with limited permission
   const swById = useSelector((state) => state.swById);
@@ -468,12 +484,23 @@ const NeedTable = () => {
   // needs
   useEffect(() => {
     if (swInfo) {
-      if (child.id > 0 || (result && result.id)) {
-        dispatch(fetchChildNeeds(child.id || result.id));
-        dispatch({ type: ALL_NEEDS_RESET });
-      } else if (ngo || child.id < 0) {
-        dispatch(fetchAllNeeds(null, ngo.id, null, null));
-        dispatch({ type: CHILD_NEEDS_RESET });
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+        if (!ngo || child.id > 0 || (result && result.id)) {
+          dispatch({ type: ALL_NEEDS_RESET });
+          dispatch(fetchChildNeeds(child.id || result.id));
+        } else if (ngo || child.id < 0) {
+          dispatch({ type: CHILD_NEEDS_RESET });
+          dispatch(fetchAllNeeds(null, ngo.id, null, null));
+        }
+      }
+      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER || swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
+        if (!ngo || child.id > 0 || (result && result.id)) {
+          dispatch({ type: SW_NEED_LIST_RESET });
+          dispatch(fetchChildNeeds(child.id || result.id));
+        } else {
+          dispatch({ type: CHILD_NEEDS_RESET });
+          dispatch(fetchSwNeedList());
+        }
       }
     }
   }, [swInfo, child, result, confirmed, deleted, ngo]);
@@ -497,7 +524,11 @@ const NeedTable = () => {
       const needData = getOrganizedNeeds(needs);
       setNeedsData(needData);
     }
-  }, [successChildNeeds, successAllNeeds]);
+    if (successSwNeeds) {
+      const needData = getOrganizedNeeds(swNeeds);
+      setNeedsData(needData);
+    }
+  }, [successChildNeeds, successAllNeeds, successSwNeeds]);
 
   // Autocomplete ngo
   useEffect(() => {
@@ -505,21 +536,6 @@ const NeedTable = () => {
       setOptionsNgo([...ngoList]);
     }
   }, [successNgoList]);
-
-  // ngo
-  useEffect(() => {
-    if (swInfo) {
-      // super admin & admin
-      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER || swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
-        setOptionsNgo([
-          {
-            id: swInfo.ngoId,
-            name: swInfo.ngoName,
-          },
-        ]);
-      }
-    }
-  }, [openNgo, successNgoList, loadingNgoList]);
 
   // Autocomplete children
   useEffect(() => {
@@ -636,9 +652,11 @@ const NeedTable = () => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - (needs || theNeeds).needs.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - (needs || theNeeds || swNeeds).needs.length)
+      : 0;
 
-  const tableNeeds = needs ? needs.needs : theNeeds && theNeeds.needs;
+  const tableNeeds = needs ? needs.needs : theNeeds ? theNeeds.needs : swNeeds && swNeeds;
 
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
@@ -738,7 +756,7 @@ const NeedTable = () => {
           />
         </Grid>
       </Grid>
-      {loadingAllNeeds || loadingChildNeeds ? (
+      {loadingSw || loadingSwNeeds || loadingAllNeeds || loadingChildNeeds ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
