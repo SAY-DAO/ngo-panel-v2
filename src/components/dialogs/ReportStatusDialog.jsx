@@ -37,6 +37,8 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const [optionsStatus, setOptionsStatus] = useState([]);
   const [currentStatus, setCurrentStatus] = useState();
   const [statusId, setStatusId] = useState();
+  const [productExpDelivery, setExpProductDelivery] = useState(new Date());
+  const [productDelivered, setProductDelivered] = useState(new Date());
 
   const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
   const { statusUpdated, loading: loadingAStatusUpdate } = needStatusUpdate;
@@ -140,6 +142,14 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const handleClose = () => {
     setStatusDialog(false);
     setStatusNeed();
+  };
+
+  const handleExpDeliveryChange = (newValue) => {
+    setExpProductDelivery(newValue);
+  };
+
+  const handleDeliveredChange = (newValue) => {
+    setProductDelivered(newValue);
   };
 
   const onSubmit = async (data) => {
@@ -255,8 +265,9 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                             <DesktopDatePicker
                               id="expProductToNgo"
                               inputFormat="MM/dd/yyyy"
+                              value={productExpDelivery}
                               control={control}
-                              {...register('expProductToNgo', { required: true })}
+                              onChange={handleExpDeliveryChange}
                               renderInput={(params) => <TextField {...params} />}
                             />
                           </LocalizationProvider>
@@ -309,8 +320,9 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                             <DesktopDatePicker
                               id="productDeliveredToNgo"
                               inputFormat="MM/dd/yyyy"
+                              value={productDelivered}
                               control={control}
-                              {...register('productDeliveredToNgo', { required: true })}
+                              onChange={handleDeliveredChange}
                               renderInput={(params) => <TextField {...params} />}
                               error={!!errors.productDeliveredToNgo}
                             />
