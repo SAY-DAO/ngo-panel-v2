@@ -115,7 +115,6 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.id'),
-      width: '150px',
     },
     {
       id: 'img',
@@ -172,6 +171,13 @@ function EnhancedTableHead(props) {
       label: t('need.paid'),
       width: '150px',
     },
+    {
+      id: 'expectedDelivary',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.paid'),
+      width: '200px',
+    },
   ];
 
   const headCellsService = [
@@ -183,7 +189,7 @@ function EnhancedTableHead(props) {
     },
     {
       id: 'id',
-      numeric: false,
+      numeric: true,
       disablePadding: false,
       label: t('need.id'),
     },
@@ -667,8 +673,15 @@ const ReportStatusTable = () => {
           </TableCell>
           <TableCell align="center">
             <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
-              {row.purchase_cost ? row.purchase_cost.toLocaleString() : row.paid.toLocaleString()} /{' '}
+              {row.purchase_cost ? row.purchase_cost.toLocaleString() : row.paid.toLocaleString()} /
               {row.cost.toLocaleString()}
+            </Typography>
+          </TableCell>
+          <TableCell align="center">
+            <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
+              {NeedTypeEnum.PRODUCT && row.status > ProductStatusEnum.COMPLETE_PAY
+                ? row.expected_delivery_date
+                : '-'}
             </Typography>
           </TableCell>
         </TableRow>
@@ -893,6 +906,7 @@ const ReportStatusTable = () => {
       name: PropTypes.string,
       title: PropTypes.string,
       paid: PropTypes.number,
+      expected_delivery_date: PropTypes.number,
       purchase_cost: PropTypes.number,
       status: PropTypes.number,
       type: PropTypes.number,
