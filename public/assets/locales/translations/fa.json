@@ -376,6 +376,7 @@
     },
     "etitle": "عنوان در فروشگاه",
     "cost": "قیمت",
+    "expectedDeliveryToNgo": "تخمین زمان رسیدن",
     "paid": "پرداختی",
     "progress": "پیشرفت",
     "status": "وضعیت",

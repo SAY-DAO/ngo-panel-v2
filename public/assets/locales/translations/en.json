@@ -336,6 +336,7 @@
     "etitle": "E-commerce Title",
     "cost": "Cost",
     "paid": "Paid",
+    "expectedDeliveryToNgo": "Exp. date of arrival",
     "progress": "Progress",
     "status": "Status",
     "link": "Link",

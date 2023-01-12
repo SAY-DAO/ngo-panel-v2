@@ -175,7 +175,7 @@ function EnhancedTableHead(props) {
       id: 'expectedDelivary',
       numeric: false,
       disablePadding: false,
-      label: t('need.paid'),
+      label: t('need.expectedDeliveryToNgo'),
       width: '200px',
     },
   ];
