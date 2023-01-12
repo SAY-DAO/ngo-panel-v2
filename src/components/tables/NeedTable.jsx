@@ -75,24 +75,6 @@ function descendingComparator(a, b, orderBy) {
     if (new Date(b[orderBy]).getTime() > new Date(a[orderBy]).getTime()) {
       return 1;
     }
-  } else if (orderBy === 'unpayable') {
-    const newA = a;
-    const newB = b;
-    if (newA.status > PaymentStatusEnum.COMPLETE_PAY) {
-      newA.unpayable = 0;
-    } else if (newA.status <= PaymentStatusEnum.COMPLETE_PAY) {
-      newA.unpayable = 2;
-    } else if (newB.status > PaymentStatusEnum.COMPLETE_PAY) {
-      newB.unpayable = 0;
-    } else if (newB.status <= PaymentStatusEnum.COMPLETE_PAY) {
-      newB.unpayable = 4;
-    }
-    if (newB[orderBy] < newA[orderBy]) {
-      return -1;
-    }
-    if (newB[orderBy] > newA[orderBy]) {
-      return 1;
-    }
   } else {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -136,6 +118,12 @@ function EnhancedTableHead(props) {
       label: '',
     },
     {
+      id: 'update',
+      numeric: false,
+      disablePadding: true,
+      label: t('need.update'),
+    },
+    {
       id: 'id',
       numeric: false,
       disablePadding: false,
@@ -162,12 +150,7 @@ function EnhancedTableHead(props) {
       label: t('need.childSayName'),
       width: '150px',
     },
-    {
-      id: 'update',
-      numeric: false,
-      disablePadding: true,
-      label: t('need.update'),
-    },
+
     {
       id: 'imageUrl',
       numeric: false,
@@ -647,7 +630,7 @@ const NeedTable = () => {
 
   const handleEdit = (row) => {
     dispatch({ type: SW_BY_ID_RESET });
-    navigate(`/need/edit/${child.id || (result && result.id)}/${row.id}`);
+    navigate(`/need/edit/${row.child_id || child.id || (result && result.id)}/${row.id}`);
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -825,6 +808,15 @@ const NeedTable = () => {
                                     }}
                                   />
                                 </TableCell>
+                                <TableCell>
+                                  <IconButton
+                                    onClick={() => handleEdit(row)}
+                                    color="primary"
+                                    aria-label="update need"
+                                  >
+                                    <EditOutlinedIcon />
+                                  </IconButton>
+                                </TableCell>
                                 <TableCell padding="checkbox">
                                   <Typography color="textSecondary" variant="h6" fontWeight="400">
                                     {labelId}
@@ -868,15 +860,6 @@ const NeedTable = () => {
                                   >
                                     {row.childSayName || (result && result.sayName)}
                                   </Typography>
-                                </TableCell>
-                                <TableCell>
-                                  <IconButton
-                                    onClick={() => handleEdit(row)}
-                                    color="primary"
-                                    aria-label="update need"
-                                  >
-                                    <EditOutlinedIcon />
-                                  </IconButton>
                                 </TableCell>
                                 <TableCell>
                                   <Box display="flex" alignItems="center">

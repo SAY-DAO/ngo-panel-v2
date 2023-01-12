@@ -48,7 +48,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     expProductToNgo:
       NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
-      Yup.date().required(t('error.report.expectedDeliveryToNgo')),
+      Yup.string().required(t('error.report.expectedDeliveryToNgo')),
     retailerCode:
       NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
