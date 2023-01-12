@@ -169,7 +169,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.paid'),
-      width: '150px',
+      width: '200px',
     },
     {
       id: 'expectedDelivary',
@@ -239,7 +239,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('need.paid'),
-      width: '250px',
+      width: '200px',
     },
   ];
 
