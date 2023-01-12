@@ -696,9 +696,11 @@ const NeedTable = () => {
             onChange={(e, value) => setChild(value)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) =>
-              option.isConfirmed
+              option.isConfirmed && option.id > 0
                 ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
-                : `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
+                : !option.isConfirmed && option.id > 0
+                ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
+                : `(${option.sayName})`
             }
             renderOption={(props, option) => (
               <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -706,14 +708,18 @@ const NeedTable = () => {
                   <>
                     <FeatherIcon color="green" icon="check" width="18" />
                     <Typography>
-                      {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
+                      {option.id > 0
+                        ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `
+                        : `(${option.sayName})`}
                     </Typography>
                   </>
                 ) : (
                   <>
                     <FeatherIcon color="red" icon="x" width="18" />
                     <Typography>
-                      {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
+                      {option.id > 0
+                        ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `
+                        : `(${option.sayName})`}
                     </Typography>
                   </>
                 )}
