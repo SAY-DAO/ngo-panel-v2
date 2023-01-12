@@ -667,7 +667,8 @@ const ReportStatusTable = () => {
           </TableCell>
           <TableCell align="center">
             <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
-              {row.paid.toLocaleString()} / {row.cost.toLocaleString()}
+              {row.purchase_cost ? row.purchase_cost.toLocaleString() : row.paid.toLocaleString()} /{' '}
+              {row.cost.toLocaleString()}
             </Typography>
           </TableCell>
         </TableRow>
@@ -892,6 +893,7 @@ const ReportStatusTable = () => {
       name: PropTypes.string,
       title: PropTypes.string,
       paid: PropTypes.number,
+      purchase_cost: PropTypes.number,
       status: PropTypes.number,
       type: PropTypes.number,
       img: PropTypes.string,

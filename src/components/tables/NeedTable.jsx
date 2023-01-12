@@ -178,13 +178,6 @@ function EnhancedTableHead(props) {
       label: t('need.link'),
     },
     {
-      id: 'affiliateLinkUrl',
-      numeric: false,
-      disablePadding: false,
-      label: t('need.affiliateLinkUrl'),
-      width: '200px',
-    },
-    {
       id: 'title',
       numeric: false,
       disablePadding: false,
@@ -923,8 +916,6 @@ const NeedTable = () => {
                                       </Link>
                                     )}
                                   </Typography>
-                                </TableCell>
-                                <TableCell>
                                   <Typography
                                     color="textSecondary"
                                     variant="body1"
