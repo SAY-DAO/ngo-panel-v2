@@ -168,6 +168,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (NeedTypeEnum.PRODUCT) {
       values.typeId = NeedTypeEnum.PRODUCT;
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
+        console.log(data);
         values.expected_delivery_date = format(new Date(data.expProductToNgo), 'yyyy-MM-dd');
         values.purchase_cost = Number(data.retailerPaid);
         values.dkc = data.retailerCode.toString();
@@ -264,7 +265,6 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DesktopDatePicker
                               id="expProductToNgo"
-                              inputFormat="MM-dd-yyyy"
                               value={productExpDelivery}
                               control={control}
                               {...register('expProductToNgo', { required: true })}
@@ -320,7 +320,6 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DesktopDatePicker
                               id="productDeliveredToNgo"
-                              inputFormat="MM/dd/yyyy"
                               value={productDelivered}
                               control={control}
                               onChange={handleDeliveredChange}

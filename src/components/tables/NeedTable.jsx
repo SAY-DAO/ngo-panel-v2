@@ -864,7 +864,7 @@ const NeedTable = () => {
                                 <TableCell>
                                   <Box display="flex" alignItems="center">
                                     <Avatar
-                                      src={row.imageUrl}
+                                      src={row.imageUrl && row.imageUrl}
                                       alt="sw photo"
                                       width="35"
                                       sx={{
