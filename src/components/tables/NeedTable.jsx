@@ -49,7 +49,7 @@ import {
 } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
-import { getOrganizedNeeds, PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
+import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
 import {
   ALL_NEEDS_RESET,
   CHILD_NEEDS_RESET,
@@ -73,6 +73,13 @@ function descendingComparator(a, b, orderBy) {
       return -1;
     }
     if (new Date(b[orderBy]).getTime() > new Date(a[orderBy]).getTime()) {
+      return 1;
+    }
+  } else if (orderBy === 'unpayable' && (!b.paid || !a.paid)) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
       return 1;
     }
   } else {
@@ -841,21 +848,37 @@ const NeedTable = () => {
                                 </TableCell>
                                 <TableCell>
                                   <Box display="flex" alignItems="center">
-                                    {row.status <= PaymentStatusEnum.COMPLETE_PAY ? (
+                                    <Tooltip
+                                      title={
+                                        row.unpayable === false && !row.paid ? (
+                                          <Typography sx={{ fontSize: 12 }}>
+                                            {t('need.payable')}
+                                          </Typography>
+                                        ) : row.unpayable === true && !row.paid ? (
+                                          <Typography sx={{ fontSize: 12 }}>
+                                            {t('need.unpayable')}
+                                          </Typography>
+                                        ) : (
+                                          <Typography sx={{ fontSize: 12 }}>
+                                            {t('need.purchased')}
+                                          </Typography>
+                                        )
+                                      }
+                                    >
                                       <Box
                                         sx={{
                                           backgroundColor:
-                                            row.unpayable === false
+                                            row.unpayable === false && !row.paid
                                               ? (theme) => theme.palette.success.main
-                                              : (theme) => theme.palette.error.main,
+                                              : row.unpayable === true && !row.paid
+                                              ? (theme) => theme.palette.error.main
+                                              : (theme) => theme.palette.info.main,
                                           borderRadius: '100%',
                                           height: '10px',
                                           width: '10px',
                                         }}
                                       />
-                                    ) : (
-                                      <Typography>{t('need.purchased')}</Typography>
-                                    )}
+                                    </Tooltip>
                                   </Box>
                                 </TableCell>
                                 <TableCell>

@@ -48,7 +48,7 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
       width: '80px',
     },
     labels: [t('need.pie.ok'), t('need.pie.unpayable'), t('need.pie.unconfirmed')],
-    colors: ['rgb(0, 194, 146)', 'rgb(254, 201, 15)', 'rgb(237, 77 ,96)'],
+    colors: ['rgb(0, 194, 146)', 'rgb(237, 77 ,96)', 'rgb(254, 201, 15)'],
     tooltip: {
       fillSeriesColor: false,
     },
