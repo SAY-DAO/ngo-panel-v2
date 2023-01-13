@@ -40,10 +40,10 @@ const TaskCard = ({ need }) => {
   };
 
   if (need) {
-    // const diff = moment(new Date()).diff(moment(new Date(need.created)));
+    const diff = moment(new Date()).diff(moment(new Date(need.created)));
     // const diff = (moment(new Date(need.created)).diff(moment(new Date())));
     // console.log('Total Duration in millis:', moment.duration(diff).asMilliseconds());
-    // console.log('Days:', moment.duration(diff).days());
+    console.log('Days:', moment.duration(diff).days());
     // console.log('Hours:', moment.duration(diff).hours());
     // console.log('Minutes:', moment.duration(diff).minutes());
     // console.log('Seconds:', moment.duration(diff).seconds());
@@ -90,7 +90,7 @@ const TaskCard = ({ need }) => {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {/* {need.child.sayName} */}
+                {need.childSayName}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="200">
                 {/* {getAge(need.child.birthDate)} yrs */}
@@ -127,12 +127,10 @@ const TaskCard = ({ need }) => {
                   horizontal: 'right',
                 }}
               >
-                <MenuItem onClick={() => navigate(`/children/edit/${need.flaskChildId}`)}>
+                <MenuItem onClick={() => navigate(`/children/edit/${need.child_id}`)}>
                   Edit Child
                 </MenuItem>
-                <MenuItem
-                  onClick={() => navigate(`/need/edit/${need.flaskChildId}/${need.flaskNeedId}`)}
-                >
+                <MenuItem onClick={() => navigate(`/need/edit/${need.child_id}/${need.id}`)}>
                   Edit Need
                 </MenuItem>
               </Menu>
@@ -219,7 +217,7 @@ const TaskCard = ({ need }) => {
                 color: '#000000',
                 backgroundColor: need.type === NeedTypeEnum.PRODUCT ? '#ff9d23' : '#0397ff',
               }}
-              label={need.typeName}
+              label={need.type_name}
               size="small"
             />
             <Chip
@@ -266,35 +264,48 @@ const TaskCard = ({ need }) => {
           )}
           <img
             style={{ opacity: '50%', minHeight: '100px' }}
-            srcSet={`${need.needRetailerImg} 1x, ${need.needRetailerImg} 2x`}
-            alt={need.needRetailerImg}
+            srcSet={`${need.img} 1x, ${need.img} 2x`}
+            alt={need.img}
             width="100%"
           />
           <Grid container sx={{ p: 1 }}>
             {need.created && (
               <Typography color="textSecondary" variant="h6" fontWeight="400">
-                created: {moment().diff(moment(need.created, 'YYYY-MM-DD'), 'days')} days ago
+                created: {moment().diff(moment(need.created), 'days')} days ago
+                <br />
               </Typography>
             )}
             {need.updated && (
               <Typography color="textSecondary" variant="h6" fontWeight="400">
-                updated: {moment().diff(moment(need.updated, 'YYYY-MM-DD'), 'days')} days ago
+                updated: {moment().diff(moment(need.updated), 'days')} days ago
+                <br />
               </Typography>
             )}
             {need.confirmDate && (
               <Typography color="textSecondary" variant="h6" fontWeight="400">
-                confirmed: {moment().diff(moment(need.confirmDate, 'YYYY-MM-DD'), 'days')} days ago
+                confirmed: {moment().diff(moment(need.confirmDate), 'days')} days ago
+                <br />
               </Typography>
             )}
-            {need.paid && (
+            {need.purchase_date && (
               <Typography color="textSecondary" variant="h6" fontWeight="400">
-                confirmed: {moment().diff(moment(need.confirmDate, 'YYYY-MM-DD'), 'days')} days ago
+                Purchased: {moment().diff(moment(need.purchase_date), 'days')} days ago
+              </Typography>
+            )}
+            {need.ngo_delivery_date && (
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                Ngo Delivery: {moment().diff(moment(need.ngo_delivery_date), 'days')} days ago
+              </Typography>
+            )}
+            {need.child_delivery_date && (
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                Child Delivery: {moment().diff(moment(need.child_delivery_date), 'days')} days ago
               </Typography>
             )}
           </Grid>
         </Box>
       </Card>
-      <Box
+      {/* <Box
         sx={{
           display: {
             sm: 'flex',
@@ -320,7 +331,7 @@ const TaskCard = ({ need }) => {
             </Typography>
           </Link>
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

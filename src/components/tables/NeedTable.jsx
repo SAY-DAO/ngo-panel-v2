@@ -50,12 +50,6 @@ import {
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
-import {
-  ALL_NEEDS_RESET,
-  CHILD_NEEDS_RESET,
-  SW_NEED_LIST_RESET,
-} from '../../redux/constants/needConstant';
-import { CHILDREN_BY_NGO_RESET } from '../../redux/constants/childrenConstants';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -426,12 +420,13 @@ const NeedTable = () => {
     isConfirmed: true,
   });
 
+  const [theTableNeeds, setTheTableNeeds] = useState();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
 
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
-  const loadingNgo = openNgo && optionsNgo.length === 0;
+  const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
 
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, loading: loadingChildNeeds, success: successChildNeeds } = childNeeds;
@@ -440,7 +435,7 @@ const NeedTable = () => {
   const { confirmed, deleted } = childOneNeed;
 
   const childrenByNgo = useSelector((state) => state.childrenByNgo);
-  const { childList, loading: loadingChildren, success: successChildren } = childrenByNgo;
+  const { childList, loading: loadinggoChildren, success: successNgoChildren } = childrenByNgo;
 
   const allNeeds = useSelector((state) => state.allNeeds);
   const { needs, loading: loadingAllNeeds, success: successAllNeeds } = allNeeds;
@@ -450,7 +445,7 @@ const NeedTable = () => {
 
   // for social worker with limited permission
   const swById = useSelector((state) => state.swById);
-  const { children, loading: loadingSw } = swById;
+  const { children: swChildren, loading: loadingSw } = swById;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
@@ -458,76 +453,145 @@ const NeedTable = () => {
   const childById = useSelector((state) => state.childById);
   const { result } = childById;
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  // needs
+  // fetch needs
   useEffect(() => {
     if (swInfo) {
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
-        if (!ngo || child.id > 0 || (result && result.id)) {
-          dispatch({ type: ALL_NEEDS_RESET });
+      if (
+        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
+        swInfo.typeId === RolesEnum.ADMIN ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        if ((child && child.id > 0) || (result && result.id)) {
+          console.log('fetchChildNeeds');
           dispatch(fetchChildNeeds(child.id || result.id));
         } else if (ngo || child.id < 0) {
-          dispatch({ type: CHILD_NEEDS_RESET });
+          console.log('fetchAllNeeds');
           dispatch(fetchAllNeeds(null, ngo.id, null, null));
         }
       }
-      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER || swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
-        if (!ngo || child.id > 0 || (result && result.id)) {
-          dispatch({ type: SW_NEED_LIST_RESET });
+      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+        if ((child && child.id > 0) || (result && result.id)) {
+          console.log('fetchChildNeeds');
           dispatch(fetchChildNeeds(child.id || result.id));
         } else {
-          dispatch({ type: CHILD_NEEDS_RESET });
           dispatch(fetchSwNeedList());
+          console.log('fetchSwNeedList');
         }
       }
     }
   }, [swInfo, child, result, confirmed, deleted, ngo]);
 
+  // filter needs for the table
   useEffect(() => {
-    if (successChildNeeds) {
-      dispatch({ type: CHILD_NEEDS_RESET });
+    let tableNeeds;
+    if (swInfo && theNeeds && child && child && child.id > 0) {
+      console.log('table = the child needs');
+      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+        tableNeeds = theNeeds.needs.filter((n) => swInfo.typeId === n.createdBy);
+        setTheTableNeeds(tableNeeds);
+      } else if (
+        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
+        swInfo.typeId === RolesEnum.ADMIN ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        tableNeeds = theNeeds.needs;
+        setTheTableNeeds(tableNeeds);
+      }
+    } else if (swInfo && needs && child && child.id === 0) {
+      console.log('table = all needs');
+      if (
+        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
+        swInfo.typeId === RolesEnum.ADMIN ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        tableNeeds = needs.needs;
+        setTheTableNeeds(tableNeeds);
+      }
+    } else if (swInfo && swNeeds) {
+      console.log('table = swNeeds');
+      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+        tableNeeds = swNeeds;
+        setTheTableNeeds(tableNeeds);
+      }
     }
-    if (successAllNeeds) {
-      dispatch({ type: ALL_NEEDS_RESET });
-    }
-  }, [ngo]);
+  }, [swInfo, needs, swNeeds, theNeeds]);
 
-  // sort needs
+  // sort needs for statics
   useEffect(() => {
-    if (successChildNeeds) {
-      const needData = getOrganizedNeeds(theNeeds);
-      setNeedsData(needData);
-    }
-    if (successAllNeeds) {
-      const needData = getOrganizedNeeds(needs);
-      setNeedsData(needData);
-    }
-    if (successSwNeeds) {
-      const needData = getOrganizedNeeds(swNeeds);
-      setNeedsData(needData);
+    if (swInfo) {
+      // admins and Ngo supervisors vs. social workers
+      if (
+        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
+        swInfo.typeId === RolesEnum.ADMIN ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        if (successChildNeeds) {
+          const needData = getOrganizedNeeds(theNeeds);
+          setNeedsData(needData);
+        }
+        if (successAllNeeds) {
+          const needData = getOrganizedNeeds(needs);
+          setNeedsData(needData);
+        }
+        if (successSwNeeds) {
+          const needData = getOrganizedNeeds(swNeeds);
+          setNeedsData(needData);
+        }
+      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+        if (successChildNeeds) {
+          const filteredChildNeeds = theNeeds.needs.filter((n) => swInfo.typeId === n.createdBy);
+          const needData = getOrganizedNeeds(filteredChildNeeds);
+          setNeedsData(needData);
+        }
+        if (successSwNeeds) {
+          const needData = getOrganizedNeeds(swNeeds);
+          setNeedsData(needData);
+        }
+      }
     }
   }, [successChildNeeds, successAllNeeds, successSwNeeds]);
 
   // Autocomplete ngo
   useEffect(() => {
-    if (successNgoList) {
-      setOptionsNgo([...ngoList]);
+    let active = true;
+    if (!loadingNgo) {
+      return undefined;
     }
-  }, [successNgoList]);
+
+    if (active && swInfo) {
+      // super admin & admin
+      if (
+        (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) &&
+        successNgoList
+      ) {
+        setOptionsNgo([...ngoList]);
+      }
+      // social worker
+      else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        setOptionsNgo([
+          {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          },
+        ]);
+      }
+    }
+    return () => {
+      active = false;
+    };
+  }, [loadingNgo, successNgoList, swInfo]);
 
   // Autocomplete children
   useEffect(() => {
     let active = true;
-    if (loadingChildren) {
+    if (loadinggoChildren) {
       return undefined;
     }
     // super admin & admin
-    if (active && successChildren) {
+    if (active && successNgoChildren) {
       // sort children
       const sortedChildren = childList.children.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
@@ -538,9 +602,9 @@ const NeedTable = () => {
       ]);
     }
     // social worker
-    if (active && children) {
-      // sort children
-      const sortedChildren = children.children.sort(
+    if (active && swChildren) {
+      // sort swChildren
+      const sortedChildren = swChildren.children.sort(
         (a, b) => Number(b.isConfirmed) - Number(a.isConfirmed),
       );
       setOptions([
@@ -551,27 +615,27 @@ const NeedTable = () => {
     return () => {
       active = false;
     };
-  }, [loadingChildren, successChildren, children, ngo]);
+  }, [loadinggoChildren, successNgoChildren, swChildren, ngo]);
 
   // child open
   useEffect(() => {
-    if (openNgo) {
-      dispatch({ type: CHILDREN_BY_NGO_RESET });
-    } else if (swInfo && ngo) {
+    if (swInfo && ngo) {
       // super admin & admin
       if (
-        (!childList && swInfo.typeId === RolesEnum.SUPER_ADMIN) ||
+        ( swInfo.typeId === RolesEnum.SUPER_ADMIN) ||
         swInfo.typeId === RolesEnum.ADMIN
       ) {
+        console.log('fetchChildrenByNgo');
         dispatch(fetchChildrenByNgo({ ngoId: ngo.id }));
       } else if (
         swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
         dispatch(fetchSwChildList(swInfo.id));
+        console.log('fetchSwChildList');
       }
     }
-  }, [open, openNgo, ngo, swInfo]);
+  }, [ngo, swInfo]);
 
   // when click on Breadcrumb use the state to retrieve the child
   useEffect(() => {
@@ -589,6 +653,12 @@ const NeedTable = () => {
   //   }
   //   setSelected([]);
   // };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
 
   const handleClick = (event, id) => {
     // const selectedIndex = selected.indexOf(id);
@@ -639,8 +709,6 @@ const NeedTable = () => {
       ? Math.max(0, (1 + page) * rowsPerPage - (needs || theNeeds || swNeeds).needs.length)
       : 0;
 
-  const tableNeeds = needs ? needs.needs : theNeeds ? theNeeds.needs : swNeeds && swNeeds;
-
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
@@ -649,7 +717,7 @@ const NeedTable = () => {
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <Autocomplete
-            value={ngo}
+            value={ngo && ngo.id && ngo}
             id="asynchronous-ngo"
             sx={{ width: 300 }}
             open={openNgo}
@@ -725,8 +793,8 @@ const NeedTable = () => {
                 )}
               </Box>
             )}
-            options={successNgoList || children ? options : []}
-            loading={loadingSw || loadingChildren}
+            options={successNgoList || swChildren ? options : []}
+            loading={loadingSw || loadinggoChildren}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -735,7 +803,7 @@ const NeedTable = () => {
                   ...params.InputProps,
                   endAdornment: (
                     <>
-                      {loadingChildren ? <CircularProgress color="inherit" size={20} /> : null}
+                      {loadinggoChildren ? <CircularProgress color="inherit" size={20} /> : null}
                       {params.InputProps.endAdornment}
                     </>
                   ),
@@ -751,17 +819,17 @@ const NeedTable = () => {
         </Grid>
       ) : (
         needsData &&
-        tableNeeds && (
+        theTableNeeds && (
           <Card sx={{ maxWidth: '100%' }}>
             <Grid container direction="row">
               <Grid item xs={12} md={4}>
-                <LinearNeedStats needsData={needsData} totalNeeds={tableNeeds.length} />
+                <LinearNeedStats needsData={needsData} totalNeeds={theTableNeeds.length} />
               </Grid>
               <Grid item xs={12} md={8}>
                 <PieChart
                   donaNeeds={needsData[5]}
-                  allNeeds={tableNeeds}
-                  totalNeeds={tableNeeds.length}
+                  allNeeds={theTableNeeds}
+                  totalNeeds={theTableNeeds.length}
                 />
               </Grid>
             </Grid>
@@ -784,10 +852,10 @@ const NeedTable = () => {
                         orderBy={orderBy}
                         // onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
-                        rowCount={tableNeeds.length}
+                        rowCount={theTableNeeds.length}
                       />
                       <TableBody>
-                        {stableSort(tableNeeds, getComparator(order, orderBy))
+                        {stableSort(theTableNeeds, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
                             const isItemSelected = isSelected(row.id);
@@ -1154,7 +1222,7 @@ const NeedTable = () => {
                     rowsPerPageOptions={[5, 10, 25, 50]}
                     labelRowsPerPage={t('table.rowCount')}
                     component="div"
-                    count={tableNeeds.length}
+                    count={theTableNeeds.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

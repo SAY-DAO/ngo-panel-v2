@@ -101,7 +101,8 @@ const NeedEdit = () => {
     doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
     link:
-      oneNeed && oneNeed.type === NeedTypeEnum.PRODUCT &&
+      oneNeed &&
+      oneNeed.type === NeedTypeEnum.PRODUCT &&
       Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
   });
@@ -282,6 +283,9 @@ const NeedEdit = () => {
                         />
                       </Badge>
                     </Grid>
+                  </Card>
+                  <Card>
+                    <Typography sx={{ textAlign: 'center' }}>{oneNeed.childSayName}</Typography>
                   </Card>
                 </Grid>
                 <Grid item lg={8} md={12} xs={12}>

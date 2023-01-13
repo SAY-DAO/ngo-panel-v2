@@ -43,7 +43,7 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 250,
+        'X-TAKE': 150,
       },
     };
 
@@ -117,6 +117,7 @@ export const fetchChildNeeds = (childId) => async (dispatch, getState) => {
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        'X-TAKE': 150,
       },
     };
     const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);

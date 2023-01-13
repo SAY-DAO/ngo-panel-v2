@@ -216,6 +216,7 @@ export const fetchMyPage = (values) => async (dispatch, getState) => {
     dispatch({ type: MY_PAGE_REQUEST });
     const {
       userLogin: { userInfo },
+      swDetails: { swInfo },
     } = getState();
 
     const config = {
@@ -227,21 +228,27 @@ export const fetchMyPage = (values) => async (dispatch, getState) => {
       },
     };
 
-    console.log(values);
     let response;
     if (values.createdBy) {
-      response = await daoApi.get(`/users/myPage?createdBy=${values.createdBy}`, config);
+      response = await daoApi.get(
+        `/users/myPage/${swInfo.typeId}?createdBy=${values.createdBy}`,
+        config,
+      );
     } else if (values.confirmedBy) {
-      response = await daoApi.get(`/users/myPage?confirmedBy=${values.confirmedBy}`, config);
+      response = await daoApi.get(
+        `/users/myPage/${swInfo.typeId}?confirmedBy=${values.confirmedBy}`,
+        config,
+      );
     } else if (values.purchasedBy) {
-      response = await daoApi.get(`/users/myPage?purchasedBy=${values.purchasedBy}`, config);
+      response = await daoApi.get(
+        `/users/myPage/${swInfo.typeId}?purchasedBy=${values.purchasedBy}`,
+        config,
+      );
     }
 
     dispatch({
       type: MY_PAGE_SUCCESS,
-      payload: {
-        needs: response.data,
-      },
+      payload: response && response.data,
     });
   } catch (e) {
     dispatch({

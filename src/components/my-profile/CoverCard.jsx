@@ -1,43 +1,24 @@
-import React, { useEffect } from 'react';
-import { Grid, Box, Card, CardContent, Typography, Button, Avatar, CircularProgress } from '@mui/material';
+import React from 'react';
+import {
+  Grid,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Avatar,
+  CircularProgress,
+} from '@mui/material';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
 import InterestsIcon from '@mui/icons-material/Interests';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import { useTranslation } from 'react-i18next';
 import cover from '../../assets/images/cover.jpg';
-import { fetchSocialWorkerById, fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { RolesEnum } from '../../utils/helpers';
-import { fetchChildList } from '../../redux/actions/childrenAction';
 
-const CoverCard = ({ swId }) => {
-  const dispatch = useDispatch();
+const CoverCard = ({ theUser, childCount, needCount, signatureCount }) => {
   const { t } = useTranslation();
-
-  const swById = useSelector((state) => state.swById);
-  const { children, result } = swById;
-
-  const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo } = swDetails;
-
-  const childAll = useSelector((state) => state.childAll);
-  const { myChildren } = childAll;
-
-  useEffect(() => {
-    if (swId) {
-      dispatch(fetchSocialWorkerById(swId));
-    }
-  }, [swId]);
-
-  useEffect(() => {
-    if (swInfo && (swInfo.typeId === RolesEnum.ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN)) {
-      dispatch(fetchChildList())
-    } else {
-      dispatch(fetchSwChildList())
-    }
-  }, [swInfo])
-
   return (
     <Card
       sx={{
@@ -100,7 +81,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {children ? children.children.length : myChildren ? myChildren.length : <CircularProgress size={15} />}
+                  {needCount || <CircularProgress size={15} />}
                 </Typography>
                 <Typography
                   color="textSecondary"
@@ -110,7 +91,8 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {result && (result.typeId === RolesEnum.ADMIN || result.typeId === RolesEnum.SUPER_ADMIN || result.typeId === RolesEnum.SUPER_ADMIN)
+                  {theUser &&
+                  (theUser.typeId === RolesEnum.ADMIN || theUser.typeId === RolesEnum.SUPER_ADMIN)
                     ? t('myProfile.confirmedNeeds')
                     : t('myProfile.createdNeeds')}
                 </Typography>
@@ -138,7 +120,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {children ? children.children.length : myChildren ? myChildren.length : <CircularProgress size={15} />}
+                  {childCount || <CircularProgress size={15} />}
                 </Typography>
                 <Typography
                   color="textSecondary"
@@ -148,7 +130,10 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  {result && (result.typeId === RolesEnum.ADMIN || result.typeId === RolesEnum.SUPER_ADMIN || result.typeId === RolesEnum.SUPER_ADMIN)
+                  {theUser &&
+                  (theUser.typeId === RolesEnum.ADMIN ||
+                    theUser.typeId === RolesEnum.SUPER_ADMIN ||
+                    theUser.typeId === RolesEnum.SUPER_ADMIN)
                     ? t('myProfile.myChildren')
                     : t('myProfile.allChildren')}
                 </Typography>
@@ -176,7 +161,7 @@ const CoverCard = ({ swId }) => {
                     lineHeight: '1.2',
                   }}
                 >
-                  2,659
+                  {signatureCount || <CircularProgress size={15} />}
                 </Typography>
                 <Typography
                   color="textSecondary"
@@ -187,7 +172,6 @@ const CoverCard = ({ swId }) => {
                   }}
                 >
                   {t('myProfile.signed')}
-
                 </Typography>
               </Grid>
             </Grid>
@@ -229,7 +213,7 @@ const CoverCard = ({ swId }) => {
                   }}
                 >
                   <Avatar
-                    src={result && result.avatarUrl}
+                    src={theUser && theUser.avatarUrl}
                     alt="Social worker avatar"
                     sx={{
                       borderRadius: '50%',
@@ -253,7 +237,7 @@ const CoverCard = ({ swId }) => {
                       textAlign: 'center',
                     }}
                   >
-                    {`${result && result.firstName} ${result && result.lastName}`}{' '}
+                    {`${theUser && theUser.firstName} ${theUser && theUser.lastName}`}{' '}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -263,7 +247,7 @@ const CoverCard = ({ swId }) => {
                       textAlign: 'center',
                     }}
                   >
-                    {result && result.typeName}
+                    {theUser && theUser.typeName}
                   </Typography>
                 </Box>
               </Box>
@@ -340,7 +324,10 @@ const CoverCard = ({ swId }) => {
 };
 
 CoverCard.propTypes = {
-  swId: PropTypes.number,
+  childCount: PropTypes.number,
+  needCount: PropTypes.number,
+  signatureCount: PropTypes.number,
+  theUser: PropTypes.object,
 };
 
 export default CoverCard;

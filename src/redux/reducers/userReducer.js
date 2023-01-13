@@ -90,7 +90,7 @@ export const myPageReducer = (state = { success: false }, action) => {
     case MY_PAGE_REQUEST:
       return { loading: true };
     case MY_PAGE_SUCCESS:
-      return { loading: false, success: true, data: action.payload };
+      return { loading: false, success: true, pageDetails: action.payload };
     case MY_PAGE_FAIL:
       return { loading: false, error: action.payload };
     case MY_PAGE_RESET:

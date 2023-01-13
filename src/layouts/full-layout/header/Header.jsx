@@ -82,13 +82,15 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (!successSwDetails && !loadingswDetails) {
       dispatch(fetchSocialWorkerDetails());
     }
-    if (
-      !successNgoList &&
-      !loadingNgoList &&
-      swInfo &&
-      (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)
-    ) {
-      dispatch(fetchNgoList());
+    if (location.pathname !== PROFILE_VIEW) {
+      if (
+        !successNgoList &&
+        !loadingNgoList &&
+        swInfo &&
+        (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)
+      ) {
+        dispatch(fetchNgoList());
+      }
     }
   }, [successSwDetails, successNgoList, loadingNgoList, loadingswDetails]);
 

@@ -165,7 +165,10 @@ const NeedAdd = () => {
         // super admin & admin
         if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
           dispatch(fetchActiveChildList());
-        } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER ||  swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
+        } else if (
+          swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+          swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        ) {
           dispatch(fetchSwChildList());
         }
       }
@@ -457,6 +460,9 @@ const NeedAdd = () => {
                         />
                       </Badge>
                     </Grid>
+                  </Card>
+                  <Card>
+                    <Typography sx={{ textAlign: 'center' }}>{result.sayName}</Typography>
                   </Card>
                   <Card sx={{ p: 1 }}>
                     <Grid item xs={12}>
