@@ -291,7 +291,11 @@ const CoverCard = ({
                       textAlign: 'center',
                     }}
                   >
-                    {`${theUser && theUser.firstName} ${theUser && theUser.lastName}`}{' '}
+                    {!theUser.firstName ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : (
+                      `${theUser && theUser.firstName} ${theUser && theUser.lastName}`
+                    )}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -301,7 +305,7 @@ const CoverCard = ({
                       textAlign: 'center',
                     }}
                   >
-                    {theUser && theUser.typeName}
+                    {!theUser ? <CircularProgress color="inherit" size={20} /> : theUser.typeName}
                   </Typography>
                   <Button
                     disabled
