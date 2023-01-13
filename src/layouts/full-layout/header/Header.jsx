@@ -92,7 +92,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         dispatch(fetchNgoList());
       }
     }
-  }, [successSwDetails, successNgoList, loadingNgoList, loadingswDetails]);
+  }, [successSwDetails, successNgoList, loadingNgoList, loadingswDetails, location]);
 
   // if not active log out
   useEffect(() => {

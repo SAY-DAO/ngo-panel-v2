@@ -549,15 +549,15 @@ const ReportStatusTable = () => {
           tabIndex={-1}
           sx={{ '& > *': { borderBottom: 'unset' }, height: '100px' }}
         >
-          <TableCell>
+          <TableCell align="center">
             <IconButton aria-label="expand row" size="small" onClick={() => setAccOpen(!accOpen)}>
               {accOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">
+          <TableCell align="center" component="th" scope="row">
             {row.id}
           </TableCell>
-          <TableCell>
+          <TableCell align="center">
             <Box display="flex" alignItems="center">
               <CardMedia
                 component="img"
@@ -581,7 +581,7 @@ const ReportStatusTable = () => {
             </Box>
           </TableCell>
 
-          <TableCell align="center">
+          <TableCell>
             {row.link && (
               <Link href={row.link} target="_blank">
                 Link
@@ -599,7 +599,7 @@ const ReportStatusTable = () => {
           </TableCell>
           {typeId === NeedTypeEnum.PRODUCT && <TableCell align="center">{row.title}</TableCell>}
           <TableCell align="center">{row.ngoId}</TableCell>
-          <TableCell align="center">{row.created_by_id}</TableCell>
+          <TableCell>{row.created_by_id}</TableCell>
           <TableCell align="center">
             <Box alignItems="center">
               <IconButton
@@ -671,7 +671,7 @@ const ReportStatusTable = () => {
               </Box>
             </Box>
           </TableCell>
-          <TableCell align="center">
+          <TableCell>
             <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
               {row.purchase_cost ? row.purchase_cost.toLocaleString() : row.paid.toLocaleString()} /
               {row.cost.toLocaleString()}
