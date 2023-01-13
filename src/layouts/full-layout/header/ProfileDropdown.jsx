@@ -95,10 +95,10 @@ const ProfileDropdown = () => {
                     lineHeight: '1.235',
                   }}
                 >
-                  {t('myProfile.settings.edit')}
+                  {t('profile.settings.edit')}
                 </Typography>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
-                  {t('myProfile.settings.settings')}
+                  {t('profile.settings.settings')}
                 </Typography>
               </Box>
             </Box>

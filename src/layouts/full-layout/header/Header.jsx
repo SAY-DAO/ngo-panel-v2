@@ -246,7 +246,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               }}
             >
               <Typography color="textSecondary" variant="h5" fontWeight="400" sx={{ ml: 1 }}>
-                {t('myProfile.settings.hi')},
+                {t('profile.settings.hi')},
               </Typography>
               <Typography
                 variant="h5"
@@ -285,7 +285,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           >
             <Box display="flex" alignItems="center">
               <Typography variant="h4" fontWeight="500">
-                {t('myProfile.settings.title')}
+                {t('profile.settings.title')}
               </Typography>
             </Box>
           </Box>
@@ -307,7 +307,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               variant="contained"
               color="primary"
             >
-              {t('myProfile.settings.logOut')}
+              {t('profile.settings.logOut')}
             </LoadingButton>
           </Link>
         </Menu>

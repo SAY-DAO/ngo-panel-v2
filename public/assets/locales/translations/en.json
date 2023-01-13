@@ -1,28 +1,28 @@
 {
-  "alert":{
+  "alert": {
     "title": "Please be Advised!",
     "body": "Up to End of Day We are working on some feature and you might encounter some mior issues"
   },
-  "settings":{
-    "title":"Settings",
-    "themeOption":"Theme Option",
-    "themeDirection":"Theme Direction",
-    "themeColors":"Theme Colors",
-    "ltr":"LTR",
-    "rtl":"RTL",
-    "dark":"Dark",
-    "light":"Light"
+  "settings": {
+    "title": "Settings",
+    "themeOption": "Theme Option",
+    "themeDirection": "Theme Direction",
+    "themeColors": "Theme Colors",
+    "ltr": "LTR",
+    "rtl": "RTL",
+    "dark": "Dark",
+    "light": "Light"
   },
   "error": {
     "nestDown": "Nest server is not running",
-    "report":{
+    "report": {
       "expectedDeliveryToNgo": "Please enter estimated arrival time to NGO.",
       "retailerCode": "Please enter retialer unique code.",
       "deliveredToNgo": "Please enter arrival time to NGO.",
       "bankTrackId": "Please enter the bank tracking id."
     }
   },
-  "image":{
+  "image": {
     "edit": "Edit photo",
     "scale": "Zoom",
     "rotate": "Rotate"
@@ -71,11 +71,11 @@
       "connect": "Connect Wallet"
     }
   },
-  "table":{
+  "table": {
     "rowCount": "Rows per page",
     "dense": "Dense padding"
   },
-  "BCrumb":{
+  "BCrumb": {
     "home": "My Page",
     "add": "Add",
     "childrenEdit": "Edit Child",
@@ -122,14 +122,13 @@
     "successBank": "Payment was successful"
   },
   "report": {
-    "statusChange":{
+    "statusChange": {
       "expectedDeliveryToNgo": "Date of Product arrival",
       "retailerPaid": "Price paid to Retailer",
       "retailerCode": "Retailer Code",
       "deliveredToNgo": "Date of arrival to NGO",
       "bankTrackId": "Bank Track Id",
       "purchasedCost": "Price paid for service"
-
     },
     "history": {
       "title": "History",
@@ -224,7 +223,7 @@
     "update": "Edit",
     "updated": "Successfully Updated!",
     "migrated": "Successfully Migrated!",
-    "migrate":{
+    "migrate": {
       "from": "From",
       "to": "To"
     },
@@ -314,7 +313,7 @@
     "updatedNeed": "Successfully Updated!",
     "autoCompleteType": "Service/Product",
     "autoCompleteStatus": "Status",
-    "pie":{
+    "pie": {
       "ok": "OK",
       "unpayable": "Unpayable",
       "unconfirmed": "Not Confirmed"
@@ -495,16 +494,16 @@
     "state": "State",
     "country": "Country",
     "housingStatus": "Housing",
-    "housingCondition":{
+    "housingCondition": {
       "none": "-",
       "homeless": "Homeless",
       "resident": "Resident",
-      "careCenters":"Care Centers"
+      "careCenters": "Care Centers"
     },
     "phoneNumber": "Phone Number",
     "address": "Address",
     "education": "Education",
-    "educationondition":{
+    "educationondition": {
       "deprived": "Deprived",
       "kinderGarten": "KinderGarten",
       "notAttending": "Not Attending",
@@ -554,15 +553,17 @@
       }
     }
   },
-  "myProfile": {
-    "settings":{
+  "profile": {
+    "settings": {
       "hi": "Hi",
-      "title":"User Profile",
-      "edit":"Edit Profile",
-      "settings":"Account Settings",
-      "logIn":"Log in",
+      "title": "User Profile",
+      "edit": "Edit Profile",
+      "settings": "Account Settings",
+      "logIn": "Log in",
       "logOut": "Log out"
-    },
+    }
+  },
+  "myPage": {
     "viewAs": "View as ...",
     "countRecent": {
       "title": "Display Recent Needs",
@@ -583,6 +584,26 @@
         "paied": "Payment",
         "purchased": "Transferred/Purchased",
         "done": "Done"
+      }
+    },
+    "taskCard": {
+      "paid": "Paid",
+      "cost": "Cost",
+      "duration": "Duration",
+      "date": {
+        "created": "Created At",
+        "updated": "Updated at",
+        "purchased": "Purchased at",
+        "confirmed": "Confirmed at",
+        "paid": "Paid at",
+        "ngoDelivery": "Delivered NGO",
+        "childDelivery": "Delivered Child",
+        "daysAgo":"days ago",
+        "days":"days"
+      },
+      "menu": {
+        "updateChild": "Edit Child",
+        "updateٔNeed": "َEdit Need"
       }
     }
   }

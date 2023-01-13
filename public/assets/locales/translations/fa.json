@@ -1,17 +1,17 @@
 {
-  "alert":{
+  "alert": {
     "title": "لطفا در جریان باشید!",
     "body": "در حال به‌روزرسانی بعضی از قابلیت‌ها هستیم و ممکن است تا اواخر هفته پنل دچار اختلال باشد."
   },
-  "settings":{
-    "title":"تنظیمات",
-    "themeOption":"انتخاب تم",
-    "themeDirection":"چیدمان",
-    "themeColors":"رنگ‌",
-    "ltr":"چپ‌چین",
-    "rtl":"راست‌چین",
-    "dark":"تیره",
-    "light":"روشن"
+  "settings": {
+    "title": "تنظیمات",
+    "themeOption": "انتخاب تم",
+    "themeDirection": "چیدمان",
+    "themeColors": "رنگ‌",
+    "ltr": "چپ‌چین",
+    "rtl": "راست‌چین",
+    "dark": "تیره",
+    "light": "روشن"
   },
   "error": {
     "nestDown": "مشکل ارتباط با سرور Nest",
@@ -49,14 +49,14 @@
     },
     "timeout": "ای وای ... <1/>یه چیزی از کار افتاده، ممکنه بعدا بیای؟",
     "emptyCart": "سبد خرید شما خالی است",
-    "report":{
-      "expectedDeliveryToNgo":"انتخاب تاریخ تحویل ضروری است.",
+    "report": {
+      "expectedDeliveryToNgo": "انتخاب تاریخ تحویل ضروری است.",
       "retailerCode": "لطفا کد سفارش را وارد کنید",
       "deliveredToNgo": "انتخاب تاریخ دریافت ضروری است.",
       "bankTrackId": "شماره پیگیری بانک ضروری است."
     }
   },
-  "image":{
+  "image": {
     "edit": "ویرایش عکس",
     "scale": "بزرگ‌نمایی",
     "rotate": "چرخش"
@@ -164,11 +164,11 @@
     }
   },
   "report": {
-    "statusChange":{
+    "statusChange": {
       "expectedDeliveryToNgo": "تاریخ انتظار تحویل کالا به انجمن",
       "retailerPaid": "هزینه پرداخت شده واقعی",
       "retailerCode": "شماره سفارش",
-      "deliveredToNgo":  "تاریخ رسیدن کالا به انجمن",
+      "deliveredToNgo": "تاریخ رسیدن کالا به انجمن",
       "bankTrackId": "کد رهگیری بانک",
       "purchasedCost": "هزینه پرداخت شده واقعی"
     },
@@ -264,7 +264,7 @@
     "isCoordinator": "Coordinator Status",
     "update": "ویرایش",
     "updated": "با موفقیت انجام شد!",
-    "migrate":{
+    "migrate": {
       "from": "از",
       "to": "به"
     },
@@ -355,7 +355,7 @@
     "updatedNeed": "با موفقیت انجام شد!",
     "autoCompleteType": "خدمات/کالا",
     "autoCompleteStatus": "وضعیت",
-    "pie":{
+    "pie": {
       "ok": "خوب",
       "unpayable": "غیر قابل پرداخت",
       "unconfirmed": "تایید نشده"
@@ -365,7 +365,7 @@
     "titleAdd": "اضافه کردی نیاز",
     "titleStatus": "عنوان",
     "payable": "قابل پرداخت",
-    "unpayable":"غیر قابل پرداخت",
+    "unpayable": "غیر قابل پرداخت",
     "purchased": "خرید شده",
     "update": "ویرایش",
     "imageUrl": "آیکون",
@@ -534,28 +534,28 @@
     "state": "استان",
     "country": "کشور",
     "housingStatus": "وضعیت مسکن",
-    "housingCondition":{
+    "housingCondition": {
       "none": "-",
       "homeless": "بی‌خانمان",
       "Resident": "دارای محل زندگی",
-      "CareCenters":"تحت پوشش"
+      "CareCenters": "تحت پوشش"
     },
     "phoneNumber": "شماره تماس",
     "address": "آدرس",
     "education": "تحصیلات",
-    "educationondition":{
+    "educationondition": {
       "deprived": "بازمانده از تحصیل",
       "kinderGarten": "مهد کودک",
       "notAttending": "عدم حضور در مدرسه",
       "preSchool": "آمادگی",
       "firstGrade": "سال اول",
-      "secondGrade":"سال دوم",
+      "secondGrade": "سال دوم",
       "thirdGrade": "سال سوم",
       "fourthGrade": "سال چهارم",
       "fifthGrade": "سال پنجم",
       "sixGrade": "سال ششم",
       "sevenGrade": "سال هفتم",
-      "eightGrade":"سال هشتم",
+      "eightGrade": "سال هشتم",
       "nineGrade": "سال نهم",
       "tenGrade": "سال دهم",
       "elevenGrade": "سال یازدهم",
@@ -593,15 +593,17 @@
       }
     }
   },
-  "myProfile": {
-    "settings":{
-      "hi": "سلام",
-      "title":"صفحه کاربری",
-      "edit":"ویرایش پروفایل",
-      "settings":"جزییات پروفایل",
-      "logIn":"ورود",
-      "logOut": "خروج"
-    },
+  "profile": {
+    "settings": {
+      "hi": "Hi",
+      "title": "User Profile",
+      "edit": "Edit Profile",
+      "settings": "Account Settings",
+      "logIn": "Log in",
+      "logOut": "Log out"
+    }
+  },
+  "myPage": {
     "viewAs": "نمایش مددکار ...",
     "countRecent": {
       "title": "نمایش آخرین نیازها",
@@ -622,6 +624,27 @@
         "paid": "پرداخت‌ها",
         "purchased": "خریدها / انتقال داده شده",
         "done": "انجام شده"
+      }
+    },
+    "taskCard": {
+      "paid": "پرداختی",
+      "cost": "قیمت",
+      "duration": "مدت",
+      "date": {
+        "created": "تاریخ ایجاد",
+        "updated": "تاریخ ویرایش",
+        "purchased": "تاریخ خرید",
+        "confirmed": "تاریخ تائید",
+        "paid": "تاریخ پرداخت",
+        "ngoDelivery": "تاریخ ارسال به سمن",
+        "childDelivery": "تاریخ ارسال به کودک",
+        "daysAgo":"روز پیش",
+        "days":"روز"
+
+      },
+      "menu": {
+        "updateChild": "ویرایش کودک",
+        "updateٔNeed": "ویرایش نیاز"
       }
     }
   }

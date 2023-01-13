@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Button,
   Avatar,
   CircularProgress,
   FormControl,
@@ -22,6 +21,7 @@ import HandshakeIcon from '@mui/icons-material/Handshake';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { LoadingButton } from '@mui/lab';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import cover from '../../assets/images/cover.jpg';
 import { RolesEnum } from '../../utils/helpers';
@@ -147,8 +147,8 @@ const CoverCard = ({
                 >
                   {theUser &&
                   (theUser.typeId === RolesEnum.ADMIN || theUser.typeId === RolesEnum.SUPER_ADMIN)
-                    ? t('myProfile.confirmedNeeds')
-                    : t('myProfile.createdNeeds')}
+                    ? t('myPage.confirmedNeeds')
+                    : t('myPage.createdNeeds')}
                 </Typography>
               </Grid>
               <Grid
@@ -188,8 +188,8 @@ const CoverCard = ({
                   (theUser.typeId === RolesEnum.ADMIN ||
                     theUser.typeId === RolesEnum.SUPER_ADMIN ||
                     theUser.typeId === RolesEnum.SUPER_ADMIN)
-                    ? t('myProfile.myChildren')
-                    : t('myProfile.allChildren')}
+                    ? t('myPage.myChildren')
+                    : t('myPage.allChildren')}
                 </Typography>
               </Grid>
               <Grid
@@ -225,7 +225,7 @@ const CoverCard = ({
                     lineHeight: '1.2',
                   }}
                 >
-                  {t('myProfile.signed')}
+                  {t('myPage.signed')}
                 </Typography>
               </Grid>
             </Grid>
@@ -307,22 +307,9 @@ const CoverCard = ({
                   >
                     {!theUser ? <CircularProgress color="inherit" size={20} /> : theUser.typeName}
                   </Typography>
-                  <Button
-                    disabled
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    sx={{
-                      height: '40px',
-                      backgroundColor: '#f4b58f',
-                      pl: '18px',
-                      pr: '18px',
-                      ml: 1,
-                      mt: { xs: 1, sm: 0, lg: 0 },
-                    }}
-                  >
+                  <LoadingButton disabled color="primary" variant="contained" sx={{ mt: 2 }}>
                     {t('button.wallet.connect')}
-                  </Button>
+                  </LoadingButton>
                 </Box>
               </Box>
             </Box>
@@ -409,7 +396,7 @@ const CoverCard = ({
                         renderInput={(params) => (
                           <TextField
                             {...params}
-                            label={t('myProfile.viewAs')}
+                            label={t('myPage.viewAs')}
                             InputProps={{
                               ...params.InputProps,
                               endAdornment: (
@@ -429,20 +416,20 @@ const CoverCard = ({
                 <Grid item>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
-                      {t('myProfile.countRecent.title')}
+                      {t('myPage.countRecent.title')}
                     </InputLabel>
                     <Select
                       sx={{ minWidth: '200px' }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={take}
-                      label={t('myProfile.countRecent.title')}
+                      label={t('myPage.countRecent.title')}
                       onChange={handleChange}
                       size="small"
                     >
-                      <MenuItem value={10}>{t('myProfile.countRecent.count.ten')}</MenuItem>
-                      <MenuItem value={50}>{t('myProfile.countRecent.count.fifty')}</MenuItem>
-                      <MenuItem value={100}>{t('myProfile.countRecent.count.hundred')}</MenuItem>
+                      <MenuItem value={10}>{t('myPage.countRecent.count.ten')}</MenuItem>
+                      <MenuItem value={50}>{t('myPage.countRecent.count.fifty')}</MenuItem>
+                      <MenuItem value={100}>{t('myPage.countRecent.count.hundred')}</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
