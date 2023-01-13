@@ -15,7 +15,6 @@ import {
   NGO_ADD,
   NGO_EDIT,
   NGO_LIST,
-  PROFILE_EDIT,
   PROFILE_VIEW,
   PROVIDER_ADD,
   PROVIDER_EDIT,
@@ -40,7 +39,7 @@ const SocialWorkerAdd = Loadable(lazy(() => import('../pages/socialWorkers/Socia
 const SocialWorkerMigrate = Loadable(
   lazy(() => import('../pages/socialWorkers/SocialWorkerMigrate')),
 );
-const SocialWorkerProfile = Loadable(lazy(() => import('../pages/my-profile/MyProfile')));
+const SocialWorkerProfile = Loadable(lazy(() => import('../pages/my-page/MyPage')));
 const ProviderList = Loadable(lazy(() => import('../pages/providers/ProviderList')));
 const ProviderEdit = Loadable(lazy(() => import('../pages/providers/ProviderEdit')));
 const ProviderAdd = Loadable(lazy(() => import('../pages/providers/ProviderAdd')));
@@ -67,7 +66,6 @@ const Router = [
     children: [
       { path: HOME, element: <Navigate to={PROFILE_VIEW} /> },
       { path: PROFILE_VIEW, exact: true, element: <SocialWorkerProfile /> },
-      { path: PROFILE_EDIT, exact: true, element: <SocialWorkerEdit /> },
       { path: SW_LIST, exact: true, element: <SocialWorkerList /> },
       { path: SW_EDIT, exact: true, element: <SocialWorkerEdit /> },
       { path: SW_ADD, exact: true, element: <SocialWorkerAdd /> },

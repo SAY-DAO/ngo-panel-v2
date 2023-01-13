@@ -1,5 +1,5 @@
 export const HOME = '/';
-export const PROFILE_VIEW = '/profile/view';
+export const PROFILE_VIEW = '/page/view';
 export const PROFILE_EDIT = '/profile/edit';
 export const SW_LIST = '/sw/list';
 export const SW_EDIT = '/sw/edit/:id';

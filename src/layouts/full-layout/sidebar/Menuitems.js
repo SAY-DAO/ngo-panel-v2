@@ -20,7 +20,7 @@ const Menuitems = [
   {
     title: 'sidebar.myPage',
     icon: 'user',
-    href: '/profile/view',
+    href: '/page/view',
     admin: false,
   },
 

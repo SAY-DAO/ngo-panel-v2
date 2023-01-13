@@ -39,16 +39,6 @@ const TaskCard = ({ need }) => {
     setAnchorEl(null);
   };
 
-  if (need) {
-    const diff = moment(new Date()).diff(moment(new Date(need.created)));
-    // const diff = (moment(new Date(need.created)).diff(moment(new Date())));
-    // console.log('Total Duration in millis:', moment.duration(diff).asMilliseconds());
-    console.log('Days:', moment.duration(diff).days());
-    // console.log('Hours:', moment.duration(diff).hours());
-    // console.log('Minutes:', moment.duration(diff).minutes());
-    // console.log('Seconds:', moment.duration(diff).seconds());
-  }
-
   return (
     <Box>
       <Card
@@ -58,6 +48,9 @@ const TaskCard = ({ need }) => {
           '&:hover': {
             maxHeight: '700px',
           },
+          border: 'solid',
+          borderColor: (theme) => theme.palette.secondary.light,
+          borderWidth: '0.1em',
         }}
       >
         <CardContent>
@@ -68,7 +61,9 @@ const TaskCard = ({ need }) => {
                 borderRadius: '50%',
                 width: '50px',
                 height: '50px',
-                // background: `url(${need.child.awakeAvatarUrl})`,
+                background: need.awakeAvatarUrl
+                  ? `url(${need.awakeAvatarUrl})`
+                  : `url(${need.imageUrl})`,
                 '&:hover': {
                   background: `url(${need.imageUrl})`,
                   backgroundPosition: 'center',
@@ -84,16 +79,17 @@ const TaskCard = ({ need }) => {
               }}
             >
               <Typography
-                variant="h5"
+                variant="h6"
                 fontWeight="600"
                 sx={{
                   whiteSpace: 'nowrap',
+                  fontSize: 12,
                 }}
               >
-                {need.childSayName}
+                {need.childFirstName} {need.childLastName}
               </Typography>
-              <Typography color="textSecondary" variant="h6" fontWeight="200">
-                {/* {getAge(need.child.birthDate)} yrs */}
+              <Typography color="textSecondary" variant="h6" fontWeight="200" sx={{ fontSize: 10 }}>
+                {need.childSayName}
               </Typography>
             </Box>
             <Box

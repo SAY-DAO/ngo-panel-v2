@@ -1,4 +1,25 @@
 ﻿
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: blue transparent;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 20px;
+  border: 2px solid rgb(145, 118, 70);
+}
+
 /* Child Voice */
 .player {
   height: 42px;
@@ -68,3 +89,4 @@
 .apexcharts-legend-marker {
   margin: 4px
 }
+

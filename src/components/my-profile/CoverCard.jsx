@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Grid,
   Box,
@@ -8,17 +8,71 @@ import {
   Button,
   Avatar,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Autocomplete,
+  TextField,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import InterestsIcon from '@mui/icons-material/Interests';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
+import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import cover from '../../assets/images/cover.jpg';
 import { RolesEnum } from '../../utils/helpers';
 
-const CoverCard = ({ theUser, childCount, needCount, signatureCount }) => {
+const CoverCard = ({
+  theUser,
+  childCount,
+  needCount,
+  signatureCount,
+  take,
+  setTake,
+  swInfo,
+  swNewDetails,
+  setSwNewDetails,
+}) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const [openSocialWorkers, setOpenSocialWorker] = useState(false);
+  const [optionsSocialWorkers, setOptionsSwList] = useState([]);
+
+  const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
+  const swAll = useSelector((state) => state.swAll);
+  const { swList, success: successSwAll } = swAll;
+
+  // Autocomplete
+  useEffect(() => {
+    let active = true;
+    if (!isLoadingSw) {
+      return undefined;
+    }
+    if (active && successSwAll) {
+      // sort myChildren
+      const sortedSocialWorkers = swList.sort((a, b) => Number(b.isActive) - Number(a.isActive));
+      setOptionsSwList([...sortedSocialWorkers]);
+    }
+    return () => {
+      active = false;
+    };
+  }, [isLoadingSw, successSwAll, swNewDetails]);
+
+  // social worker open
+  useEffect(() => {
+    if (openSocialWorkers && !swList) {
+      dispatch(fetchSocialWorkersList());
+    }
+  }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
+
+  const handleChange = (event) => {
+    setTake(event.target.value);
+  };
   return (
     <Card
       sx={{
@@ -249,6 +303,26 @@ const CoverCard = ({ theUser, childCount, needCount, signatureCount }) => {
                   >
                     {theUser && theUser.typeName}
                   </Typography>
+                  <Button
+                    disabled
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    sx={{
+                      height: '40px',
+                      backgroundColor: '#f4b58f',
+                      pl: '18px',
+                      pr: '18px',
+                      ml: 1,
+                      mt: {
+                        xs: 1,
+                        sm: 0,
+                        lg: 0,
+                      },
+                    }}
+                  >
+                    {t('button.wallet.connect')}
+                  </Button>
                 </Box>
               </Box>
             </Box>
@@ -295,26 +369,94 @@ const CoverCard = ({ theUser, childCount, needCount, signatureCount }) => {
                 },
               }}
             >
-              <Button
-                disabled
-                color="primary"
-                variant="contained"
-                size="small"
-                sx={{
-                  height: '40px',
-                  backgroundColor: '#f4b58f',
-                  pl: '18px',
-                  pr: '18px',
-                  ml: 1,
-                  mt: {
-                    xs: 1,
-                    sm: 0,
-                    lg: 0,
-                  },
-                }}
-              >
-                {t('button.wallet.connect')}
-              </Button>
+              <Grid container spacing={2} sx={{ p: 2 }}>
+                <Grid item>
+                  {swInfo &&
+                    (swInfo.typeId === RolesEnum.SUPER_ADMIN ||
+                      swInfo.typeId === RolesEnum.ADMIN) && (
+                      <Autocomplete
+                        size="small"
+                        value={swNewDetails}
+                        id="asynchronous-social-worker"
+                        sx={{ minWidth: '300px' }}
+                        open={openSocialWorkers}
+                        onOpen={() => {
+                          setOpenSocialWorker(true);
+                        }}
+                        onClose={() => {
+                          setOpenSocialWorker(false);
+                        }}
+                        options={optionsSocialWorkers}
+                        onChange={(e, value) => setSwNewDetails(value && value)}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        getOptionLabel={(option) =>
+                          `${option.id}. ${option.typeName} - ${option.firstName} ${option.lastName}`
+                        }
+                        loading={isLoadingSw}
+                        renderOption={(props, option) => (
+                          <Box
+                            component="li"
+                            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                            {...props}
+                          >
+                            {option.isActive ? (
+                              <>
+                                <FeatherIcon color="green" icon="check" width="18" />
+                                <Typography>
+                                  {`${option.id}.  ${option.firstName} ${option.lastName}`}
+                                </Typography>
+                              </>
+                            ) : (
+                              <>
+                                <FeatherIcon color="red" icon="x" width="18" />
+                                <Typography>
+                                  {`${option.id}.  ${option.firstName} ${option.lastName}`}
+                                </Typography>
+                              </>
+                            )}
+                          </Box>
+                        )}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label={t('myProfile.viewAs')}
+                            InputProps={{
+                              ...params.InputProps,
+                              endAdornment: (
+                                <>
+                                  {isLoadingSw ? (
+                                    <CircularProgress color="inherit" size={20} />
+                                  ) : null}
+                                  {params.InputProps.endAdornment}
+                                </>
+                              ),
+                            }}
+                          />
+                        )}
+                      />
+                    )}
+                </Grid>
+                <Grid item>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      {t('myProfile.countRecent.title')}
+                    </InputLabel>
+                    <Select
+                      sx={{ minWidth: '200px' }}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={take}
+                      label={t('myProfile.countRecent.title')}
+                      onChange={handleChange}
+                      size="small"
+                    >
+                      <MenuItem value={10}>{t('myProfile.countRecent.count.ten')}</MenuItem>
+                      <MenuItem value={50}>{t('myProfile.countRecent.count.fifty')}</MenuItem>
+                      <MenuItem value={100}>{t('myProfile.countRecent.count.hundred')}</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
             </Box>
           </Grid>
         </Grid>
@@ -328,6 +470,11 @@ CoverCard.propTypes = {
   needCount: PropTypes.number,
   signatureCount: PropTypes.number,
   theUser: PropTypes.object,
+  take: PropTypes.number,
+  setTake: PropTypes.func,
+  swInfo: PropTypes.object,
+  swNewDetails: PropTypes.object,
+  setSwNewDetails: PropTypes.func,
 };
 
 export default CoverCard;

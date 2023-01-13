@@ -111,7 +111,7 @@ const themesOptions = [
       },
       secondary: {
         main: '#1e4db7',
-        light: '#ddebff',
+        light: '#b5cef3',
         dark: '#173f98',
       },
     },
@@ -140,6 +140,8 @@ const themesOptions = [
       },
       secondary: {
         main: '#402e8d',
+        light: '#b0c9ed',
+        dark: '#173f98',
       },
     },
   },
@@ -167,7 +169,7 @@ const themesOptions = [
       },
       secondary: {
         main: '#fb9678',
-        light: '#fcf1ed',
+        light: '#d7aa9a',
         dark: '#e67e5f',
         contrastText: '#ffffff',
       },
@@ -184,6 +186,9 @@ const themesOptions = [
       },
       secondary: {
         main: '#5e244d',
+        light: '#d7aa9a',
+        dark: '#e67e5f',
+        contrastText: '#ffffff',
       },
     },
   },

@@ -34,6 +34,9 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
+  const CustomizerReducer = useSelector((state) => state.CustomizerReducer);
+  const { activeDir } = CustomizerReducer;
+
   const handleClick = (index) => {
     if (open === index) {
       setOpen((prevopen) => !prevopen);
@@ -108,7 +111,10 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                         {index === open || pathWithoutLastPart === item.href ? (
                           <FeatherIcon icon="chevron-down" size="16" />
                         ) : (
-                          <FeatherIcon icon="chevron-right" size="16" />
+                          <FeatherIcon
+                            icon={activeDir === 'rtl' ? 'chevron-left' : 'chevron-right'}
+                            size="16"
+                          />
                         )}
                       </ListItem>
                       <Collapse in={index === open} timeout="auto" unmountOnExit>
