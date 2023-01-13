@@ -73,7 +73,7 @@ const MyPage = () => {
           setSwNewDetails={setSwNewDetails}
         />
         <Grid container spacing={0}>
-          <Card sx={{ width: '100%', overflowX: 'scroll', minHeight: '500px' }}>
+          <Card sx={{ width: '100%', overflow: 'scroll', minHeight: '500px' }}>
             <Grid
               container
               justifyContent="space-around"
@@ -105,7 +105,7 @@ const MyPage = () => {
               <Grid
                 container
                 spacing={0}
-                sx={{ minWidth: '950px', maxHeight: '650px', overflowY: 'scroll' }}
+                sx={{ minWidth: '950px', maxHeight: '650px' }}
               >
                 <Grid item xs={3}>
                   {pageDetails &&

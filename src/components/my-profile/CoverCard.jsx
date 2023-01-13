@@ -314,11 +314,7 @@ const CoverCard = ({
                       pl: '18px',
                       pr: '18px',
                       ml: 1,
-                      mt: {
-                        xs: 1,
-                        sm: 0,
-                        lg: 0,
-                      },
+                      mt: { xs: 1, sm: 0, lg: 0 },
                     }}
                   >
                     {t('button.wallet.connect')}
@@ -340,19 +336,9 @@ const CoverCard = ({
                 sm: 'center',
                 lg: 'flex-end',
               },
-              mt: {
-                sm: 2,
-                lg: 0,
-              },
-              ml: {
-                sm: 4,
-                lg: 0,
-              },
-              order: {
-                xs: '3',
-                sm: '3',
-                lg: '3',
-              },
+              mt: { sm: 2, lg: 0 },
+              ml: { sm: 4, lg: 0 },
+              order: { xs: '3', sm: '3', lg: '3' },
             }}
           >
             <Box
@@ -369,7 +355,7 @@ const CoverCard = ({
                 },
               }}
             >
-              <Grid container spacing={2} sx={{ p: 2 }}>
+              <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
                 <Grid item>
                   {swInfo &&
                     (swInfo.typeId === RolesEnum.SUPER_ADMIN ||
