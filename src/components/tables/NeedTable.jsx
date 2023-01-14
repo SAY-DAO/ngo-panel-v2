@@ -464,7 +464,7 @@ const NeedTable = () => {
         if ((child && child.id > 0) || (result && result.id)) {
           console.log('fetchChildNeeds');
           dispatch(fetchChildNeeds(child.id || result.id));
-        } else if (ngo || child.id < 0) {
+        } else if (ngo || (child && child.id < 0)) {
           console.log('fetchAllNeeds');
           dispatch(fetchAllNeeds(ngo.id));
         }
@@ -484,7 +484,7 @@ const NeedTable = () => {
   // filter needs for the table
   useEffect(() => {
     let tableNeeds;
-    if (swInfo && theNeeds && child && child && child.id > 0) {
+    if (swInfo && theNeeds && child && child.id > 0) {
       console.log('table = the child needs');
       if (theNeeds && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = theNeeds.needs.filter((n) => swInfo.typeId === n.createdBy);
@@ -643,6 +643,20 @@ const NeedTable = () => {
     }
   }, [theChildId]);
 
+  const onNgoOpen = () => {
+    setOpenNgo(true);
+  };
+
+  const onNgoSet = (value) => {
+    setNgo(value);
+    setChild({
+      id: 0,
+      firstName: '',
+      lastName: '',
+      sayName: t('child.all'),
+      isConfirmed: true,
+    });
+  };
   // const handleSelectAllClick = (event) => {
   //   if (event.target.checked) {
   //     const newSelecteds = theNeeds.needs.map((n) => n.id);
@@ -720,13 +734,11 @@ const NeedTable = () => {
             id="asynchronous-ngo"
             sx={{ width: 300 }}
             open={openNgo}
-            onOpen={() => {
-              setOpenNgo(true);
-            }}
+            onOpen={() => onNgoOpen()}
             onClose={() => {
               setOpenNgo(false);
             }}
-            onChange={(e, value) => setNgo(value)}
+            onChange={(e, value) => onNgoSet(value)}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => `${option.id} - ${option.name}`}
             options={optionsNgo}
@@ -748,69 +760,74 @@ const NeedTable = () => {
             )}
           />
         </Grid>
-        <Grid item>
-          <Autocomplete
-            value={child}
-            id="asynchronous-children"
-            sx={{ width: 300 }}
-            open={open}
-            onOpen={() => {
-              setOpen(true);
-            }}
-            onClose={() => {
-              setOpen(false);
-            }}
-            onChange={(e, value) => setChild(value)}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) =>
-              option.isConfirmed && option.id > 0
-                ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
-                : !option.isConfirmed && option.id > 0
-                ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
-                : `(${option.sayName})`
-            }
-            renderOption={(props, option) => (
-              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                {option.isConfirmed ? (
-                  <>
-                    <FeatherIcon color="green" icon="check" width="18" />
-                    <Typography>
-                      {option.id > 0
-                        ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `
-                        : `(${option.sayName})`}
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <FeatherIcon color="red" icon="x" width="18" />
-                    <Typography>
-                      {option.id > 0
-                        ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `
-                        : `(${option.sayName})`}
-                    </Typography>
-                  </>
-                )}
-              </Box>
-            )}
-            options={successNgoList || swChildren ? options : []}
-            loading={loadingSw || loadinggoChildren}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t('child.title')}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
+        {child && (
+          <Grid item>
+            <Autocomplete
+              value={child}
+              id="asynchronous-children"
+              sx={{ width: 300 }}
+              open={open}
+              onOpen={() => {
+                setOpen(true);
+              }}
+              onClose={() => {
+                setOpen(false);
+              }}
+              onChange={(e, value) => setChild(value)}
+              isOptionEqualToValue={(option, value) => option && option.id === value.id}
+              getOptionLabel={(option) =>
+                option &&
+                (option.isConfirmed && option.id > 0
+                  ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
+                  : !option.isConfirmed && option.id > 0
+                  ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
+                  : `(${option.sayName})`)
+              }
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                  {option && option.isConfirmed ? (
                     <>
-                      {loadinggoChildren ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
+                      <FeatherIcon color="green" icon="check" width="18" />
+                      <Typography>
+                        {option &&
+                          (option.id > 0
+                            ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `
+                            : `(${option.sayName})`)}
+                      </Typography>
                     </>
-                  ),
-                }}
-              />
-            )}
-          />
-        </Grid>
+                  ) : (
+                    <>
+                      <FeatherIcon color="red" icon="x" width="18" />
+                      <Typography>
+                        {option &&
+                          (option.id > 0
+                            ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `
+                            : `(${option.sayName})`)}
+                      </Typography>
+                    </>
+                  )}
+                </Box>
+              )}
+              options={successNgoList || swChildren ? options : []}
+              loading={loadingSw || loadinggoChildren}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('child.title')}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loadinggoChildren ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+          </Grid>
+        )}
       </Grid>
       {loadingSw || loadingSwNeeds || loadingAllNeeds || loadingChildNeeds ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
