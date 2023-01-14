@@ -46,7 +46,7 @@ export const fetchAllNeeds = (ngoId) => async (dispatch, getState) => {
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 150,
+        'X-TAKE': 100,
       },
     };
 
@@ -74,7 +74,7 @@ export const fetchReportNeeds = (isDone, ngoId, type, status) => async (dispatch
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 150,
+        'X-TAKE': 100,
       },
     };
 
