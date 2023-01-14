@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -41,7 +41,9 @@ import { getAge, NeedTypeEnum } from '../../utils/helpers';
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
+
   const { needId, childId } = useParams();
   const { t } = useTranslation();
 
@@ -140,6 +142,12 @@ const NeedEdit = () => {
       }
     }
   }, [oneNeed]);
+
+  useEffect( () => {
+    if (successUpdateNeed) {
+      navigate(`/need/list`);
+    }
+  }, [successUpdateNeed]);
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -690,16 +698,14 @@ const NeedEdit = () => {
                 </DialogActions>
               </Dialog>
               <Grid>
-                {(successUpdateNeed || errorUpdateNeed) && (
+                {errorUpdateNeed && (
                   <Message
-                    severity={successUpdateNeed ? 'success' : 'error'}
+                    severity='error'
                     variant="filled"
                     input="addSw"
                     backError={errorUpdateNeed}
                     sx={{ width: '100%' }}
-                  >
-                    {successUpdateNeed && t('socialWorker.updated')}
-                  </Message>
+                  />
                 )}
               </Grid>
             </>

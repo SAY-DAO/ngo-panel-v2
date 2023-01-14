@@ -26,6 +26,9 @@ import {
   TextField,
   CircularProgress,
   Switch,
+  Stack,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -396,6 +399,7 @@ const NeedTable = () => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [toastOpen, setToastOpen] = useState(false);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -452,6 +456,9 @@ const NeedTable = () => {
 
   const childById = useSelector((state) => state.childById);
   const { result } = childById;
+
+  const needUpdate = useSelector((state) => state.needUpdate);
+  const { success: successUpdateNeed } = needUpdate;
 
   // fetch needs
   useEffect(() => {
@@ -643,6 +650,13 @@ const NeedTable = () => {
     }
   }, [theChildId]);
 
+  // toast
+  useEffect(() => {
+    if (successUpdateNeed) {
+      setToastOpen(true);
+    }
+  }, [successUpdateNeed]);
+
   const onNgoOpen = () => {
     setOpenNgo(true);
   };
@@ -723,6 +737,14 @@ const NeedTable = () => {
     });
     navigate(`/need/edit/${row.child_id || child.id || (result && result.id)}/${row.id}`);
   };
+
+  const handleCloseToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setToastOpen(false);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -1259,6 +1281,13 @@ const NeedTable = () => {
                 />
               </Box>
             </CardContent>
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
+                <Alert onClose={handleCloseToast} severity="success" sx={{ width: '100%' }}>
+                  {successUpdateNeed && t('socialWorker.updated')}
+                </Alert>
+              </Snackbar>
+            </Stack>
           </Card>
         )
       )}
