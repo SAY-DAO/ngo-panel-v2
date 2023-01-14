@@ -51,7 +51,7 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
-import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
+import { getAge, getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 
 const NeedAdd = () => {
@@ -461,8 +461,19 @@ const NeedAdd = () => {
                       </Badge>
                     </Grid>
                   </Card>
-                  <Card>
-                    <Typography sx={{ textAlign: 'center' }}>{result.sayName}</Typography>
+                  <Card sx={{ textAlign: 'center' }}>
+                    <Typography component="span" sx={{ textAlign: 'center' }}>
+                      {result.firstName}{' '}
+                    </Typography>
+                    <Typography component="span" sx={{ textAlign: 'center' }}>
+                      {result.lastName}
+                    </Typography>
+                    <Typography sx={{ textAlign: 'center', fontSize: 12 }}>
+                      ({result.sayName})
+                    </Typography>
+                    <Typography sx={{ textAlign: 'center', fontSize: 12 }}>
+                      {getAge(result.birthDate)} {t('child.years')}
+                    </Typography>
                   </Card>
                   <Card sx={{ p: 1 }}>
                     <Grid item xs={12}>

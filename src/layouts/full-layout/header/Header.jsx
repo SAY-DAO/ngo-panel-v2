@@ -33,7 +33,9 @@ import {
   MILESTONE_ADD,
   MILESTONE_LIST,
   NGO_LIST,
+  NEED_EDIT,
   PROFILE_VIEW,
+  NEED_ADD,
   PROVIDER_LIST,
   SW_LIST,
 } from '../../../routes/RouteConstants';
@@ -82,7 +84,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (!successSwDetails && !loadingswDetails) {
       dispatch(fetchSocialWorkerDetails());
     }
-    if (location.pathname !== PROFILE_VIEW) {
+    if (location.pathname !== PROFILE_VIEW && location.pathname !== NEED_EDIT && location.pathname !== NEED_ADD) {
       if (
         !successNgoList &&
         !loadingNgoList &&

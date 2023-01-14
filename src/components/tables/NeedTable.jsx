@@ -483,6 +483,7 @@ const NeedTable = () => {
 
   // filter needs for the table
   useEffect(() => {
+    console.log(theNeeds, needs, swNeeds);
     let tableNeeds;
     if (swInfo && theNeeds && child && child && child.id > 0) {
       console.log('table = the child needs');
@@ -621,10 +622,7 @@ const NeedTable = () => {
   useEffect(() => {
     if (swInfo && ngo) {
       // super admin & admin
-      if (
-        ( swInfo.typeId === RolesEnum.SUPER_ADMIN) ||
-        swInfo.typeId === RolesEnum.ADMIN
-      ) {
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         console.log('fetchChildrenByNgo');
         dispatch(fetchChildrenByNgo({ ngoId: ngo.id }));
       } else if (

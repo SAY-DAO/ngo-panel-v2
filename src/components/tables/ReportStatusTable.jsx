@@ -145,6 +145,13 @@ function EnhancedTableHead(props) {
       width: '200px',
     },
     {
+      id: 'informations',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.informations'),
+      width: '200px',
+    },
+    {
       id: 'ngo',
       numeric: false,
       disablePadding: false,
@@ -598,6 +605,25 @@ const ReportStatusTable = () => {
             {row.childSayName}
           </TableCell>
           {typeId === NeedTypeEnum.PRODUCT && <TableCell align="center">{row.title}</TableCell>}
+          <TableCell>
+            <Tooltip title={row.informations ? row.informations : ''} placement="top-end">
+              <Typography
+                color="textSecondary"
+                variant="body1"
+                fontWeight="400"
+                sx={{
+                  maxWidth: '400px',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  width: '160px',
+                  height: '1.2em',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {row.informations}
+              </Typography>
+            </Tooltip>
+          </TableCell>
           <TableCell align="center">{row.ngoId}</TableCell>
           <TableCell>{row.created_by_id}</TableCell>
           <TableCell align="center">
@@ -905,6 +931,7 @@ const ReportStatusTable = () => {
       childSayName: PropTypes.string,
       name: PropTypes.string,
       title: PropTypes.string,
+      informations: PropTypes.string,
       paid: PropTypes.number,
       expected_delivery_date: PropTypes.number,
       purchase_cost: PropTypes.number,

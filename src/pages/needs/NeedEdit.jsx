@@ -37,7 +37,7 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import Message from '../../components/Message';
 import { apiDao } from '../../env';
-import { NeedTypeEnum } from '../../utils/helpers';
+import { getAge, NeedTypeEnum } from '../../utils/helpers';
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
@@ -284,8 +284,19 @@ const NeedEdit = () => {
                       </Badge>
                     </Grid>
                   </Card>
-                  <Card>
-                    <Typography sx={{ textAlign: 'center' }}>{oneNeed.childSayName}</Typography>
+                  <Card sx={{ textAlign: 'center' }}>
+                    <Typography component="span" sx={{ textAlign: 'center' }}>
+                      {result.firstName}{' '}
+                    </Typography>
+                    <Typography component="span" sx={{ textAlign: 'center' }}>
+                      {result.lastName}
+                    </Typography>
+                    <Typography sx={{ textAlign: 'center', fontSize: 12 }}>
+                      ({result.sayName})
+                    </Typography>
+                    <Typography sx={{ textAlign: 'center', fontSize: 12 }}>
+                      {getAge(result.birthDate)} {t('child.years')}
+                    </Typography>
                   </Card>
                 </Grid>
                 <Grid item lg={8} md={12} xs={12}>
