@@ -628,6 +628,10 @@ const ReportStatusTable = () => {
           <TableCell align="center">
             <Box alignItems="center">
               <IconButton
+                disabled={
+                  (row.type === NeedTypeEnum.SERVICE && row.status === ServiceStatusEnum.DELIVERED) ||
+                  (row.type === NeedTypeEnum.PRODUCT && row.status === ProductStatusEnum.DELIVERED)
+                }
                 aria-label="attachment"
                 size="small"
                 onClick={() => handleStatusChange(row)}
