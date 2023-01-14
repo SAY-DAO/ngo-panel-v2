@@ -24,7 +24,7 @@ import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
 import { logout } from '../../../redux/actions/userAction';
 import { fetchSocialWorkerDetails } from '../../../redux/actions/socialWorkerAction';
-import { SW_DETAILS_RESET } from '../../../redux/constants/socialWorkerConstants';
+import { SW_DETAILS_RESET, SW_LIST_RESET } from '../../../redux/constants/socialWorkerConstants';
 import { RolesEnum } from '../../../utils/helpers';
 import {
   CHILDREN_ADD,
@@ -42,10 +42,12 @@ import { fetchNgoList } from '../../../redux/actions/ngoAction';
 import {
   ALL_NEEDS_RESET,
   ALL_REPORT_NEEDS_RESET,
+  CHILD_NEEDS_RESET,
   CHILD_ONE_NEED_RESET,
 } from '../../../redux/constants/needConstant';
 import { MY_PAGE_RESET } from '../../../redux/constants/userConstants';
 import { NGO_BY_ID_RESET, NGO_LIST_RESET } from '../../../redux/constants/ngoConstants';
+import { CHILDREN_BY_NGO_RESET, CHILD_ACTIVE_LIST_RESET, CHILD_BY_ID_RESET, CHILD_LIST_RESET } from '../../../redux/constants/childrenConstants';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -141,6 +143,12 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     dispatch({ type: ALL_REPORT_NEEDS_RESET });
     dispatch({ type: NGO_BY_ID_RESET });
     dispatch({ type: NGO_LIST_RESET });
+    dispatch({ type: CHILDREN_BY_NGO_RESET });
+    dispatch({ type: CHILD_ACTIVE_LIST_RESET });
+    dispatch({ type: CHILD_LIST_RESET });
+    dispatch({ type: SW_LIST_RESET });
+    dispatch({ type: CHILD_BY_ID_RESET });
+    dispatch({ type: CHILD_NEEDS_RESET });
     dispatch(logout());
   };
 
