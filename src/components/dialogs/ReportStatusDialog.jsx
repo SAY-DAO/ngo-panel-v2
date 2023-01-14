@@ -147,6 +147,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   };
 
   const handleDeliveredChange = (newValue) => {
+    console.log(newValue);
     setProductDelivered(newValue);
   };
 
@@ -322,8 +323,8 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                               id="productDeliveredToNgo"
                               value={productDelivered}
                               control={control}
-                              onChange={handleDeliveredChange}
                               {...register('productDeliveredToNgo', { required: true })}
+                              onChange={handleDeliveredChange}
                               renderInput={(params) => <TextField {...params} />}
                               error={!!errors.productDeliveredToNgo}
                             />
