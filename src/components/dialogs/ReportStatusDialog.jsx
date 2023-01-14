@@ -169,7 +169,6 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (NeedTypeEnum.PRODUCT) {
       values.typeId = NeedTypeEnum.PRODUCT;
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-        console.log(data);
         values.expected_delivery_date = format(new Date(data.expProductToNgo), 'yyyy-MM-dd');
         values.purchase_cost = Number(data.retailerPaid);
         values.dkc = data.retailerCode.toString();
@@ -185,6 +184,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     }
     dispatch(updateNeedStatus(values));
   };
+
   return (
     <div>
       {currentStatus && (
@@ -271,6 +271,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                               {...register('expProductToNgo', { required: true })}
                               onChange={handleExpDeliveryChange}
                               renderInput={(params) => <TextField {...params} />}
+                              error={!!errors.expProductToNgo}
                             />
                           </LocalizationProvider>
                         </Grid>
