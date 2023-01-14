@@ -46,21 +46,21 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
 
   const validationSchema = Yup.object().shape({
     expProductToNgo:
-      NeedTypeEnum.PRODUCT &&
+      need.type === NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
       Yup.string().required(t('error.report.expectedDeliveryToNgo')),
     retailerCode:
-      NeedTypeEnum.PRODUCT &&
+      need.type === NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
       Yup.string().required(t('error.report.retailerCode')),
     productDeliveredToNgo:
-      NeedTypeEnum.PRODUCT &&
+      need.type === NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.DELIVERED_TO_NGO &&
       Yup.date().required(t('error.report.deliveredToNgo')),
     bankTrackId:
-      NeedTypeEnum.SERVICE &&
+      need.type === NeedTypeEnum.SERVICE &&
       statusId === ServiceStatusEnum.MONEY_TO_NGO &&
-      Yup.date().required(t('error.report.bankTrackId')),
+      Yup.string().required(t('error.report.bankTrackId')),
   });
 
   const {
@@ -182,6 +182,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
         values.statusId = statusId;
       }
     }
+    console.log(values);
     dispatch(updateNeedStatus(values));
   };
 
@@ -352,7 +353,6 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                             control={control}
                             {...register('bankTrackId')}
                             error={!!errors.bankTrackId}
-                            helperText={errors && errors.bankTrackId && errors.bankTrackId.message}
                           />
                         </Grid>
                       </Grid>
@@ -384,38 +384,51 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
               </Grid>
             </Card>
           </DialogContent>
-
           <DialogActions>
             <LoadingButton
               loading={loadingAStatusUpdate}
               color="primary"
               type="submit"
               variant="outlined"
-              sx={{ mt: 4 }}
               disabled={!statusId}
               onClick={handleSubmit(onSubmit)}
             >
               {t('button.update')}
             </LoadingButton>
-            <LoadingButton
-              variant="outlined"
-              color="secondary"
-              type="submit"
-              sx={{ mt: 4 }}
-              onClick={handleClose}
-            >
+            <LoadingButton variant="outlined" color="secondary" type="submit" onClick={handleClose}>
               {t('button.cancel')}
             </LoadingButton>
           </DialogActions>
-          {errors && errors.expProductToNgo && (
-            <ul>
+          <ul>
+            {errors && errors.expProductToNgo && (
+              <li>
+                <Typography color="error" variant="span">
+                  {errors && errors.retailerCode?.message}
+                </Typography>
+              </li>
+            )}
+            {errors && errors.productDeliveredToNgo && (
+              <li>
+                <Typography color="error" variant="span">
+                  {errors && errors.productDeliveredToNgo?.message}
+                </Typography>
+              </li>
+            )}
+            {errors && errors.expProductToNgo && (
               <li>
                 <Typography color="error" variant="span">
                   {errors && errors.expProductToNgo?.message}
                 </Typography>
               </li>
-            </ul>
-          )}
+            )}
+            {errors && errors.bankTrackId && (
+              <li>
+                <Typography color="error" variant="span">
+                  {errors && errors.bankTrackId?.message}
+                </Typography>
+              </li>
+            )}
+          </ul>
         </Dialog>
       )}
     </div>

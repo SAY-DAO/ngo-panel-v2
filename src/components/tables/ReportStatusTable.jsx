@@ -1106,12 +1106,14 @@ const ReportStatusTable = () => {
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert
-            onClose={handleCloseToast}
             variant="filled"
+            onClose={handleCloseToast}
             severity={errorStatusUpdate ? 'error' : 'success'}
             sx={{ width: '100%' }}
           >
-            {successStatusUpdate}
+            {(errorOneNeed && errorOneNeed) ||
+              (errorStatusUpdate && errorStatusUpdate) ||
+              (successStatusUpdate && t('socialWorker.updated'))}
           </Alert>
         </Snackbar>
       </Stack>
