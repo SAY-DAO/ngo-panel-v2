@@ -22,6 +22,9 @@ import {
   ALL_NEEDS_REQUEST,
   ALL_NEEDS_SUCCESS,
   ALL_NEEDS_FAIL,
+  ALL_REPORT_NEEDS_REQUEST,
+  ALL_REPORT_NEEDS_SUCCESS,
+  ALL_REPORT_NEEDS_FAIL,
   UPDATE_NEED_CONFIRM_SUCCESS,
   UPDATE_NEED_CONFIRM_FAIL,
   UPDATE_NEED_CONFIRM_REQUEST,
@@ -34,6 +37,7 @@ import {
   UPDATE_NEED_STATUS_FAIL,
   UPDATE_NEED_STATUS_RESET,
   ALL_NEEDS_RESET,
+  ALL_REPORT_NEEDS_RESET,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -45,6 +49,21 @@ export const allNeedsReducer = (state = {}, action) => {
     case ALL_NEEDS_FAIL:
       return { loading: false, error: action.payload };
     case ALL_NEEDS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const allReportNeedsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ALL_REPORT_NEEDS_REQUEST:
+      return { loading: true, success: false };
+    case ALL_REPORT_NEEDS_SUCCESS:
+      return { loading: false, success: true, needs: action.payload };
+    case ALL_REPORT_NEEDS_FAIL:
+      return { loading: false, error: action.payload };
+    case ALL_REPORT_NEEDS_RESET:
       return {};
     default:
       return state;

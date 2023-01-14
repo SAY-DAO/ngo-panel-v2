@@ -39,7 +39,7 @@ import { LoadingButton } from '@mui/lab';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { fetchAllNeeds } from '../../redux/actions/needsAction';
+import { fetchReportNeeds } from '../../redux/actions/needsAction';
 import convertor from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
@@ -83,8 +83,6 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-  console.log(array);
-
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -370,8 +368,8 @@ const ReportStatusTable = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const allNeeds = useSelector((state) => state.allNeeds);
-  const { needs, loading: loadingAllNeeds } = allNeeds;
+  const allReportNeeds = useSelector((state) => state.allReportNeeds);
+  const { needs, loading: loadingAllReportNeeds } = allReportNeeds;
 
   const serverOneNeed = useSelector((state) => state.serverOneNeed);
   const { loading: loadingOneNeed, error: errorOneNeed } = serverOneNeed;
@@ -456,21 +454,21 @@ const ReportStatusTable = () => {
 
   // fetch needs
   useEffect(() => {
-    if (swInfo && !loadingAllNeeds) {
+    if (swInfo && !loadingAllReportNeeds) {
       if (successNgoList) {
         // super admin & admin
         if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
           if (ngoId) {
-            dispatch(fetchAllNeeds(true, ngoId, typeId, statusId));
+            dispatch(fetchReportNeeds(true, ngoId, typeId, statusId));
           } else {
-            dispatch(fetchAllNeeds(true, null, typeId, statusId));
+            dispatch(fetchReportNeeds(true, null, typeId, statusId));
           }
         }
       } else if (
         swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
-        dispatch(fetchAllNeeds(true, swInfo.ngoId, typeId, statusId));
+        dispatch(fetchReportNeeds(true, swInfo.ngoId, typeId, statusId));
       }
     }
   }, [ngoId, typeId, statusId, swInfo, successNgoList, successStatusUpdate]);
@@ -1041,7 +1039,7 @@ const ReportStatusTable = () => {
         </Grid>
       )}
 
-      {loadingAllNeeds || loadingNgoList ? (
+      {loadingAllReportNeeds || loadingNgoList ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>

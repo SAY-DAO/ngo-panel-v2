@@ -30,6 +30,7 @@ import {
 import { userLoginReducer, myPageReducer } from './userReducer';
 import {
   allNeedsReducer,
+  allReportNeedsReducer,
   childNeedsReducer,
   childOneNeedReducer,
   exampleNeedsReducer,
@@ -69,6 +70,7 @@ export default combineReducers({
   swOneMigrate: swMigrateOneReducer,
   swNeedList: swNeedListReducer,
   allNeeds: allNeedsReducer,
+  allReportNeeds: allReportNeedsReducer,
   childExampleNeeds: exampleNeedsReducer,
   childNeeds: childNeedsReducer,
   childOneNeed: childOneNeedReducer,

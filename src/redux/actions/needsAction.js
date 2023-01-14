@@ -28,12 +28,15 @@ import {
   ALL_NEEDS_REQUEST,
   ALL_NEEDS_SUCCESS,
   ALL_NEEDS_FAIL,
+  ALL_REPORT_NEEDS_REQUEST,
+  ALL_REPORT_NEEDS_SUCCESS,
+  ALL_REPORT_NEEDS_FAIL,
   DELETE_NEED_REQUEST,
   DELETE_NEED_SUCCESS,
   DELETE_NEED_FAIL,
 } from '../constants/needConstant';
 
-export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, getState) => {
+export const fetchAllNeeds = (ngoId) => async (dispatch, getState) => {
   try {
     dispatch({ type: ALL_NEEDS_REQUEST });
     const {
@@ -47,11 +50,37 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
       },
     };
 
+    const { data } = await publicApi.get(`/needs?ngoId=${ngoId}&isChildConfirmed=true`, config);
+
+    dispatch({
+      type: ALL_NEEDS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: ALL_NEEDS_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const fetchReportNeeds = (isDone, ngoId, type, status) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ALL_REPORT_NEEDS_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        'X-TAKE': 150,
+      },
+    };
+
     let response;
-    if (!isDone && !type && !status) {
-      // - need list page
-      response = await publicApi.get(`/needs?ngoId=${ngoId}&isChildConfirmed=true`, config);
-    } else if (!ngoId && isDone && status) {
+
+    if (!ngoId && isDone && status) {
       // to get all ngos done need - reports page
       response = await publicApi.get(
         `/needs?isDone=${isDone}&type=${type}&status=${status}`,
@@ -66,12 +95,12 @@ export const fetchAllNeeds = (isDone, ngoId, type, status) => async (dispatch, g
     }
 
     dispatch({
-      type: ALL_NEEDS_SUCCESS,
+      type: ALL_REPORT_NEEDS_SUCCESS,
       payload: response.data,
     });
   } catch (e) {
     dispatch({
-      type: ALL_NEEDS_FAIL,
+      type: ALL_REPORT_NEEDS_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }

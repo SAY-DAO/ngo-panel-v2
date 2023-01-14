@@ -466,7 +466,7 @@ const NeedTable = () => {
           dispatch(fetchChildNeeds(child.id || result.id));
         } else if (ngo || child.id < 0) {
           console.log('fetchAllNeeds');
-          dispatch(fetchAllNeeds(null, ngo.id, null, null));
+          dispatch(fetchAllNeeds(ngo.id));
         }
       }
       if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
@@ -486,11 +486,11 @@ const NeedTable = () => {
     let tableNeeds;
     if (swInfo && theNeeds && child && child && child.id > 0) {
       console.log('table = the child needs');
-      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+      if (theNeeds && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = theNeeds.needs.filter((n) => swInfo.typeId === n.createdBy);
         setTheTableNeeds(tableNeeds);
       } else if (
-        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
+        (theNeeds && swInfo.typeId === RolesEnum.SUPER_ADMIN) ||
         swInfo.typeId === RolesEnum.ADMIN ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
@@ -498,6 +498,8 @@ const NeedTable = () => {
         setTheTableNeeds(tableNeeds);
       }
     } else if (swInfo && needs && child && child.id === 0) {
+      console.log('table = all needs');
+      console.log(needs);
       console.log('table = all needs');
       if (
         swInfo.typeId === RolesEnum.SUPER_ADMIN ||
