@@ -483,7 +483,6 @@ const NeedTable = () => {
 
   // filter needs for the table
   useEffect(() => {
-    console.log(theNeeds, needs, swNeeds);
     let tableNeeds;
     if (swInfo && theNeeds && child && child && child.id > 0) {
       console.log('table = the child needs');
