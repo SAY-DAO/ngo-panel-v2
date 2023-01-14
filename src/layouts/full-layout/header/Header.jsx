@@ -39,6 +39,13 @@ import {
   SW_LIST,
 } from '../../../routes/RouteConstants';
 import { fetchNgoList } from '../../../redux/actions/ngoAction';
+import {
+  ALL_NEEDS_RESET,
+  ALL_REPORT_NEEDS_RESET,
+  CHILD_ONE_NEED_RESET,
+} from '../../../redux/constants/needConstant';
+import { MY_PAGE_RESET } from '../../../redux/constants/userConstants';
+import { NGO_BY_ID_RESET, NGO_LIST_RESET } from '../../../redux/constants/ngoConstants';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -128,6 +135,12 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const handleLogOut = () => {
     dispatch({ type: SW_DETAILS_RESET });
+    dispatch({ type: CHILD_ONE_NEED_RESET });
+    dispatch({ type: ALL_NEEDS_RESET });
+    dispatch({ type: MY_PAGE_RESET });
+    dispatch({ type: ALL_REPORT_NEEDS_RESET });
+    dispatch({ type: NGO_BY_ID_RESET });
+    dispatch({ type: NGO_LIST_RESET });
     dispatch(logout());
   };
 
