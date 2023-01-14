@@ -147,7 +147,6 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   };
 
   const handleDeliveredChange = (newValue) => {
-    console.log(newValue);
     setProductDelivered(newValue);
   };
 
@@ -155,7 +154,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     console.log(JSON.stringify(data, null, 2));
     const values = {};
     values.needId = need.id;
-    if (NeedTypeEnum.SERVICE) {
+    if (need.type === NeedTypeEnum.SERVICE) {
       values.typeId = NeedTypeEnum.SERVICE;
       if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
         values.bank_track_id = data.bankTrackId.toString();
@@ -166,7 +165,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
         values.statusId = statusId;
       }
     }
-    if (NeedTypeEnum.PRODUCT) {
+    if (need.type === NeedTypeEnum.PRODUCT) {
       values.typeId = NeedTypeEnum.PRODUCT;
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
         values.expected_delivery_date = format(new Date(data.expProductToNgo), 'yyyy-MM-dd');
@@ -182,7 +181,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
         values.statusId = statusId;
       }
     }
-    console.log(values);
+
     dispatch(updateNeedStatus(values));
   };
 
