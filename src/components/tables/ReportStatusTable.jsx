@@ -362,7 +362,7 @@ const ReportStatusTable = () => {
   const [orderBy, setOrderBy] = useState('updated');
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [toastOpen, setToastOpen] = useState(false);
 
   const swDetails = useSelector((state) => state.swDetails);
