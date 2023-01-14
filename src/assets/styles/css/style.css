@@ -2,7 +2,7 @@
 /* Works on Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: blue transparent;
+  scrollbar-color: rgb(101, 101, 187) transparent;
 }
 
 /* Works on Chrome, Edge, and Safari */

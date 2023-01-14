@@ -513,7 +513,6 @@ const ReportStatusTable = () => {
   const handleStatusChange = (row) => {
     setStatusDialog(true);
     setStatusNeed(row);
-    setToastOpen(true);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -931,7 +930,7 @@ const ReportStatusTable = () => {
       title: PropTypes.string,
       informations: PropTypes.string,
       paid: PropTypes.number,
-      expected_delivery_date: PropTypes.number,
+      expected_delivery_date: PropTypes.string,
       purchase_cost: PropTypes.number,
       status: PropTypes.number,
       type: PropTypes.number,
@@ -1108,10 +1107,11 @@ const ReportStatusTable = () => {
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert
             onClose={handleCloseToast}
+            variant="filled"
             severity={errorStatusUpdate ? 'error' : 'success'}
             sx={{ width: '100%' }}
           >
-            {errorOneNeed || errorStatusUpdate || successStatusUpdate}
+            {successStatusUpdate}
           </Alert>
         </Snackbar>
       </Stack>

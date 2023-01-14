@@ -323,6 +323,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                               value={productDelivered}
                               control={control}
                               onChange={handleDeliveredChange}
+                              {...register('productDeliveredToNgo', { required: true })}
                               renderInput={(params) => <TextField {...params} />}
                               error={!!errors.productDeliveredToNgo}
                             />
