@@ -461,25 +461,25 @@ const NeedTable = () => {
         swInfo.typeId === RolesEnum.ADMIN ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
-        if ((child && child.id > 0) || (result && result.id)) {
+        if (child && child.id > 0) {
           console.log('fetchChildNeeds');
-          dispatch(fetchChildNeeds(child.id || result.id));
+          dispatch(fetchChildNeeds(child.id));
         } else if (ngo || (child && child.id < 0)) {
           console.log('fetchAllNeeds');
           dispatch(fetchAllNeeds(ngo.id));
         }
       }
       if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
-        if ((child && child.id > 0) || (result && result.id)) {
+        if (child && child.id > 0) {
           console.log('fetchChildNeeds');
-          dispatch(fetchChildNeeds(child.id || result.id));
+          dispatch(fetchChildNeeds(child.id));
         } else {
           dispatch(fetchSwNeedList());
           console.log('fetchSwNeedList');
         }
       }
     }
-  }, [swInfo, child, result, confirmed, deleted, ngo]);
+  }, [swInfo, child, confirmed, deleted, ngo]);
 
   // filter needs for the table
   useEffect(() => {
@@ -713,6 +713,14 @@ const NeedTable = () => {
 
   const handleEdit = (row) => {
     dispatch({ type: SW_BY_ID_RESET });
+    // refreson need edit and back to list
+    setChild({
+      id: 0,
+      firstName: '',
+      lastName: '',
+      sayName: t('child.all'),
+      isConfirmed: true,
+    });
     navigate(`/need/edit/${row.child_id || child.id || (result && result.id)}/${row.id}`);
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;
