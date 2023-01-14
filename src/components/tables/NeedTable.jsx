@@ -730,7 +730,7 @@ const NeedTable = () => {
     dispatch({ type: SW_BY_ID_RESET });
     dispatch({ type: UPDATE_ONE_NEED_RESET });
 
-    // refreson need edit and back to list
+    // refresh need edit and back to list
     setChild({
       id: 0,
       firstName: '',
@@ -1286,7 +1286,7 @@ const NeedTable = () => {
             </CardContent>
             <Stack spacing={2} sx={{ width: '100%' }}>
               <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
-                <Alert onClose={handleCloseToast} severity="success" sx={{ width: '100%' }}>
+                <Alert onClose={handleCloseToast} variant="filled" severity="success" sx={{ width: '100%' }}>
                   {successUpdateNeed && t('socialWorker.updated')}
                 </Alert>
               </Snackbar>
