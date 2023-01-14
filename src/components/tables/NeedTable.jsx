@@ -53,6 +53,7 @@ import {
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
+import { UPDATE_ONE_NEED_RESET } from '../../redux/constants/needConstant';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -727,6 +728,7 @@ const NeedTable = () => {
 
   const handleEdit = (row) => {
     dispatch({ type: SW_BY_ID_RESET });
+    dispatch({ type: UPDATE_ONE_NEED_RESET });
     // refreson need edit and back to list
     setChild({
       id: 0,
