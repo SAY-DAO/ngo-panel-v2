@@ -168,13 +168,13 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (need.type === NeedTypeEnum.PRODUCT) {
       values.typeId = NeedTypeEnum.PRODUCT;
       if (statusId === ProductStatusEnum.PURCHASED_PRODUCT) {
-        values.expected_delivery_date = format(new Date(data.expProductToNgo), 'yyyy-MM-dd');
+        values.expected_delivery_date = format(new Date(productExpDelivery), 'yyyy-MM-dd');
         values.purchase_cost = Number(data.retailerPaid);
         values.dkc = data.retailerCode.toString();
         values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
-        values.ngo_delivery_date = format(new Date(data.productDeliveredToNgo), 'yyyy-MM-dd');
+        values.ngo_delivery_date = format(new Date(productDelivered), 'yyyy-MM-dd');
         values.statusId = statusId;
       }
       if (statusId === ProductStatusEnum.DELIVERED) {
@@ -399,7 +399,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
             </LoadingButton>
           </DialogActions>
           <ul>
-            {errors && errors.expProductToNgo && (
+            {errors && errors.retailerCode && (
               <li>
                 <Typography color="error" variant="span">
                   {errors && errors.retailerCode?.message}

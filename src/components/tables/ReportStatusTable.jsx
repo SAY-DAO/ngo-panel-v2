@@ -533,7 +533,6 @@ const ReportStatusTable = () => {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
-    console.log(accOpen);
     // set type name for status dialogue
     // useEffect(() => {
     //   if (statusDialog && row && needs.needs) {
