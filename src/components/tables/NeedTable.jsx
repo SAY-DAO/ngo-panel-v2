@@ -433,6 +433,9 @@ const NeedTable = () => {
   const [optionsNgo, setOptionsNgo] = useState([]);
   const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
 
+  const CustomizerReducer = useSelector((state) => state.CustomizerReducer);
+  const { activeDir } = CustomizerReducer;
+
   const childNeeds = useSelector((state) => state.childNeeds);
   const { theNeeds, loading: loadingChildNeeds, success: successChildNeeds } = childNeeds;
 
@@ -1195,7 +1198,9 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.created}
+                                    {activeDir === 'rtl'
+                                      ? new Date(row.created).toLocaleDateString('fa-IR')
+                                      : row.created}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1213,7 +1218,9 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.confirmDate}
+                                    {activeDir === 'rtl'
+                                      ? new Date(row.confirmDate).toLocaleDateString('fa-IR')
+                                      : row.confirmDate}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1222,7 +1229,9 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.updated}
+                                    {activeDir === 'rtl'
+                                      ? new Date(row.updated).toLocaleDateString('fa-IR')
+                                      : row.updated}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1231,7 +1240,9 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.doneAt}
+                                    {activeDir === 'rtl'
+                                      ? new Date(row.doneAt).toLocaleDateString('fa-IR')
+                                      : row.doneAt}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1249,7 +1260,11 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {row.child_delivery_date}
+                                    {activeDir === 'rtl'
+                                      ? new Date(row.child_delivery_date).toLocaleDateString(
+                                          'fa-IR',
+                                        )
+                                      : row.child_delivery_date}
                                   </Typography>
                                 </TableCell>
                               </TableRow>
@@ -1286,7 +1301,12 @@ const NeedTable = () => {
             </CardContent>
             <Stack spacing={2} sx={{ width: '100%' }}>
               <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
-                <Alert onClose={handleCloseToast} variant="filled" severity="success" sx={{ width: '100%' }}>
+                <Alert
+                  onClose={handleCloseToast}
+                  variant="filled"
+                  severity="success"
+                  sx={{ width: '100%' }}
+                >
                   {successUpdateNeed && t('socialWorker.updated')}
                 </Alert>
               </Snackbar>

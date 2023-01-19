@@ -368,6 +368,9 @@ const ReportStatusTable = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
+  const CustomizerReducer = useSelector((state) => state.CustomizerReducer);
+  const { activeDir } = CustomizerReducer;
+
   const allReportNeeds = useSelector((state) => state.allReportNeeds);
   const { needs, loading: loadingAllReportNeeds } = allReportNeeds;
 
@@ -628,7 +631,8 @@ const ReportStatusTable = () => {
             <Box alignItems="center">
               <IconButton
                 disabled={
-                  (row.type === NeedTypeEnum.SERVICE && row.status === ServiceStatusEnum.DELIVERED) ||
+                  (row.type === NeedTypeEnum.SERVICE &&
+                    row.status === ServiceStatusEnum.DELIVERED) ||
                   (row.type === NeedTypeEnum.PRODUCT && row.status === ProductStatusEnum.DELIVERED)
                 }
                 aria-label="attachment"
@@ -708,7 +712,9 @@ const ReportStatusTable = () => {
           <TableCell align="center">
             <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
               {NeedTypeEnum.PRODUCT && row.status > ProductStatusEnum.COMPLETE_PAY
-                ? row.expected_delivery_date
+                ? activeDir === 'rtl'
+                  ? new Date(row.expected_delivery_date).toLocaleDateString('fa-IR')
+                  : row.expected_delivery_date
                 : '-'}
             </Typography>
           </TableCell>
@@ -750,7 +756,9 @@ const ReportStatusTable = () => {
                         {t('need.confirmDate')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {row.confirmDate}
+                        {activeDir === 'rtl'
+                          ? new Date(row.confirmDate).toLocaleDateString('fa-IR')
+                          : row.confirmDate}
                       </TableCell>
                       <TableCell align="right">-</TableCell>
                     </TableRow>
@@ -759,7 +767,9 @@ const ReportStatusTable = () => {
                         {t('need.created')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {row.created}
+                        {activeDir === 'rtl'
+                          ? new Date(row.created).toLocaleDateString('fa-IR')
+                          : row.created}
                       </TableCell>
                       <TableCell align="right"> - </TableCell>
                     </TableRow>
@@ -768,7 +778,9 @@ const ReportStatusTable = () => {
                         {t('need.updated')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {row.updated}
+                        {activeDir === 'rtl'
+                          ? new Date(row.updated).toLocaleDateString('fa-IR')
+                          : row.updated}
                       </TableCell>
                       <TableCell align="right">-</TableCell>
                     </TableRow>
@@ -778,7 +790,9 @@ const ReportStatusTable = () => {
                         {t('need.needStatus.2')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {row.doneAt}
+                        {activeDir === 'rtl'
+                          ? new Date(row.doneAt).toLocaleDateString('fa-IR')
+                          : row.doneAt}
                       </TableCell>
                       <TableCell align="right">
                         {row.payments && row.payments[0] && (
@@ -842,7 +856,11 @@ const ReportStatusTable = () => {
                       </TableCell>
                       <TableCell component="th" scope="row">
                         {typeId === NeedTypeEnum.PRODUCT
-                          ? row.purchase_date
+                          ? activeDir === 'rtl'
+                            ? new Date(row.purchase_date).toLocaleDateString('fa-IR')
+                            : row.purchase_date
+                          : activeDir === 'rtl'
+                          ? new Date(row.ngo_delivery_date).toLocaleDateString('fa-IR')
                           : row.ngo_delivery_date}
                       </TableCell>
                       <TableCell align="right">
@@ -865,7 +883,11 @@ const ReportStatusTable = () => {
                       </TableCell>
                       <TableCell component="th" scope="row">
                         {typeId === NeedTypeEnum.PRODUCT
-                          ? row.ngo_delivery_date
+                          ? activeDir === 'rtl'
+                            ? new Date(row.ngo_delivery_date).toLocaleDateString('fa-IR')
+                            : row.ngo_delivery_date
+                          : activeDir === 'rtl'
+                          ? new Date(row.child_delivery_date).toLocaleDateString('fa-IR')
                           : row.child_delivery_date}
                       </TableCell>
                       <TableCell align="right">
@@ -885,7 +907,9 @@ const ReportStatusTable = () => {
                           {t('need.needStatus.p5')}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {row.child_delivery_date}
+                          {activeDir === 'rtl'
+                            ? new Date(row.child_delivery_date).toLocaleDateString('fa-IR')
+                            : row.child_delivery_date}
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {statusId > 4 && <ReportImage row={row} statusId={statusId} />}

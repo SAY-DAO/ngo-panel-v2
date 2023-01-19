@@ -83,7 +83,8 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    {' '}({pageDetails.needs[0].length})
+                    {' '}
+                    ({pageDetails.needs[0].length})
                   </Typography>
                 )}
               </Grid>

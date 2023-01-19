@@ -40,6 +40,9 @@ const CoverCard = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const myPage = useSelector((state) => state.myPage);
+  const { pageDetails, success: successProfile } = myPage;
+
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
 
@@ -73,6 +76,7 @@ const CoverCard = ({
   const handleChange = (event) => {
     setTake(event.target.value);
   };
+
   return (
     <Card
       sx={{
@@ -80,6 +84,65 @@ const CoverCard = ({
       }}
     >
       <img srcSet={`${cover} 1x, ${cover} 2x`} alt={cover} width="100%" />
+
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '20px',
+            right: '20px',
+            color: 'white',
+            paddingLeft: '10px',
+            paddingRight: '20px',
+            borderRadius: 1,
+            backgroundColor: (theme) => theme.palette.background.default,
+            opacity: '50%',
+            '&:hover': {
+              backgroundColor: (theme) => theme.palette.background.default,
+              opacity: [0.9, 0.8, 0.7],
+            },
+          }}
+        >
+          {swNewDetails.typeId === RolesEnum.ADMIN ||
+          swNewDetails.typeId === RolesEnum.SUPER_ADMIN ? (
+            <Typography>
+              <strong>{t('myPage.countJobs.titleConfirmed')}</strong>
+            </Typography>
+          ) : (
+            <Typography>
+              <strong>{t('myPage.countJobs.titleCreated')}</strong>
+            </Typography>
+          )}
+
+          {!successProfile ? (
+            <CircularProgress size={15} />
+          ) : (
+            <Typography>
+              {t('myPage.countJobs.count.first')}: {pageDetails.timeLine.inTwoDays}
+            </Typography>
+          )}
+          {!successProfile ? (
+            <CircularProgress size={15} />
+          ) : (
+            <Typography>
+              {t('myPage.countJobs.count.second')}: {pageDetails.timeLine.inWeek}
+            </Typography>
+          )}
+          {!successProfile ? (
+            <CircularProgress size={15} />
+          ) : (
+            <Typography>
+              {t('myPage.countJobs.count.third')}: {pageDetails.timeLine.inMonth}
+            </Typography>
+          )}
+        </Box>
+      </Grid>
+
       <CardContent
         sx={{
           pt: '24px',
@@ -427,9 +490,9 @@ const CoverCard = ({
                       onChange={handleChange}
                       size="small"
                     >
-                      <MenuItem value={10}>{t('myPage.countRecent.count.ten')}</MenuItem>
-                      <MenuItem value={50}>{t('myPage.countRecent.count.fifty')}</MenuItem>
-                      <MenuItem value={100}>{t('myPage.countRecent.count.hundred')}</MenuItem>
+                      <MenuItem value={100}>{t('myPage.countRecent.count.first')}</MenuItem>
+                      <MenuItem value={250}>{t('myPage.countRecent.count.second')}</MenuItem>
+                      <MenuItem value={500}>{t('myPage.countRecent.count.third')}</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

@@ -32,7 +32,7 @@
     "phoneExists": "شماره تلفن وارد شده تکراری است",
     "emailExists": "نشانی ایمیل وارد شده تکراری است",
     "wrongUserOrPass": "نام کاربری یا گذرواژه اشتباه است",
-    "codeRequired": "برای ادامه استفاده از کد تایید ضروری است",
+    "codeRequired": "برای ادامه استفاده از کد تائید ضروری است",
     "wrongCode": "کد وارد شده معتبر نیست",
     "codeExpired": "کد وارد شده دیگر معتبر نیست",
     "invalidNeed": "یکی از نیازها موجود نیست",
@@ -66,7 +66,7 @@
     "skip": "می‌دانم",
     "register": "ثبت نام",
     "login": "ورود",
-    "confirm": "تایید",
+    "confirm": "تائید",
     "submit": "ارسال کد",
     "understand": "فهمیدم",
     "save": "ثبت",
@@ -358,7 +358,7 @@
     "pie": {
       "ok": "خوب",
       "unpayable": "غیر قابل پرداخت",
-      "unconfirmed": "تایید نشده"
+      "unconfirmed": "تائید نشده"
     },
     "id": "آی‌دی",
     "titleEdit": "ویرایش نیاز",
@@ -416,9 +416,9 @@
       "product": "عکس از فروشگاه"
     },
     "created": "زمان ایجاد",
-    "isConfirmed": "وضعیت تایید",
-    "confirmUser": "تایید کننده",
-    "confirmDate": "زمان تایید",
+    "isConfirmed": "وضعیت تائید",
+    "confirmUser": "تائید کننده",
+    "confirmDate": "زمان تائید",
     "updated": "زمان آخرین ویرایش",
     "doneAt": "زمان اتمام",
     "child_delivery_date": "زمان انتقال به کودک",
@@ -487,7 +487,7 @@
     "title": "کودک",
     "all": "تمام کودکان",
     "id": "آی‌دی",
-    "isConfirmed": "وضعیت تایید",
+    "isConfirmed": "وضعیت تائید",
     "existence_status": "وضعیت کودک",
     "isDeleted": "وضعیت حذف",
     "status": "وضعیت",
@@ -562,8 +562,8 @@
       "twelveGrade": "سال دوازدهم",
       "thirteenGrade": "سال سیزدهم"
     },
-    "confirmUser": "تایید کننده",
-    "confirmDate": "تاریخ تایید",
+    "confirmUser": "تائید کننده",
+    "confirmDate": "تاریخ تائید",
     "done_needs_count": "تعداد نیازهای انجام شده",
     "familyCount": "تعداد خانوار",
     "generatedCode": "کد کودک",
@@ -608,16 +608,25 @@
     "countRecent": {
       "title": "نمایش آخرین نیازها",
       "count": {
-        "ten": "ده تا",
-        "fifty": "پنجاه تا",
-        "hundred": "صد تا"
+        "first": "صد تا",
+        "second": "دویست و پنجاه تا",
+        "third": "پانصد تا"
+      }
+    },
+    "countJobs": {
+      "titleCreated": "اضافه شده",
+      "titleConfirmed": "تائید شده",
+      "count": {
+        "first": "در 48 ساعت",
+        "second": "در یک هفته",
+        "third": "در یک ماه"
       }
     },
     "signed": "امضا",
     "myChildren": "کودکان من",
     "allChildren": "تمام کودکان",
     "createdNeeds": "نیازهای اضافه شده",
-    "confirmedNeeds": "نیازهای تایید شده",
+    "confirmedNeeds": "نیازهای تائید شده",
     "taskManager": {
       "title": {
         "notPaid": "پرداخت نشده",

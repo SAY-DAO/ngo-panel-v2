@@ -568,9 +568,18 @@
     "countRecent": {
       "title": "Display Recent Needs",
       "count": {
-        "ten": "Ten",
-        "fifty": "Fifty",
-        "hundred": "Hundred"
+        "first": "Hundred",
+        "second": "Two Hundred Fifty",
+        "third": "Five Hundred"
+      }
+    },
+    "countJobs": {
+      "titleCreated": "Created",
+      "titleConfirmed": "Condiremd",
+      "count": {
+        "first": "In 48 hrs",
+        "second": "In a week",
+        "third": "In a month"
       }
     },
     "signed": "Signed",
@@ -598,8 +607,8 @@
         "paid": "Paid at",
         "ngoDelivery": "Delivered NGO",
         "childDelivery": "Delivered Child",
-        "daysAgo":"days ago",
-        "days":"days"
+        "daysAgo": "days ago",
+        "days": "days"
       },
       "menu": {
         "updateChild": "Edit Child",
