@@ -18,6 +18,7 @@ import {
   swAddReducer,
   swMigrateReducer,
   swMigrateOneReducer,
+  swDeleteReducer,
 } from './socialWorkerReducer';
 import {
   childActiveListReducer,
@@ -69,6 +70,7 @@ export default combineReducers({
   swMigrate: swMigrateReducer,
   swOneMigrate: swMigrateOneReducer,
   swNeedList: swNeedListReducer,
+  swDelete: swDeleteReducer,
   allNeeds: allNeedsReducer,
   allReportNeeds: allReportNeedsReducer,
   childExampleNeeds: exampleNeedsReducer,

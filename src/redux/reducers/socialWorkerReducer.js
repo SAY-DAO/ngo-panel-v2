@@ -31,8 +31,10 @@ import {
   MIGRATE_ONE_CHILD_SUCCESS,
   MIGRATE_ONE_CHILD_FAIL,
   MIGRATE_ONE_CHILD_RESET,
+  DELETE_SW_REQUEST,
+  DELETE_SW_SUCCESS,
+  DELETE_SW_FAIL,
 } from '../constants/socialWorkerConstants';
-
 
 export const swDetailsReducer = (state = { success: false }, action) => {
   switch (action.type) {
@@ -148,6 +150,19 @@ export const swAddReducer = (state = { success: false }, action) => {
     case ADD_SW_SUCCESS:
       return { loading: false, success: true, added: action.payload };
     case ADD_SW_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const swDeleteReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case DELETE_SW_REQUEST:
+      return { loading: true };
+    case DELETE_SW_SUCCESS:
+      return { loading: false, success: true, deleted: action.payload };
+    case DELETE_SW_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

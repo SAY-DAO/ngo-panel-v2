@@ -1,4 +1,4 @@
-import {  publicApi } from '../../apis/sayBase';
+import { publicApi } from '../../apis/sayBase';
 import {
   SW_DETAILS_REQUEST,
   SW_LIST_REQUEST,
@@ -27,6 +27,9 @@ import {
   MIGRATE_ONE_CHILD_REQUEST,
   MIGRATE_ONE_CHILD_SUCCESS,
   MIGRATE_ONE_CHILD_FAIL,
+  DELETE_SW_REQUEST,
+  DELETE_SW_SUCCESS,
+  DELETE_SW_FAIL,
 } from '../constants/socialWorkerConstants';
 
 export const fetchSocialWorkerDetails = () => async (dispatch, getState) => {
@@ -404,6 +407,33 @@ export const AddSw = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_SW_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const deleteNgo = (swId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_SW_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const { data } = await publicApi.delete(`/socialworkers/${swId}`, {}, config);
+    dispatch({
+      type: DELETE_SW_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_SW_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
