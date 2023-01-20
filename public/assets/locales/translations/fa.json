@@ -114,6 +114,8 @@
     "add": "اضافه کردن",
     "childEdit": "ویرایس کودک",
     "childrenList": "لیست کودکان",
+    "swList": "لیست مددکاران",
+    "swEdit": "ویرایش مددکار",
     "needEdit": "ویرایس نیاز",
     "needsList": "لیست نیازها",
     "ngoEdit": "ویرایس کودک",
@@ -268,37 +270,37 @@
       "from": "از",
       "to": "به"
     },
-    "migrated": "Successfully Migrated!",
-    "titleEdit": "Edit Details",
-    "titleAdd": "Add Details",
-    "generatedCode": "Code",
-    "name": "First Name",
-    "lastName": "Last Name",
-    "nameAndEmail": "Name & Email",
-    "userName": "User Name",
-    "avatarUrl": "Avatar",
-    "typeName": "Type",
-    "ngoName": "NGO",
-    "idNumber": "ID Number",
-    "idCardUrl": "ID Image",
-    "country": "Country",
-    "city": "City",
-    "typeId": "User Permission",
-    "birthDate": "Birthday",
-    "phoneNumber": "Phone Number",
-    "emergencyPhoneNumber": "Urgent Phone",
-    "email": "Email",
-    "telegramId": "Telegram ID",
-    "postalAddress": "Address",
-    "childCount": "Children Count",
-    "needCount": "Needs Count",
-    "lastLoginDate": "Last Log",
+    "migrated": "!انتقال موفق بود",
+    "titleEdit": "ویرایش جزئیات",
+    "titleAdd": "اضافه کردن جزئیات",
+    "generatedCode": "کد ساخته شده",
+    "firstName": "اسم",
+    "lastName": "فامیل",
+    "nameAndEmail": "نام و ایمیل",
+    "userName": "نام کاربری",
+    "avatarUrl": "آواتار",
+    "typeName": "نوع",
+    "ngoName": "نام سمن",
+    "idNumber": "شماره کارت شناسایی",
+    "idCardUrl": "تصویر کارت شناسایی",
+    "country": "کشور",
+    "city": "شهر",
+    "typeId": "نوع دسترسی",
+    "birthDate": "تاریخ تولد",
+    "phoneNumber": "شماره تماس",
+    "emergencyPhoneNumber": "شماره اضطراری",
+    "email": "ایمیل",
+    "telegramId": "تلگرام",
+    "postalAddress": "آدرس",
+    "childCount": "تعداد کودکان",
+    "needCount": "تعداد نیازها",
+    "lastLoginDate": "آخرین ورود",
     "button": {
-      "update": "Update",
-      "migrate": "Migrate"
+      "update": "ویرایش",
+      "migrate": "انتقال"
     },
     "migrateModal": {
-      "confirm": "Are you sure you want to migrate?"
+      "confirm": "آیا مطمئن به انتقال هستید؟"
     },
     "roles": {
       "SUPER_ADMIN": "Super Admin",
@@ -310,10 +312,10 @@
       "USER": "User"
     },
     "cities": {
-      "one": "Tehran"
+      "one": "تهران"
     },
     "countries": {
-      "one": "Iran"
+      "one": "ایران"
     }
   },
   "ngo": {
@@ -321,7 +323,7 @@
     "isActive": "وضعیت",
     "allNgos": "همه سمن‌ها",
     "update": "ویرایش",
-    "titleEdit": "ویرایش جريیات",
+    "titleEdit": "ویرایش جزئیات",
     "titleAdd": "اضافه کردن",
     "childrenCount": "تعداد کودکان",
     "country": "کشور",

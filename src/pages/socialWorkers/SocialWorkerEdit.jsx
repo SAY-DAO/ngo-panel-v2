@@ -49,21 +49,21 @@ import {
   UPDATE_SW_IS_ACTIVE_RESET,
 } from '../../redux/constants/socialWorkerConstants';
 
-const BCrumb = [
-  {
-    to: '/sw/list',
-    title: 'Social Workers List',
-  },
-  {
-    title: 'Edit',
-  },
-];
-
 const SocialWorkerEdit = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { id } = useParams();
   const { t } = useTranslation();
+
+  const BCrumb = [
+    {
+      to: '/sw/list',
+      title: t('BCrumb.swList'),
+    },
+    {
+      title: t('BCrumb.swEdit'),
+    },
+  ];
 
   const [myId, setMyId] = useState();
   const [finalImageFile, setFinalImageFile] = useState();
@@ -105,6 +105,9 @@ const SocialWorkerEdit = () => {
 
   const swUpdate = useSelector((state) => state.swUpdate);
   const { success: successSwUpdate, loading: loadingSwUpdate, error: errorSwUpdate } = swUpdate;
+
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
 
   useEffect(() => {
     if (!id && userInfo) {
@@ -353,15 +356,15 @@ const SocialWorkerEdit = () => {
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {(!id && !myId) || loadingSwById || loadingSwUpdate ? (
+      {(!id && !myId) || loadingSwById || loadingSwUpdate || loadingNgoAll ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
       ) : (
+        successNgoList &&
         result &&
         result.ngoId && (
           <>
-            <Breadcrumb title="Edit page" subtitle="Social Worker" />
             <Grid container spacing={0}>
               <Grid item lg={4} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
@@ -518,218 +521,271 @@ const SocialWorkerEdit = () => {
                 </Card>
               </Grid>
               <Grid item lg={8} md={12} xs={12}>
-                <Card sx={{ p: 3 }}>
-                  <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
-                    {t('socialWorker.titleEdit')}
-                  </Typography>
-                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
-                    <TextField
-                      required
-                      id="firstName"
-                      variant="outlined"
-                      defaultValue={result.firstName}
-                      fullWidth
-                      size="small"
-                      onChange={handleChangeInput('firstName')}
-                      control={control}
-                      {...register('firstName')}
-                      error={!!errors.firstName}
-                    />
-                    <CustomFormLabel htmlFor="lastName">
-                      {t('socialWorker.lastName')}
-                    </CustomFormLabel>
-                    <TextField
-                      required
-                      id="lastName"
-                      variant="outlined"
-                      defaultValue={result.lastName}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('lastName')}
-                      control={control}
-                      {...register('lastName')}
-                      error={!!errors.lastName}
-                    />
-                    <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
-                    <TextField
-                      id="Email"
-                      variant="outlined"
-                      defaultValue={result.email}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('email')}
-                      control={control}
-                      {...register('email')}
-                      error={!!errors.email}
-                    />
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                  <Card sx={{ p: 3 }}>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6}>
+                        <CustomFormLabel htmlFor="firstName">
+                          {t('socialWorker.firstName')}
+                        </CustomFormLabel>
+                        <TextField
+                          required
+                          id="firstName"
+                          variant="outlined"
+                          defaultValue={result.firstName}
+                          fullWidth
+                          size="small"
+                          onChange={handleChangeInput('firstName')}
+                          control={control}
+                          {...register('firstName')}
+                          error={!!errors.firstName}
+                        />
+                      </Grid>
+                      <Grid item lg={6}>
+                        <CustomFormLabel htmlFor="lastName">
+                          {t('socialWorker.lastName')}
+                        </CustomFormLabel>
+                        <TextField
+                          required
+                          id="lastName"
+                          variant="outlined"
+                          defaultValue={result.lastName}
+                          fullWidth
+                          size="small"
+                          onChange={handleChangeInput('lastName')}
+                          control={control}
+                          {...register('lastName')}
+                          error={!!errors.lastName}
+                        />
+                      </Grid>
+                      <Grid item lg={6}>
+                        <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
+                        <TextField
+                          id="Email"
+                          variant="outlined"
+                          defaultValue={result.email}
+                          fullWidth
+                          size="small"
+                          onChange={handleChangeInput('email')}
+                          control={control}
+                          {...register('email')}
+                          error={!!errors.email}
+                        />
+                      </Grid>
+                      <Grid item lg={3}>
+                        <CustomFormLabel htmlFor="country">
+                          {t('socialWorker.country')}
+                        </CustomFormLabel>
+                        <CustomSelect
+                          labelId="country-controlled-open-select-label"
+                          id="country-controlled-open-select"
+                          defaultValue={result.country || 1}
+                          onChange={handleChangeInput('country')}
+                          control={control}
+                          register={{ ...register('country') }}
+                          size="small"
+                          sx={{ width: '100%' }}
+                        >
+                          <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
+                        </CustomSelect>
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.country && errors.country.message}
+                        </FormHelperText>
+                      </Grid>
+                      <Grid item lg={3}>
+                        <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="city-controlled-open-select-label"
+                          id="city-controlled-open-select"
+                          defaultValue={result.city || 1}
+                          onChange={handleChangeInput('city')}
+                          control={control}
+                          register={{ ...register('city') }}
+                          size="small"
+                          sx={{ width: '100%' }}
+                        >
+                          <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
+                        </CustomSelect>
+                      </Grid>
+                      <Grid item lg={6}>
+                        <CustomFormLabel htmlFor="phoneNumber">
+                          {t('socialWorker.phoneNumber')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="phoneNumber"
+                          variant="outlined"
+                          defaultValue={result.phoneNumber}
+                          fullWidth
+                          size="small"
+                          onChange={handleChangeInput('phoneNumber')}
+                          control={control}
+                          {...register('phoneNumber')}
+                          error={!!errors.phoneNumber}
+                        />
+                      </Grid>
+                      <Grid item lg={6}>
+                        <CustomFormLabel htmlFor="emergencyPhoneNumber">
+                          {t('socialWorker.emergencyPhoneNumber')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="emergencyPhoneNumber"
+                          variant="outlined"
+                          defaultValue={result.emergencyPhoneNumber}
+                          fullWidth
+                          size="small"
+                          onChange={handleChangeInput('emergencyPhoneNumber')}
+                          control={control}
+                          {...register('emergencyPhoneNumber')}
+                          error={!!errors.emergencyPhoneNumber}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <CustomFormLabel htmlFor="postalAddress">
+                          {t('socialWorker.postalAddress')}
+                        </CustomFormLabel>
+                        <CustomTextField
+                          id="postalAddress"
+                          variant="outlined"
+                          multiline
+                          rows={4}
+                          defaultValue={result.postalAddress}
+                          size="small"
+                          fullWidth
+                          onChange={handleChangeInput('postalAddress')}
+                          control={control}
+                          register={{ ...register('postalAddress') }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Card>
+                  <Card elevation={4}>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6}>
+                        <CustomFormLabel htmlFor="birthDate">
+                          {t('socialWorker.birthDate')}
+                        </CustomFormLabel>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DesktopDatePicker
+                            id="birthDate"
+                            inputFormat="MM/dd/yyyy"
+                            value={birthDate}
+                            onChange={handleDateChange}
+                            renderInput={(params) => <TextField {...params} />}
+                          />
+                        </LocalizationProvider>
+                      </Grid>
+                      <Grid item lg={6}>
+                        <CustomFormLabel htmlFor="telegramId">
+                          {t('socialWorker.telegramId')}
+                        </CustomFormLabel>
+                        <OutlinedInput
+                          id="telegramId"
+                          startAdornment={<InputAdornment position="start">@</InputAdornment>}
+                          variant="outlined"
+                          defaultValue={result.telegramId}
+                          fullWidth
+                          size="medium"
+                          onChange={handleChangeInput('telegramId')}
+                          control={control}
+                          {...register('telegramId')}
+                          error={!!errors.telegramId}
+                        />
+                      </Grid>
+                      <Grid item lg={6}>
+                        <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
+                          {t('socialWorker.typeId')}
+                        </CustomFormLabel>
+                        <CustomSelect
+                          labelId="demo-controlled-open-select-label"
+                          id="demo-controlled-open-select"
+                          defaultValue={result.typeId}
+                          onChange={handleChangeInput('typeId')}
+                          register={{ ...register('typeId') }}
+                          size="small"
+                          sx={{ width: '100%' }}
+                        >
+                          <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
+                          <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
+                          <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
+                          <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
+                          <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
+                          <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
+                        </CustomSelect>
+                      </Grid>
+                      <Grid item lg={6}>
+                        <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
+                          {t('socialWorker.ngoName')}
+                        </CustomFormLabel>
+                        <CustomSelect
+                          labelId="ngoId-controlled-open-select-label"
+                          id="ngoId-controlled-open-select"
+                          defaultValue={ngoList.find((n) => n.id === result.ngoId).id}
+                          register={{ ...register('ngoId') }}
+                          control={control}
+                          error={!!errors.ngoId}
+                          size="small"
+                          sx={{ width: '100%' }}
+                        >
+                          {ngoList &&
+                            Object.keys(ngoList).map((key) => (
+                              <MenuItem key={key} value={ngoList[key].id}>
+                                {ngoList[key].name}
+                              </MenuItem>
+                            ))}
+                        </CustomSelect>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <CustomFormLabel htmlFor="idNumber">
+                          {t('socialWorker.idNumber')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="idNumber"
+                          variant="outlined"
+                          defaultValue={result.idNumber}
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          onChange={handleChangeInput('idNumber')}
+                          control={control}
+                          {...register('idNumber')}
+                          error={!!errors.idNumber}
+                        />
+                      </Grid>
 
-                    <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
-                    <CustomSelect
-                      labelId="country-controlled-open-select-label"
-                      id="country-controlled-open-select"
-                      defaultValue={result.country || 1}
-                      onChange={handleChangeInput('country')}
-                      control={control}
-                      register={{ ...register('country') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
-                    </CustomSelect>
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.country && errors.country.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
-                    <CustomSelect
-                      labelId="city-controlled-open-select-label"
-                      id="city-controlled-open-select"
-                      defaultValue={result.city || 1}
-                      onChange={handleChangeInput('city')}
-                      control={control}
-                      register={{ ...register('city') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
-                    </CustomSelect>
-
-                    <CustomFormLabel htmlFor="postalAddress">
-                      {t('socialWorker.postalAddress')}
-                    </CustomFormLabel>
-                    <CustomTextField
-                      id="postalAddress"
-                      variant="outlined"
-                      multiline
-                      rows={4}
-                      defaultValue={result.postalAddress}
-                      size="small"
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      onChange={handleChangeInput('postalAddress')}
-                      control={control}
-                      register={{ ...register('postalAddress') }}
-                    />
-                    <CustomFormLabel htmlFor="birthDate">
-                      {t('socialWorker.birthDate')}
-                    </CustomFormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DesktopDatePicker
-                        id="birthDate"
-                        inputFormat="MM/dd/yyyy"
-                        value={birthDate}
-                        onChange={handleDateChange}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-
-                    <CustomFormLabel htmlFor="telegramId">
-                      {t('socialWorker.telegramId')}
-                    </CustomFormLabel>
-                    <OutlinedInput
-                      id="telegramId"
-                      startAdornment={<InputAdornment position="start">@</InputAdornment>}
-                      variant="outlined"
-                      defaultValue={result.telegramId}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('telegramId')}
-                      control={control}
-                      {...register('telegramId')}
-                      error={!!errors.telegramId}
-                    />
-                    <CustomFormLabel htmlFor="idNumber">
-                      {t('socialWorker.idNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="idNumber"
-                      variant="outlined"
-                      defaultValue={result.idNumber}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('idNumber')}
-                      control={control}
-                      {...register('idNumber')}
-                      error={!!errors.idNumber}
-                    />
-
-                    <CustomFormLabel id="demo-controlled-open-select-label" htmlFor="typeId">
-                      {t('socialWorker.typeId')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="demo-controlled-open-select-label"
-                      id="demo-controlled-open-select"
-                      defaultValue={result.typeId}
-                      onChange={handleChangeInput('typeId')}
-                      register={{ ...register('typeId') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.roles.SUPER_ADMIN')}</MenuItem>
-                      <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
-                      <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
-                      <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
-                    </CustomSelect>
-                    <CustomFormLabel htmlFor="phoneNumber">
-                      {t('socialWorker.phoneNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="phoneNumber"
-                      variant="outlined"
-                      defaultValue={result.phoneNumber}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('phoneNumber')}
-                      control={control}
-                      {...register('phoneNumber')}
-                      error={!!errors.phoneNumber}
-                    />
-                    <CustomFormLabel htmlFor="emergencyPhoneNumber">
-                      {t('socialWorker.emergencyPhoneNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="emergencyPhoneNumber"
-                      variant="outlined"
-                      defaultValue={result.emergencyPhoneNumber}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('emergencyPhoneNumber')}
-                      control={control}
-                      {...register('emergencyPhoneNumber')}
-                      error={!!errors.emergencyPhoneNumber}
-                    />
-                    <CustomFormLabel htmlFor="userName">
-                      {t('socialWorker.userName')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="userName"
-                      variant="outlined"
-                      defaultValue={result.username}
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      onChange={handleChangeInput('userName')}
-                      control={control}
-                      {...register('userName')}
-                      error={!!errors.userName}
-                    />
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.userName && errors.userName.message}
-                    </FormHelperText>
-                    <LoadingButton
-                      loading={loadingSwUpdate}
-                      color="primary"
-                      type="submit"
-                      onClick={handleSubmit(onSubmit)}
-                      variant="contained"
-                      sx={{ mt: 4 }}
-                    >
-                      {t('socialWorker.button.update')}
-                    </LoadingButton>
-                  </form>
-                </Card>
+                      <Grid item xs={6}>
+                        <CustomFormLabel htmlFor="userName">
+                          {t('socialWorker.userName')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="userName"
+                          variant="outlined"
+                          defaultValue={result.username}
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          onChange={handleChangeInput('userName')}
+                          control={control}
+                          {...register('userName')}
+                          error={!!errors.userName}
+                        />
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.userName && errors.userName.message}
+                        </FormHelperText>
+                      </Grid>
+                      <Grid item sx={{ m: 'auto' }}>
+                        <LoadingButton
+                          loading={loadingSwUpdate}
+                          color="primary"
+                          type="submit"
+                          onClick={handleSubmit(onSubmit)}
+                          variant="contained"
+                        >
+                          {t('socialWorker.button.update')}
+                        </LoadingButton>
+                      </Grid>
+                    </Grid>
+                  </Card>
+                </form>
               </Grid>
             </Grid>
             <Dialog
