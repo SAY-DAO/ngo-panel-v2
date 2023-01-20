@@ -54,6 +54,7 @@ import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
 import { UPDATE_ONE_NEED_RESET } from '../../redux/constants/needConstant';
+import { dateConvertor } from '../../utils/persianToEnglish';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -511,7 +512,6 @@ const NeedTable = () => {
     } else if (swInfo && needs && child && child.id === 0) {
       console.log('table = all needs');
       console.log(needs);
-      console.log('table = all needs');
       if (
         swInfo.typeId === RolesEnum.SUPER_ADMIN ||
         swInfo.typeId === RolesEnum.ADMIN ||
@@ -540,24 +540,29 @@ const NeedTable = () => {
       ) {
         if (successChildNeeds) {
           const needData = getOrganizedNeeds(theNeeds);
+          console.log('need data 1');
           setNeedsData(needData);
         }
         if (successAllNeeds) {
           const needData = getOrganizedNeeds(needs);
+          console.log('need data 2');
           setNeedsData(needData);
         }
         if (successSwNeeds) {
           const needData = getOrganizedNeeds(swNeeds);
+          console.log('need data 3');
           setNeedsData(needData);
         }
       } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         if (successChildNeeds) {
           const filteredChildNeeds = theNeeds.needs.filter((n) => swInfo.typeId === n.createdBy);
           const needData = getOrganizedNeeds(filteredChildNeeds);
+          console.log('need data 4');
           setNeedsData(needData);
         }
         if (successSwNeeds) {
           const needData = getOrganizedNeeds(swNeeds);
+          console.log('need data 5');
           setNeedsData(needData);
         }
       }
@@ -963,17 +968,17 @@ const NeedTable = () => {
                                   <Box display="flex" alignItems="center">
                                     <Tooltip
                                       title={
-                                        row.unpayable === false && !row.paid ? (
+                                        row.unpayable === false && !row.isDone ? (
                                           <Typography sx={{ fontSize: 12 }}>
                                             {t('need.payable')}
                                           </Typography>
-                                        ) : row.unpayable === true && !row.paid ? (
+                                        ) : row.unpayable === true && !row.isDone ? (
                                           <Typography sx={{ fontSize: 12 }}>
                                             {t('need.unpayable')}
                                           </Typography>
                                         ) : (
                                           <Typography sx={{ fontSize: 12 }}>
-                                            {t('need.purchased')}
+                                            {t('need.fullyPaid')}
                                           </Typography>
                                         )
                                       }
@@ -981,9 +986,9 @@ const NeedTable = () => {
                                       <Box
                                         sx={{
                                           backgroundColor:
-                                            row.unpayable === false && !row.paid
+                                            row.unpayable === false && !row.isDone
                                               ? (theme) => theme.palette.success.main
-                                              : row.unpayable === true && !row.paid
+                                              : row.unpayable === true && !row.isDone
                                               ? (theme) => theme.palette.error.main
                                               : (theme) => theme.palette.info.main,
                                           borderRadius: '100%',
@@ -1198,9 +1203,11 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {activeDir === 'rtl'
-                                      ? new Date(row.created).toLocaleDateString('fa-IR')
-                                      : row.created}
+                                    {row.created
+                                      ? activeDir === 'rtl'
+                                        ? dateConvertor(row.created)
+                                        : row.created
+                                      : '-'}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1218,9 +1225,11 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {activeDir === 'rtl'
-                                      ? new Date(row.confirmDate).toLocaleDateString('fa-IR')
-                                      : row.confirmDate}
+                                    {row.confirmDate
+                                      ? activeDir === 'rtl'
+                                        ? dateConvertor(row.confirmDate)
+                                        : row.confirmDate
+                                      : '-'}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1229,9 +1238,11 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {activeDir === 'rtl'
-                                      ? new Date(row.updated).toLocaleDateString('fa-IR')
-                                      : row.updated}
+                                    {row.updated
+                                      ? activeDir === 'rtl'
+                                        ? dateConvertor(row.updated)
+                                        : row.updated
+                                      : '-'}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1240,9 +1251,11 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {activeDir === 'rtl'
-                                      ? new Date(row.doneAt).toLocaleDateString('fa-IR')
-                                      : row.doneAt}
+                                    {row.doneAt
+                                      ? activeDir === 'rtl'
+                                        ? dateConvertor(row.doneAt)
+                                        : row.doneAt
+                                      : '-'}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>
@@ -1260,11 +1273,11 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {activeDir === 'rtl'
-                                      ? new Date(row.child_delivery_date).toLocaleDateString(
-                                          'fa-IR',
-                                        )
-                                      : row.child_delivery_date}
+                                    {row.child_delivery_date
+                                      ? activeDir === 'rtl'
+                                        ? dateConvertor(row.child_delivery_date)
+                                        : row.child_delivery_date
+                                      : '-'}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

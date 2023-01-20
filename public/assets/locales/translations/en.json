@@ -324,7 +324,7 @@
     "titleStatus": "Need Title",
     "payable": "Payable",
     "unpayable": "Unpayable",
-    "purchased": "Purchased",
+    "fullyPaid": "Paid fully",
     "update": "Edit",
     "imageUrl": "Icon",
     "childSayName": "SAY Name",

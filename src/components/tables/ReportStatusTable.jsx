@@ -40,7 +40,7 @@ import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { fetchReportNeeds } from '../../redux/actions/needsAction';
-import convertor from '../../utils/persianToEnglish';
+import { dateConvertor, numberConvertor } from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/DaoAction';
@@ -713,7 +713,7 @@ const ReportStatusTable = () => {
             <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
               {NeedTypeEnum.PRODUCT && row.status > ProductStatusEnum.COMPLETE_PAY
                 ? activeDir === 'rtl'
-                  ? new Date(row.expected_delivery_date).toLocaleDateString('fa-IR')
+                  ? dateConvertor(row.expected_delivery_date)
                   : row.expected_delivery_date
                 : '-'}
             </Typography>
@@ -756,9 +756,11 @@ const ReportStatusTable = () => {
                         {t('need.confirmDate')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {activeDir === 'rtl'
-                          ? new Date(row.confirmDate).toLocaleDateString('fa-IR')
-                          : row.confirmDate}
+                        {row.confirmDate
+                          ? activeDir === 'rtl'
+                            ? dateConvertor(row.confirmDate)
+                            : row.confirmDate
+                          : '-'}
                       </TableCell>
                       <TableCell align="right">-</TableCell>
                     </TableRow>
@@ -767,9 +769,11 @@ const ReportStatusTable = () => {
                         {t('need.created')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {activeDir === 'rtl'
-                          ? new Date(row.created).toLocaleDateString('fa-IR')
-                          : row.created}
+                        {row.created
+                          ? activeDir === 'rtl'
+                            ? dateConvertor(row.created)
+                            : row.created
+                          : '-'}
                       </TableCell>
                       <TableCell align="right"> - </TableCell>
                     </TableRow>
@@ -778,9 +782,11 @@ const ReportStatusTable = () => {
                         {t('need.updated')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {activeDir === 'rtl'
-                          ? new Date(row.updated).toLocaleDateString('fa-IR')
-                          : row.updated}
+                        {row.updated
+                          ? activeDir === 'rtl'
+                            ? dateConvertor(row.updated)
+                            : row.updated
+                          : '-'}
                       </TableCell>
                       <TableCell align="right">-</TableCell>
                     </TableRow>
@@ -790,9 +796,11 @@ const ReportStatusTable = () => {
                         {t('need.needStatus.2')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {activeDir === 'rtl'
-                          ? new Date(row.doneAt).toLocaleDateString('fa-IR')
-                          : row.doneAt}
+                        {row.doneAt
+                          ? activeDir === 'rtl'
+                            ? dateConvertor(row.doneAt)
+                            : row.doneAt
+                          : '-'}
                       </TableCell>
                       <TableCell align="right">
                         {row.payments && row.payments[0] && (
@@ -855,23 +863,25 @@ const ReportStatusTable = () => {
                           : t('need.needStatus.s3')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {typeId === NeedTypeEnum.PRODUCT
+                        {typeId === NeedTypeEnum.PRODUCT && row.purchase_date
                           ? activeDir === 'rtl'
-                            ? new Date(row.purchase_date).toLocaleDateString('fa-IR')
+                            ? dateConvertor(row.purchase_date)
                             : row.purchase_date
-                          : activeDir === 'rtl'
-                          ? new Date(row.ngo_delivery_date).toLocaleDateString('fa-IR')
-                          : row.ngo_delivery_date}
+                          : typeId === NeedTypeEnum.SERVICE && row.ngo_delivery_date
+                          ? activeDir === 'rtl'
+                            ? dateConvertor(row.ngo_delivery_date)
+                            : row.ngo_delivery_date
+                          : '-'}
                       </TableCell>
                       <TableCell align="right">
                         {row.dkc &&
-                          parseInt(convertor(row.dkc), 10)
+                          parseInt(numberConvertor(row.dkc), 10)
                             .toLocaleString('en-US')
                             .replace(/,/g, '-')}
                         {typeId === NeedTypeEnum.SERVICE &&
                           statusId > 2 &&
                           row.bank_track_id &&
-                          parseInt(convertor(row.bank_track_id), 10)}
+                          parseInt(numberConvertor(row.bank_track_id), 10)}
                       </TableCell>
                     </TableRow>
                     {/* 4 Product delivered to NGO - service delivery to child */}
@@ -882,13 +892,15 @@ const ReportStatusTable = () => {
                           : t('need.needStatus.s4')}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        {typeId === NeedTypeEnum.PRODUCT
+                        {typeId === NeedTypeEnum.PRODUCT && row.ngo_delivery_date
                           ? activeDir === 'rtl'
-                            ? new Date(row.ngo_delivery_date).toLocaleDateString('fa-IR')
+                            ? dateConvertor(row.ngo_delivery_date)
                             : row.ngo_delivery_date
-                          : activeDir === 'rtl'
-                          ? new Date(row.child_delivery_date).toLocaleDateString('fa-IR')
-                          : row.child_delivery_date}
+                          : typeId === NeedTypeEnum.SERVICE && row.child_delivery_date
+                          ? activeDir === 'rtl'
+                            ? dateConvertor(row.child_delivery_date)
+                            : row.child_delivery_date
+                          : '-'}
                       </TableCell>
                       <TableCell align="right">
                         {typeId === NeedTypeEnum.SERVICE &&
@@ -907,9 +919,11 @@ const ReportStatusTable = () => {
                           {t('need.needStatus.p5')}
                         </TableCell>
                         <TableCell component="th" scope="row">
-                          {activeDir === 'rtl'
-                            ? new Date(row.child_delivery_date).toLocaleDateString('fa-IR')
-                            : row.child_delivery_date}
+                          {row.child_delivery_date
+                            ? activeDir === 'rtl'
+                              ? dateConvertor(row.child_delivery_date)
+                              : row.child_delivery_date
+                            : '-'}
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {statusId > 4 && <ReportImage row={row} statusId={statusId} />}

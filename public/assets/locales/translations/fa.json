@@ -366,7 +366,7 @@
     "titleStatus": "عنوان",
     "payable": "قابل پرداخت",
     "unpayable": "غیر قابل پرداخت",
-    "purchased": "خرید شده",
+    "fullyPaid": "پرداخت شده",
     "update": "ویرایش",
     "imageUrl": "آیکون",
     "childSayName": "SAY نام",
