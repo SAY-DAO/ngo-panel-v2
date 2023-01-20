@@ -29,6 +29,7 @@ import { format } from 'date-fns';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
+import { dateConvertor } from '../../utils/persianToEnglish';
 
 export default function StatusDialog({ need, statusDialog, setStatusDialog, setStatusNeed }) {
   const dispatch = useDispatch();
@@ -189,6 +190,17 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     <div>
       {currentStatus && (
         <Dialog open={statusDialog} onClose={handleClose}>
+          <Grid container direction="row" justifyContent="space-between" alignItems="center">
+            <Typography sx={{ pl: 1, pr: 1 }} variant="body2">
+              {dateConvertor(
+                `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+              )}
+            </Typography>
+            <Typography sx={{ pl: 1, pr: 1 }} variant="body2">
+              {`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`}
+            </Typography>
+          </Grid>
+
           <DialogTitle sx={{ p: 2, textAlign: 'center', fontSize: '1.2rem' }}>
             {t('need.needStatusTitle')}
           </DialogTitle>
