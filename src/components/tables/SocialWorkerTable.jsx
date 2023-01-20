@@ -106,6 +106,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('socialWorker.generatedCode'),
+      width: '200px',
     },
 
     {
@@ -113,6 +114,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('socialWorker.userName'),
+      width: '200px',
     },
 
     {
@@ -126,6 +128,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('socialWorker.ngoName'),
+      width: '150px',
     },
     {
       id: 'idNumber',
@@ -156,6 +159,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('socialWorker.emergencyPhoneNumber'),
+      width: '200px',
     },
     {
       id: 'telegramId',
@@ -167,19 +171,21 @@ function EnhancedTableHead(props) {
       id: 'postalAddress',
       numeric: false,
       disablePadding: false,
-      label: t('socialWorker.address'),
+      label: t('socialWorker.postalAddress'),
     },
     {
       id: 'childCount',
       numeric: false,
       disablePadding: false,
       label: t('socialWorker.childCount'),
+      width: '150px',
     },
     {
       id: 'needCount',
       numeric: false,
       disablePadding: false,
       label: t('socialWorker.needCount'),
+      width: '150px',
     },
     {
       id: 'lastLoginDate',
@@ -207,6 +213,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ minWidth: headCell.width }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -232,7 +239,7 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -337,10 +344,9 @@ const SocialWorkerTable = ({ swList }) => {
     //   );
     // }
     if (selected[0] === id) {
-      setSelected([])
+      setSelected([]);
     } else {
       setSelected([id]);
-
     }
   };
 
@@ -522,9 +528,23 @@ const SocialWorkerTable = ({ swList }) => {
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                              <Tooltip title={row.postalAddress ? row.postalAddress : ''} placement="top-end">
+                              <Typography
+                                color="textSecondary"
+                                variant="body1"
+                                fontWeight="400"
+                                sx={{
+                                  maxWidth: '400px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  width: '160px',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
                                 {row.postalAddress}
                               </Typography>
+                              </Tooltip>
                             </TableCell>
                             <TableCell>
                               <Typography variant="h6">{row.childCount}</Typography>
