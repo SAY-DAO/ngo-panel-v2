@@ -1,3 +1,4 @@
+
 export function numberConvertor(string) {
   return string
     .replace(/[\u0660-\u0669]/g, (c) => {
@@ -9,10 +10,7 @@ export function numberConvertor(string) {
 }
 
 export function dateConvertor(string) {
-  return new Date(string).toLocaleDateString('fa-IR', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  const d = new Date(string)
+  return new Intl.DateTimeFormat('fa-IR-u-ca-persian', {dateStyle: 'full'}).format(d)
 }
+

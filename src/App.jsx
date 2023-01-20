@@ -9,7 +9,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import swDev from './swDev';
 
 const App = () => {
-  
   const routing = useRoutes(Router);
   const theme = ThemeSettings();
   const customizer = useSelector((state) => state.CustomizerReducer);
