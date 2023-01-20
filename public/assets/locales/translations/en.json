@@ -387,6 +387,7 @@
       "update": "Update",
       "add": "Add Need"
     },
+    "today": "Today",
     "needStatusTitle": "Change Need Status",
     "needStatus": {
       "1": "Partial payment",

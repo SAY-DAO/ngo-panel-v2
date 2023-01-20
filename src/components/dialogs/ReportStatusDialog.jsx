@@ -190,37 +190,49 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     <div>
       {currentStatus && (
         <Dialog open={statusDialog} onClose={handleClose}>
-          <Grid container direction="row" justifyContent="space-between" alignItems="center">
-            <Typography sx={{ pl: 1, pr: 1 }} variant="body2">
-              {dateConvertor(
-                `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
-              )}
-            </Typography>
-            <Typography sx={{ pl: 1, pr: 1 }} variant="body2">
-              {`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`}
-            </Typography>
-          </Grid>
-
           <DialogTitle sx={{ p: 2, textAlign: 'center', fontSize: '1.2rem' }}>
             {t('need.needStatusTitle')}
           </DialogTitle>
           <DialogContent sx={{ p: 0 }}>
-            <DialogContentText
-              sx={{
-                textAlign: 'center',
-                maxWidth: '400px',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                width: '250px',
-                whiteSpace: 'nowrap',
-                pb: 2,
-                margin: 'auto',
-              }}
-            >
-              {need.title}
-              <br />
-              <strong>{need.name}</strong>
-            </DialogContentText>
+            <Grid container direction="row" justifyContent="space-between" alignItems="center">
+              <Grid item>
+                <Card elevation={8}>
+                  <Typography sx={{ fontSize: 16 }}>{t('need.today')} </Typography>
+                  <Typography sx={{ fontSize: 12, pl: 1, pr: 1 }} variant="body2">
+                    {dateConvertor(
+                      `${new Date().getFullYear()}-${
+                        new Date().getMonth() + 1
+                      }-${new Date().getDate()}`,
+                    )}
+                  </Typography>
+                  <Typography sx={{ fontSize: 12, pl: 1, pr: 1 }} variant="body2">
+                    {`${new Date().getFullYear()}-${
+                      new Date().getMonth() + 1
+                    }-${new Date().getDate()}`}
+                  </Typography>
+                </Card>
+              </Grid>
+              <Grid item>
+                <Card elevation={8}>
+                  <DialogContentText
+                    sx={{
+                      textAlign: 'center',
+                      maxWidth: '600px',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      width: '250px',
+                      whiteSpace: 'nowrap',
+                      pb: 2,
+                      margin: 'auto',
+                    }}
+                  >
+                    {need.title}
+                    <br />
+                    <strong>{need.name}</strong>
+                  </DialogContentText>
+                </Card>
+              </Grid>
+            </Grid>
             <Card sx={{ p: 1 }}>
               <Grid
                 container
