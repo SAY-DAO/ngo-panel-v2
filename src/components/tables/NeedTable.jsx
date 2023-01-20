@@ -53,7 +53,7 @@ import {
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
 import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
-import { UPDATE_ONE_NEED_RESET } from '../../redux/constants/needConstant';
+import { ALL_NEEDS_RESET, UPDATE_ONE_NEED_RESET } from '../../redux/constants/needConstant';
 import { dateConvertor } from '../../utils/persianToEnglish';
 
 function descendingComparator(a, b, orderBy) {
@@ -426,6 +426,9 @@ const NeedTable = () => {
     isConfirmed: true,
   });
 
+  console.log('ngo');
+  console.log(ngo);
+  console.log('ngo');
   const [theTableNeeds, setTheTableNeeds] = useState();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
@@ -531,7 +534,7 @@ const NeedTable = () => {
 
   // sort needs for statics
   useEffect(() => {
-    if (swInfo) {
+    if (swInfo && !open) {
       // admins and Ngo supervisors vs. social workers
       if (
         swInfo.typeId === RolesEnum.SUPER_ADMIN ||
@@ -567,7 +570,7 @@ const NeedTable = () => {
         }
       }
     }
-  }, [successChildNeeds, successAllNeeds, successSwNeeds]);
+  }, [successChildNeeds, successAllNeeds, successSwNeeds, open]);
 
   // Autocomplete ngo
   useEffect(() => {
@@ -670,6 +673,10 @@ const NeedTable = () => {
     setOpenNgo(true);
   };
 
+  const onChildOpen = () => {
+    dispatch({ type: ALL_NEEDS_RESET });
+    setOpen(true);
+  };
   const onNgoSet = (value) => {
     setNgo(value);
     setChild({
@@ -809,7 +816,7 @@ const NeedTable = () => {
               sx={{ width: 300 }}
               open={open}
               onOpen={() => {
-                setOpen(true);
+                onChildOpen();
               }}
               onClose={() => {
                 setOpen(false);

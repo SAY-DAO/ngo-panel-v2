@@ -32,11 +32,14 @@ export function getOrganizedNeeds(theNeeds) {
     for (let i = 0; i < theNeeds.needs.length; i += 1) {
       if (theNeeds.needs[i].isUrgent) {
         needData[0].push(theNeeds.needs[i]);
-      } else if (theNeeds.needs[i].isDone) {
+      }
+      if (theNeeds.needs[i].isDone) {
         needData[5].push(theNeeds.needs[i]);
-      } else if (theNeeds.needs[i].isConfirmed) {
+      }
+      if (theNeeds.needs[i].isConfirmed) {
         needData[6].push(theNeeds.needs[i]);
-      } else if (theNeeds.needs[i].unpayable) {
+      }
+      if (theNeeds.needs[i].unpayable) {
         needData[7].push(theNeeds.needs[i]);
       }
       needData[theNeeds.needs[i].category + 1].push(theNeeds.needs[i]);
@@ -46,17 +49,20 @@ export function getOrganizedNeeds(theNeeds) {
       console.log(theNeeds.length);
       if (theNeeds[i].isUrgent) {
         needData[0].push(theNeeds[i]);
-      } else if (theNeeds[i].isDone) {
+      }
+      if (theNeeds[i].isDone) {
         needData[5].push(theNeeds[i]);
-      } else if (theNeeds[i].isConfirmed) {
+      }
+      if (theNeeds[i].isConfirmed) {
         needData[6].push(theNeeds[i]);
-      } else if (theNeeds[i].unpayable) {
+      }
+      if (theNeeds[i].unpayable) {
         needData[7].push(theNeeds[i]);
       }
       needData[theNeeds[i].category + 1].push(theNeeds[i]);
     }
   }
-
+  console.log(needData);
   return needData;
 }
 
