@@ -290,20 +290,20 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'Social Workers Table',
-  },
-];
-
 const SocialWorkerTable = ({ swList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const BCrumb = [
+    {
+      to: '/',
+      title: t('BCrumb.home'),
+    },
+    {
+      title: t('BCrumb.swList'),
+    },
+  ];
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('status');
@@ -528,22 +528,25 @@ const SocialWorkerTable = ({ swList }) => {
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Tooltip title={row.postalAddress ? row.postalAddress : ''} placement="top-end">
-                              <Typography
-                                color="textSecondary"
-                                variant="body1"
-                                fontWeight="400"
-                                sx={{
-                                  maxWidth: '400px',
-                                  textOverflow: 'ellipsis',
-                                  overflow: 'hidden',
-                                  width: '160px',
-                                  height: '1.2em',
-                                  whiteSpace: 'nowrap',
-                                }}
+                              <Tooltip
+                                title={row.postalAddress ? row.postalAddress : ''}
+                                placement="top-end"
                               >
-                                {row.postalAddress}
-                              </Typography>
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="400"
+                                  sx={{
+                                    maxWidth: '400px',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    width: '160px',
+                                    height: '1.2em',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  {row.postalAddress}
+                                </Typography>
                               </Tooltip>
                             </TableCell>
                             <TableCell>
