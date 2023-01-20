@@ -246,9 +246,12 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
+  // const dispatch = useDispatch();
+
   const { numSelected, selected } = props;
 
   const handleDelete = () => {
+    // dispatch(deleteSw(selected[0]));
     console.log(selected);
   };
 

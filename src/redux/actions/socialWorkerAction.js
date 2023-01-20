@@ -412,7 +412,7 @@ export const AddSw = (values) => async (dispatch, getState) => {
   }
 };
 
-export const deleteNgo = (swId) => async (dispatch, getState) => {
+export const deleteSw = (swId) => async (dispatch, getState) => {
   try {
     dispatch({ type: DELETE_SW_REQUEST });
     const {
