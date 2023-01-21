@@ -23,8 +23,12 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
-import cover from '../../assets/images/cover.jpg';
+import spring from '../../assets/images/cover/spring.jpeg';
+import summer from '../../assets/images/cover/summer.jpeg';
+import autumn from '../../assets/images/cover/autumn.jpeg';
+import winter from '../../assets/images/cover/winter.jpeg';
 import { RolesEnum } from '../../utils/helpers';
+import { persianMonth } from '../../utils/persianToEnglish';
 
 const CoverCard = ({
   theUser,
@@ -40,6 +44,7 @@ const CoverCard = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const [cover, setCover] = useState(null);
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails, success: successProfile } = myPage;
 
@@ -49,6 +54,25 @@ const CoverCard = ({
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
   const swAll = useSelector((state) => state.swAll);
   const { swList, success: successSwAll } = swAll;
+
+  // getMonth() returns the month (from 0 to 11) of a date
+  useEffect(() => {
+    const d = new Date();
+    const pm = persianMonth(d);
+    console.log(pm);
+    if (pm === 'Farvardin' || pm === 'Ordibehesht' || pm === 'Khordad') {
+      setCover(spring);
+    }
+    if (pm === 'Tir' || pm === 'Mordad' || pm === 'Shahrivar') {
+      setCover(summer);
+    }
+    if (pm === 'Mehr' || pm === 'Aban' || pm === 'Azar') {
+      setCover(autumn);
+    }
+    if (pm === 'Dey' || pm === 'Bahman' || pm === 'Esfand') {
+      setCover(winter);
+    }
+  }, []);
 
   // Autocomplete
   useEffect(() => {

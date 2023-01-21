@@ -14,3 +14,6 @@ export function dateConvertor(string) {
   return new Intl.DateTimeFormat('fa-IR-u-ca-persian', {dateStyle: 'full'}).format(d)
 }
 
+export function persianMonth(date){
+  return new Intl.DateTimeFormat('en-US-u-ca-persian', {month: 'short'}).format(date)
+}
