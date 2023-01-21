@@ -55,7 +55,7 @@ const CoverCard = ({
   const swAll = useSelector((state) => state.swAll);
   const { swList, success: successSwAll } = swAll;
 
-  // getMonth() returns the month (from 0 to 11) of a date
+  // seasonal cover
   useEffect(() => {
     const d = new Date();
     const pm = persianMonth(d);
