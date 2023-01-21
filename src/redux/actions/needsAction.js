@@ -302,39 +302,19 @@ export const updateNeed = (values) => async (dispatch, getState) => {
     const formData = new FormData();
     formData.append('sw_id', swInfo.swId);
 
-    if (values.childId) {
-      formData.append('child_id', values.childId);
-    }
-    if (values.name) {
-      formData.append('name_translations', values.name);
-    }
-    if (values.description) {
-      formData.append('description_translations', values.description);
-    }
+    formData.append('child_id', values.childId);
+    formData.append('name_translations', values.name);
+    formData.append('description_translations', values.description);
     formData.append('category', values.category);
     formData.append('isUrgent', values.isUrgent);
-    if (values.cost) {
-      formData.append('cost', values.cost);
-    }
+    formData.append('cost', values.cost);
     formData.append('type', values.type);
-    if (values.link) {
-      formData.append('link', values.link);
-    }
-    if (values.affiliateLinkUrl) {
-      formData.append('affiliateLinkUrl', values.affiliateLinkUrl);
-    }
-    if (values.receipts) {
-      formData.append('receipts', values.receipts);
-    }
-    if (values.doing_duration) {
-      formData.append('doing_duration', values.doing_duration);
-    }
-    if (values.details) {
-      formData.append('details', values.details);
-    }
-    if (values.information) {
-      formData.append('informations', values.information);
-    }
+    formData.append('link', values.link);
+    formData.append('affiliateLinkUrl', values.affiliateLinkUrl);
+    formData.append('receipts', values.receipts);
+    formData.append('doing_duration', values.doing_duration);
+    formData.append('details', values.details);
+    formData.append('informations', values.information);
 
     if (values.imageUrl) {
       formData.append('imageUrl', values.imageUrl);
