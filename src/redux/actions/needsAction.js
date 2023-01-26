@@ -36,7 +36,7 @@ import {
   DELETE_NEED_FAIL,
 } from '../constants/needConstant';
 
-export const fetchAllNeeds = (ngoId) => async (dispatch, getState) => {
+export const fetchAllNeeds = (ngoId, take) => async (dispatch, getState) => {
   try {
     dispatch({ type: ALL_NEEDS_REQUEST });
     const {
@@ -46,7 +46,7 @@ export const fetchAllNeeds = (ngoId) => async (dispatch, getState) => {
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 100,
+        'X-TAKE': take,
       },
     };
 
@@ -134,7 +134,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchChildNeeds = (childId) => async (dispatch, getState) => {
+export const fetchChildNeeds = (childId, take) => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_NEEDS_REQUEST });
 
@@ -146,7 +146,7 @@ export const fetchChildNeeds = (childId) => async (dispatch, getState) => {
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 150,
+        'X-TAKE': take,
       },
     };
     const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
@@ -193,7 +193,7 @@ export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
   }
 };
 
-export const fetchSwNeedList = () => async (dispatch, getState) => {
+export const fetchSwNeedList = (take) => async (dispatch, getState) => {
   try {
     dispatch({ type: SW_NEED_LIST_REQUEST });
     const {
@@ -205,7 +205,7 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 100,
+        'X-TAKE': take,
       },
     };
 
@@ -215,7 +215,7 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
       response = await publicApi.get('/needs', config);
     } else {
       response = await publicApi.get(`/socialworkers/${swInfo.id}/createdNeeds`, config);
-          }
+    }
 
     dispatch({
       type: SW_NEED_LIST_SUCCESS,

@@ -1,12 +1,13 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import { Card, CardContent, Box, Typography } from '@mui/material';
+import { Card, CardContent, Box, Typography, IconButton, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import PageContainer from '../container/PageContainer';
 import { PaymentStatusEnum } from '../../utils/helpers';
 
-const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
+const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake }) => {
   const { t } = useTranslation();
 
   let unpayableCount = 0;
@@ -59,6 +60,9 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
     confirmedCount,
   ];
 
+  const handleClick = () => {
+    setTake(take + 100);
+  };
   return (
     <PageContainer title="Pie Charts" description="this is innerpage">
       <Card>
@@ -73,16 +77,59 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds }) => {
           >
             <CardContent>
               <Typography
-                variant="h4"
-                fontWeight="400"
+                variant="h1"
+                fontWeight="500"
                 sx={{
                   marginBottom: '0',
-                  opacity: '0.8',
+                  marginTop: '0px',
                 }}
                 gutterBottom
               >
-                {t('need.title')}
+                {maxCount}
               </Typography>
+              <Typography
+                variant="h6"
+                fontWeight="400"
+                sx={{
+                  marginBottom: '0',
+                  opacity: '0.6',
+                }}
+                gutterBottom
+              >
+                {t('need.totalCount')}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card
+            sx={{
+              color: 'white',
+              textAlign: 'center',
+              p: 1,
+              m: 0,
+            }}
+          >
+            <CardContent>
+              <Tooltip title={t('need.loadMore')}>
+                <IconButton
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                  size="large"
+                  aria-label="action"
+                >
+                  <RotateLeftIcon />
+                </IconButton>
+              </Tooltip>
+            </CardContent>
+          </Card>
+          <Card
+            sx={{
+              color: 'white',
+              textAlign: 'center',
+              p: 1,
+              m: 0,
+            }}
+          >
+            <CardContent>
               <Typography
                 variant="h1"
                 fontWeight="500"
@@ -123,5 +170,8 @@ export default PieChart;
 PieChart.propTypes = {
   donaNeeds: PropTypes.array.isRequired,
   totalNeeds: PropTypes.number.isRequired,
+  maxCount: PropTypes.number,
   allNeeds: PropTypes.array.isRequired,
+  take: PropTypes.number.isRequired,
+  setTake: PropTypes.func.isRequired,
 };

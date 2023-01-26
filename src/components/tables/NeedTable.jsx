@@ -428,12 +428,15 @@ const NeedTable = () => {
 
 
   const [theTableNeeds, setTheTableNeeds] = useState();
+  const [theTableMaxNeeds, setTheTableMaxNeeds] = useState()
+
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
 
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
   const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
+  const [take, setTake] = useState(100);
 
   const CustomizerReducer = useSelector((state) => state.CustomizerReducer);
   const { activeDir } = CustomizerReducer;
@@ -502,10 +505,10 @@ const NeedTable = () => {
       ) {
         if (child && child.id > 0) {
           console.log('fetchChildNeeds');
-          dispatch(fetchChildNeeds(child.id));
+          dispatch(fetchChildNeeds(child.id, take));
         } else if (ngo || (child && child.id < 0)) {
           console.log('fetchAllNeeds');
-          dispatch(fetchAllNeeds(ngo.id));
+          dispatch(fetchAllNeeds(ngo.id, take));
         }
       }
       if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
@@ -513,12 +516,12 @@ const NeedTable = () => {
           console.log('fetchChildNeeds');
           dispatch(fetchChildNeeds(child.id));
         } else {
-          dispatch(fetchSwNeedList());
+          dispatch(fetchSwNeedList(take));
           console.log('fetchSwNeedList');
         }
       }
     }
-  }, [swInfo, child, confirmed, deleted, ngo]);
+  }, [swInfo, child, confirmed, deleted, ngo, take]);
 
   // filter needs for the table
   useEffect(() => {
@@ -532,10 +535,12 @@ const NeedTable = () => {
       ) {
         tableNeeds = theNeeds.needs;
         setTheTableNeeds(tableNeeds);
+        setTheTableMaxNeeds(theNeeds.total_count)
       }
       if (theNeeds && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = theNeeds.needs.filter((n) => swInfo.id === n.createdBy);
         console.log('table = the sw child needs');
+        setTheTableMaxNeeds(theNeeds.total_count)
         setTheTableNeeds(tableNeeds);
       }
       // all children
@@ -547,12 +552,14 @@ const NeedTable = () => {
       ) {
         tableNeeds = needs.needs;
         console.log('table = all needs');
+        setTheTableMaxNeeds(needs.all_needs_count)
         setTheTableNeeds(tableNeeds);
       }
     } else if (swInfo && swNeeds) {
       if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = swNeeds;
         console.log('table = swNeeds');
+        setTheTableMaxNeeds(needs.all_needs_count)
         setTheTableNeeds(tableNeeds);
       }
     }
@@ -902,9 +909,12 @@ const NeedTable = () => {
               </Grid>
               <Grid item xs={12} md={8}>
                 <PieChart
+                  setTake={setTake}
+                  take={take}
                   donaNeeds={needsData[5]}
                   allNeeds={theTableNeeds}
                   totalNeeds={theTableNeeds.length}
+                  maxCount={theTableMaxNeeds}
                 />
               </Grid>
             </Grid>
