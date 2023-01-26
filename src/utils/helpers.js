@@ -46,7 +46,6 @@ export function getOrganizedNeeds(theNeeds) {
     }
   } else {
     for (let i = 0; i < theNeeds.length; i += 1) {
-      console.log(theNeeds.length);
       if (theNeeds[i].isUrgent) {
         needData[0].push(theNeeds[i]);
       }
@@ -62,7 +61,6 @@ export function getOrganizedNeeds(theNeeds) {
       needData[theNeeds[i].category + 1].push(theNeeds[i]);
     }
   }
-  console.log(needData);
   return needData;
 }
 

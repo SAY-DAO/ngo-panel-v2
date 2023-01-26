@@ -151,7 +151,7 @@ export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
   }
 };
 
-export const fetchSwChildList = (swId) => async (dispatch, getState) => {
+export const fetchSwOrNgoChildList = (swId) => async (dispatch, getState) => {
   try {
     dispatch({ type: SW_CHILD_LIST_REQUEST });
     const {
@@ -165,6 +165,7 @@ export const fetchSwChildList = (swId) => async (dispatch, getState) => {
       },
     };
     // both confirmed and not confirmed children
+    // migrate will use the first one
     let response;
     if (swId) {
       response = await publicApi.get(`/child/all/confirm=${2}?sw_id=${swId}`, config);

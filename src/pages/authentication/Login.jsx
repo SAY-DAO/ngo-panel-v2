@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useTranslation } from 'react-i18next';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -16,6 +17,7 @@ import Message from '../../components/Message';
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const location = useLocation();
 
   const redirect = location.search
@@ -127,9 +129,9 @@ const Login = () => {
                 }}
               >
                 <Typography fontWeight="700" variant="h2">
-                  Welcome to SAY Social Gateway
+                  {t('login.title')}
                 </Typography>
-                <Box display="flex" alignItems="center">
+                {/* <Box display="flex" alignItems="center">
                   <Typography
                     color="textSecondary"
                     variant="h6"
@@ -152,13 +154,13 @@ const Login = () => {
                   >
                     Create an account
                   </Typography>
-                </Box>
+                </Box> */}
                 <Box
                   sx={{
                     mt: 4,
                   }}
                 >
-                  <CustomFormLabel htmlFor="email">Email Address</CustomFormLabel>
+                  <CustomFormLabel htmlFor="email"> {t('login.username')}</CustomFormLabel>
                   <CustomTextField
                     id="email"
                     type="email"
@@ -167,7 +169,7 @@ const Login = () => {
                     variant="outlined"
                     fullWidth
                   />
-                  <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
+                  <CustomFormLabel htmlFor="password"> {t('login.password')}</CustomFormLabel>
                   <CustomTextField
                     id="password"
                     type="password"
@@ -192,7 +194,7 @@ const Login = () => {
                     <FormGroup>
                       <FormControlLabel
                         control={<CustomCheckbox defaultChecked />}
-                        label="Remeber this Device"
+                        label= {t('login.remember')}
                         sx={{
                           mb: 2,
                         }}
@@ -214,7 +216,7 @@ const Login = () => {
                           color: 'primary.main',
                         }}
                       >
-                        Forgot Password ?
+                         {t('login.forgotPassword')}
                       </Typography>
                     </Box>
                   </Box>
@@ -232,7 +234,7 @@ const Login = () => {
                     }}
                     onClick={handleLogin}
                   >
-                    Sign In
+                     {t('button.login')}
                   </LoadingButton>
                 </Box>
                 <Grid item xs={12} sx={{ textAlign: 'center' }}>

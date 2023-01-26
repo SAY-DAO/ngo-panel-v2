@@ -13,6 +13,14 @@
     "dark": "Dark",
     "light": "Light"
   },
+  "login": {
+    "title": "Welcome to SAY Social Gateway",
+    "subtitle": "",
+    "username": "Email ou Username",
+    "password": "Password",
+    "remember": "Remeber this Device",
+    "forgotPassword": "Forgot Password ?"
+  },
   "error": {
     "nestDown": "Nest server is not running",
     "report": {

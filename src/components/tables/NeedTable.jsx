@@ -51,7 +51,7 @@ import {
   updateNeedConfirm,
 } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
-import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
+import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
 import { ALL_NEEDS_RESET, UPDATE_ONE_NEED_RESET } from '../../redux/constants/needConstant';
 import { dateConvertor } from '../../utils/persianToEnglish';
@@ -407,15 +407,15 @@ const NeedTable = () => {
   const { swInfo } = swDetails;
   const [ngo, setNgo] = useState(
     swInfo &&
-      (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN
-        ? {
-            id: 2,
-            name: 'مهر و ماه',
-          }
-        : {
-            id: swInfo.ngoId,
-            name: swInfo.ngoName,
-          }),
+    (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN
+      ? {
+        id: 2,
+        name: 'مهر و ماه',
+      }
+      : {
+        id: swInfo.ngoId,
+        name: swInfo.ngoName,
+      }),
   );
 
   const [child, setChild] = useState({
@@ -426,9 +426,7 @@ const NeedTable = () => {
     isConfirmed: true,
   });
 
-  console.log('ngo');
-  console.log(ngo);
-  console.log('ngo');
+
   const [theTableNeeds, setTheTableNeeds] = useState();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
@@ -468,6 +466,32 @@ const NeedTable = () => {
   const needUpdate = useSelector((state) => state.needUpdate);
   const { success: successUpdateNeed } = needUpdate;
 
+
+  // child open
+  useEffect(() => {
+    if (swInfo && ngo) {
+      // super admin & admin
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+        console.log('fetchChildrenByNgo');
+        dispatch(fetchChildrenByNgo({ ngoId: ngo.id }));
+      } else if (
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        // backend will filter all ngo children
+        dispatch(fetchSwOrNgoChildList());
+        console.log('fetchٔNgoChildList');
+      }
+      else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER
+      ) {
+        // backend will filter only sw children
+        dispatch(fetchSwOrNgoChildList());
+        console.log('fetchSwChildList');
+      }
+    }
+  }, [ngo, swInfo]);
+
+
   // fetch needs
   useEffect(() => {
     if (swInfo) {
@@ -499,12 +523,9 @@ const NeedTable = () => {
   // filter needs for the table
   useEffect(() => {
     let tableNeeds;
+    // one children
     if (swInfo && theNeeds && child && child.id > 0) {
-      console.log('table = the child needs');
-      if (theNeeds && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
-        tableNeeds = theNeeds.needs.filter((n) => swInfo.typeId === n.createdBy);
-        setTheTableNeeds(tableNeeds);
-      } else if (
+      if (
         (theNeeds && swInfo.typeId === RolesEnum.SUPER_ADMIN) ||
         swInfo.typeId === RolesEnum.ADMIN ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
@@ -512,21 +533,26 @@ const NeedTable = () => {
         tableNeeds = theNeeds.needs;
         setTheTableNeeds(tableNeeds);
       }
+      if (theNeeds && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+        tableNeeds = theNeeds.needs.filter((n) => swInfo.id === n.createdBy);
+        console.log('table = the sw child needs');
+        setTheTableNeeds(tableNeeds);
+      }
+      // all children
     } else if (swInfo && needs && child && child.id === 0) {
-      console.log('table = all needs');
-      console.log(needs);
       if (
         swInfo.typeId === RolesEnum.SUPER_ADMIN ||
         swInfo.typeId === RolesEnum.ADMIN ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
         tableNeeds = needs.needs;
+        console.log('table = all needs');
         setTheTableNeeds(tableNeeds);
       }
     } else if (swInfo && swNeeds) {
-      console.log('table = swNeeds');
       if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = swNeeds;
+        console.log('table = swNeeds');
         setTheTableNeeds(tableNeeds);
       }
     }
@@ -546,7 +572,7 @@ const NeedTable = () => {
           console.log('need data 1');
           setNeedsData(needData);
         }
-        if (successAllNeeds) {
+        if (successAllNeeds && child && child.id === 0) {
           const needData = getOrganizedNeeds(needs);
           console.log('need data 2');
           setNeedsData(needData);
@@ -558,12 +584,14 @@ const NeedTable = () => {
         }
       } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         if (successChildNeeds) {
-          const filteredChildNeeds = theNeeds.needs.filter((n) => swInfo.typeId === n.createdBy);
+          console.log(theNeeds)
+          const filteredChildNeeds = theNeeds.needs.filter((n) => swInfo.id === n.createdBy);
+          console.log(filteredChildNeeds)
           const needData = getOrganizedNeeds(filteredChildNeeds);
           console.log('need data 4');
           setNeedsData(needData);
         }
-        if (successSwNeeds) {
+        if (successSwNeeds && child && child.id === 0) {
           const needData = getOrganizedNeeds(swNeeds);
           console.log('need data 5');
           setNeedsData(needData);
@@ -637,23 +665,6 @@ const NeedTable = () => {
       active = false;
     };
   }, [loadinggoChildren, successNgoChildren, swChildren, ngo]);
-
-  // child open
-  useEffect(() => {
-    if (swInfo && ngo) {
-      // super admin & admin
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
-        console.log('fetchChildrenByNgo');
-        dispatch(fetchChildrenByNgo({ ngoId: ngo.id }));
-      } else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
-      ) {
-        dispatch(fetchSwChildList(swInfo.id));
-        console.log('fetchSwChildList');
-      }
-    }
-  }, [ngo, swInfo]);
 
   // when click on Breadcrumb use the state to retrieve the child
   useEffect(() => {
@@ -828,8 +839,8 @@ const NeedTable = () => {
                 (option.isConfirmed && option.id > 0
                   ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
                   : !option.isConfirmed && option.id > 0
-                  ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
-                  : `(${option.sayName})`)
+                    ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
+                    : `(${option.sayName})`)
               }
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -996,8 +1007,8 @@ const NeedTable = () => {
                                             row.unpayable === false && !row.isDone
                                               ? (theme) => theme.palette.success.main
                                               : row.unpayable === true && !row.isDone
-                                              ? (theme) => theme.palette.error.main
-                                              : (theme) => theme.palette.info.main,
+                                                ? (theme) => theme.palette.error.main
+                                                : (theme) => theme.palette.info.main,
                                           borderRadius: '100%',
                                           height: '10px',
                                           width: '10px',

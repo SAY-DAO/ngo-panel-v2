@@ -3,7 +3,7 @@ import { CircularProgress, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import ChildrenTable from '../../components/tables/ChildrenTable';
-import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
+import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { fetchChildList } from '../../redux/actions/childrenAction';
 import { RolesEnum } from '../../utils/helpers';
 
@@ -29,7 +29,7 @@ const ChildrenList = () => {
         swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
         swInfo.typeId === RolesEnum.NGO_SUPERVISOR
       ) {
-        dispatch(fetchSwChildList());
+        dispatch(fetchSwOrNgoChildList());
       }
     }
   }, [swInfo]);

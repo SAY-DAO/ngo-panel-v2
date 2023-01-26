@@ -9,7 +9,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import {
   fetchSocialWorkerById,
   fetchSocialWorkersList,
-  fetchSwChildList,
+  fetchSwOrNgoChildList,
 } from '../../redux/actions/socialWorkerAction';
 import {
   MIGRATE_ONE_CHILD_RESET,
@@ -123,7 +123,7 @@ export default function SocialWorkerMigrate() {
       setTo();
       const swId = e.target.outerText.split(/([0-9]+)/)[1];
       dispatch(fetchSocialWorkerById(swId));
-      dispatch(fetchSwChildList(swId));
+      dispatch(fetchSwOrNgoChildList(swId));
       setFrom(swId);
     }
   };
@@ -133,7 +133,7 @@ export default function SocialWorkerMigrate() {
       setFrom();
       const swId = e.target.outerText.split(/([0-9]+)/)[1];
       dispatch(fetchSocialWorkerById(swId));
-      dispatch(fetchSwChildList(swId));
+      dispatch(fetchSwOrNgoChildList(swId));
       setTo(swId);
     }
   };

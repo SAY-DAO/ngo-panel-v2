@@ -13,6 +13,14 @@
     "dark": "تیره",
     "light": "روشن"
   },
+  "login": {
+    "title": "به پورتال مددکار خوش‌آمدید",
+    "subtitle": "",
+    "username": "ایمیل یا نام کاربری",
+    "password": "رمزعبور",
+    "remember": "مرا به خاطر بسپار",
+    "forgotPassword": "فراموشی رمز عبور؟"
+  },
   "error": {
     "nestDown": "مشکل ارتباط با سرور Nest",
     "weak": "ضعیف",
@@ -598,12 +606,12 @@
   },
   "profile": {
     "settings": {
-      "hi": "Hi",
-      "title": "User Profile",
-      "edit": "Edit Profile",
-      "settings": "Account Settings",
-      "logIn": "Log in",
-      "logOut": "Log out"
+      "hi": "سلام",
+      "title": "پروفایل کاربری",
+      "edit": "ویرایش پروفایل",
+      "settings": "جزئیات کاربری",
+      "logIn": "ورود",
+      "logOut": "خروج"
     }
   },
   "myPage": {
@@ -650,9 +658,8 @@
         "paid": "تاریخ پرداخت",
         "ngoDelivery": "تاریخ ارسال به سمن",
         "childDelivery": "تاریخ ارسال به کودک",
-        "daysAgo":"روز پیش",
-        "days":"روز"
-
+        "daysAgo": "روز پیش",
+        "days": "روز"
       },
       "menu": {
         "updateChild": "ویرایش کودک",

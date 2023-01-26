@@ -360,7 +360,7 @@ export const signTransaction = (need) => async (dispatch, getState) => {
   try {
     dispatch({ type: SIGNATURE_REQUEST });
     // update server first
-    await dispatch(updateOneNeedNestServer(need));
+    // await dispatch(updateOneNeedNestServer(need));
     const {
       serverOneNeed: { error },
     } = getState();
@@ -383,6 +383,7 @@ export const signTransaction = (need) => async (dispatch, getState) => {
       signerAddress,
     };
     const { data } = await daoApi.post(`/signature/sw/generate`, request);
+    console.log(data)
 
     // eslint-disable-next-line no-underscore-dangle
     const signature = await signer._signTypedData(
@@ -392,7 +393,6 @@ export const signTransaction = (need) => async (dispatch, getState) => {
     );
 
     await daoApi.post(`/needs/patch`, request);
-
     dispatch({
       type: SIGNATURE_SUCCESS,
       payload: { data, signature },

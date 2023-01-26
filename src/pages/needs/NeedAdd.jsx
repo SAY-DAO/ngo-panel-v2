@@ -52,7 +52,7 @@ import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
 import { getAge, getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
-import { fetchSwChildList } from '../../redux/actions/socialWorkerAction';
+import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
@@ -169,7 +169,7 @@ const NeedAdd = () => {
           swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
           swInfo.typeId === RolesEnum.NGO_SUPERVISOR
         ) {
-          dispatch(fetchSwChildList());
+          dispatch(fetchSwOrNgoChildList());
         }
       }
     }

@@ -205,22 +205,21 @@ export const fetchSwNeedList = () => async (dispatch, getState) => {
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': 500,
+        'X-TAKE': 100,
       },
     };
 
-    let url;
+    let response;
     // super admin & admin
     if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
-      url = `/needs`;
+      response = await publicApi.get('/needs', config);
     } else {
-      url = `/socialworkers/${swInfo.id}/createdNeeds`;
-    }
-    const { data } = await publicApi.get(url, config);
+      response = await publicApi.get(`/socialworkers/${swInfo.id}/createdNeeds`, config);
+          }
 
     dispatch({
       type: SW_NEED_LIST_SUCCESS,
-      payload: data,
+      payload: response.data,
     });
   } catch (e) {
     dispatch({
