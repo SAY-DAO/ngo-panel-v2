@@ -563,7 +563,7 @@ const NeedTable = () => {
         setTheTableNeeds(tableNeeds);
       }
     }
-  }, [swInfo, needs, swNeeds, theNeeds]);
+  }, [swInfo, successChildNeeds, successAllNeeds, successSwNeeds]);
 
   // sort needs for statics
   useEffect(() => {
@@ -784,7 +784,7 @@ const NeedTable = () => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0
+    page > 0 && (needs || theNeeds || swNeeds)
       ? Math.max(0, (1 + page) * rowsPerPage - (needs || theNeeds || swNeeds).needs.length)
       : 0;
 

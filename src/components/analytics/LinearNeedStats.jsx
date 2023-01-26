@@ -60,7 +60,7 @@ const LinearNeedStats = ({ needsData, totalNeeds }) => {
     >
       {stats && (
         <CardContent>
-          <WidgetCard title= {t('need.stats') }/>
+          <WidgetCard title={`${t('need.stats')}  (${totalNeeds})`} />
           <Box sx={{ mt: -1 }}>
             {stats.map((stat) => (
               <Box
@@ -107,14 +107,14 @@ const LinearNeedStats = ({ needsData, totalNeeds }) => {
                         stat.color === 'secondary'
                           ? (theme) => theme.palette.secondary.main
                           : stat.color === 'error'
-                          ? (theme) => theme.palette.error.main
-                          : stat.color === 'warning'
-                          ? (theme) => theme.palette.warning.main
-                          : stat.color === 'success'
-                          ? (theme) => theme.palette.success.main
-                          : stat.color === 'primary'
-                          ? (theme) => theme.palette.primary.main
-                          : (theme) => theme.palette.primary.main,
+                            ? (theme) => theme.palette.error.main
+                            : stat.color === 'warning'
+                              ? (theme) => theme.palette.warning.main
+                              : stat.color === 'success'
+                                ? (theme) => theme.palette.success.main
+                                : stat.color === 'primary'
+                                  ? (theme) => theme.palette.primary.main
+                                  : (theme) => theme.palette.primary.main,
                     },
                   }}
                 />

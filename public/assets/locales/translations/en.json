@@ -353,6 +353,7 @@
     "type_name": "Type",
     "totalCount": "total Needs count",
     "stats": "Needs Stats",
+    "display": "On Display",
     "loadMore": " Load more needs",
     "statsRatio": "Done / Total",
     "newStatus": "New Status...",

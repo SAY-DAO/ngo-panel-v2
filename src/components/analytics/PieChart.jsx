@@ -1,6 +1,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import { Card, CardContent, Box, Typography, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, Grid, Typography, IconButton, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
@@ -66,102 +66,104 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake }) 
   return (
     <PageContainer title="Pie Charts" description="this is innerpage">
       <Card>
-        <Box display="flex" alignItems="center" justifyContent="center">
-          <Card
-            sx={{
-              color: 'white',
-              textAlign: 'center',
-              p: 1,
-              m: 0,
-            }}
-          >
-            <CardContent>
-              <Typography
-                variant="h1"
-                fontWeight="500"
-                sx={{
-                  marginBottom: '0',
-                  marginTop: '0px',
-                }}
-                gutterBottom
-              >
-                {maxCount}
-              </Typography>
-              <Typography
-                variant="h6"
-                fontWeight="400"
-                sx={{
-                  marginBottom: '0',
-                  opacity: '0.6',
-                }}
-                gutterBottom
-              >
-                {t('need.totalCount')}
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card
-            sx={{
-              color: 'white',
-              textAlign: 'center',
-              p: 1,
-              m: 0,
-            }}
-          >
-            <CardContent>
-              <Tooltip title={t('need.loadMore')}>
-                <IconButton
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                  size="large"
-                  aria-label="action"
+        <Card
+          sx={{
+            textAlign: 'center',
+            p: 1,
+            m: 0,
+          }}
+        >
+          <CardContent>
+            <Grid container direction="row" alignItems="center" justifyContent="center">
+              <Grid item xs={12} md={3}>
+                <Typography
+                  variant="h1"
+                  fontWeight="500"
+                  sx={{
+                    marginBottom: '0',
+                    marginTop: '0px',
+                  }}
+                  gutterBottom
                 >
-                  <RotateLeftIcon />
-                </IconButton>
-              </Tooltip>
-            </CardContent>
-          </Card>
-          <Card
-            sx={{
-              color: 'white',
-              textAlign: 'center',
-              p: 1,
-              m: 0,
-            }}
-          >
-            <CardContent>
-              <Typography
-                variant="h1"
-                fontWeight="500"
-                sx={{
-                  marginBottom: '0',
-                  marginTop: '0px',
-                }}
-                gutterBottom
-              >
-                {donaNeeds.length} {' / '}
-                {totalNeeds}
-              </Typography>
-              <Typography
-                variant="h6"
-                fontWeight="400"
-                sx={{
-                  marginBottom: '0',
-                  opacity: '0.6',
-                }}
-                gutterBottom
-              >
-                {t('need.statsRatio')}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
+                  {maxCount}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  fontWeight="400"
+                  sx={{
+                    marginBottom: '0',
+                    opacity: '0.6',
+                  }}
+                  gutterBottom
+                >
+                  {t('need.totalCount')}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Tooltip title={t('need.loadMore')}>
+                  <IconButton
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    size="large"
+                    aria-label="action"
+                  >
+                    <RotateLeftIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Typography
+                  variant="h4"
+                  fontWeight="400"
+                  sx={{
+                    marginBottom: '0',
+                    opacity: '0.8',
+                  }}
+                  gutterBottom
+                >
+                  {t('need.display')}
+                </Typography>
+                <Typography
+                  variant="h1"
+                  fontWeight="500"
+                  sx={{
+                    marginBottom: '0',
+                    marginTop: '0px',
+                  }}
+                  gutterBottom
+                >
+                  {donaNeeds.length} {' / '}
+                  {totalNeeds}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  fontWeight="400"
+                  sx={{
+                    marginBottom: '0',
+                    opacity: '0.6',
+                  }}
+                  gutterBottom
+                >
+                  {t('need.statsRatio')}
+                </Typography>
 
-        <CardContent>
-          <Chart options={optionspiechart} series={seriespiechart} type="pie" height="270px" />
-        </CardContent>
-      </Card>
-    </PageContainer>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+        <Card
+          sx={{
+            textAlign: 'center',
+            p: 1,
+            m: 0,
+          }}
+        >
+          <CardContent>
+            <Chart options={optionspiechart} series={seriespiechart} type="pie" height="270px" />
+          </CardContent>
+        </Card>
+      </Card >
+    </PageContainer >
   );
 };
 
