@@ -559,7 +559,7 @@ const NeedTable = () => {
       if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = swNeeds;
         console.log('table = swNeeds');
-        setTheTableMaxNeeds(needs.all_needs_count)
+        setTheTableMaxNeeds(swNeeds.length) // TODO: all needs count is needed
         setTheTableNeeds(tableNeeds);
       }
     }
