@@ -352,6 +352,7 @@
     "affiliateLinkUrl": "Aff. Link",
     "type_name": "Type",
     "totalCount": "total Needs count",
+    "totalExplain": "Please be advised that this is the total of the needs for the child and the ones you have created could be less than this total",
     "stats": "Needs Stats",
     "display": "On Display",
     "loadMore": " Load more needs",

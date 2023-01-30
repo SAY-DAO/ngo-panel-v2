@@ -915,6 +915,7 @@ const NeedTable = () => {
                   allNeeds={theTableNeeds}
                   totalNeeds={theTableNeeds.length}
                   maxCount={theTableMaxNeeds}
+                  child={child}
                 />
               </Grid>
             </Grid>

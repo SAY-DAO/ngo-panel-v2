@@ -4,11 +4,16 @@ import { Card, CardContent, Grid, Typography, IconButton, Tooltip } from '@mui/m
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useSelector } from 'react-redux';
 import PageContainer from '../container/PageContainer';
-import { PaymentStatusEnum } from '../../utils/helpers';
+import { PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
 
-const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake }) => {
+const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, child }) => {
   const { t } = useTranslation();
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   let unpayableCount = 0;
   for (let i = 0; i < allNeeds.length; i += 1) {
@@ -76,6 +81,16 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake }) 
           <CardContent>
             <Grid container direction="row" alignItems="center" justifyContent="center">
               <Grid item xs={12} md={3}>
+                {
+                  swInfo.typeId === RolesEnum.SOCIAL_WORKER  && child && child.id > 0 && (
+                    <Tooltip placement='top-end' title={t('need.totalExplain')}>
+                      <IconButton>
+                        <HelpOutlineIcon fontSize='small' />
+                      </IconButton>
+                    </Tooltip>
+                  )
+                }
+
                 <Typography
                   variant="h1"
                   fontWeight="500"
@@ -176,4 +191,5 @@ PieChart.propTypes = {
   allNeeds: PropTypes.array.isRequired,
   take: PropTypes.number.isRequired,
   setTake: PropTypes.func.isRequired,
+  child: PropTypes.object
 };
