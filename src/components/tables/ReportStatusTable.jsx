@@ -359,7 +359,7 @@ const ReportStatusTable = () => {
   const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
 
   const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('updated');
+  const [orderBy, setOrderBy] = useState('doneAt');
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(25);
