@@ -42,10 +42,10 @@ export const fetchSocialWorkerDetails = () => async (dispatch, getState) => {
     const config = {
       headers: {
         'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
+        Authorization: userInfo && userInfo.access_token ||  userInfo.accessToken,
       },
     };
-    const { data } = await publicApi.get(`/socialworkers/${userInfo.id}`, config);
+    const { data } = await publicApi.get(`/socialworkers/${userInfo.id || userInfo.user.id}`, config);
 
     dispatch({
       type: SW_DETAILS_SUCCESS,

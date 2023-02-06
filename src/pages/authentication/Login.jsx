@@ -13,6 +13,7 @@ import backImage from '../../assets/images/login/intro.png';
 import LogoIcon from '../../layouts/full-layout/logo/LogoIcon';
 import { login } from '../../redux/actions/userAction';
 import Message from '../../components/Message';
+import { fetchSocialWorkerDetails } from '../../redux/actions/socialWorkerAction';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const Login = () => {
 
   const redirect = location.search
     ? // eslint-disable-next-line no-restricted-globals
-      location.search.split('redirect=')[1]
+    location.search.split('redirect=')[1]
     : '/';
 
   const [isDisabled, setIsDisabled] = useState(true);
@@ -33,11 +34,22 @@ const Login = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { loading: loadingLogin, error: errorLogin, success: successLogin } = userLogin;
 
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { success: successSwDetails } = swDetails;
+
   useEffect(() => {
-    if (successLogin) {
+    if (successLogin && successSwDetails) {
       navigate(`/${redirect}`);
     }
-  }, [redirect, successLogin]);
+  }, [redirect, successLogin, successSwDetails]);
+
+
+  useEffect(() => {
+    if (successLogin) {
+      dispatch(fetchSocialWorkerDetails());
+    }
+  }, [successLogin]);
 
   // loading button
   useEffect(() => {
@@ -194,7 +206,7 @@ const Login = () => {
                     <FormGroup>
                       <FormControlLabel
                         control={<CustomCheckbox defaultChecked />}
-                        label= {t('login.remember')}
+                        label={t('login.remember')}
                         sx={{
                           mb: 2,
                         }}
@@ -216,7 +228,7 @@ const Login = () => {
                           color: 'primary.main',
                         }}
                       >
-                         {t('login.forgotPassword')}
+                        {t('login.forgotPassword')}
                       </Typography>
                     </Box>
                   </Box>
@@ -234,7 +246,7 @@ const Login = () => {
                     }}
                     onClick={handleLogin}
                   >
-                     {t('button.login')}
+                    {t('button.login')}
                   </LoadingButton>
                 </Box>
                 <Grid item xs={12} sx={{ textAlign: 'center' }}>

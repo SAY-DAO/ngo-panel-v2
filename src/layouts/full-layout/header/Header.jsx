@@ -56,7 +56,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { t } = useTranslation();
 
   const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo, loading: loadingswDetails, success: successSwDetails } = swDetails;
+  const { swInfo, loading: loadingswDetails, success: successSwDetails, error: errorSwDetails } = swDetails;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { loading: loadingNgoList, success: successNgoList } = ngoAll;
@@ -86,7 +86,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (!successLogin) {
       navigate('/auth/login');
     }
-  }, [successLogin, location]);
+    if (errorSwDetails && errorSwDetails.status === 403) {
+      navigate('/auth/login');
+    }
+  }, [successLogin, location, errorSwDetails]);
 
   useEffect(() => {
     if (!successSwDetails && !loadingswDetails) {
@@ -106,7 +109,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         dispatch(fetchNgoList());
       }
     }
-  }, [successSwDetails, successNgoList, loadingNgoList, loadingswDetails, location]);
+  }, [successSwDetails, successNgoList, loadingNgoList,successLogin, location]);
 
   // if not active log out
   useEffect(() => {
