@@ -504,8 +504,427 @@
     },
     "s4": {
       "img": "https://sayapp.company/public/resources/img/child_delivered.jpg",
+<<<<<<< Updated upstream
       "title": "هزینه‌ی {{needName}} برای {{childSayName}}",
       "paragraph": "در روز {{date}} مبلغ {{needCost}} تومان هزینه‌ی {{needName}} برای {{childSayName}} توسط انجمن پرداخت شد."
+=======
+      "title": "{{childSayName}}’s {{needName}} has been paid for",
+      "paragraph": "The amount of {{needCost}} Tomans for {{childSayName}}’s {{needName}}, has been paid by the NGO on {{date}}."
+    },
+    "contact": "At SAY, we listen to you.",
+    "address": "4th Floor, No 22, Azarshahr St, Iranshahr St, Karimkhan Zand St, Tehran, Iran",
+    "phoneNumber": "Tel: <1>0 2 1 - 2 2 3 4 7 8 1 4</1>",
+    "download": "Download Report",
+    "receipt": {
+      "code": "شماره رسید",
+      "title": "عنوان رسید",
+      "description": "توضیحات"
+    }
+  },
+  "sidebar": {
+    "swHeader": "مددکار",
+    "myPage": "صفحه من",
+    "children": {
+      "title": "کودکان"
+    },
+    "needs": {
+      "title": "نیازها"
+    },
+    "milestone": {
+      "title": "جدول نقاط عطف"
+    },
+    "reports": "گزارش‌ها",
+    "adminHeader": "ادمین",
+    "ngos": {
+      "title": "انجمن‌ها"
+    },
+    "providers": {
+      "title": "تامین کننده‌ها"
+    },
+    "socialWorkers": {
+      "title": "مددکارها",
+      "migrate": "انتقال"
+    },
+    "categories": {
+      "title": "دسته بندی‌ها"
+    },
+    "daoHeader": "DAO",
+    "dashboard": "داشبورد",
+    "list": "لیست",
+    "add": "اضافه کردن"
+  },
+  "socialWorker": {
+    "title": "مددکار",
+    "myChildren": "کودکان من",
+    "noChildren": "کودکی ندارد",
+    "socialWorker": "مددکار",
+    "isActive": "وضعیت",
+    "isCoordinator": "Coordinator Status",
+    "update": "ویرایش",
+    "updated": "با موفقیت انجام شد!",
+    "migrate": {
+      "from": "از",
+      "to": "به"
+    },
+    "migrated": "!انتقال موفق بود",
+    "titleEdit": "ویرایش جزئیات",
+    "titleAdd": "اضافه کردن جزئیات",
+    "generatedCode": "کد ساخته شده",
+    "firstName": "اسم",
+    "lastName": "فامیل",
+    "nameAndEmail": "نام و ایمیل",
+    "userName": "نام کاربری",
+    "avatarUrl": "آواتار",
+    "typeName": "نوع",
+    "ngoName": "نام سمن",
+    "idNumber": "شماره کارت شناسایی",
+    "idCardUrl": "تصویر کارت شناسایی",
+    "country": "کشور",
+    "city": "شهر",
+    "typeId": "نوع دسترسی",
+    "birthDate": "تاریخ تولد",
+    "phoneNumber": "شماره تماس",
+    "emergencyPhoneNumber": "شماره اضطراری",
+    "email": "ایمیل",
+    "telegramId": "تلگرام",
+    "postalAddress": "آدرس",
+    "childCount": "تعداد کودکان",
+    "needCount": "تعداد نیازها",
+    "lastLoginDate": "آخرین ورود",
+    "button": {
+      "update": "ویرایش",
+      "migrate": "انتقال"
+    },
+    "migrateModal": {
+      "confirm": "آیا مطمئن به انتقال هستید؟"
+    },
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "SOCIAL_WORKER": "Social Worker",
+      "COORDINATOR": "Coordinator",
+      "NGO_SUPERVISOR": "NGO Supervisor",
+      "SAY_SUPERVISOR": "SAY Supervisor",
+      "ADMIN": "Admin",
+      "USER": "User"
+    },
+    "cities": {
+      "one": "تهران"
+    },
+    "countries": {
+      "one": "ایران"
+    }
+  },
+  "ngo": {
+    "title": "سازمان مردم نهاد",
+    "isActive": "وضعیت",
+    "allNgos": "همه سمن‌ها",
+    "update": "ویرایش",
+    "titleEdit": "ویرایش جزئیات",
+    "titleAdd": "اضافه کردن",
+    "childrenCount": "تعداد کودکان",
+    "country": "کشور",
+    "state": "استان",
+    "city": "شهر",
+    "currentChildrenCount": "تعداد کودکان فعال",
+    "socialWorkerCount": "تعداد مددکارها",
+    "currentSocialWorkerCount": "تعداد مددکاران فعال",
+    "emailAddress": "ایمیل",
+    "id": "آی‌دی",
+    "name": "نام",
+    "phoneNumber": "تلفن",
+    "postalAddress": "آدرس",
+    "registerDate": "تاریخ ثبت شده",
+    "created": "تاریخ ایجاد",
+    "updated": "تاریخ ویرایش",
+    "website": "وبسایت",
+    "button": {
+      "update": "به‌روزرسانی",
+      "add": "اضافه کردن سمن"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
+  },
+  "need": {
+    "title": "نیازها",
+    "updatedNeed": "با موفقیت انجام شد!",
+    "autoCompleteType": "خدمات/کالا",
+    "autoCompleteStatus": "وضعیت",
+    "pie": {
+      "ok": "خوب",
+      "unpayable": "غیر قابل پرداخت",
+      "unconfirmed": "تائید نشده"
+    },
+    "id": "آی‌دی",
+    "titleEdit": "ویرایش نیاز",
+    "titleAdd": "اضافه کردی نیاز",
+    "titleStatus": "عنوان",
+    "payable": "قابل پرداخت",
+    "unpayable": "غیر قابل پرداخت",
+    "fullyPaid": "پرداخت شده",
+    "update": "ویرایش",
+    "imageUrl": "آیکون",
+    "childSayName": "SAY نام",
+    "name": {
+      "fa": "نام نیاز (fa)",
+      "en": "نام نیاز (en)"
+    },
+    "etitle": "عنوان در فروشگاه",
+    "cost": "قیمت",
+    "expectedDeliveryToNgo": "تخمین زمان رسیدن",
+    "paid": "پرداختی",
+    "progress": "پیشرفت",
+    "status": "وضعیت",
+    "link": "لینک",
+    "affiliateLinkUrl": "لینک همکاری فروش",
+    "type_name": "نوع",
+    "stats": "آمار نیازها",
+    "newStatus": "وضعیت جدید ...",
+    "display": "در حال نمایش",
+    "loadMore": "دریافت نیاز بیشتز",
+    "totalExplain": "لطفا مطلع باشید که این عدد تعداد کل نیازها می‌باشد. تعداد نیازهای ساخته شده به وسیله شما می‌تواند کمتر از کل باشد",
+    "totalCount": "تمام نیازها",
+    "statsRatio": "انجام شده / تمام نیازها",
+    "providerSelect": "لطفا تامیین کننده انتخاب کنید",
+    "provider": "اسم تامین کننده",
+    "providers": {
+      "service": "خدمات",
+      "product": "کالا"
+    },
+    "types": {
+      "service": "خدمات",
+      "product": "کالا"
+    },
+    "isUrgent": "ضروری",
+    "informations": "اطلاعات بیشتر",
+    "details": "یادداشت مددکار",
+    "category": "دسته‌بندی",
+    "categories": {
+      "growth": "رشد",
+      "joy": "تفریح",
+      "health": "سلامت",
+      "surroundings": "پیرامون"
+    },
+    "description": "توضیحات",
+    "descriptions": {
+      "fa": "توضیحات فارسی(fa)",
+      "en": "توضیحات انگلیسی(en)"
+    },
+    "img": {
+      "service": "عکس",
+      "product": "عکس از فروشگاه"
+    },
+    "created": "زمان ایجاد",
+    "isConfirmed": "وضعیت تائید",
+    "confirmUser": "تائید کننده",
+    "confirmDate": "زمان تائید",
+    "updated": "زمان آخرین ویرایش",
+    "doneAt": "زمان اتمام",
+    "child_delivery_date": "زمان انتقال به کودک",
+    "preNeed": "الگو",
+    "doing_duration": "مدت زمان انجام",
+    "payers": "پرداخت کننده‌ها",
+    "button": {
+      "update": "به‌ روزرسانی نیاز",
+      "add": "اضافه کردی نیاز"
+    },
+    "today": "تاریخ امروز",
+    "needStatusTitle": "تغییر وضعیت",
+    "needStatus": {
+      "1": "نیم‌پرداخت",
+      "2": "پرداخت کامل",
+      "p3": "کالا خریده شده",
+      "p4": "به سمن ارسال شده",
+      "p5": "به کودک ارسال شده",
+      "s3": "هزینه به سمن ارسال شده",
+      "s4": "به کودک ارسال شده",
+      "signature": "امضا",
+      "sign": "امضا",
+      "pending": "به کودک ارسال نشده"
+    },
+    "needDialogue": {
+      "service": {
+        "1": "نیم‌پرداخت",
+        "2": "پرداخت کامل",
+        "3": "هزینه به سمن ارسال شده",
+        "4": "به کودک ارسال شده"
+      },
+      "product": {
+        "1": "نیم‌پرداخت",
+        "2": "پرداخت کامل",
+        "3": "کالا خریده شده",
+        "4": "به سمن ارسال شده",
+        "5": "به کودک ارسال شده"
+      }
+    }
+  },
+  "provider": {
+    "update": "Edit",
+    "titleEdit": "Edit Details",
+    "titleAdd": "Add Details",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "isActive": "Status",
+    "description": "Description",
+    "emailAddress": "Email",
+    "name": "Name",
+    "website": "website",
+    "type": "type",
+    "updated": "Updated",
+    "button": {
+      "update": "Update",
+      "add": "Add Provider"
+    },
+    "cities": {
+      "one": "Tehran"
+    },
+    "countries": {
+      "one": "Iran"
+    }
+  },
+  "child": {
+    "title": "کودک",
+    "all": "تمام کودکان",
+    "id": "آی‌دی",
+    "isConfirmed": "وضعیت تائید",
+    "existence_status": "وضعیت کودک",
+    "isDeleted": "وضعیت حذف",
+    "status": "وضعیت",
+    "sayname_translations": {
+      "fa": "SAY نام فارسی (fa)",
+      "en": "SAY نام انگلیسی (en)"
+    },
+    "firstName_translations": {
+      "fa": "نام فارسی",
+      "en": "نام انگلیسی"
+    },
+    "lastName_translations": {
+      "fa": "نام خانوادگی فارسی",
+      "en": "نام خانوادگی انگلیسی"
+    },
+    "bio_translations": {
+      "fa": "داستان فارسی کودک",
+      "en": "داستان انگلیسی کودک"
+    },
+    "bio_summary_translations": {
+      "fa": "خلاصه داستان فارسی کودک",
+      "en": "خلاصه داستان انگلیسی کودک"
+    },
+    "divider": {
+      "housing": "جزییات محل زندگی",
+      "origin": "جزییات تولد"
+    },
+    "awakeAvatarUrl": "آواتار کودک",
+    "sleptAvatarUrl": "آواتار خواب کودک",
+    "uploadVoice": "آپلود صدای کودک",
+    "bio": "داستان کودک",
+    "bioSummary": "خلاصه داستان کودک",
+    "bioSummaryTranslations": "ترجمه خلاصه داستان کودک",
+    "birthDate": "تاریخ تولد",
+    "age": "سن",
+    "years": "ساله",
+    "sex": "جنسیت",
+    "sexKind": {
+      "male": "پسر",
+      "female": "دختر"
+    },
+    "birthPlace": "مکان تولد",
+    "city": "شهر",
+    "state": "استان",
+    "country": "کشور",
+    "housingStatus": "وضعیت مسکن",
+    "housingCondition": {
+      "none": "-",
+      "homeless": "بی‌خانمان",
+      "Resident": "دارای محل زندگی",
+      "CareCenters": "تحت پوشش"
+    },
+    "phoneNumber": "شماره تماس",
+    "address": "آدرس",
+    "education": "تحصیلات",
+    "educationondition": {
+      "deprived": "بازمانده از تحصیل",
+      "kinderGarten": "مهد کودک",
+      "notAttending": "عدم حضور در مدرسه",
+      "preSchool": "آمادگی",
+      "firstGrade": "سال اول",
+      "secondGrade": "سال دوم",
+      "thirdGrade": "سال سوم",
+      "fourthGrade": "سال چهارم",
+      "fifthGrade": "سال پنجم",
+      "sixGrade": "سال ششم",
+      "sevenGrade": "سال هفتم",
+      "eightGrade": "سال هشتم",
+      "nineGrade": "سال نهم",
+      "tenGrade": "سال دهم",
+      "elevenGrade": "سال یازدهم",
+      "twelveGrade": "سال دوازدهم",
+      "thirteenGrade": "سال سیزدهم"
+    },
+    "confirmUser": "تائید کننده",
+    "confirmDate": "تاریخ تائید",
+    "done_needs_count": "تعداد نیازهای انجام شده",
+    "familyCount": "تعداد خانوار",
+    "generatedCode": "کد کودک",
+    "id_social_worker": "مددکار",
+    "spent_credit": "مبلغ هزینه شده",
+    "id_ngo": "انجمن",
+    "isMigrated": "وضعیت انتقال",
+    "is_gone": "وضعیت رفته",
+    "nationality": "ملیت",
+    "voiceUrl": "صدای کودک",
+    "created": "تاریخ ایجاد",
+    "updated": "تاریخ آخرین ویرایش",
+    "edit": "ویرایش",
+    "button": {
+      "update": "ویرایش",
+      "add": "اضافه کردن"
+    }
+  },
+  "dao": {
+    "milestone": {
+      "duetime": "Step due time",
+      "title": "Step title",
+      "description": "short description",
+      "button": {
+        "next": "Next",
+        "finish": "Finish"
+      }
+    }
+  },
+  "profile": {
+    "settings": {
+      "hi": "سلام",
+      "title": "پروفایل کاربری",
+      "edit": "ویرایش پروفایل",
+      "settings": "جزئیات کاربری",
+      "logIn": "ورود",
+      "logOut": "خروج"
+    }
+  },
+  "myPage": {
+    "viewAs": "نمایش مددکار ...",
+    "countRecent": {
+      "title": "نمایش آخرین نیازها",
+      "count": {
+        "first": "صد تا",
+        "second": "دویست و پنجاه تا",
+        "third": "پانصد تا"
+      }
+    },
+    "countJobs": {
+      "titleCreated": "اضافه شده",
+      "titleConfirmed": "تائید شده",
+      "count": {
+        "first": "در 48 ساعت",
+        "second": "در یک هفته",
+        "third": "در یک ماه"
+      }
+>>>>>>> Stashed changes
     },
     "contact": "ما به شما گوش می‌دهیم، با ما تماس بگیرید.",
     "address": "ایران - تهران - ایرانشهر - آذرشهر - پلاک 22 - واحد 4",

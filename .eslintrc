@@ -45,6 +45,7 @@
     "react/require-default-props": "off",
     "react/jsx-no-bind":"off",
     "no-nested-ternary": "off",
-    "react/destructuring-assignment": "off"
+    "react/destructuring-assignment": "off",
+    "no-underscore-dangle":"off"
   }
 }
