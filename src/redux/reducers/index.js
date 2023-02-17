@@ -43,10 +43,9 @@ import {
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
 import {
   mileStoneReducer,
-  serverOneNeedReducer,
-  serverReducer,
   signatureReducer,
-} from './daoReducer';
+  walletReducer,
+} from './blockchainReducer';
 import {
   providerAddReducer,
   providerByIdReducer,
@@ -58,6 +57,7 @@ import {
 
 export default combineReducers({
   CustomizerReducer,
+  wallet: walletReducer,
   countryList: countryListReducer,
   myPage: myPageReducer,
   userLogin: userLoginReducer,
@@ -89,8 +89,6 @@ export default combineReducers({
   receiptList: receiptsListReducer,
   receiptDelete: receiptDeleteReducer,
   receiptAdd: receiptAddReducer,
-  server: serverReducer,
-  serverOneNeed: serverOneNeedReducer,
   signature: signatureReducer,
   ngoStatusUpdate: ngoUpdateIsActiveReducer,
   ngoById: ngoByIdReducer,

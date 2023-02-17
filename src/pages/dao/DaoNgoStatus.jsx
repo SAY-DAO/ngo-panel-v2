@@ -5,7 +5,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { fetchNestNgos } from '../../redux/actions/DaoAction';
+import { fetchNestNgos } from '../../redux/actions/blockchainAction';
 
 const DaoNgoStatus = () => {
   const dispatch = useDispatch();

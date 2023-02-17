@@ -1,5 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -13,13 +14,17 @@ import {
   Chip,
   ListItem,
   Grid,
+  AvatarGroup,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { LoadingButton } from '@mui/lab';
+import { ethers } from 'ethers';
 import {
   PaymentStatusEnum,
   getAge,
@@ -28,14 +33,21 @@ import {
   ServiceStatusEnum,
   RolesEnum,
 } from '../../utils/helpers';
+import ReportImage from '../report/ReportImage';
+import ReceiptImage from './ReceiptImage';
+import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
 
-const TaskCard = ({ need, count }) => {
+const TaskCard = ({ need }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
+
+  const wallet = useSelector((state) => state.wallet);
+  const { myWallet, loading: loadingWallet } = wallet;
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -45,7 +57,12 @@ const TaskCard = ({ need, count }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleWallet = () => {
+    dispatch(connectWallet());
+  };
+  const handleSignature = () => {
+    dispatch(signTransaction(need));
+  };
   return (
     <Box>
       <Card
@@ -69,8 +86,8 @@ const TaskCard = ({ need, count }) => {
                 borderRadius: '50%',
                 width: '50px',
                 height: '50px',
-                background: need.awakeAvatarUrl
-                  ? `url(${need.awakeAvatarUrl})`
+                background: need.child.awakeAvatarUrl
+                  ? `url(${need.child.awakeAvatarUrl})`
                   : `url(${need.imageUrl})`,
                 '&:hover': {
                   background: `url(${need.imageUrl})`,
@@ -94,10 +111,10 @@ const TaskCard = ({ need, count }) => {
                   fontSize: 12,
                 }}
               >
-                {need.childFirstName} {need.childLastName}
+                {need.child.firstName} {need.child.lastName}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="200" sx={{ fontSize: 11 }}>
-                {need.childSayName}
+                {need.child.sayName}
               </Typography>
             </Box>
             <Box
@@ -132,12 +149,12 @@ const TaskCard = ({ need, count }) => {
                 }}
               >
                 {(swInfo.typeId === RolesEnum.ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN) && (
-                  <MenuItem onClick={() => navigate(`/children/edit/${need.child_id}`)}>
+                  <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
                     {t('myPage.taskCard.menu.updateChild')}
                   </MenuItem>
                 )}
 
-                <MenuItem onClick={() => navigate(`/need/edit/${need.child_id}/${need.id}`)}>
+                <MenuItem onClick={() => navigate(`/need/edit/${need.child.id}/${need.id}`)}>
                   {t('myPage.taskCard.menu.updateٔNeed')}
                 </MenuItem>
               </Menu>
@@ -166,11 +183,21 @@ const TaskCard = ({ need, count }) => {
           <Typography color="textSecondary" variant="h6" fontWeight="400">
             {t('myPage.taskCard.cost')}: {need.cost.toLocaleString()}
           </Typography>
-          <Typography color="textSecondary" variant="h6" fontWeight="400">
-            {t('myPage.taskCard.duration')}: {need.doing_duration || '-'}{' '}
-            {t('myPage.taskCard.date.days')}
-          </Typography>
         </CardContent>
+        <Grid item xs={12}>
+          <Typography color="textSecondary" variant="span" fontWeight="400">
+            Receipts:
+          </Typography>
+          {need.receipts_ && need.receipts_[0] ? (
+            <AvatarGroup>
+              {need.receipts_.map((r) => (
+                <ReceiptImage receipt={r} key={r.id} />
+              ))}
+            </AvatarGroup>
+          ) : (
+            'No Receipts'
+          )}
+        </Grid>
         {need.affiliateLinkUrl && (
           <Link href={need.affiliateLinkUrl} underline="none" target="_blank">
             <Typography
@@ -234,7 +261,7 @@ const TaskCard = ({ need, count }) => {
                 color: '#000000',
                 backgroundColor: need.type === NeedTypeEnum.PRODUCT ? '#ff9d23' : '#0397ff',
               }}
-              label={need.type_name}
+              label={need.type === NeedTypeEnum.PRODUCT ? 'Product' : 'Service'}
               size="small"
             />
             <Chip
@@ -286,62 +313,88 @@ const TaskCard = ({ need, count }) => {
             width="100%"
           />
           <Grid container sx={{ p: 1 }}>
+            <Typography color="textSecondary" variant="h6" fontWeight="400">
+              {t('myPage.taskCard.duration')}: {need.doingDuration || '-'}
+              {t('myPage.taskCard.date.days')}
+            </Typography>
             {need.created && (
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                <strong>{t('myPage.taskCard.date.created')}:</strong>
-                {moment().diff(moment(need.created), 'days')} {t('myPage.taskCard.date.daysAgo')}
-                <br />
-              </Typography>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                  <strong>{t('myPage.taskCard.date.created')}:</strong>
+                  {moment().diff(moment(need.created), 'days')} {t('myPage.taskCard.date.daysAgo')}
+                  <br />
+                </Typography>
+              </Grid>
             )}
             {need.updated && (
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                <strong>{t('myPage.taskCard.date.updated')}:</strong>
-                {moment().diff(moment(need.updated), 'days')} {t('myPage.taskCard.date.daysAgo')}
-                <br />
-              </Typography>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                  <strong>{t('myPage.taskCard.date.updated')}:</strong>
+                  {moment().diff(moment(need.updated), 'days')} {t('myPage.taskCard.date.daysAgo')}
+                  <br />
+                </Typography>
+              </Grid>
             )}
             {need.confirmDate && (
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                <strong>{t('myPage.taskCard.date.confirmed')}: </strong>
-                {moment().diff(moment(need.confirmDate), 'days')}{' '}
-                {t('myPage.taskCard.date.daysAgo')}
-                <br />
-              </Typography>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                  <strong>{t('myPage.taskCard.date.confirmed')}: </strong>
+                  {moment().diff(moment(need.confirmDate), 'days')}{' '}
+                  {t('myPage.taskCard.date.daysAgo')}
+                  <br />
+                </Typography>
+              </Grid>
             )}
             {need.isDone && (
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                <strong>{t('myPage.taskCard.date.paid')}: </strong>
-                {moment().diff(
-                  moment(need.payments.filter((p) => p.verified)[0].verified),
-                  'days',
-                )}{' '}
-                {t('myPage.taskCard.date.daysAgo')}
-                <br />
-              </Typography>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                  <strong>{t('myPage.taskCard.date.paid')}: </strong>
+                  {moment().diff(
+                    moment(need.verifiedPayments.filter((p) => p.verified)[0].verified),
+                    'days',
+                  )}{' '}
+                  {t('myPage.taskCard.date.daysAgo')}
+                  <br />
+                </Typography>
+              </Grid>
             )}
             {need.purchase_date && (
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                <strong>{t('myPage.taskCard.date.purchased')}: </strong>
-                {moment().diff(moment(need.purchase_date), 'days')}{' '}
-                {t('myPage.taskCard.date.daysAgo')}
-                <br />
-              </Typography>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                  <strong>{t('myPage.taskCard.date.purchased')}: </strong>
+                  {moment().diff(moment(need.purchase_date), 'days')}{' '}
+                  {t('myPage.taskCard.date.daysAgo')}
+                  <br />
+                </Typography>
+              </Grid>
             )}
             {need.ngo_delivery_date && (
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                <strong>{t('myPage.taskCard.date.ngoDelivery')}: </strong>
-                {moment().diff(moment(need.ngo_delivery_date), 'days')}{' '}
-                {t('myPage.taskCard.date.daysAgo')}
-                <br />
-              </Typography>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                  <strong>{t('myPage.taskCard.date.ngoDelivery')}: </strong>
+                  {moment().diff(moment(need.ngo_delivery_date), 'days')}{' '}
+                  {t('myPage.taskCard.date.daysAgo')}
+                  <br />
+                </Typography>
+              </Grid>
             )}
             {need.child_delivery_date && (
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                <strong>{t('myPage.taskCard.date.childDelivery')}: </strong>
-                {moment().diff(moment(need.child_delivery_date), 'days')}{' '}
-                {t('myPage.taskCard.date.daysAgo')}
-              </Typography>
+              <Grid item xs={12}>
+                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                  <strong>{t('myPage.taskCard.date.childDelivery')}: </strong>
+                  {moment().diff(moment(need.child_delivery_date), 'days')}{' '}
+                  {t('myPage.taskCard.date.daysAgo')}
+                </Typography>
+              </Grid>
             )}
+
+            <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+              {!myWallet ? (
+                <LoadingButton onClick={handleWallet}>Connect Wallet</LoadingButton>
+              ) : (
+                <LoadingButton onClick={handleSignature}>Sign</LoadingButton>
+              )}
+            </Grid>
           </Grid>
         </Box>
       </Card>
@@ -380,5 +433,4 @@ export default TaskCard;
 
 TaskCard.propTypes = {
   need: PropTypes.object,
-  count: PropTypes.number,
 };

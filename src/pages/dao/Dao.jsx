@@ -8,8 +8,7 @@ import {
   fetchNestNeeds,
   fetchNestNgos,
   fetchNestUsers,
-  updateNestServer,
-} from '../../redux/actions/DaoAction';
+} from '../../redux/actions/blockchainAction';
 import DaoNeedStatus from './DaoNeedStatus';
 import DaoChildStatus from './DaoChildStatus';
 import DaoFamilyStatus from './DaoFamilyStatus';
@@ -38,7 +37,6 @@ const Dao = () => {
     skip += 1000;
     count = 500;
     console.log(count, skip);
-    dispatch(updateNestServer(count, skip));
   };
 
   return (

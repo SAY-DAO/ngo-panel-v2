@@ -111,7 +111,8 @@ export const RolesEnum = {
   NGO_SUPERVISOR: 4,
   SAY_SUPERVISOR: 5,
   ADMIN: 6,
-  USER: 7,
+  FAMILY: 7,
+  FRIEND: 8,
 };
 
 export const NeedTypeEnum = {

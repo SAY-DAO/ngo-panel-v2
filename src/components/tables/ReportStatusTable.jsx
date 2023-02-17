@@ -43,7 +43,7 @@ import { fetchReportNeeds } from '../../redux/actions/needsAction';
 import { dateConvertor, numberConvertor } from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
-import { signTransaction } from '../../redux/actions/DaoAction';
+import { signTransaction } from '../../redux/actions/blockchainAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
 import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
 

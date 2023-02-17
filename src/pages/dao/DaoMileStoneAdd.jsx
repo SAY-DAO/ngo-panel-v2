@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import DaoMileStoneForm from './DaoMileStoneForm';
-import { createMileStone } from '../../redux/actions/DaoAction';
+import { createMileStone } from '../../redux/actions/blockchainAction';
 
 const BCrumb = [
   {

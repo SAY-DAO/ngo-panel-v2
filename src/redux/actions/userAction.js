@@ -211,7 +211,7 @@ export const userEditProfile =
     }
   };
 
-export const fetchMyPage = (values) => async (dispatch, getState) => {
+export const fetchMyPage = () => async (dispatch, getState) => {
   try {
     dispatch({ type: MY_PAGE_REQUEST });
     const {
@@ -224,27 +224,14 @@ export const fetchMyPage = (values) => async (dispatch, getState) => {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         'X-SKIP': 0,
-        'X-TAKE': values.take,
+        'X-TAKE': 50,
       },
     };
 
-    let response;
-    if (values.createdBy) {
-      response = await daoApi.get(
-        `/users/myPage/${swInfo.typeId}?createdBy=${values.createdBy}`,
-        config,
-      );
-    } else if (values.confirmedBy) {
-      response = await daoApi.get(
-        `/users/myPage/${swInfo.typeId}?confirmedBy=${values.confirmedBy}`,
-        config,
-      );
-    } else if (values.purchasedBy) {
-      response = await daoApi.get(
-        `/users/myPage/${swInfo.typeId}?purchasedBy=${values.purchasedBy}`,
-        config,
-      );
-    }
+    const response = await daoApi.get(
+      `/users/myPage/${swInfo.ngoId}/${swInfo.id}/${swInfo.typeId}`,
+      config,
+    );
 
     dispatch({
       type: MY_PAGE_SUCCESS,

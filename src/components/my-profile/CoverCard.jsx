@@ -5,12 +5,7 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Autocomplete,
   TextField,
 } from '@mui/material';
@@ -35,8 +30,6 @@ const CoverCard = ({
   childCount,
   needCount,
   signatureCount,
-  take,
-  setTake,
   swInfo,
   swNewDetails,
   setSwNewDetails,
@@ -59,7 +52,6 @@ const CoverCard = ({
   useEffect(() => {
     const d = new Date();
     const pm = persianMonth(d);
-    console.log(pm);
     if (pm === 'Farvardin' || pm === 'Ordibehesht' || pm === 'Khordad') {
       setCover(spring);
     }
@@ -96,10 +88,6 @@ const CoverCard = ({
       dispatch(fetchSocialWorkersList());
     }
   }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
-
-  const handleChange = (event) => {
-    setTake(event.target.value);
-  };
 
   return (
     <Card
@@ -170,7 +158,7 @@ const CoverCard = ({
       <CardContent
         sx={{
           pt: '24px',
-          pb: '28px',
+          pb: '0 !important',
         }}
       >
         <Grid container spacing={0}>
@@ -343,25 +331,27 @@ const CoverCard = ({
                 <Box
                   sx={{
                     backgroundImage: 'linear-gradient(#50b2fc,#f44c66)',
-                    padding: '4px',
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
                     borderRadius: '50%',
                     border: (theme) =>
                       `${theme.palette.mode === 'dark' ? '3px solid #3c414c' : '3px solid #fff'}`,
-                    width: '110px',
-                    height: '110px',
+                    width: '100px',
+                    height: '100px',
                     overflow: 'hidden',
                     margin: '0 auto',
                   }}
                 >
-                  <Avatar
-                    src={theUser && theUser.avatarUrl}
-                    alt="Social worker avatar"
+                  <Box
                     sx={{
-                      borderRadius: '50%',
-                      width: '96px',
-                      height: '96px',
-                      border: (theme) =>
-                        `${theme.palette.mode === 'dark' ? '4px solid #3c414c' : '4px solid #fff'}`,
+                      display: 'block',
+                      backgroundImage: `url(${theUser.avatarUrl})`,
+                      backgroundPosition: 'center',
+                      backgroundSize: 'cover',
+                      backgroundColor: 'linear-gradient(#50b2fc,#f44c66)',
+                      width: '80px',
+                      height: '80px',
+                      margin: 'auto',
                     }}
                   />
                 </Box>
@@ -394,9 +384,6 @@ const CoverCard = ({
                   >
                     {!theUser ? <CircularProgress color="inherit" size={20} /> : theUser.typeName}
                   </Typography>
-                  <LoadingButton disabled color="primary" variant="contained" sx={{ mt: 2 }}>
-                    {t('button.wallet.connect')}
-                  </LoadingButton>
                 </Box>
               </Box>
             </Box>
@@ -434,6 +421,9 @@ const CoverCard = ({
               }}
             >
               <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
+                <LoadingButton disabled color="primary" variant="contained" sx={{ mt: 2 }}>
+                  {t('button.wallet.connect')}
+                </LoadingButton>
                 <Grid item>
                   {swInfo &&
                     (swInfo.typeId === RolesEnum.SUPER_ADMIN ||
@@ -499,26 +489,6 @@ const CoverCard = ({
                         )}
                       />
                     )}
-                </Grid>
-                <Grid item>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      {t('myPage.countRecent.title')}
-                    </InputLabel>
-                    <Select
-                      sx={{ minWidth: '200px' }}
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={take}
-                      label={t('myPage.countRecent.title')}
-                      onChange={handleChange}
-                      size="small"
-                    >
-                      <MenuItem value={100}>{t('myPage.countRecent.count.first')}</MenuItem>
-                      <MenuItem value={250}>{t('myPage.countRecent.count.second')}</MenuItem>
-                      <MenuItem value={500}>{t('myPage.countRecent.count.third')}</MenuItem>
-                    </Select>
-                  </FormControl>
                 </Grid>
               </Grid>
             </Box>

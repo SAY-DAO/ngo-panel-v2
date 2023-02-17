@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CircularProgress, Divider, Grid, Typography } from '@mui/material';
+import {
+  Card,
+  CircularProgress,
+  Divider,
+  Grid,
+  Stack,
+  TablePagination,
+  Typography,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
@@ -7,12 +15,14 @@ import CoverCard from '../../components/my-profile/CoverCard';
 import TaskCard from '../../components/my-profile/TaskCard';
 import { fetchMyPage } from '../../redux/actions/userAction';
 import { RolesEnum } from '../../utils/helpers';
+import { connectWallet } from '../../redux/actions/blockchainAction';
 
 const MyPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const [take, setTake] = useState(100);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -25,6 +35,12 @@ const MyPage = () => {
   useEffect(() => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
   }, [swInfo]);
+
+  window.ethereum.on('accountsChanged', (accounts) => {
+    console.log(accounts);
+    dispatch(connectWallet());
+    // Time to reload your interface with accounts[0]!
+  });
 
   useEffect(() => {
     let createdBy;
@@ -50,13 +66,19 @@ const MyPage = () => {
         confirmedBy = 0;
         purchasedBy = 0;
       }
-      dispatch(fetchMyPage({ take, createdBy, confirmedBy, purchasedBy }));
+      dispatch(fetchMyPage({ createdBy, confirmedBy, purchasedBy }));
     }
-    return () => {
-      // dispatch({ type: MY_PAGE_RESET });
-    };
-  }, [swNewDetails, take]);
+  }, [swNewDetails]);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  console.log(pageDetails && pageDetails.needs.childDelivered.length);
   return (
     <PageContainer title="User Profile" description="this is User Profile page">
       <>
@@ -65,8 +87,6 @@ const MyPage = () => {
           childCount={pageDetails ? pageDetails.childrenCount : 0}
           needCount={pageDetails ? pageDetails.needsCount : 0}
           signatureCount={pageDetails ? pageDetails.signaturesCount : 0}
-          take={take}
-          setTake={setTake}
           swInfo={swInfo}
           swNewDetails={swNewDetails}
           setSwNewDetails={setSwNewDetails}
@@ -83,8 +103,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    {' '}
-                    ({pageDetails.needs[0].length})
+                    ({pageDetails.needs.notPaid.length})
                   </Typography>
                 )}
               </Grid>
@@ -92,7 +111,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.paid')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    {'  '}( {pageDetails.needs[1].length})
+                    ( {pageDetails.needs.paid.length})
                   </Typography>
                 )}
               </Grid>
@@ -100,7 +119,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.purchased')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    {'  '}( {pageDetails.needs[2].length})
+                    ( {pageDetails.needs.purchased.length})
                   </Typography>
                 )}
               </Grid>
@@ -108,7 +127,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.done')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    {'  '}( {pageDetails.needs[3].length})
+                    ( {pageDetails.needs.childDelivered.length})
                   </Typography>
                 )}
               </Grid>
@@ -129,31 +148,53 @@ const MyPage = () => {
               >
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs[0] &&
-                    pageDetails &&
-                    pageDetails.needs[0].map((need) => <TaskCard key={need.id} need={need} />)}
+                    pageDetails.needs.notPaid
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs[1] &&
-                    pageDetails &&
-                    pageDetails.needs[1].map((need) => <TaskCard key={need.id} need={need} />)}
+                    pageDetails.needs.paid
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs[2] &&
-                    pageDetails &&
-                    pageDetails.needs[2].map((need) => <TaskCard key={need.id} need={need} />)}
+                    pageDetails.needs.purchased
+                      .concat(pageDetails.needs.moneyToNgo)
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs[3] &&
-                    pageDetails &&
-                    pageDetails.needs[3].map((need) => <TaskCard key={need.id} need={need} />)}
+                    pageDetails.needs.childDelivered
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
               </Grid>
             )}
           </Card>
+          <Stack spacing={2}>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              labelRowsPerPage={t('table.rowCount')}
+              component="div"
+              count={
+                pageDetails
+                  ? Math.max(
+                      pageDetails.needs.notPaid.length,
+                      pageDetails.needs.paid.length,
+                      pageDetails.needs.purchased.length,
+                      pageDetails.needs.childDelivered.length,
+                    )
+                  : 2
+              }
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Stack>
         </Grid>
       </>
     </PageContainer>
