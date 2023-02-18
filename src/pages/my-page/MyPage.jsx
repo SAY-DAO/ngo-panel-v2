@@ -14,7 +14,6 @@ import PageContainer from '../../components/container/PageContainer';
 import CoverCard from '../../components/my-profile/CoverCard';
 import TaskCard from '../../components/my-profile/TaskCard';
 import { fetchMyPage } from '../../redux/actions/userAction';
-import { RolesEnum } from '../../utils/helpers';
 import { connectWallet } from '../../redux/actions/blockchainAction';
 
 const MyPage = () => {
@@ -36,41 +35,20 @@ const MyPage = () => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
   }, [swInfo]);
 
+  // Metamask
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
         console.log(accounts);
         dispatch(connectWallet());
-        // Time to reload your interface with accounts[0]!
       });
     }
   }, [window.ethereum]);
 
   useEffect(() => {
-    let createdBy;
-    let confirmedBy;
-    let purchasedBy;
-    if (swNewDetails && swNewDetails.typeId) {
-      if (
-        swNewDetails.typeId === RolesEnum.ADMIN ||
-        swNewDetails.typeId === RolesEnum.SUPER_ADMIN
-      ) {
-        createdBy = 0;
-        confirmedBy = swNewDetails.id;
-        purchasedBy = 0;
-      } else if (swNewDetails.typeId === RolesEnum.COORDINATOR) {
-        createdBy = 0;
-        confirmedBy = 0;
-        purchasedBy = swNewDetails.id;
-      } else if (
-        swNewDetails.typeId === RolesEnum.SOCIAL_WORKER ||
-        swNewDetails.typeId === RolesEnum.NGO_SUPERVISOR
-      ) {
-        createdBy = swNewDetails.id;
-        confirmedBy = 0;
-        purchasedBy = 0;
-      }
-      dispatch(fetchMyPage({ createdBy, confirmedBy, purchasedBy }));
+    if (swNewDetails && swNewDetails.id) {
+      const isUser = swInfo.id === swNewDetails.id ? 1 : 0; // when 0 displays all children when 1 shows children/needs  created by them
+      dispatch(fetchMyPage(swNewDetails, isUser));
     }
   }, [swNewDetails]);
 
@@ -82,7 +60,6 @@ const MyPage = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  console.log(pageDetails && pageDetails.needs.childDelivered.length);
   return (
     <PageContainer title="User Profile" description="this is User Profile page">
       <>
