@@ -36,11 +36,15 @@ const MyPage = () => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
   }, [swInfo]);
 
-  window.ethereum.on('accountsChanged', (accounts) => {
-    console.log(accounts);
-    dispatch(connectWallet());
-    // Time to reload your interface with accounts[0]!
-  });
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        console.log(accounts);
+        dispatch(connectWallet());
+        // Time to reload your interface with accounts[0]!
+      });
+    }
+  }, [window.ethereum]);
 
   useEffect(() => {
     let createdBy;

@@ -68,9 +68,9 @@ const TaskCard = ({ need }) => {
       <Card
         sx={{
           p: 0,
-          maxHeight: '300px',
+          maxHeight: '330px',
           '&:hover': {
-            maxHeight: '700px',
+            maxHeight: '750px',
             borderColor: (theme) => theme.palette.secondary.dark,
           },
           border: 'solid',
@@ -183,45 +183,47 @@ const TaskCard = ({ need }) => {
           <Typography color="textSecondary" variant="h6" fontWeight="400">
             {t('myPage.taskCard.cost')}: {need.cost.toLocaleString()}
           </Typography>
+          <Grid item xs={12}>
+            {need.receipts_ && need.receipts_[0] ? (
+              <AvatarGroup>
+                {need.receipts_.map((r) => (
+                  <ReceiptImage receipt={r} key={r.id} />
+                ))}
+              </AvatarGroup>
+            ) : (
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                {t('myPage.taskCard.noReceipt')}
+              </Typography>
+            )}
+          </Grid>
         </CardContent>
-        <Grid item xs={12}>
-          <Typography color="textSecondary" variant="span" fontWeight="400">
-            Receipts:
-          </Typography>
-          {need.receipts_ && need.receipts_[0] ? (
-            <AvatarGroup>
-              {need.receipts_.map((r) => (
-                <ReceiptImage receipt={r} key={r.id} />
-              ))}
-            </AvatarGroup>
-          ) : (
-            'No Receipts'
+
+        <Grid container>
+          {need.affiliateLinkUrl && (
+            <Link href={need.affiliateLinkUrl} underline="none" target="_blank">
+              <Typography
+                color="textSecondary"
+                variant="span"
+                fontWeight="400"
+                sx={{ textAlign: 'center', p: 1 }}
+              >
+                Affiliate
+              </Typography>
+            </Link>
+          )}
+          {need.link && (
+            <Link href={need.link} underline="none" target="_blank">
+              <Typography
+                color="textSecondary"
+                variant="span"
+                fontWeight="400"
+                sx={{ textAlign: 'center', p: 1 }}
+              >
+                Link
+              </Typography>
+            </Link>
           )}
         </Grid>
-        {need.affiliateLinkUrl && (
-          <Link href={need.affiliateLinkUrl} underline="none" target="_blank">
-            <Typography
-              color="textSecondary"
-              variant="h6"
-              fontWeight="400"
-              sx={{ textAlign: 'center' }}
-            >
-              Affiliate
-            </Typography>
-          </Link>
-        )}
-        {need.link && (
-          <Link href={need.link} underline="none" target="_blank">
-            <Typography
-              color="textSecondary"
-              variant="h6"
-              fontWeight="400"
-              sx={{ textAlign: 'center' }}
-            >
-              Link
-            </Typography>
-          </Link>
-        )}
 
         <Box sx={{ position: 'relative' }}>
           <ListItem
@@ -339,7 +341,7 @@ const TaskCard = ({ need }) => {
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
                   <strong>{t('myPage.taskCard.date.confirmed')}: </strong>
-                  {moment().diff(moment(need.confirmDate), 'days')}{' '}
+                  {moment().diff(moment(need.confirmDate), 'days')}
                   {t('myPage.taskCard.date.daysAgo')}
                   <br />
                 </Typography>
@@ -349,41 +351,37 @@ const TaskCard = ({ need }) => {
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
                   <strong>{t('myPage.taskCard.date.paid')}: </strong>
-                  {moment().diff(
-                    moment(need.verifiedPayments.filter((p) => p.verified)[0].verified),
-                    'days',
-                  )}{' '}
+                  {moment().diff(moment(need.doneAt), 'days')}
                   {t('myPage.taskCard.date.daysAgo')}
                   <br />
                 </Typography>
               </Grid>
             )}
-            {need.purchase_date && (
+            {need.purchaseDate && (
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
                   <strong>{t('myPage.taskCard.date.purchased')}: </strong>
-                  {moment().diff(moment(need.purchase_date), 'days')}{' '}
+                  {moment().diff(moment(need.purchaseDate), 'days')}{' '}
                   {t('myPage.taskCard.date.daysAgo')}
                   <br />
                 </Typography>
               </Grid>
             )}
-            {need.ngo_delivery_date && (
+            {need.ngoDeliveryDate && (
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
                   <strong>{t('myPage.taskCard.date.ngoDelivery')}: </strong>
-                  {moment().diff(moment(need.ngo_delivery_date), 'days')}{' '}
+                  {moment().diff(moment(need.ngoDeliveryDate), 'days')}{' '}
                   {t('myPage.taskCard.date.daysAgo')}
                   <br />
                 </Typography>
               </Grid>
             )}
-            {need.child_delivery_date && (
+            {need.childDeliveryDate && (
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
                   <strong>{t('myPage.taskCard.date.childDelivery')}: </strong>
-                  {moment().diff(moment(need.child_delivery_date), 'days')}{' '}
-                  {t('myPage.taskCard.date.daysAgo')}
+                  {moment().diff(moment(need.childDeliveryDate), 'days')} {t('myPage.taskCard.date.daysAgo')}
                 </Typography>
               </Grid>
             )}

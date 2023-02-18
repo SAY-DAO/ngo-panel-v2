@@ -653,7 +653,8 @@
     "taskCard": {
       "paid": "پرداختی",
       "cost": "قیمت",
-      "duration": "مدت",
+      "duration": "زمان انجام",
+      "noReceipt": "بدون رسید",
       "date": {
         "created": "تاریخ ایجاد",
         "updated": "تاریخ ویرایش",

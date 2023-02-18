@@ -614,6 +614,7 @@
       "paid": "Paid",
       "cost": "Cost",
       "duration": "Duration",
+      "noReceipt": "No receipt",
       "date": {
         "created": "Created At",
         "updated": "Updated at",

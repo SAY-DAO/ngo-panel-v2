@@ -349,8 +349,8 @@ const CoverCard = ({
                       backgroundPosition: 'center',
                       backgroundSize: 'cover',
                       backgroundColor: 'linear-gradient(#50b2fc,#f44c66)',
-                      width: '80px',
-                      height: '80px',
+                      width: '100%',
+                      height: '100%',
                       margin: 'auto',
                     }}
                   />

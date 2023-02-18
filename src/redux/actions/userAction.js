@@ -232,7 +232,6 @@ export const fetchMyPage = () => async (dispatch, getState) => {
       `/users/myPage/${swInfo.ngoId}/${swInfo.id}/${swInfo.typeId}`,
       config,
     );
-
     dispatch({
       type: MY_PAGE_SUCCESS,
       payload: response && response.data,

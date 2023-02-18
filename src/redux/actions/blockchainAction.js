@@ -151,7 +151,6 @@ export const connectWallet = () => async (dispatch) => {
   try {
     dispatch({ type: WALLET_CONNECT_REQUEST });
 
-    await window.ethereum.enable();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send('eth_requestAccounts', []);
 
@@ -205,17 +204,19 @@ export const signTransaction = (need) => async (dispatch, getState) => {
     dispatch({ type: SIGNATURE_REQUEST });
 
     const {
-      wallet: { signerAddress },
+      wallet: { myWallet },
+      swDetails: { swInfo },
     } = getState();
 
     const request = {
+      socialWorker:swInfo,
       need,
-      signerAddress,
+      child: need.child,
+      signerAddress: myWallet,
     };
 
-    console.log(request);
-
-    const { data } = await daoApi.post(`/signature/sw/generate`, request);
+    const { data } = await daoApi.post(`/signatures/sw/generate`, request);
+    console.log(data);
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
@@ -225,7 +226,6 @@ export const signTransaction = (need) => async (dispatch, getState) => {
       data.SocialWorkerVoucher,
     );
 
-    await daoApi.post(`/needs/patch`, request);
     dispatch({
       type: SIGNATURE_SUCCESS,
       payload: { data, signature },
