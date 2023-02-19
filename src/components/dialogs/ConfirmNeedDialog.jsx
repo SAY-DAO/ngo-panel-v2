@@ -41,9 +41,113 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
           {t('need.needDialogue.confirm.dialogTitle')}
         </DialogTitle>
         <DialogContent>
-          <List sx={{ width: '100%', minWidth: 340, maxWidth: 360, bgcolor: 'background.paper' }}>
+          <List sx={{ width: '100%', minWidth: 30, maxWidth: 360, bgcolor: 'background.paper' }}>
+            <ListItem alignItems="flex-start" sx={{ backgroundColor: '#1c1c1c' }}>
+              <ListItemAvatar>
+                <Avatar
+                  alt="Need Icon"
+                  src={dialogValues.theNeed.imageUrl && dialogValues.theNeed.imageUrl}
+                  sx={{ mb: 1 }}
+                />
+                <Box display="flex" alignItems="center">
+                  <Tooltip
+                    title={
+                      dialogValues.theNeed.unpayable === false && !dialogValues.theNeed.isDone ? (
+                        <Typography sx={{ fontSize: 12 }}>{t('need.payable')}</Typography>
+                      ) : dialogValues.theNeed.unpayable === true &&
+                        !dialogValues.theNeed.isDone ? (
+                        <Typography sx={{ fontSize: 12 }}>{t('need.unpayable')}</Typography>
+                      ) : (
+                        <Typography sx={{ fontSize: 12 }}>{t('need.fullyPaid')}</Typography>
+                      )
+                    }
+                  >
+                    <Box
+                      sx={{
+                        display: 'inline-block',
+                        m: '2px',
+                        backgroundColor:
+                          dialogValues.theNeed.unpayable === false && !dialogValues.theNeed.isDone
+                            ? () => theme.palette.success.main
+                            : dialogValues.theNeed.unpayable === true &&
+                              !dialogValues.theNeed.isDone
+                            ? () => theme.palette.error.main
+                            : () => theme.palette.info.main,
+                        borderRadius: '100%',
+                        height: '10px',
+                        width: '10px',
+                      }}
+                    />
+                  </Tooltip>
+                  <Tooltip
+                    title={<Typography sx={{ fontSize: 12 }}>{t('need.isConfirmed')}</Typography>}
+                  >
+                    <Box
+                      sx={{
+                        display: 'inline-block',
+                        m: '2px',
+                        backgroundColor:
+                          dialogValues.theNeed.isConfirmed === true
+                            ? () => theme.palette.success.main
+                            : () => theme.palette.error.main,
+                        borderRadius: '10%',
+                        height: '10px',
+                        width: '10px',
+                      }}
+                    />
+                  </Tooltip>
+                </Box>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Grid container justifyContent="space-between">
+                    <Typography
+                      sx={{
+                        display: 'inline-block',
+                      }}
+                      component="span"
+                      variant="subtitle1"
+                      color="text.primary"
+                    >
+                      {dialogValues.theNeed.name}
+                    </Typography>
+
+                    <Typography
+                      sx={{
+                        display: 'inline-block',
+                        fontSize: 12,
+                      }}
+                      component="span"
+                      variant="body2"
+                      color="primary"
+                    >
+                      ID: {dialogValues.theNeed.id}
+                    </Typography>
+                  </Grid>
+                }
+                secondary={
+                  <>
+                    <Typography
+                      sx={{
+                        display: 'inline',
+                      }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {dialogValues.theNeed.title}
+                    </Typography>
+                    <Typography sx={{ display: 'block' }} component="span">
+                      {dialogValues.theNeed.childSayName}
+                    </Typography>
+                  </>
+                }
+              />
+            </ListItem>
+            <Divider variant="middle" sx={{ borderColor: '#a36868' }} />
+
             {dialogValues &&
-              dialogValues.map((d) => (
+              dialogValues.duplicates.map((d) => (
                 <Grid key={d.id}>
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
@@ -98,7 +202,32 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                       </Box>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={d.name}
+                      primary={
+                        <Grid container justifyContent="space-between">
+                          <Typography
+                            sx={{
+                              display: 'inline-block',
+                            }}
+                            component="span"
+                            variant="subtitle1"
+                            color="text.primary"
+                          >
+                            {d.name}
+                          </Typography>
+
+                          <Typography
+                            sx={{
+                              display: 'inline-block',
+                              fontSize: 12,
+                            }}
+                            component="span"
+                            variant="body2"
+                            color="secondary"
+                          >
+                            ID: {d.id}
+                          </Typography>
+                        </Grid>
+                      }
                       secondary={
                         <>
                           <Typography
@@ -118,17 +247,24 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                       }
                     />
                   </ListItem>
+
                   <Divider variant="inset" component="li" />
                 </Grid>
               ))}
           </List>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Disagree
+          <Button color="primary" variant="outlined" type="submit" onClick={handleClose} autoFocus>
+            {t('button.confirm')}
           </Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
+          <Button
+            color="secondary"
+            variant="outlined"
+            type="submit"
+            autoFocus
+            onClick={handleClose}
+          >
+            {t('button.cancel')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -139,5 +275,5 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
 ConfirmNeedDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
-  dialogValues: PropTypes.array,
+  dialogValues: PropTypes.object,
 };

@@ -67,10 +67,13 @@ export function getOrganizedNeeds(theNeeds) {
 }
 
 // duplicates need filtering by name property, and unpaid
-export function getDuplicateChildNeeds(childNeeds, NeedName, childId) {
+export function getDuplicateChildNeeds(childNeeds, theNeed) {
   return childNeeds.filter((n) => {
     return (
-      n.name === NeedName && n.child_id === childId && n.status < PaymentStatusEnum.COMPLETE_PAY
+      n.name === theNeed.name &&
+      n.child_id === theNeed.child_id &&
+      n.id !== theNeed.id &&
+      n.status < PaymentStatusEnum.COMPLETE_PAY
     );
   });
 }

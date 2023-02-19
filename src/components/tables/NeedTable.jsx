@@ -770,8 +770,8 @@ const NeedTable = () => {
 
   const handleConfirmNeed = (row) => {
     // updateNeedConfirm(row.id);
-    const duplicates = getDuplicateChildNeeds(theTableNeeds, row.name, row.child_id);
-    setDialogValues(duplicates);
+    const duplicates = getDuplicateChildNeeds(theTableNeeds, row);
+    setDialogValues({ duplicates, theNeed: row });
     setDialogOpen(true);
   };
 
@@ -1354,11 +1354,13 @@ const NeedTable = () => {
                 </Alert>
               </Snackbar>
             </Stack>
-            <ConfirmNeedDialog
-              open={openDialog}
-              setOpen={setDialogOpen}
-              dialogValues={dialogValues}
-            />
+            {dialogValues && (
+              <ConfirmNeedDialog
+                open={openDialog}
+                setOpen={setDialogOpen}
+                dialogValues={dialogValues}
+              />
+            )}
           </Card>
         )
       )}
