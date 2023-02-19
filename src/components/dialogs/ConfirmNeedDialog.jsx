@@ -32,7 +32,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
   };
 
   const handleConfirm = () => {
-    dispatch(updateNeedConfirm(dialogValues.need.id));
+    dispatch(updateNeedConfirm(dialogValues.theNeed.id));
   };
 
   return (

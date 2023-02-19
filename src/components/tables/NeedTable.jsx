@@ -738,7 +738,6 @@ const NeedTable = () => {
       setSelected([id]);
     }
   };
-  // console.log(selected)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
