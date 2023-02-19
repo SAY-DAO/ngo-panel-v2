@@ -7,7 +7,7 @@ import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSelector } from 'react-redux';
 import PageContainer from '../container/PageContainer';
-import { PaymentStatusEnum, RolesEnum } from '../../utils/helpers';
+import { PaymentStatusEnum, RolesEnum } from '../../utils/types';
 
 const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, child }) => {
   const { t } = useTranslation();
@@ -81,15 +81,13 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, ch
           <CardContent>
             <Grid container direction="row" alignItems="center" justifyContent="center">
               <Grid item xs={12} md={3}>
-                {
-                  swInfo.typeId === RolesEnum.SOCIAL_WORKER  && child && child.id > 0 && (
-                    <Tooltip placement='top-end' title={t('need.totalExplain')}>
-                      <IconButton>
-                        <HelpOutlineIcon fontSize='small' />
-                      </IconButton>
-                    </Tooltip>
-                  )
-                }
+                {swInfo.typeId === RolesEnum.SOCIAL_WORKER && child && child.id > 0 && (
+                  <Tooltip placement="top-end" title={t('need.totalExplain')}>
+                    <IconButton>
+                      <HelpOutlineIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
 
                 <Typography
                   variant="h1"
@@ -161,7 +159,6 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, ch
                 >
                   {t('need.statsRatio')}
                 </Typography>
-
               </Grid>
             </Grid>
           </CardContent>
@@ -177,8 +174,8 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, ch
             <Chart options={optionspiechart} series={seriespiechart} type="pie" height="270px" />
           </CardContent>
         </Card>
-      </Card >
-    </PageContainer >
+      </Card>
+    </PageContainer>
   );
 };
 
@@ -191,5 +188,5 @@ PieChart.propTypes = {
   allNeeds: PropTypes.array.isRequired,
   take: PropTypes.number.isRequired,
   setTake: PropTypes.func.isRequired,
-  child: PropTypes.object
+  child: PropTypes.object,
 };

@@ -51,8 +51,9 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
-import { getAge, getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
+import { getAge, getOrganizedNeeds } from '../../utils/helpers';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
+import { RolesEnum } from '../../utils/types';
 
 const NeedAdd = () => {
   const dispatch = useDispatch();

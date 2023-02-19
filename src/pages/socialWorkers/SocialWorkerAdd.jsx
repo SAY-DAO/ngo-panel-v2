@@ -40,7 +40,7 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { RolesEnum } from '../../utils/helpers';
+import { RolesEnum } from '../../utils/types';
 
 const SocialWorkerAdd = () => {
   const dispatch = useDispatch();

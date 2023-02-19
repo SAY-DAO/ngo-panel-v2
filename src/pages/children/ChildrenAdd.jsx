@@ -43,7 +43,8 @@ import { AddChild } from '../../redux/actions/childrenAction';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import { getAge, EducationEnum, HousingStatusEnum } from '../../utils/helpers';
+import { EducationEnum, HousingStatusEnum } from '../../utils/types';
+import { getAge } from '../../utils/helpers';
 
 const ChildAdd = () => {
   const dispatch = useDispatch();

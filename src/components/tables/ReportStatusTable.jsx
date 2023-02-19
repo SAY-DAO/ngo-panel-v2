@@ -45,7 +45,7 @@ import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/blockchainAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
-import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
+import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/types';
 
 function descendingComparator(a, b, orderBy) {
   if (

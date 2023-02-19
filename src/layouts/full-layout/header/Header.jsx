@@ -25,7 +25,7 @@ import CustomTextField from '../../../components/forms/custom-elements/CustomTex
 import { logout } from '../../../redux/actions/userAction';
 import { fetchSocialWorkerDetails } from '../../../redux/actions/socialWorkerAction';
 import { SW_DETAILS_RESET, SW_LIST_RESET } from '../../../redux/constants/socialWorkerConstants';
-import { RolesEnum } from '../../../utils/helpers';
+import { RolesEnum } from '../../../utils/types';
 import {
   CHILDREN_ADD,
   DAO_HOME,

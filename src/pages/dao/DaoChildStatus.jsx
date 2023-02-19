@@ -7,7 +7,7 @@ import TagFacesIcon from '@mui/icons-material/TagFaces';
 import MoodBadIcon from '@mui/icons-material/MoodBad';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
-import { ChildExistenceEnum } from '../../utils/helpers';
+import { ChildExistenceEnum } from '../../utils/types';
 
 const DaoChildStatus = () => {
   const theme = useTheme();

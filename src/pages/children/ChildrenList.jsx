@@ -5,7 +5,7 @@ import PageContainer from '../../components/container/PageContainer';
 import ChildrenTable from '../../components/tables/ChildrenTable';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { fetchChildList } from '../../redux/actions/childrenAction';
-import { RolesEnum } from '../../utils/helpers';
+import { RolesEnum } from '../../utils/types';
 
 const ChildrenList = () => {
   const dispatch = useDispatch();

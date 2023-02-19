@@ -26,7 +26,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
 import { format } from 'date-fns';
-import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/helpers';
+import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/types';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
 import { dateConvertor } from '../../utils/persianToEnglish';

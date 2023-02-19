@@ -30,7 +30,8 @@ import { useNavigate } from 'react-router-dom';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { ChildExistenceEnum, getAge } from '../../utils/helpers';
+import { ChildExistenceEnum } from '../../utils/types';
+import { getAge } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -345,8 +346,6 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-
-
 const ChildrenTable = ({ childList }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -354,10 +353,10 @@ const ChildrenTable = ({ childList }) => {
   const BCrumb = [
     {
       to: '/',
-      title: t("BCrumb.home"),
+      title: t('BCrumb.home'),
     },
     {
-      title: t("BCrumb.childrenList"),
+      title: t('BCrumb.childrenList'),
     },
   ];
   const [order, setOrder] = useState('asc');
@@ -400,10 +399,9 @@ const ChildrenTable = ({ childList }) => {
     // }
 
     if (selected[0] === id) {
-      setSelected([])
+      setSelected([]);
     } else {
       setSelected([id]);
-
     }
   };
 

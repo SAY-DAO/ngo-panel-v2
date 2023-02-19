@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { SidebarWidth } from '../../../assets/global/Theme-variable';
 import Menuitems from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
-import { RolesEnum } from '../../../utils/helpers';
+import { RolesEnum } from '../../../utils/types';
 
 const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   const { t } = useTranslation();

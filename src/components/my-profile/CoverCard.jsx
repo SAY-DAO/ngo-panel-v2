@@ -22,7 +22,7 @@ import spring from '../../assets/images/cover/spring.jpeg';
 import summer from '../../assets/images/cover/summer.jpeg';
 import autumn from '../../assets/images/cover/autumn.jpeg';
 import winter from '../../assets/images/cover/winter.jpeg';
-import { RolesEnum } from '../../utils/helpers';
+import { RolesEnum } from '../../utils/types';
 import { persianMonth } from '../../utils/persianToEnglish';
 
 const CoverCard = ({

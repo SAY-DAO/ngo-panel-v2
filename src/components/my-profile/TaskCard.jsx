@@ -27,12 +27,12 @@ import { LoadingButton } from '@mui/lab';
 import { ethers } from 'ethers';
 import {
   PaymentStatusEnum,
-  getAge,
   NeedTypeEnum,
   ProductStatusEnum,
   ServiceStatusEnum,
   RolesEnum,
-} from '../../utils/helpers';
+} from '../../utils/types';
+import { getAge } from '../../utils/types';
 import ReportImage from '../report/ReportImage';
 import ReceiptImage from './ReceiptImage';
 import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
@@ -231,16 +231,18 @@ const TaskCard = ({ need }) => {
               position: 'absolute',
             }}
           >
-            {need.unpayable && (
-              <Chip
-                sx={{
-                  color: '#000000',
-                  backgroundColor: '#ff0000',
-                }}
-                label="unpayable"
-                size="small"
-              />
-            )}
+            {need.type === NeedTypeEnum.PRODUCT &&
+              need.status < ProductStatusEnum.PURCHASED_PRODUCT &&
+              need.unpayable && (
+                <Chip
+                  sx={{
+                    color: '#000000',
+                    backgroundColor: '#ff0000',
+                  }}
+                  label="unpayable"
+                  size="small"
+                />
+              )}
             {!need.isConfirmed && (
               <Chip
                 sx={{
@@ -261,7 +263,7 @@ const TaskCard = ({ need }) => {
             <Chip
               sx={{
                 color: '#000000',
-                backgroundColor: need.type === NeedTypeEnum.PRODUCT ? '#ff9d23' : '#0397ff',
+                backgroundColor: need.type === NeedTypeEnum.PRODUCT ? '#9d59a8' : '#5888e3',
               }}
               label={need.type === NeedTypeEnum.PRODUCT ? 'Product' : 'Service'}
               size="small"
@@ -381,7 +383,8 @@ const TaskCard = ({ need }) => {
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
                   <strong>{t('myPage.taskCard.date.childDelivery')}: </strong>
-                  {moment().diff(moment(need.childDeliveryDate), 'days')} {t('myPage.taskCard.date.daysAgo')}
+                  {moment().diff(moment(need.childDeliveryDate), 'days')}{' '}
+                  {t('myPage.taskCard.date.daysAgo')}
                 </Typography>
               </Grid>
             )}

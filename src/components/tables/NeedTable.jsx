@@ -48,13 +48,14 @@ import {
   fetchAllNeeds,
   fetchChildNeeds,
   fetchSwNeedList,
-  updateNeedConfirm,
 } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
-import { getOrganizedNeeds, RolesEnum } from '../../utils/helpers';
+import { getDuplicateChildNeeds, getOrganizedNeeds } from '../../utils/helpers';
+import { RolesEnum } from '../../utils/types';
 import { ALL_NEEDS_RESET, UPDATE_ONE_NEED_RESET } from '../../redux/constants/needConstant';
 import { dateConvertor } from '../../utils/persianToEnglish';
+import ConfirmNeedDialog from '../dialogs/ConfirmNeedDialog';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -402,20 +403,32 @@ const NeedTable = () => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [toastOpen, setToastOpen] = useState(false);
+  const [openDialog, setDialogOpen] = useState(false);
+  const [dialogValues, setDialogValues] = useState();
+  const [theTableNeeds, setTheTableNeeds] = useState();
+  const [theTableMaxNeeds, setTheTableMaxNeeds] = useState();
+
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
+
+  const [openNgo, setOpenNgo] = useState(false);
+  const [optionsNgo, setOptionsNgo] = useState([]);
+  const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
+  const [take, setTake] = useState(100);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
   const [ngo, setNgo] = useState(
     swInfo &&
-    (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN
-      ? {
-        id: 2,
-        name: 'مهر و ماه',
-      }
-      : {
-        id: swInfo.ngoId,
-        name: swInfo.ngoName,
-      }),
+      (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN
+        ? {
+            id: 2,
+            name: 'مهر و ماه',
+          }
+        : {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          }),
   );
 
   const [child, setChild] = useState({
@@ -425,18 +438,6 @@ const NeedTable = () => {
     sayName: t('child.all'),
     isConfirmed: true,
   });
-
-
-  const [theTableNeeds, setTheTableNeeds] = useState();
-  const [theTableMaxNeeds, setTheTableMaxNeeds] = useState()
-
-  const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState([]);
-
-  const [openNgo, setOpenNgo] = useState(false);
-  const [optionsNgo, setOptionsNgo] = useState([]);
-  const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
-  const [take, setTake] = useState(100);
 
   const CustomizerReducer = useSelector((state) => state.CustomizerReducer);
   const { activeDir } = CustomizerReducer;
@@ -469,7 +470,6 @@ const NeedTable = () => {
   const needUpdate = useSelector((state) => state.needUpdate);
   const { success: successUpdateNeed } = needUpdate;
 
-
   // child open
   useEffect(() => {
     if (swInfo && ngo) {
@@ -477,23 +477,17 @@ const NeedTable = () => {
       if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
         console.log('fetchChildrenByNgo');
         dispatch(fetchChildrenByNgo({ ngoId: ngo.id }));
-      } else if (
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
-      ) {
+      } else if (swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
         // backend will filter all ngo children
         dispatch(fetchSwOrNgoChildList());
         console.log('fetchٔNgoChildList');
-      }
-      else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER
-      ) {
+      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         // backend will filter only sw children
         dispatch(fetchSwOrNgoChildList());
         console.log('fetchSwChildList');
       }
     }
   }, [ngo, swInfo]);
-
 
   // fetch needs
   useEffect(() => {
@@ -535,12 +529,12 @@ const NeedTable = () => {
       ) {
         tableNeeds = theNeeds.needs;
         setTheTableNeeds(tableNeeds);
-        setTheTableMaxNeeds(theNeeds.total_count)
+        setTheTableMaxNeeds(theNeeds.total_count);
       }
       if (theNeeds && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = theNeeds.needs.filter((n) => swInfo.id === n.createdBy);
         console.log('table = the sw child needs');
-        setTheTableMaxNeeds(theNeeds.total_count)
+        setTheTableMaxNeeds(theNeeds.total_count);
         setTheTableNeeds(tableNeeds);
       }
       // all children
@@ -552,14 +546,14 @@ const NeedTable = () => {
       ) {
         tableNeeds = needs.needs;
         console.log('table = all needs');
-        setTheTableMaxNeeds(needs.all_needs_count)
+        setTheTableMaxNeeds(needs.all_needs_count);
         setTheTableNeeds(tableNeeds);
       }
     } else if (swInfo && swNeeds) {
       if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         tableNeeds = swNeeds;
         console.log('table = swNeeds');
-        setTheTableMaxNeeds(swNeeds.length) // TODO: all needs count is needed
+        setTheTableMaxNeeds(swNeeds.length); // TODO: all needs count is needed
         setTheTableNeeds(tableNeeds);
       }
     }
@@ -591,9 +585,9 @@ const NeedTable = () => {
         }
       } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
         if (successChildNeeds) {
-          console.log(theNeeds)
+          console.log(theNeeds);
           const filteredChildNeeds = theNeeds.needs.filter((n) => swInfo.id === n.createdBy);
-          console.log(filteredChildNeeds)
+          console.log(filteredChildNeeds);
           const needData = getOrganizedNeeds(filteredChildNeeds);
           console.log('need data 4');
           setNeedsData(needData);
@@ -774,6 +768,13 @@ const NeedTable = () => {
     navigate(`/need/edit/${row.child_id || child.id || (result && result.id)}/${row.id}`);
   };
 
+  const handleConfirmNeed = (row) => {
+    // updateNeedConfirm(row.id);
+    const duplicates = getDuplicateChildNeeds(theTableNeeds, row.name, row.child_id);
+    setDialogValues(duplicates);
+    setDialogOpen(true);
+  };
+
   const handleCloseToast = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -846,8 +847,8 @@ const NeedTable = () => {
                 (option.isConfirmed && option.id > 0
                   ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
                   : !option.isConfirmed && option.id > 0
-                    ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
-                    : `(${option.sayName})`)
+                  ? `${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName})`
+                  : `(${option.sayName})`)
               }
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -989,7 +990,7 @@ const NeedTable = () => {
                                       swInfo.typeId === RolesEnum.NGO_SUPERVISOR
                                     }
                                     checked={row.isConfirmed}
-                                    onChange={() => dispatch(updateNeedConfirm(row.id))}
+                                    onChange={() => handleConfirmNeed(row)}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                   />
                                 </TableCell>
@@ -1018,8 +1019,8 @@ const NeedTable = () => {
                                             row.unpayable === false && !row.isDone
                                               ? (theme) => theme.palette.success.main
                                               : row.unpayable === true && !row.isDone
-                                                ? (theme) => theme.palette.error.main
-                                                : (theme) => theme.palette.info.main,
+                                              ? (theme) => theme.palette.error.main
+                                              : (theme) => theme.palette.info.main,
                                           borderRadius: '100%',
                                           height: '10px',
                                           width: '10px',
@@ -1353,6 +1354,11 @@ const NeedTable = () => {
                 </Alert>
               </Snackbar>
             </Stack>
+            <ConfirmNeedDialog
+              open={openDialog}
+              setOpen={setDialogOpen}
+              dialogValues={dialogValues}
+            />
           </Card>
         )
       )}

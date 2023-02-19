@@ -41,7 +41,8 @@ import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import { AddChild, fetchMyChildById } from '../../redux/actions/childrenAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import { getAge, EducationEnum, HousingStatusEnum } from '../../utils/helpers';
+import { EducationEnum, HousingStatusEnum } from '../../utils/types';
+import { getAge } from '../../utils/helpers';
 
 const ChildEdit = () => {
   const dispatch = useDispatch();
@@ -52,10 +53,10 @@ const ChildEdit = () => {
   const BCrumb = [
     {
       to: '/children/list',
-      title: t("BCrumb.childrenList"),
+      title: t('BCrumb.childrenList'),
     },
     {
-      title: t("BCrumb.childEdit"),
+      title: t('BCrumb.childEdit'),
     },
   ];
 
@@ -716,7 +717,7 @@ const ChildEdit = () => {
                             opacity: '60%',
                           }}
                         >
-                          {getAge(birthDate)} {t("child.years")}
+                          {getAge(birthDate)} {t('child.years')}
                         </Typography>
                       </Grid>
                       <Grid item md={4} xs={12}>

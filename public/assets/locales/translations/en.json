@@ -416,6 +416,10 @@
       "pending": "Not Delivered yet"
     },
     "needDialogue": {
+      "confirm":{
+        "dialogTitle": "The duplicate needs"
+
+      },
       "service": {
         "1": "Partial payment",
         "2": "Complete payment",

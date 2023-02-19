@@ -1,5 +1,5 @@
 import { daoApi, publicApi } from '../../apis/sayBase';
-import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/helpers';
+import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/types';
 import {
   CHILD_EXAMPLE_NEEDS_FAIL,
   CHILD_EXAMPLE_NEEDS_REQUEST,

@@ -37,7 +37,8 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import Message from '../../components/Message';
 import { apiDao } from '../../env';
-import { getAge, NeedTypeEnum } from '../../utils/helpers';
+import { getAge } from '../../utils/helpers';
+import { NeedTypeEnum } from '../../utils/types';
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
@@ -143,7 +144,7 @@ const NeedEdit = () => {
     }
   }, [oneNeed]);
 
-  useEffect( () => {
+  useEffect(() => {
     if (successUpdateNeed) {
       navigate(`/need/list`);
     }
@@ -700,7 +701,7 @@ const NeedEdit = () => {
               <Grid>
                 {errorUpdateNeed && (
                   <Message
-                    severity='error'
+                    severity="error"
                     variant="filled"
                     input="addSw"
                     backError={errorUpdateNeed}
