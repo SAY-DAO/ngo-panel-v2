@@ -768,7 +768,7 @@ const NeedTable = () => {
     navigate(`/need/edit/${row.child_id || child.id || (result && result.id)}/${row.id}`);
   };
 
-  const handleConfirmNeed = (row) => {
+  const handleDialog= (row) => {
     const duplicates = getDuplicateChildNeeds(theTableNeeds, row);
     setDialogValues({ duplicates, theNeed: row });
     setDialogOpen(true);
@@ -989,7 +989,7 @@ const NeedTable = () => {
                                       swInfo.typeId === RolesEnum.NGO_SUPERVISOR
                                     }
                                     checked={row.isConfirmed}
-                                    onChange={() => handleConfirmNeed(row)}
+                                    onChange={() => handleDialog(row)}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                   />
                                 </TableCell>
