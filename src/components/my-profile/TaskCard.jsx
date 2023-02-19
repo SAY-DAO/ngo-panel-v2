@@ -32,7 +32,7 @@ import {
   ServiceStatusEnum,
   RolesEnum,
 } from '../../utils/types';
-import { getAge } from '../../utils/types';
+import { getAge } from '../../utils/helpers';
 import ReportImage from '../report/ReportImage';
 import ReceiptImage from './ReceiptImage';
 import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
