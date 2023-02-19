@@ -395,6 +395,14 @@ const ReportStatusTable = () => {
     }
   }, [typeId, openType]);
 
+  // toast && dialog
+  useEffect(() => {
+    if (successStatusUpdate) {
+      setStatusDialog(false);
+      setToastOpen(true);
+    }
+  }, [ successStatusUpdate]);
+
   // Autocomplete ngo
   useEffect(() => {
     let active = true;
