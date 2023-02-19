@@ -39,6 +39,7 @@ import {
   ALL_NEEDS_RESET,
   ALL_REPORT_NEEDS_RESET,
   UPDATE_ONE_NEED_RESET,
+  UPDATE_NEED_CONFIRM_RESET,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -99,7 +100,7 @@ export const childNeedsReducer = (state = {}, action) => {
   }
 };
 
-export const childOneNeedReducer = (state = {}, action) => {
+export const needConfirmReducer = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_NEED_CONFIRM_REQUEST:
       return { ...state, loading: true, success: false };
@@ -107,6 +108,15 @@ export const childOneNeedReducer = (state = {}, action) => {
       return { loading: false, success: true, confirmed: action.payload };
     case UPDATE_NEED_CONFIRM_FAIL:
       return { loading: false, error: action.payload };
+    case UPDATE_NEED_CONFIRM_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const childOneNeedReducer = (state = {}, action) => {
+  switch (action.type) {
     case DELETE_NEED_REQUEST:
       return { ...state, loading: true, success: false };
     case DELETE_NEED_SUCCESS:

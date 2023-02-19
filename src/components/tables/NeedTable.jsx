@@ -53,7 +53,11 @@ import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { getDuplicateChildNeeds, getOrganizedNeeds } from '../../utils/helpers';
 import { RolesEnum } from '../../utils/types';
-import { ALL_NEEDS_RESET, UPDATE_ONE_NEED_RESET } from '../../redux/constants/needConstant';
+import {
+  ALL_NEEDS_RESET,
+  UPDATE_NEED_CONFIRM_RESET,
+  UPDATE_ONE_NEED_RESET,
+} from '../../redux/constants/needConstant';
 import { dateConvertor } from '../../utils/persianToEnglish';
 import ConfirmNeedDialog from '../dialogs/ConfirmNeedDialog';
 
@@ -446,10 +450,10 @@ const NeedTable = () => {
   const { theNeeds, loading: loadingChildNeeds, success: successChildNeeds } = childNeeds;
 
   const childOneNeed = useSelector((state) => state.childOneNeed);
-  const { confirmed, deleted } = childOneNeed;
+  const { oneNeed, deleted } = childOneNeed;
 
   const childrenByNgo = useSelector((state) => state.childrenByNgo);
-  const { childList, loading: loadinggoChildren, success: successNgoChildren } = childrenByNgo;
+  const { childList, loading: loadingChildren, success: successNgoChildren } = childrenByNgo;
 
   const allNeeds = useSelector((state) => state.allNeeds);
   const { needs, loading: loadingAllNeeds, success: successAllNeeds } = allNeeds;
@@ -515,7 +519,7 @@ const NeedTable = () => {
         }
       }
     }
-  }, [swInfo, child, confirmed, deleted, ngo, take]);
+  }, [swInfo, child, deleted, ngo, take]);
 
   // filter needs for the table
   useEffect(() => {
@@ -637,7 +641,7 @@ const NeedTable = () => {
   // Autocomplete children
   useEffect(() => {
     let active = true;
-    if (loadinggoChildren) {
+    if (loadingChildren) {
       return undefined;
     }
     // super admin & admin
@@ -665,7 +669,7 @@ const NeedTable = () => {
     return () => {
       active = false;
     };
-  }, [loadinggoChildren, successNgoChildren, swChildren, ngo]);
+  }, [loadingChildren, successNgoChildren, swChildren, ngo]);
 
   // when click on Breadcrumb use the state to retrieve the child
   useEffect(() => {
@@ -678,7 +682,6 @@ const NeedTable = () => {
   useEffect(() => {
     if (successUpdateNeed) {
       setToastOpen(true);
-      setDialogOpen(false)
     }
   }, [successUpdateNeed]);
 
@@ -768,7 +771,8 @@ const NeedTable = () => {
     navigate(`/need/edit/${row.child_id || child.id || (result && result.id)}/${row.id}`);
   };
 
-  const handleDialog= (row) => {
+  const handleDialog = (row) => {
+    dispatch({ type: UPDATE_NEED_CONFIRM_RESET });
     const duplicates = getDuplicateChildNeeds(theTableNeeds, row);
     setDialogValues({ duplicates, theNeed: row });
     setDialogOpen(true);
@@ -875,7 +879,7 @@ const NeedTable = () => {
                 </Box>
               )}
               options={successNgoList || swChildren ? options : []}
-              loading={loadingSw || loadinggoChildren}
+              loading={loadingSw || loadingChildren}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -884,7 +888,7 @@ const NeedTable = () => {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {loadinggoChildren ? <CircularProgress color="inherit" size={20} /> : null}
+                        {loadingChildren ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -988,7 +992,11 @@ const NeedTable = () => {
                                       swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
                                       swInfo.typeId === RolesEnum.NGO_SUPERVISOR
                                     }
-                                    checked={row.isConfirmed}
+                                    checked={
+                                      oneNeed && row.id === oneNeed.id
+                                        ? oneNeed.isConfirmed
+                                        : row.isConfirmed
+                                    }
                                     onChange={() => handleDialog(row)}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                   />

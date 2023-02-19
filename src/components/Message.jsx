@@ -16,6 +16,8 @@ export default function Message({
   children,
   severity,
 }) {
+  console.log( input, backError.data.message,  variant, children, severity);
+
   const { t } = useTranslation();
   const onRequestCheck = () => {
     if (backSuccess) {
@@ -64,13 +66,15 @@ export default function Message({
         // you already join this family
         return t(contents.sthIsWrong);
       }
-
+      if (backError.status === 400 && backError.data && input === 'confirm') {
+        console.log(backError.data.message);
+        return `${backError.data.message}`;
+      }
       if (backError.status === 400 && backError.data[0] && input === 'addSw') {
         console.log(backError);
-        return `${backError.data[0].loc[0]} ${backError.data[0].msg}`;
+        return `${backError.data[0]} ${backError.data[0].msg}`;
       }
       if (backError.status === 400 && backError.data && input === 'addSw') {
-        console.log(backError);
         return `${backError.data.message}`;
       }
       if (backError.status === 400 && input === 'register') {

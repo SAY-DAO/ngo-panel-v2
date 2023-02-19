@@ -18,18 +18,27 @@ import { PropTypes } from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Box, Grid, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateNeedConfirm } from '../../redux/actions/needsAction';
+import { useEffect } from 'react';
+import { fetchChildOneNeed, updateNeedConfirm } from '../../redux/actions/needsAction';
+import Message from '../Message';
 
 export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const needUpdate = useSelector((state) => state.needUpdate);
-  const { loading: loadingUpdateNeed } = needUpdate;
+  const needConfirm = useSelector((state) => state.needConfirm);
+  const { loading: loadingConfirm, success: successConfirm, error: errorConfirm } = needConfirm;
+
+  
+  useEffect(() => {
+    if (successConfirm) {
+      setOpen(false);
+      dispatch(fetchChildOneNeed(dialogValues.theNeed.id))
+    }
+  }, [successConfirm]);
 
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  console.log(dialogValues);
 
   const handleClose = () => {
     setOpen(false);
@@ -265,7 +274,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
         </DialogContent>
         <DialogActions>
           <LoadingButton
-          loading={loadingUpdateNeed}
+            loading={loadingConfirm}
             color="primary"
             variant="outlined"
             type="submit"
@@ -284,6 +293,17 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
             {t('button.cancel')}
           </Button>
         </DialogActions>
+        <Grid container sx={{ p:1 }}>
+        {errorConfirm && (
+          <Message
+            severity="error"
+            variant="filled"
+            input="confirm"
+            backError={errorConfirm}
+            sx={{ width: '100%'}}
+          />
+        )}
+      </Grid>
       </Dialog>
     </div>
   );
