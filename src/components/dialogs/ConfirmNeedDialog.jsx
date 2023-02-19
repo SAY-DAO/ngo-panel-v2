@@ -13,16 +13,20 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import { LoadingButton } from '@mui/lab';
 import { PropTypes } from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Box, Grid, Tooltip } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateNeedConfirm } from '../../redux/actions/needsAction';
 
 export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
     const dispatch = useDispatch();
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const needUpdate = useSelector((state) => state.needUpdate);
+  const { loading: loadingUpdateNeed } = needUpdate;
 
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   console.log(dialogValues);
@@ -260,7 +264,8 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
           </List>
         </DialogContent>
         <DialogActions>
-          <Button
+          <LoadingButton
+          loading={loadingUpdateNeed}
             color="primary"
             variant="outlined"
             type="submit"
@@ -268,7 +273,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
             autoFocus
           >
             {t('button.confirm')}
-          </Button>
+          </LoadingButton>
           <Button
             color="secondary"
             variant="outlined"

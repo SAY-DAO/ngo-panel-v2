@@ -678,7 +678,7 @@ const NeedTable = () => {
   useEffect(() => {
     if (successUpdateNeed) {
       setToastOpen(true);
-      setOpen(false)
+      setDialogOpen(false)
     }
   }, [successUpdateNeed]);
 
