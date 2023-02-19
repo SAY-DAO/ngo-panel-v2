@@ -374,9 +374,6 @@ const ReportStatusTable = () => {
   const allReportNeeds = useSelector((state) => state.allReportNeeds);
   const { needs, loading: loadingAllReportNeeds } = allReportNeeds;
 
-  const serverOneNeed = useSelector((state) => state.serverOneNeed);
-  const { loading: loadingOneNeed, error: errorOneNeed } = serverOneNeed;
-
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, loading: loadingNgoList, success: successNgoList } = ngoAll;
 
@@ -475,17 +472,6 @@ const ReportStatusTable = () => {
       }
     }
   }, [ngoId, typeId, statusId, swInfo, successNgoList, successStatusUpdate]);
-
-  // toast && dialog
-  useEffect(() => {
-    if (errorOneNeed) {
-      setToastOpen(true);
-    }
-    if (successStatusUpdate) {
-      setStatusDialog(false);
-      setToastOpen(true);
-    }
-  }, [errorOneNeed, successStatusUpdate]);
 
   const handleCloseToast = (event, reason) => {
     if (reason === 'clickaway') {
@@ -938,7 +924,7 @@ const ReportStatusTable = () => {
                       <TableCell component="th" scope="row" />
                       <TableCell component="th" scope="row">
                         <LoadingButton
-                          loading={loadingOneNeed}
+                          // loading={loadingOneNeed}
                           onClick={() => signReport()}
                           disabled={
                             (typeId === NeedTypeEnum.PRODUCT && statusId !== 5) ||
@@ -1154,8 +1140,7 @@ const ReportStatusTable = () => {
             severity={errorStatusUpdate ? 'error' : 'success'}
             sx={{ width: '100%' }}
           >
-            {(errorOneNeed && errorOneNeed) ||
-              (errorStatusUpdate && errorStatusUpdate) ||
+            {(errorStatusUpdate && errorStatusUpdate) ||
               (successStatusUpdate && t('socialWorker.updated'))}
           </Alert>
         </Snackbar>
