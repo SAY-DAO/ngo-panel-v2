@@ -769,7 +769,6 @@ const NeedTable = () => {
   };
 
   const handleConfirmNeed = (row) => {
-    // updateNeedConfirm(row.id);
     const duplicates = getDuplicateChildNeeds(theTableNeeds, row);
     setDialogValues({ duplicates, theNeed: row });
     setDialogOpen(true);

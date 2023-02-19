@@ -16,9 +16,11 @@ import Typography from '@mui/material/Typography';
 import { PropTypes } from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Box, Grid, Tooltip } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { updateNeedConfirm } from '../../redux/actions/needsAction';
 
 export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
-  //   const dispatch = useDispatch();
+    const dispatch = useDispatch();
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -27,6 +29,10 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    dispatch(updateNeedConfirm(dialogValues.need.id));
   };
 
   return (
@@ -254,7 +260,13 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
           </List>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" variant="outlined" type="submit" onClick={handleClose} autoFocus>
+          <Button
+            color="primary"
+            variant="outlined"
+            type="submit"
+            onClick={handleConfirm}
+            autoFocus
+          >
             {t('button.confirm')}
           </Button>
           <Button
