@@ -620,15 +620,16 @@
       "duration": "Duration",
       "noReceipt": "No receipt",
       "date": {
-        "created": "Created At",
+        "created": "Created at",
         "updated": "Updated at",
-        "purchased": "Purchased at",
-        "confirmed": "Confirmed at",
-        "paid": "Paid at",
+        "purchased": "Purchased",
+        "confirmed": "Confirmed",
+        "paid": "Paid",
         "ngoDelivery": "Delivered NGO",
         "childDelivery": "Delivered Child",
         "daysAgo": "days ago",
-        "days": "days"
+        "days": "days",
+        "hours": "hrs"
       },
       "menu": {
         "updateChild": "Edit Child",

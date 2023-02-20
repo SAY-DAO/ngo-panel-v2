@@ -36,6 +36,7 @@ import { getAge } from '../../utils/helpers';
 import ReportImage from '../report/ReportImage';
 import ReceiptImage from './ReceiptImage';
 import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
+import DurationTimeLine from './DurationTimeLine';
 
 const TaskCard = ({ need }) => {
   const dispatch = useDispatch();
@@ -68,9 +69,9 @@ const TaskCard = ({ need }) => {
       <Card
         sx={{
           p: 0,
-          maxHeight: '330px',
+          maxHeight: '300px',
           '&:hover': {
-            maxHeight: '750px',
+            maxHeight: '1200px',
             borderColor: (theme) => theme.palette.secondary.dark,
           },
           border: 'solid',
@@ -81,7 +82,6 @@ const TaskCard = ({ need }) => {
         <CardContent>
           <Box display="flex" alignItems="center">
             <Box
-              // src=
               sx={{
                 borderRadius: '50%',
                 width: '50px',
@@ -316,20 +316,14 @@ const TaskCard = ({ need }) => {
             alt={need.img}
             width="100%"
           />
-          <Grid container sx={{ p: 1 }}>
-            <Typography color="textSecondary" variant="h6" fontWeight="400">
-              {t('myPage.taskCard.duration')}: {need.doingDuration || '-'}
-              {t('myPage.taskCard.date.days')}
-            </Typography>
-            {need.created && (
-              <Grid item xs={12}>
-                <Typography color="textSecondary" variant="h6" fontWeight="400">
-                  <strong>{t('myPage.taskCard.date.created')}:</strong>
-                  {moment().diff(moment(need.created), 'days')} {t('myPage.taskCard.date.daysAgo')}
-                  <br />
-                </Typography>
-              </Grid>
-            )}
+          {/* dates */}
+          <Grid container sx={{ p: 0 }}>
+            <Grid item xs={12}>
+              <DurationTimeLine need={need} />
+            </Grid>
+          </Grid>
+          <Grid container>
+         
             {need.updated && (
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
@@ -339,36 +333,8 @@ const TaskCard = ({ need }) => {
                 </Typography>
               </Grid>
             )}
-            {need.confirmDate && (
-              <Grid item xs={12}>
-                <Typography color="textSecondary" variant="h6" fontWeight="400">
-                  <strong>{t('myPage.taskCard.date.confirmed')}: </strong>
-                  {moment().diff(moment(need.confirmDate), 'days')}
-                  {t('myPage.taskCard.date.daysAgo')}
-                  <br />
-                </Typography>
-              </Grid>
-            )}
-            {need.isDone && (
-              <Grid item xs={12}>
-                <Typography color="textSecondary" variant="h6" fontWeight="400">
-                  <strong>{t('myPage.taskCard.date.paid')}: </strong>
-                  {moment().diff(moment(need.doneAt), 'days')}
-                  {t('myPage.taskCard.date.daysAgo')}
-                  <br />
-                </Typography>
-              </Grid>
-            )}
-            {need.purchaseDate && (
-              <Grid item xs={12}>
-                <Typography color="textSecondary" variant="h6" fontWeight="400">
-                  <strong>{t('myPage.taskCard.date.purchased')}: </strong>
-                  {moment().diff(moment(need.purchaseDate), 'days')}{' '}
-                  {t('myPage.taskCard.date.daysAgo')}
-                  <br />
-                </Typography>
-              </Grid>
-            )}
+           
+        
             {need.ngoDeliveryDate && (
               <Grid item xs={12}>
                 <Typography color="textSecondary" variant="h6" fontWeight="400">
@@ -388,14 +354,13 @@ const TaskCard = ({ need }) => {
                 </Typography>
               </Grid>
             )}
-
-            <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-              {!myWallet ? (
-                <LoadingButton onClick={handleWallet}>Connect Wallet</LoadingButton>
-              ) : (
-                <LoadingButton onClick={handleSignature}>Sign</LoadingButton>
-              )}
-            </Grid>
+          </Grid>
+          <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+            {!myWallet ? (
+              <LoadingButton onClick={handleWallet}>Connect Wallet</LoadingButton>
+            ) : (
+              <LoadingButton onClick={handleSignature}>Sign</LoadingButton>
+            )}
           </Grid>
         </Box>
       </Card>

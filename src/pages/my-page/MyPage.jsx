@@ -142,7 +142,6 @@ const MyPage = () => {
                 <Grid item xs={3}>
                   {pageDetails &&
                     pageDetails.needs[2]
-                      .concat(pageDetails.needs[2])
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>

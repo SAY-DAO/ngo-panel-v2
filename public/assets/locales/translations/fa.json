@@ -661,13 +661,14 @@
       "date": {
         "created": "تاریخ ایجاد",
         "updated": "تاریخ ویرایش",
-        "purchased": "تاریخ خرید",
-        "confirmed": "تاریخ تائید",
-        "paid": "تاریخ پرداخت",
-        "ngoDelivery": "تاریخ ارسال به سمن",
-        "childDelivery": "تاریخ ارسال به کودک",
+        "purchased": "خرید",
+        "confirmed": "تائید",
+        "paid": "پرداخت",
+        "ngoDelivery": "به سمن",
+        "childDelivery": "به کودک",
         "daysAgo": "روز پیش",
-        "days": "روز"
+        "days": "روز",
+        "hours": "ساعت"
       },
       "menu": {
         "updateChild": "ویرایش کودک",
