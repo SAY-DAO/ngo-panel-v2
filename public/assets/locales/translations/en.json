@@ -628,6 +628,7 @@
         "ngoDelivery": "Delivered NGO",
         "childDelivery": "Delivered Child",
         "daysAgo": "days ago",
+        "hoursAgo": "hrs ago",
         "days": "days",
         "hours": "hrs"
       },

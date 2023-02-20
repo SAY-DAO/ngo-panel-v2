@@ -163,8 +163,8 @@ export default function DurationTimeLine({ need }) {
         <TimelineItem>
           <TimelineOppositeContent color="text.secondary">
             {parseInt(moment().diff(moment(need.created), 'days'), 10) > 1
-              ? moment().diff(moment(need.created), 'days') + t('myPage.taskCard.date.days')
-              : moment().diff(moment(need.created), 'hours') + t('myPage.taskCard.date.hours')}
+              ? moment().diff(moment(need.created), 'days') + t('myPage.taskCard.date.daysAgo')
+              : moment().diff(moment(need.created), 'hours') + t('myPage.taskCard.date.hoursAgo')}
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip title={<Typography sx={{ fontSize: 12 }}>{need.created}</Typography>}>
@@ -178,7 +178,7 @@ export default function DurationTimeLine({ need }) {
       <Grid container>
         <Typography color="textSecondary" variant="h6" fontWeight="400">
           {t('myPage.taskCard.duration')}: {need.doingDuration || '-'}
-          {t('myPage.taskCard.date.days')}
+          {t('myPage.taskCard.date.daysAgo')}
         </Typography>
       </Grid>
     </Timeline>
