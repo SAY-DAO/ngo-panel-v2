@@ -231,7 +231,6 @@ export const fetchMyPage = (swNewDetails, isUser) => async (dispatch, getState) 
       `/users/myPage/${swNewDetails.ngoId}/${swNewDetails.id}/${swNewDetails.typeId}?isUser=${isUser}`,
       config,
     );
-    console.log(response);
     dispatch({
       type: MY_PAGE_SUCCESS,
       payload: response && response.data,

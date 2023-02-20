@@ -84,7 +84,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ({pageDetails.needs.notPaid.length})
+                    ({pageDetails.needs[0].length})
                   </Typography>
                 )}
               </Grid>
@@ -92,7 +92,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.paid')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {pageDetails.needs.paid.length})
+                    ( {pageDetails.needs[1].length})
                   </Typography>
                 )}
               </Grid>
@@ -100,7 +100,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.purchased')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {pageDetails.needs.purchased.length})
+                    ( {pageDetails.needs[2].length})
                   </Typography>
                 )}
               </Grid>
@@ -108,7 +108,7 @@ const MyPage = () => {
                 <Typography component="span">{t('myPage.taskManager.title.done')}</Typography>
                 {pageDetails && (
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {pageDetails.needs.childDelivered.length})
+                    ( {pageDetails.needs[3].length})
                   </Typography>
                 )}
               </Grid>
@@ -129,26 +129,26 @@ const MyPage = () => {
               >
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs.notPaid
+                    pageDetails.needs[0]
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs.paid
+                    pageDetails.needs[1]
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs.purchased
-                      .concat(pageDetails.needs.moneyToNgo)
+                    pageDetails.needs[2]
+                      .concat(pageDetails.needs[2])
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
-                    pageDetails.needs.childDelivered
+                    pageDetails.needs[3]
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((need) => <TaskCard key={need.id} need={need} />)}
                 </Grid>
@@ -163,10 +163,10 @@ const MyPage = () => {
               count={
                 pageDetails
                   ? Math.max(
-                      pageDetails.needs.notPaid.length,
-                      pageDetails.needs.paid.length,
-                      pageDetails.needs.purchased.length,
-                      pageDetails.needs.childDelivered.length,
+                      pageDetails.needs[0].length,
+                      pageDetails.needs[1].length,
+                      pageDetails.needs[2].length,
+                      pageDetails.needs[3].length,
                     )
                   : 2
               }

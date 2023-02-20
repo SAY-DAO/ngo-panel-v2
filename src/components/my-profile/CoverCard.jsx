@@ -24,6 +24,7 @@ import autumn from '../../assets/images/cover/autumn.jpeg';
 import winter from '../../assets/images/cover/winter.jpeg';
 import { RolesEnum } from '../../utils/types';
 import { persianMonth } from '../../utils/persianToEnglish';
+import ContributionOverview from './ContributionOverview';
 
 const CoverCard = ({
   theUser,
@@ -38,9 +39,6 @@ const CoverCard = ({
   const { t } = useTranslation();
 
   const [cover, setCover] = useState(null);
-  const myPage = useSelector((state) => state.myPage);
-  const { pageDetails, success: successProfile } = myPage;
-
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
 
@@ -106,52 +104,16 @@ const CoverCard = ({
         <Box
           sx={{
             position: 'absolute',
-            bottom: '20px',
-            right: '20px',
+            bottom: '0px',
+            right: '0px',
             color: 'white',
-            paddingLeft: '10px',
-            paddingRight: '20px',
+            paddingLeft: '0px',
+            paddingRight: '0px',
             borderRadius: 1,
-            backgroundColor: (theme) => theme.palette.background.default,
             opacity: '50%',
-            '&:hover': {
-              backgroundColor: (theme) => theme.palette.background.default,
-              opacity: [0.9, 0.8, 0.7],
-            },
           }}
         >
-          {swNewDetails.typeId === RolesEnum.ADMIN ||
-          swNewDetails.typeId === RolesEnum.SUPER_ADMIN ? (
-            <Typography>
-              <strong>{t('myPage.countJobs.titleConfirmed')}</strong>
-            </Typography>
-          ) : (
-            <Typography>
-              <strong>{t('myPage.countJobs.titleCreated')}</strong>
-            </Typography>
-          )}
-
-          {!successProfile ? (
-            <CircularProgress size={15} />
-          ) : (
-            <Typography>
-              {t('myPage.countJobs.count.first')}: {pageDetails.timeLine.inTwoDays}
-            </Typography>
-          )}
-          {!successProfile ? (
-            <CircularProgress size={15} />
-          ) : (
-            <Typography>
-              {t('myPage.countJobs.count.second')}: {pageDetails.timeLine.inWeek}
-            </Typography>
-          )}
-          {!successProfile ? (
-            <CircularProgress size={15} />
-          ) : (
-            <Typography>
-              {t('myPage.countJobs.count.third')}: {pageDetails.timeLine.inMonth}
-            </Typography>
-          )}
+          <ContributionOverview swNewDetails={swNewDetails} />
         </Box>
       </Grid>
 
