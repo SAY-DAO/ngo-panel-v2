@@ -16,7 +16,6 @@ export default function Message({
   children,
   severity,
 }) {
-  console.log( input, backError.data.message,  variant, children, severity);
 
   const { t } = useTranslation();
   const onRequestCheck = () => {

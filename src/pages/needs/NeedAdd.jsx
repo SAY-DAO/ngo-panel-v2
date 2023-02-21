@@ -959,11 +959,12 @@ const NeedAdd = () => {
                 </DialogActions>
               </Dialog>
               <Grid>
+                
                 {(successAddNeed || errorAddNeed) && (
                   <Message
                     severity={successAddNeed ? 'success' : 'error'}
                     variant="filled"
-                    input="addSw"
+                    input="needAdd"
                     backError={errorAddNeed}
                     sx={{ width: '100%' }}
                   >
