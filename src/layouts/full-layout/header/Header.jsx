@@ -13,6 +13,7 @@ import {
   Button,
   useMediaQuery,
   Drawer,
+  Alert,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 // Dropdown Component
@@ -222,11 +223,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="search" width="20" height="20" />
         </IconButton>
-        {/* <Alert severity="info">
+        <Alert severity="info">
           <Typography variant="body2">
             <strong>{t('alert.title')} </strong>— {t('alert.body')}
           </Typography>
-        </Alert> */}
+        </Alert>
         <Drawer
           anchor="top"
           open={showDrawer2}
