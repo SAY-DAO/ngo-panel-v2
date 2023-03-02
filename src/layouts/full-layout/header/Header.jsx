@@ -223,7 +223,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="search" width="20" height="20" />
         </IconButton>
-        <Alert severity="info">
+        <Alert severity="warning">
           <Typography variant="body2">
             <strong>{t('alert.title')} </strong>— {t('alert.body')}
           </Typography>
