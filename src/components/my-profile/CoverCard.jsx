@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Autocomplete,
   TextField,
+  IconButton,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import InterestsIcon from '@mui/icons-material/Interests';
@@ -15,6 +16,7 @@ import ChildCareIcon from '@mui/icons-material/ChildCare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
+import SwitchAccessShortcutAddIcon from '@mui/icons-material/SwitchAccessShortcutAdd';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
@@ -25,10 +27,10 @@ import winter from '../../assets/images/cover/winter.jpeg';
 import { RolesEnum } from '../../utils/types';
 import { persianMonth } from '../../utils/persianToEnglish';
 import ContributionOverview from './ContributionOverview';
+import { fetchMyPage } from '../../redux/actions/userAction';
 
 const CoverCard = ({
   theUser,
-  childCount,
   needCount,
   signatureCount,
   swInfo,
@@ -41,8 +43,13 @@ const CoverCard = ({
   const [cover, setCover] = useState(null);
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
-
+  const [skip, setSkip] = useState(10);
+  const [childCount, setChildCount] = useState();
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
+
+  // const myPage = useSelector((state) => state.myPage);
+  // const { pageDetails } = myPage;
+
   const swAll = useSelector((state) => state.swAll);
   const { swList, success: successSwAll } = swAll;
 
@@ -86,6 +93,16 @@ const CoverCard = ({
       dispatch(fetchSocialWorkersList());
     }
   }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
+
+  const handleChildPagination = () => {
+    const isUser = swInfo.id === swNewDetails.id ? 1 : 0; // when 0 displays all children when 1 shows children/needs  created by them
+    const take = 15;
+    setChildCount(childCount+take)
+    setSkip(skip + take);
+    console.log(take);
+    console.log(skip);
+    dispatch(fetchMyPage(swNewDetails, isUser, skip, take));
+  };
 
   return (
     <Card
@@ -202,7 +219,15 @@ const CoverCard = ({
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <ChildCareIcon fontSize="medium" />
+                  <IconButton
+                    aria-label="delete"
+                    // disabled
+                    onClick={handleChildPagination}
+                    sx={{ pt: 0 }}
+                  >
+                    <ChildCareIcon fontSize="medium" />
+                    <SwitchAccessShortcutAddIcon />
+                  </IconButton>
                 </Typography>
                 <Typography
                   variant="h4"

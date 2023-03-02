@@ -404,6 +404,8 @@
     "today": "Today",
     "needStatusTitle": "Change Need Status",
     "needStatus": {
+      "-1": "Not Confirmed",
+      "0": "Not Paid",
       "1": "Partial payment",
       "2": "Complete payment",
       "p3": "Purchased product",
@@ -634,8 +636,32 @@
       },
       "menu": {
         "updateChild": "Edit Child",
-        "updateٔNeed": "َEdit Need"
+        "updateٔNeed": "َEdit Need",
+        "addTicket": "َAdd ticket",
+        "readTicket": "َRead ticket",
+        "tickets": "َAll tickets"
+
       }
     }
+  },
+  "ticket":{
+    "dialog":{
+      "title":"Create Ticket",
+      "confirm":"Are you sure you want to add a ticket for this need?",
+      "chatWith": "Chat with"
+    },
+    "ticketing":{
+      "subHeader": "SAY ticketing",
+      "header": "Tickets"
+    }
+  },
+  "roles":{
+    "socialWorker":"Social Worker",
+    "auditor":"Auditor",
+    "purchaser": "Purchaser",
+    "ngoSupervisor": "NGO supervisor",
+    "noRole": "No Role",
+    "familyMember": "Family Member",
+    "friend": "Friend"
   }
 }

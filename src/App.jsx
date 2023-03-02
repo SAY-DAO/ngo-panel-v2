@@ -13,12 +13,12 @@ const App = () => {
   const theme = ThemeSettings();
   const customizer = useSelector((state) => state.CustomizerReducer);
   return (
-    <ThemeProvider theme={theme}>
-      <RTL direction={customizer.activeDir}>
-        <CssBaseline />
-        {routing}
-      </RTL>
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <RTL direction={customizer.activeDir}>
+          <CssBaseline />
+          {routing}
+        </RTL>
+      </ThemeProvider>
   );
 };
 swDev();

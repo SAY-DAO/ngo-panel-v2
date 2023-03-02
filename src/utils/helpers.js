@@ -1,4 +1,11 @@
-import { PaymentStatusEnum } from './types';
+import {
+  NeedTypeEnum,
+  PaymentStatusEnum,
+  ProductStatusEnum,
+  RolesEnum,
+  SAYPlatformRoles,
+  ServiceStatusEnum,
+} from './types';
 
 // Age
 export function getAge(DOB) {
@@ -12,13 +19,128 @@ export function getAge(DOB) {
   return age;
 }
 
-export const NeedCategoryEnum = {
-  GROWTH: 0,
-  JOY: 1,
-  HEALTH: 2,
-  SURRONDING: 3,
-};
+// "-1": "تائید نشده",
+// "0": "پرداخت نشده,
+// "1": "نیم‌پرداخت",
+// "2": "پرداخت کامل",
+// "p3": "کالا خریده شده",
+// "p4": "به سمن ارسال شده",
+// "p5": "به کودک ارسال شده",
+// "s3": "هزینه به سمن ارسال شده",
+// "s4": "به کودک ارسال شده",
+// "signature": "امضا",
+// "sign": "امضا",
+// "pending": "به کودک ارسال نشده"
 
+export function getCurrentStatusString(need) {
+  if (!need.isConfirmed) {
+    return '-1';
+  }
+  if (need.status === PaymentStatusEnum.PARTIAL_PAY) {
+    return '1';
+  }
+  if (need.status === PaymentStatusEnum.COMPLETE_PAY) {
+    return '2';
+  }
+  if (need.type === NeedTypeEnum.PRODUCT) {
+    if (need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
+      return 'p3';
+    }
+    if (need.status === ProductStatusEnum.DELIVERED_TO_NGO) {
+      return 'p4';
+    }
+    if (need.status === ProductStatusEnum.DELIVERED) {
+      return 'p5';
+    }
+  }
+  if (need.type === NeedTypeEnum.SERVICE) {
+    if (need.status === ServiceStatusEnum.MONEY_TO_NGO) {
+      return 's3';
+    }
+    if (need.status === ServiceStatusEnum.DELIVERED) {
+      return 's4';
+    }
+  }
+  return '0';
+}
+
+export function convertFlaskToSayRoles(flakUserType) {
+  let role;
+  if (flakUserType === RolesEnum.SAY_SUPERVISOR) {
+    role = SAYPlatformRoles.AUDITOR;
+  } else if (flakUserType === RolesEnum.ADMIN) {
+    role = SAYPlatformRoles.AUDITOR;
+  } else if (flakUserType === RolesEnum.SUPER_ADMIN) {
+    role = SAYPlatformRoles.AUDITOR;
+  } else if (flakUserType === RolesEnum.SOCIAL_WORKER) {
+    role = SAYPlatformRoles.SOCIAL_WORKER;
+  } else if (flakUserType === RolesEnum.COORDINATOR) {
+    role = SAYPlatformRoles.PURCHASER;
+  } else if (flakUserType === RolesEnum.NGO_SUPERVISOR) {
+    role = SAYPlatformRoles.NGO_SUPERVISOR;
+  } else if (!flakUserType) {
+    role = SAYPlatformRoles.FAMILY;
+  }
+  return role;
+}
+
+
+export function getSAYRole(sayRole) {
+  let roleInteger;
+  if (sayRole === SAYPlatformRoles.AUDITOR) {
+    roleInteger = 'auditor';
+  } else if (sayRole === SAYPlatformRoles.SOCIAL_WORKER) {
+    roleInteger = 'socialWorker';
+  } else if (sayRole === SAYPlatformRoles.PURCHASER) {
+    roleInteger = 'purchaser';
+  } else if (sayRole === SAYPlatformRoles.NGO_SUPERVISOR) {
+    roleInteger = 'ngoSupervisor';
+  } else if (sayRole === SAYPlatformRoles.FAMILY) {
+    roleInteger = 'familyMember';
+  } else if (sayRole === SAYPlatformRoles.FRIEND) {
+    roleInteger = 'friend';
+  } else if (sayRole === SAYPlatformRoles.NO_ROLE) {
+    roleInteger = 'noRole';
+  }
+  return roleInteger;
+}
+
+export function getSAYRoleString(sayRole) {
+  let roleString;
+  if (sayRole === SAYPlatformRoles.AUDITOR) {
+    roleString = 'auditor';
+  } else if (sayRole === SAYPlatformRoles.SOCIAL_WORKER) {
+    roleString = 'socialWorker';
+  } else if (sayRole === SAYPlatformRoles.PURCHASER) {
+    roleString = 'purchaser';
+  } else if (sayRole === SAYPlatformRoles.NGO_SUPERVISOR) {
+    roleString = 'ngoSupervisor';
+  } else if (sayRole === SAYPlatformRoles.FAMILY) {
+    roleString = 'familyMember';
+  } else if (sayRole === SAYPlatformRoles.FRIEND) {
+    roleString = 'friend';
+  } else if (sayRole === SAYPlatformRoles.NO_ROLE) {
+    roleString = 'noRole';
+  }
+  return roleString;
+}
+
+export function getUserSAYRoleString(userTypeId) {
+  if (userTypeId === RolesEnum.SOCIAL_WORKER) {
+    return 'socialWorker';
+  }
+  if (userTypeId === RolesEnum.NGO_SUPERVISOR) {
+    return 'ngoSupervisor';
+  }
+  if (
+    userTypeId === RolesEnum.ADMIN ||
+    userTypeId === RolesEnum.SUPER_ADMIN ||
+    userTypeId === RolesEnum.SAY_SUPERVISOR
+  ) {
+    return 'auditor';
+  }
+  return 'noRole';
+}
 // urgent ==> index 0
 // growth 0 ==> index 1
 // joy 1 ==> index 2

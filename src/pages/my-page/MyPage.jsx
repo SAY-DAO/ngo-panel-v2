@@ -22,6 +22,7 @@ const MyPage = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [cardSelected, setCardSelected] = useState(0);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -48,7 +49,7 @@ const MyPage = () => {
   useEffect(() => {
     if (swNewDetails && swNewDetails.id) {
       const isUser = swInfo.id === swNewDetails.id ? 1 : 0; // when 0 displays all children when 1 shows children/needs  created by them
-      dispatch(fetchMyPage(swNewDetails, isUser));
+      dispatch(fetchMyPage(swNewDetails, isUser, 0, 5));
     }
   }, [swNewDetails]);
 
@@ -65,7 +66,6 @@ const MyPage = () => {
       <>
         <CoverCard
           theUser={swNewDetails}
-          childCount={pageDetails ? pageDetails.childrenCount : 0}
           needCount={pageDetails ? pageDetails.needsCount : 0}
           signatureCount={pageDetails ? pageDetails.signaturesCount : 0}
           swInfo={swInfo}
@@ -131,25 +131,57 @@ const MyPage = () => {
                   {pageDetails &&
                     pageDetails.needs[0]
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => <TaskCard key={need.id} need={need} />)}
+                      .map((need) => (
+                        <TaskCard
+                          key={need.id}
+                          need={need}
+                          setCardSelected={setCardSelected}
+                          cardSelected={cardSelected}
+                          swNewDetails={swNewDetails}
+                        />
+                      ))}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
                     pageDetails.needs[1]
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => <TaskCard key={need.id} need={need} />)}
+                      .map((need) => (
+                        <TaskCard
+                          key={need.id}
+                          need={need}
+                          setCardSelected={setCardSelected}
+                          cardSelected={cardSelected}
+                          swNewDetails={swNewDetails}
+                        />
+                      ))}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
                     pageDetails.needs[2]
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => <TaskCard key={need.id} need={need} />)}
+                      .map((need) => (
+                        <TaskCard
+                          key={need.id}
+                          need={need}
+                          setCardSelected={setCardSelected}
+                          cardSelected={cardSelected}
+                          swNewDetails={swNewDetails}
+                        />
+                      ))}
                 </Grid>
                 <Grid item xs={3}>
                   {pageDetails &&
                     pageDetails.needs[3]
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => <TaskCard key={need.id} need={need} />)}
+                      .map((need) => (
+                        <TaskCard
+                          key={need.id}
+                          need={need}
+                          setCardSelected={setCardSelected}
+                          cardSelected={cardSelected}
+                          swNewDetails={swNewDetails}
+                        />
+                      ))}
                 </Grid>
               </Grid>
             )}

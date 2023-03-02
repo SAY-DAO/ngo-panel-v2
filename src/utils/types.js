@@ -19,11 +19,39 @@ export const EducationEnum = {
   thirteenGrade: 13,
 };
 
+export const NeedCategoryEnum = {
+  GROWTH: 0,
+  JOY: 1,
+  HEALTH: 2,
+  SURROUNDING: 3,
+};
+
 // 0:homeless | 1:Resident| 2:Care centers
 export const HousingStatusEnum = {
   homeless: 0,
   Resident: 1,
   CareCenters: 2,
+};
+
+export const PanelContributors = {
+  SOCIAL_WORKER: 1,
+  NGO_SUPERVISOR: 2,
+  PURCHASER: 3,
+  AUDITOR: 4,
+};
+
+export const AppContributors = {
+  FAMILY: 5,
+  FRIEND: 6,
+};
+export const SAYPlatformRoles = {
+  NO_ROLE: 0,
+  SOCIAL_WORKER: PanelContributors.SOCIAL_WORKER,
+  NGO_SUPERVISOR: PanelContributors.NGO_SUPERVISOR,
+  PURCHASER: PanelContributors.PURCHASER,
+  AUDITOR: PanelContributors.AUDITOR,
+  FAMILY: AppContributors.FAMILY,
+  FRIEND: AppContributors.FRIEND,
 };
 
 export const RolesEnumDefine = {

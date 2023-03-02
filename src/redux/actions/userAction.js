@@ -211,7 +211,7 @@ export const userEditProfile =
     }
   };
 
-export const fetchMyPage = (swNewDetails, isUser) => async (dispatch, getState) => {
+export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch, getState) => {
   try {
     dispatch({ type: MY_PAGE_REQUEST });
     const {
@@ -222,8 +222,8 @@ export const fetchMyPage = (swNewDetails, isUser) => async (dispatch, getState) 
       headers: {
         'Content-type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-SKIP': 0,
-        'X-TAKE': 50,
+        'X-SKIP': skip,
+        'X-TAKE': take,
       },
     };
 

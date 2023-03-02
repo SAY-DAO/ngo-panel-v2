@@ -120,13 +120,13 @@
   "BCrumb": {
     "home": "صفحه من",
     "add": "اضافه کردن",
-    "childEdit": "ویرایس کودک",
+    "childEdit": "ویرایش کودک",
     "childrenList": "لیست کودکان",
     "swList": "لیست مددکاران",
     "swEdit": "ویرایش مددکار",
-    "needEdit": "ویرایس نیاز",
+    "needEdit": "ویرایش نیاز",
     "needsList": "لیست نیازها",
-    "ngoEdit": "ویرایس کودک",
+    "ngoEdit": "ویرایش کودک",
     "ngosList": "لیست سمن‌ها",
     "reportsList": "لیست گزارش‌ها"
   },
@@ -341,7 +341,7 @@
     "socialWorkerCount": "تعداد مددکارها",
     "currentSocialWorkerCount": "تعداد مددکاران فعال",
     "emailAddress": "ایمیل",
-    "id": "آی‌دی",
+    "id": "شناسه",
     "name": "نام",
     "phoneNumber": "تلفن",
     "postalAddress": "آدرس",
@@ -370,7 +370,7 @@
       "unpayable": "غیر قابل پرداخت",
       "unconfirmed": "تائید نشده"
     },
-    "id": "آی‌دی",
+    "id": "شناسه",
     "titleEdit": "ویرایش نیاز",
     "titleAdd": "اضافه کردی نیاز",
     "titleStatus": "عنوان",
@@ -446,6 +446,8 @@
     "today": "تاریخ امروز",
     "needStatusTitle": "تغییر وضعیت",
     "needStatus": {
+      "-1": "تائید نشده",
+      "0": "پرداخت نشده",
       "1": "نیم‌پرداخت",
       "2": "پرداخت کامل",
       "p3": "کالا خریده شده",
@@ -504,7 +506,7 @@
   "child": {
     "title": "کودک",
     "all": "تمام کودکان",
-    "id": "آی‌دی",
+    "id": "شناسه",
     "isConfirmed": "وضعیت تائید",
     "existence_status": "وضعیت کودک",
     "isDeleted": "وضعیت حذف",
@@ -673,8 +675,32 @@
       },
       "menu": {
         "updateChild": "ویرایش کودک",
-        "updateٔNeed": "ویرایش نیاز"
+        "updateٔNeed": "ویرایش نیاز",
+        "addTicket": "اضافه کردن تیکت",
+        "readTicket": "خواندن تیکت",
+        "tickets": "تیکت‌ها"
+
       }
     }
+  },
+  "ticket":{
+    "dialog":{
+      "title":"ایجاد تیکت",
+      "confirm":"آیا مطمئن به ایجاد تیکت برای این نیاز هستید؟",
+      "chatWith": "گفتگو با"
+    },
+    "ticketing":{
+      "subHeader": "پیغام‌رسان",
+      "header": "گفتگوها"
+    }
+  },
+  "roles":{
+    "socialWorker":"مددکار",
+    "auditor":"ناظر",
+    "purchaser": "خرید کننده",
+    "ngoSupervisor": "سرپرست انجمن",
+    "noRole": "بدون نقش :(",
+    "familyMember": "عضو حوانواده",
+    "friend": "دوست"
   }
 }

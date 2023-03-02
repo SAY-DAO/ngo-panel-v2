@@ -15,7 +15,10 @@ const ContributionOverview = ({ swNewDetails }) => {
   const theme = useTheme();
 
   const [graphData, setGraphData] = useState();
-
+  const [values, setValues] = useState({
+    confirms: [],
+    creations: [],
+  });
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails, success: successProfile } = myPage;
 
@@ -118,7 +121,6 @@ const ContributionOverview = ({ swNewDetails }) => {
       const keys = Object.keys(pageDetails.timeLine.inMonth);
       // those zero are later than 6 months
       keys.forEach((key) => {
-        console.log(pageDetails.timeLine.inMonth[key]);
         if (
           pageDetails.timeLine.inMonth[key].created > 0 ||
           pageDetails.timeLine.inMonth[key].confirmed > 0
@@ -133,32 +135,36 @@ const ContributionOverview = ({ swNewDetails }) => {
       });
       setGraphData(myList);
     }
-    console.log('----------------');
-    console.log(myList);
   }, [pageDetails]);
+
+  const confirms = [];
+  const creations = [];
+  useEffect(() => {
+    if (graphData) {
+      // eslint-disable-next-line no-unused-expressions
+      graphData &&
+        graphData.forEach((d) => {
+          if (d && d[Object.keys(d)[0]]) {
+            confirms.push(d[Object.keys(d)[0]].confirmed);
+            creations.push(d[Object.keys(d)[0]].created);
+          }
+          setValues({
+            confirms,
+            creations,
+          });
+        });
+    }
+  }, [graphData]);
 
   const seriesContributionOverview = [
     {
       name: t('myPage.countJobs.titleConfirmed'),
-      data: [
-        graphData && graphData[0] ? graphData[0][Object.keys(graphData[0])[0]].confirmed : 0,
-        graphData && graphData[1] ? graphData[1][Object.keys(graphData[1])[0]].confirmed : 0,
-        graphData && graphData[2] ? graphData[2][Object.keys(graphData[2])[0]].confirmed : 0,
-        graphData && graphData[3] ? graphData[3][Object.keys(graphData[3])[0]].confirmed : 0,
-        graphData && graphData[4] ? graphData[4][Object.keys(graphData[4])[0]].confirmed : 0,
-        graphData && graphData[5] ? graphData[5][Object.keys(graphData[5])[0]].confirmed : 0,
-      ],
+      data: [...values.confirms],
     },
     {
       name: t('myPage.countJobs.titleCreated'),
-      data: [
-        graphData && graphData[0] ? graphData[0][Object.keys(graphData[0])[0]].created : 0,
-        graphData && graphData[1] ? graphData[1][Object.keys(graphData[1])[0]].created : 0,
-        graphData && graphData[2] ? graphData[2][Object.keys(graphData[2])[0]].created : 0,
-        graphData && graphData[3] ? graphData[3][Object.keys(graphData[3])[0]].created : 0,
-        graphData && graphData[4] ? graphData[4][Object.keys(graphData[4])[0]].created : 0,
-        graphData && graphData[5] ? graphData[5][Object.keys(graphData[5])[0]].created : 0,
-      ],
+      data: [...values.creations],
+
     },
   ];
 

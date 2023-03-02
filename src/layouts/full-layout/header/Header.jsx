@@ -47,7 +47,13 @@ import {
 } from '../../../redux/constants/needConstant';
 import { MY_PAGE_RESET } from '../../../redux/constants/userConstants';
 import { NGO_BY_ID_RESET, NGO_LIST_RESET } from '../../../redux/constants/ngoConstants';
-import { CHILDREN_BY_NGO_RESET, CHILD_ACTIVE_LIST_RESET, CHILD_BY_ID_RESET, CHILD_LIST_RESET } from '../../../redux/constants/childrenConstants';
+import {
+  CHILDREN_BY_NGO_RESET,
+  CHILD_ACTIVE_LIST_RESET,
+  CHILD_BY_ID_RESET,
+  CHILD_LIST_RESET,
+} from '../../../redux/constants/childrenConstants';
+import { fetchTicketList } from '../../../redux/actions/ticketAction';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -56,13 +62,27 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { t } = useTranslation();
 
   const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo, loading: loadingswDetails, success: successSwDetails, error: errorSwDetails } = swDetails;
+  const {
+    swInfo,
+    loading: loadingswDetails,
+    success: successSwDetails,
+    error: errorSwDetails,
+  } = swDetails;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { success: successLogin } = userLogin;
+
+  const myTickets = useSelector((state) => state.myTickets);
+  const { loading: loadingTicketList, success: successTicketList } = myTickets;
+
+  useEffect(() => {
+    if (!successTicketList && !loadingTicketList) {
+      dispatch(fetchTicketList());
+    }
+  }, [successTicketList]);
 
   // do not let non admin user to navigate to the folloing pages
   useEffect(() => {
@@ -109,7 +129,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         dispatch(fetchNgoList());
       }
     }
-  }, [successSwDetails, successNgoList, loadingNgoList,successLogin, location]);
+  }, [successSwDetails, successNgoList, loadingNgoList, successLogin, location]);
 
   // if not active log out
   useEffect(() => {
