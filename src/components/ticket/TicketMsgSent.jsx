@@ -31,6 +31,8 @@ const TicketMsgSent = () => {
       console.log('message received!');
       setSocketData(data);
     });
+    console.log('ija');
+
     return () => {
       console.log('Server-Off');
       socket.off('connect');

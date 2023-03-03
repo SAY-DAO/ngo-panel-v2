@@ -39,24 +39,28 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   // set ticket
   useEffect(() => {
+    setTheTicket(tickets && tickets.find((tik) => tik.id === currentTicket));
+  }, [currentTicket, tickets]);
+
+  // set ticket
+  useEffect(() => {
     if (socketContent) {
+      console.log(socketContent);
       const modifiedTickets = tickets.map((ticket) =>
         ticket.id === socketContent.content.ticket.id
           ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
           : ticket,
       );
       setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
-    } else {
-      setTheTicket(tickets && tickets.find((tik) => tik.id === currentTicket));
     }
-  }, [ socketContent, currentTicket]);
+  }, [socketContent]);
 
   // fetch ticket when selected
   useEffect(() => {
     dispatch(fetchTicketById(currentTicket));
   }, [currentTicket]);
 
-  console.log(theTicket)
+  console.log(theTicket);
   return (
     <WebsocketProvider value={socketHttp}>
       <Box>
@@ -94,14 +98,14 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 <Grid item xs={5}>
                   <ListItem>
                     <AvatarGroup max={4}>
-                      {theTicket.contributors.map((p) => (
+                      {theTicket.contributors.map((c) => (
                         <Tooltip
-                          title={`${p.firstName} - ${t(`roles.${getUserSAYRoleString(p.typeId)}`)}`}
-                          key={p.id}
+                          title={`${c.firstName} - ${t(`roles.${getUserSAYRoleString(c.typeId)}`)}`}
+                          key={c.id}
                         >
                           <Avatar
-                            alt={p.firstName}
-                            src={p.avatarUrl}
+                            alt={c.firstName}
+                            src={c.avatarUrl}
                             sx={{
                               backgroundColor: (theme) => theme.palette.grey.A200,
                             }}
@@ -125,9 +129,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
             <Scrollbar style={{ height: 'calc(100vh - 445px)' }}>
               <Box p={2}>
                 {theTicket &&
-                  theTicket.ticketHistory.map((h, index) =>
-                    h.from === swInfo.id ? (
-                      <Box display="flex" alignItems="start   " flexDirection="row" key={index}>
+                  theTicket.ticketHistory.map((h) =>
+                    h.from !== swInfo.id ? (
+                      <Box display="flex" alignItems="start" flexDirection="row" key={h.id}>
                         <ListItemAvatar>
                           <Avatar
                             alt="user"
@@ -135,12 +139,12 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                               theTicket.contributors.find((p) => p.flaskId === h.from) &&
                               theTicket.contributors.find((p) => p.flaskId === h.from).avatarUrl
                             }
+                            sx={{ backgroundColor: (theme) => theme.palette.grey[600] }}
                           />
                         </ListItemAvatar>
                         <div className="pl-3">
                           <Box
                             mb={1}
-                            key={index}
                             sx={{
                               p: 2,
                               backgroundColor: 'primary.light',
@@ -159,34 +163,32 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                         </div>
                       </Box>
                     ) : (
-                      <Box key={index}>
-                        {theTicket.ticketHistory.map((v) => (
+                      <Box key={h.id}>
+                        <Box
+                          mb={1}
+                          display="flex"
+                          alignItems="flex-end"
+                          flexDirection="row-reverse"
+                          className="chat-socketContent"
+                          key={h.id}
+                        >
                           <Box
-                            mb={1}
-                            display="flex"
-                            alignItems="flex-end"
-                            flexDirection="row-reverse"
-                            className="chat-socketContent"
-                            key={v}
+                            sx={{
+                              p: 2,
+                              backgroundColor: 'primary.light',
+                              ml: 'auto',
+                              borderRadius: '6px',
+                              color: (theme) =>
+                                `${
+                                  theme.palette.mode === 'dark'
+                                    ? 'rgba(0, 0, 0, 0.87)'
+                                    : 'rgba(0, 0, 0, 0.87)'
+                                }`,
+                            }}
                           >
-                            <Box
-                              sx={{
-                                p: 2,
-                                backgroundColor: 'primary.light',
-                                ml: 'auto',
-                                borderRadius: '6px',
-                                color: (theme) =>
-                                  `${
-                                    theme.palette.mode === 'dark'
-                                      ? 'rgba(0, 0, 0, 0.87)'
-                                      : 'rgba(0, 0, 0, 0.87)'
-                                  }`,
-                              }}
-                            >
-                              {v.message}
-                            </Box>
+                            {h.message}
                           </Box>
-                        ))}
+                        </Box>
                       </Box>
                     ),
                   )}

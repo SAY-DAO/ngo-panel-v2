@@ -49,7 +49,7 @@ const MyPage = () => {
   useEffect(() => {
     if (swNewDetails && swNewDetails.id) {
       const isUser = swInfo.id === swNewDetails.id ? 1 : 0; // when 0 displays all children when 1 shows children/needs  created by them
-      dispatch(fetchMyPage(swNewDetails, isUser, 0, 5));
+      dispatch(fetchMyPage(swNewDetails, isUser, 0, 15));
     }
   }, [swNewDetails]);
 
