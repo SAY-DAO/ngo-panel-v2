@@ -34,6 +34,8 @@ import {
   ProductStatusEnum,
   ServiceStatusEnum,
   RolesEnum,
+  Colors,
+  colorChoices,
 } from '../../utils/types';
 import ReceiptImage from './ReceiptImage';
 import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
@@ -309,7 +311,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
               <Grid item xs={2}>
                 {(need.ticket || (addedTicket && addedTicket.need.flaskId === need.id)) && (
                   <Box>
-                    <FlagIcon />
+                    <FlagIcon
+                      sx={{
+                        color:
+                          (need.ticket || addedTicket).color === Colors.YELLOW
+                            ? colorChoices[1].code
+                            : colorChoices[0].code,
+                      }}
+                    />
                   </Box>
                 )}
               </Grid>

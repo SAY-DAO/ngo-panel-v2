@@ -1,3 +1,21 @@
+export const Colors = {
+  WHITE: 0,
+  BLUE: 1,
+  YELLOW: 2,
+  RED: 3,
+};
+
+export const colorChoices = [
+  {
+    code: '#03a9f4',
+    color: Colors.BLUE,
+  },
+  {
+    code: '#ffeb3b',
+    color: Colors.YELLOW,
+  },
+];
+
 //  -3:Deprived of education | -2:Kindergarten | -1:Not attending | 0:Pre-school | 1:1st grade | 2:2nd grade | ... | 13:University
 export const EducationEnum = {
   deprived: -3,

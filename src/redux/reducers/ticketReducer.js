@@ -14,6 +14,9 @@ import {
   TICKET_BY_ID_REQUEST,
   TICKET_BY_ID_SUCCESS,
   TICKET_BY_ID_FAIL,
+  UPDATE_TICKET_COLOR_REQUEST,
+  UPDATE_TICKET_COLOR_SUCCESS,
+  UPDATE_TICKET_COLOR_FAIL,
 } from '../constants/ticketConstants';
 
 const INIT_STATE = {
@@ -25,7 +28,7 @@ const INIT_STATE = {
 export const ticketAddReducer = (state = {}, action) => {
   switch (action.type) {
     case ADD_TICKET_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, success: false, loading: true };
     case ADD_TICKET_SUCCESS:
       return {
         ...state,
@@ -34,6 +37,24 @@ export const ticketAddReducer = (state = {}, action) => {
         success: true,
       };
     case ADD_TICKET_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const ticketUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_TICKET_COLOR_REQUEST:
+      return { loading: true };
+    case UPDATE_TICKET_COLOR_SUCCESS:
+      return {
+        ...state,
+        updatedTicket: action.payload,
+        loading: false,
+        success: true,
+      };
+    case UPDATE_TICKET_COLOR_FAIL:
       return { ...state, loading: false, error: action.payload };
     default:
       return state;

@@ -14,6 +14,9 @@ import {
   TICKET_BY_ID_REQUEST,
   TICKET_BY_ID_SUCCESS,
   TICKET_BY_ID_FAIL,
+  UPDATE_TICKET_COLOR_REQUEST,
+  UPDATE_TICKET_COLOR_SUCCESS,
+  UPDATE_TICKET_COLOR_FAIL,
 } from '../constants/ticketConstants';
 
 export const selectTicket = (id) => ({
@@ -100,6 +103,32 @@ export const addTicket = (values) => async (dispatch, getState) => {
     console.log(e);
     dispatch({
       type: ADD_TICKET_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const updateTicketColor = (values) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_TICKET_COLOR_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+      },
+    };
+    const { data } = await daoApi.patch(
+      `/tickets/ticket/${values.ticketId}?color=${values.color}`,
+      config,
+    );
+    dispatch({
+      type: UPDATE_TICKET_COLOR_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    console.log(e);
+    dispatch({
+      type: UPDATE_TICKET_COLOR_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }

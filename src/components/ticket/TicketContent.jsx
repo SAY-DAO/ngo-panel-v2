@@ -12,6 +12,8 @@ import {
   ListItem,
   AvatarGroup,
   Tooltip,
+  useMediaQuery,
+  Fab,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,8 +21,9 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import Scrollbar from '../custom-scroll/Scrollbar';
 import { getCurrentStatusString, getUserSAYRoleString } from '../../utils/helpers';
-import { fetchTicketById } from '../../redux/actions/ticketAction';
+import { fetchTicketById, updateTicketColor } from '../../redux/actions/ticketAction';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
+import { colorChoices } from '../../utils/types';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
   const dispatch = useDispatch();
@@ -36,6 +39,12 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
   const { socketContent } = ticketMsgAdd;
+
+  const ticketById = useSelector((state) => state.ticketById);
+  const { ticket: fetchedTicket } = ticketById;
+
+  const ticketUpdate = useSelector((state) => state.ticketUpdate);
+  const { success: successTicketUpdate } = ticketUpdate;
 
   // set ticket
   useEffect(() => {
@@ -58,9 +67,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   // fetch ticket when selected
   useEffect(() => {
     dispatch(fetchTicketById(currentTicket));
-  }, [currentTicket]);
+  }, [currentTicket, successTicketUpdate]);
 
-  console.log(theTicket);
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   return (
     <WebsocketProvider value={socketHttp}>
       <Box>
@@ -84,7 +93,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 <FeatherIcon icon="menu" width="18" onClick={toggleTicketSidebar} />
               </Box>
               <Grid container direction="row">
-                <Grid item xs={5}>
+                <Grid item xs={5} md={2}>
                   <ListItem>
                     <ListItemAvatar>
                       <Avatar alt="Icon" src={theTicket.need.imageUrl} />
@@ -95,33 +104,62 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                     />
                   </ListItem>
                 </Grid>
-                <Grid item xs={5}>
-                  <ListItem>
-                    <AvatarGroup max={4}>
-                      {theTicket.contributors.map((c) => (
-                        <Tooltip
-                          title={`${c.firstName} - ${t(`roles.${getUserSAYRoleString(c.typeId)}`)}`}
-                          key={c.id}
-                        >
-                          <Avatar
-                            alt={c.firstName}
-                            src={c.avatarUrl}
-                            sx={{
-                              backgroundColor: (theme) => theme.palette.grey.A200,
-                            }}
-                          />
-                        </Tooltip>
-                      ))}
-                    </AvatarGroup>
-                  </ListItem>
-                </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={5} md={3}>
                   <ListItem>
                     <ListItemText
                       primary={<Typography variant="h4">{t('need.status')}</Typography>}
                       secondary={t(`need.needStatus.${getCurrentStatusString(theTicket.need)}`)}
                     />
                   </ListItem>
+                </Grid>
+                {lgUp && (
+                  <Grid item lg={5}>
+                    <ListItem>
+                      <AvatarGroup max={4}>
+                        {theTicket.contributors.map((c) => (
+                          <Tooltip
+                            title={`${c.firstName} - ${t(
+                              `roles.${getUserSAYRoleString(c.typeId)}`,
+                            )}`}
+                            key={c.id}
+                          >
+                            <Avatar
+                              alt={c.firstName}
+                              src={c.avatarUrl}
+                              sx={{
+                                backgroundColor: (theme) => theme.palette.grey.A200,
+                              }}
+                            />
+                          </Tooltip>
+                        ))}
+                      </AvatarGroup>
+                    </ListItem>
+                  </Grid>
+                )}
+                <Grid item xs md={2}>
+                  {colorChoices.map((choice) => (
+                    <Fab
+                      color="primary"
+                      style={{ backgroundColor: choice.code }}
+                      sx={{
+                        marginTop: !lgUp ? '3px' : 0,
+                        marginRight: !lgUp ? 0 : '3px',
+                        width: lgUp ? '40px' : '30px',
+                        height: lgUp ? '40px' : '30px',
+                        color: 'black',
+                      }}
+                      key={choice.color}
+                      onClick={() =>
+                        dispatch(updateTicketColor({ ticketId: theTicket.id, color: choice.color }))
+                      }
+                    >
+                      {fetchedTicket && fetchedTicket.color === choice.color ? (
+                        <FeatherIcon icon="check" size="24" />
+                      ) : (
+                        ''
+                      )}
+                    </Fab>
+                  ))}
                 </Grid>
               </Grid>
             </Box>

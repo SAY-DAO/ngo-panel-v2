@@ -16,6 +16,7 @@ import Badge from '@mui/material/Badge';
 import Scrollbar from '../custom-scroll/Scrollbar';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { TicketSearch, selectTicket } from '../../redux/actions/ticketAction';
+import { colorChoices, Colors } from '../../utils/types';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -60,6 +61,9 @@ const TicketListing = () => {
 
   const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
   const { socketContent } = ticketMsgAdd;
+
+  const ticketById = useSelector((state) => state.ticketById);
+  const { ticket: fetchedTicket } = ticketById;
 
   useEffect(() => {
     if (tickets) {
@@ -111,17 +115,12 @@ const TicketListing = () => {
                     left: 0,
                     top: 0,
                     backgroundColor:
-                      ticket.color === 'secondary'
-                        ? (theme) => theme.palette.secondary.main
-                        : ticket.color === 'error'
-                        ? (theme) => theme.palette.error.main
-                        : ticket.color === 'warning'
-                        ? (theme) => theme.palette.warning.main
-                        : ticket.color === 'success'
-                        ? (theme) => theme.palette.success.main
-                        : ticket.color === 'primary'
-                        ? (theme) => theme.palette.primary.main
-                        : (theme) => theme.palette.primary.main,
+                      (fetchedTicket &&
+                        fetchedTicket.id === ticket.id &&
+                        fetchedTicket.color === Colors.BLUE) ||
+                      ticket.color === Colors.BLUE
+                        ? colorChoices[0].code
+                        : colorChoices[1].code,
                   }}
                 />
                 <Typography variant="h5" sx={{ width: '240px' }} noWrap>
@@ -147,7 +146,7 @@ const TicketListing = () => {
                           key={p.id}
                           overlap="circular"
                           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                          variant="dot"
+                          // variant="dot"
                         >
                           <Avatar
                             alt={p.firstName}

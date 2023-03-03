@@ -51,13 +51,20 @@ import {
   providerUpdateIsActiveReducer,
   providerUpdateReducer,
 } from './providerReducer';
-import { ticketListReducer, ticketAddReducer, ticketAddMsgReducer, ticketByIdReducer } from './ticketReducer';
+import {
+  ticketListReducer,
+  ticketAddReducer,
+  ticketAddMsgReducer,
+  ticketByIdReducer,
+  ticketUpdateReducer,
+} from './ticketReducer';
 
 export default combineReducers({
   CustomizerReducer,
   myTickets: ticketListReducer,
   ticketMsgAdd: ticketAddMsgReducer,
   ticketAdd: ticketAddReducer,
+  ticketUpdate: ticketUpdateReducer,
   ticketById: ticketByIdReducer,
   wallet: walletReducer,
   countryList: countryListReducer,
