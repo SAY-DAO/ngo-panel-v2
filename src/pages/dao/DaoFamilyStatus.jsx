@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import Chart from 'react-apexcharts';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTheme } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { fetchNestNeeds } from '../../redux/actions/blockchainAction';
 
@@ -11,9 +11,6 @@ const DaoFamilyStatus = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const primary = theme.palette.primary.main;
-
-  const server = useSelector((state) => state.server);
-  const { userList, loading: loadingServer } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -96,11 +93,11 @@ const DaoFamilyStatus = () => {
               gutterBottom
             >
               {/*  meta.totalItemsfrom pagination */}
-              {!userList ? (
+              {/* {!userList ? (
                 <CircularProgress />
               ) : (
                 userList.users && userList.users.families && userList.users.families.length
-              )}
+              )} */}
             </Typography>
           </Box>
 
@@ -110,7 +107,7 @@ const DaoFamilyStatus = () => {
             }}
           >
             <LoadingButton
-              loading={loadingServer}
+              // loading={loadingServer}
               aria-label="children=refresh"
               color="secondary"
               onClick={() => dispatch(fetchNestNeeds())}

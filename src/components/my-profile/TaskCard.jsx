@@ -15,7 +15,6 @@ import {
   AvatarGroup,
   CardActions,
   CardActionArea,
-  Badge,
   Stack,
   Snackbar,
   Alert,
@@ -228,16 +227,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                   aria-haspopup="true"
                   onClick={handleClick}
                 >
-                  <Badge
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    badgeContent={5}
-                    color="secondary"
-                  >
-                    <FeatherIcon icon="more-horizontal" width="18" />
-                  </Badge>
+                  <FeatherIcon icon="more-horizontal" width="18" />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -310,7 +300,34 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
               </Grid>
               <Grid item xs={2}>
                 {(need.ticket || (addedTicket && addedTicket.need.flaskId === need.id)) && (
-                  <Box>
+                  <Box
+                    sx={{
+                      textAlign: 'center',
+                      backgroundColor:
+                        (need.ticket || addedTicket).color === Colors.YELLOW
+                          ? (theme) => theme.palette.background.ripple
+                          : '',
+                      animation:
+                        (need.ticket || addedTicket).color === Colors.YELLOW
+                          ? 'ripple 1.4s  infinite ease-in-out'
+                          : '',
+
+                      borderRadius: '50%',
+                      '@keyframes ripple': {
+                        '0%': {
+                          transform: 'scale(.7)',
+                          opacity: 0.7,
+                        },
+                        '100%': {
+                          transform: 'scale(0.8)',
+                          opacity: 1,
+                        },
+                      },
+                      height: '40px',
+                      width: '40px',
+                      paddingTop: '7px',
+                    }}
+                  >
                     <FlagIcon
                       sx={{
                         color:

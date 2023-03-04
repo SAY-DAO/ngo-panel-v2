@@ -21,22 +21,19 @@ const Dao = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { loading: loadingSwDetails } = swDetails;
 
-  const server = useSelector((state) => state.server);
-  const { updated, needList, loading: loadingServer } = server;
-
   useEffect(() => {
     dispatch(fetchNestNeeds());
     dispatch(fetchNestChildren());
     dispatch(fetchNestUsers());
     dispatch(fetchNestNgos());
-  }, [updated]);
+  }, []);
 
-  let count;
+  // let count;
   const handleUpdateNestServer = () => {
-    let skip = needList && needList.needs.meta.totalItems;
-    skip += 1000;
-    count = 500;
-    console.log(count, skip);
+    // let skip = needList && needList.needs.meta.totalItems;
+    // skip += 1000;
+    // count = 500;
+    // console.log(count, skip);
   };
 
   return (
@@ -48,9 +45,7 @@ const Dao = () => {
       ) : (
         <PageContainer>
           <Grid item>
-            <LoadingButton loading={loadingServer} onClick={handleUpdateNestServer}>
-              sync
-            </LoadingButton>
+            <LoadingButton onClick={handleUpdateNestServer}>sync</LoadingButton>
             Nest.js Server
           </Grid>
           <Grid container direction="row">

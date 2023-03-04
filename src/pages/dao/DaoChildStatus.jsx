@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, Typography, CircularProgress, Grid } from '@mui/material';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
-import { useSelector } from 'react-redux';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 import MoodBadIcon from '@mui/icons-material/MoodBad';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
@@ -12,9 +11,6 @@ import { ChildExistenceEnum } from '../../utils/types';
 const DaoChildStatus = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
-
-  const server = useSelector((state) => state.server);
-  const { childList } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -63,15 +59,7 @@ const DaoChildStatus = () => {
     },
   ];
 
-  useEffect(() => {
-    if(childList){
-      for(let i= 0; i < childList.children.length; i+=1){
-        console.log(childList.children[i].flaskSupervisorId)
-      }
-    }
-  }, [childList])
-  
-
+  const childList = []; // TODO: remove
 
   return (
     <Card

@@ -13,6 +13,8 @@ import {
   Button,
   useMediaQuery,
   Drawer,
+  Badge,
+  Chip,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 // Dropdown Component
@@ -175,6 +177,16 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     dispatch(logout());
   };
 
+  const [anchorEl2, setAnchorEl2] = React.useState(null);
+
+  const handleClick2 = (event) => {
+    setAnchorEl2(event.currentTarget);
+  };
+
+  const handleClose2 = () => {
+    setAnchorEl2(null);
+  };
+
   return (
     <AppBar sx={sx} elevation={0} className={customClass}>
       <Toolbar>
@@ -265,10 +277,108 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         {/* ------------ End Menu icon ------------- */}
 
         <Box flexGrow={1} />
+        {/* ------------------------------------------- */}
+        {/* Messages Dropdown */}
+        {/* ------------------------------------------- */}
+        <IconButton
+          size="large"
+          aria-label="show 11 new notifications"
+          color="inherit"
+          aria-controls="msgs-menu"
+          aria-haspopup="true"
+          onClick={handleClick2}
+        >
+          <Badge variant="dot" color="secondary">
+            <FeatherIcon icon="message-square" width="20" height="20" />
+          </Badge>
+        </IconButton>
+        <Menu
+          id="msgs-menu"
+          anchorEl={anchorEl2}
+          keepMounted
+          open={Boolean(anchorEl2)}
+          onClose={handleClose2}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          sx={{
+            '& .MuiMenu-paper': {
+              width: '385px',
+              right: 0,
+              top: '70px !important',
+            },
+            '& .MuiList-padding': {
+              p: '30px',
+            },
+          }}
+        >
+          <Box
+            sx={{
+              mb: 1,
+            }}
+          >
+            <Box display="flex" alignItems="center">
+              <Typography variant="h4" fontWeight="500">
+                Messages
+              </Typography>
+              <Box
+                sx={{
+                  ml: 2,
+                }}
+              >
+                <Chip
+                  size="small"
+                  label="5 new"
+                  sx={{
+                    borderRadius: '6px',
+                    pl: '5px',
+                    pr: '5px',
+                    backgroundColor: (theme) => theme.palette.secondary.main,
+                    color: '#fff',
+                  }}
+                />
+              </Box>
+            </Box>
+          </Box>
+          {/* <MessageDropdown /> */}
 
+          <Button
+            sx={{
+              mt: 2,
+              display: 'block',
+              width: '100%',
+            }}
+            variant="outlined"
+            color="primary"
+            onClick={handleClose2}
+          >
+            <Link
+              to="/email"
+              style={{
+                color: '#fff',
+                width: '100%',
+                display: 'block',
+                textDecoration: 'none',
+              }}
+            >
+              See all messages
+            </Link>
+          </Button>
+        </Menu>
+        {/* ------------------------------------------- */}
+        {/* End Messages Dropdown */}
+        {/* ------------------------------------------- */}
         {/* ------------------------------------------- */}
         {/* Profile Dropdown */}
         {/* ------------------------------------------- */}
+        <Box
+          sx={{
+            width: '1px',
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            height: '25px',
+            ml: 1,
+            mr: 1,
+          }}
+        />
         <Button
           aria-label="menu"
           color="inherit"
@@ -283,6 +393,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               sx={{
                 width: '30px',
                 height: '30px',
+                backgroundColor: (theme)=>theme.palette.background.ripple
               }}
             />
             <Box
@@ -310,6 +421,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             </Box>
           </Box>
         </Button>
+
         <Menu
           id="profile-menu"
           anchorEl={anchorEl4}

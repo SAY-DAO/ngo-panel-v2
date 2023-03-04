@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import Chart from 'react-apexcharts';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTheme } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { fetchNestNgos } from '../../redux/actions/blockchainAction';
 
@@ -11,9 +11,6 @@ const DaoNgoStatus = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const primary = theme.palette.primary.main;
-
-  const server = useSelector((state) => state.server);
-  const { ngoList, loading: loadingServer } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -96,7 +93,7 @@ const DaoNgoStatus = () => {
               gutterBottom
             >
               {/*  meta.totalItemsfrom pagination */}
-              {!ngoList ? <CircularProgress /> : ngoList.ngos && ngoList.ngos.length}
+              {/* {!ngoList ? <CircularProgress /> : ngoList.ngos && ngoList.ngos.length} */}
             </Typography>
           </Box>
 
@@ -106,7 +103,7 @@ const DaoNgoStatus = () => {
             }}
           >
             <LoadingButton
-              loading={loadingServer}
+              // loading={loadingServer}
               aria-label="children=refresh"
               color="secondary"
               onClick={() => dispatch(fetchNestNgos())}

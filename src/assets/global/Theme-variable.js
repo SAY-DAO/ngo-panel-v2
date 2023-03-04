@@ -213,6 +213,7 @@ export const BuildTheme = (config = {}) => {
         default: customizer.activeMode === 'dark' ? '#20232a' : '#fafbfb',
         dark: customizer.activeMode === 'dark' ? '#1c2025' : '#ffffff',
         paper: customizer.activeMode === 'dark' ? '#282C34' : '#ffffff',
+        ripple: customizer.activeMode === 'dark' ? '#8b8b8b' : '#1c2025',
       },
       text: {
         primary: customizer.activeMode === 'dark' ? '#e6e5e8' : 'rgba(0, 0, 0, 0.87)',

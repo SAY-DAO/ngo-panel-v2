@@ -51,10 +51,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     setTheTicket(tickets && tickets.find((tik) => tik.id === currentTicket));
   }, [currentTicket, tickets]);
 
-  // set ticket
+  // set ticket when socket msg received
   useEffect(() => {
     if (socketContent) {
-      console.log(socketContent);
       const modifiedTickets = tickets.map((ticket) =>
         ticket.id === socketContent.content.ticket.id
           ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }

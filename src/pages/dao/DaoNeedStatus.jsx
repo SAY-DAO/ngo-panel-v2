@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import Chart from 'react-apexcharts';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useTheme } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { fetchNestNeeds } from '../../redux/actions/blockchainAction';
 
@@ -11,9 +11,6 @@ const DaoNeedStatus = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const primary = theme.palette.primary.main;
-
-  const server = useSelector((state) => state.server);
-  const { needList, loading: loadingServer } = server;
 
   const optionsmonthlychart = {
     grid: {
@@ -96,7 +93,7 @@ const DaoNeedStatus = () => {
               gutterBottom
             >
               {/*  meta.totalItemsfrom pagination */}
-              {!needList ? <CircularProgress /> : needList.totalDone} {''}/ {''}
+              {/* {!needList ? <CircularProgress /> : needList.totalDone} {''}/ {''}
               {!needList ? <CircularProgress /> : needList.needs && needList.needs.meta.totalItems}
               {''} ~ {''}
               {!needList ? (
@@ -113,7 +110,7 @@ const DaoNeedStatus = () => {
                   {needList.needs &&
                     (needList.totalDone / needList.needs.meta.totalItems).toFixed(2)}
                 </Typography>
-              )}
+              )} */}
             </Typography>
           </Box>
 
@@ -123,7 +120,7 @@ const DaoNeedStatus = () => {
             }}
           >
             <LoadingButton
-              loading={loadingServer}
+              // loading={loadingServer}
               aria-label="children=refresh"
               color="secondary"
               onClick={() => dispatch(fetchNestNeeds())}

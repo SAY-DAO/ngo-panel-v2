@@ -419,7 +419,7 @@ const CoverCard = ({
                         size="small"
                         value={swNewDetails}
                         id="asynchronous-social-worker"
-                        sx={{ minWidth: '300px' }}
+                        sx={{ minWidth: '210px' }}
                         open={openSocialWorkers}
                         onOpen={() => {
                           setOpenSocialWorker(true);
