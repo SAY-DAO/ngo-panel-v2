@@ -17,6 +17,7 @@ import {
   UPDATE_TICKET_COLOR_REQUEST,
   UPDATE_TICKET_COLOR_SUCCESS,
   UPDATE_TICKET_COLOR_FAIL,
+  UPDATE_TICKET_COLOR_RESET,
 } from '../constants/ticketConstants';
 
 const INIT_STATE = {
@@ -56,7 +57,7 @@ export const ticketUpdateReducer = (state = {}, action) => {
       };
     case UPDATE_TICKET_COLOR_FAIL:
       return { ...state, loading: false, error: action.payload };
-    case TICKET_BY_ID_RESET:
+    case UPDATE_TICKET_COLOR_RESET:
       return {};
     default:
       return state;

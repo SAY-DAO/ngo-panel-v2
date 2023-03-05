@@ -582,6 +582,10 @@
       "settings": "Account Settings",
       "logIn": "Log in",
       "logOut": "Log out"
+    },
+    "message":{
+      "more": "See All Messages",
+      "messages": "Messages"
     }
   },
   "myPage": {

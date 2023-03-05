@@ -42,13 +42,14 @@ const TicketListing = () => {
 
   useEffect(() => {
     if (tickets) {
+      
       const filteredTickets = filterTickets(tickets, ticketSearch);
       filteredTickets.map((ticket) => {
         if (updatedTicket && updatedTicket.id === ticket.id) {
           const modifiedTicket = ticket;
           modifiedTicket.color = updatedTicket.color;
-        console.log(modifiedTicket);
-        return modifiedTicket;
+          console.log(modifiedTicket);
+          return modifiedTicket;
         }
 
         return ticket;

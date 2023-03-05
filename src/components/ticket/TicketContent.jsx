@@ -14,6 +14,7 @@ import {
   Tooltip,
   useMediaQuery,
   Fab,
+  CircularProgress,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -44,7 +45,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const { ticket: fetchedTicket } = ticketById;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
-  const { success: successTicketUpdate } = ticketUpdate;
+  const { loading: loadingTicketUpdated, success: successTicketUpdate } = ticketUpdate;
 
   // set ticket
   useEffect(() => {
@@ -158,7 +159,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                         )
                       }
                     >
-                      {fetchedTicket && fetchedTicket.color === choice.color ? (
+                      {loadingTicketUpdated ? (
+                        <CircularProgress size="small" />
+                      ) : fetchedTicket && fetchedTicket.color === choice.color ? (
                         <FeatherIcon icon="check" size="24" />
                       ) : (
                         ''

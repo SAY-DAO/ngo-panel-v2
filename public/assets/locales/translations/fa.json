@@ -621,6 +621,10 @@
       "settings": "جزئیات کاربری",
       "logIn": "ورود",
       "logOut": "خروج"
+    },
+    "message":{
+      "more": "پیام‌های دیگر",
+      "messages": "پیام‌ها"
     }
   },
   "myPage": {
@@ -690,7 +694,7 @@
       "chatWith": "گفتگو با"
     },
     "ticketing":{
-      "subHeader": "پیغام‌رسان",
+      "subHeader": "پیام‌رسان",
       "header": "گفتگوها"
     }
   },

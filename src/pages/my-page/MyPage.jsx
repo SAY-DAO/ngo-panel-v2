@@ -31,9 +31,12 @@ function getModifiedNeeds(updatedTicket, addedTicket, need) {
     return theNeed;
   }
   //  when ticket color changed from TicketContent
+  console.log(need.id);
+  console.log(updatedTicket.flaskNeedId);
   if (updatedTicket && need.id === parseInt(updatedTicket.flaskNeedId, 10)) {
     theNeed = need;
-    theNeed.ticket.color = updatedTicket.color;
+    theNeed.ticket.color = parseInt(updatedTicket.color, 10);
+    console.log(theNeed);
     return theNeed;
   }
   return need;
@@ -91,13 +94,12 @@ const MyPage = () => {
           organizedNeeds[0] = modifiedNeeds[0].map((need) => {
             return getModifiedNeeds(updatedTicket, addedTicket, need);
           });
-        }
-        // 1 index /  Payment Received
-        else if (
+        } else if (
           updatedTicket ||
           addedTicket.need.status === PaymentStatusEnum.PARTIAL_PAY ||
           addedTicket.need.status === PaymentStatusEnum.COMPLETE_PAY
         ) {
+          // 1 index /  Payment Received
           organizedNeeds[1] = modifiedNeeds[1].map((need) => {
             return getModifiedNeeds(updatedTicket, addedTicket, need);
           });
@@ -116,19 +118,19 @@ const MyPage = () => {
             });
           }
         } else if (updatedTicket || addedTicket.need.type === NeedTypeEnum.PRODUCT) {
-          // Purchased
+          // 2 index / Purchased
           if (updatedTicket || addedTicket.need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
             organizedNeeds[2] = modifiedNeeds[2].map((need) => {
               return getModifiedNeeds(updatedTicket, addedTicket, need);
             });
           }
-          // Delivered to Ngo
+          // 2 index / Delivered to Ngo
           if (updatedTicket || addedTicket.need.status === ProductStatusEnum.DELIVERED_TO_NGO) {
             organizedNeeds[2] = modifiedNeeds[2].map((need) => {
               return getModifiedNeeds(updatedTicket, addedTicket, need);
             });
           }
-          // Delivered to child
+          // 3 index / Delivered to child
           if (updatedTicket || addedTicket.need.status === ProductStatusEnum.DELIVERED) {
             organizedNeeds[3] = modifiedNeeds[3].map((need) => {
               return getModifiedNeeds(updatedTicket, addedTicket, need);

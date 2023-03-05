@@ -318,7 +318,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           >
             <Box display="flex" alignItems="center">
               <Typography variant="h4" fontWeight="500">
-                Messages
+              {t('profile.message.messages')}
               </Typography>
               <Box
                 sx={{
@@ -340,7 +340,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             </Box>
           </Box>
           {/* <MessageDropdown /> */}
-
           <Button
             sx={{
               mt: 2,
@@ -360,7 +359,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
                 textDecoration: 'none',
               }}
             >
-              See all messages
+              {t('profile.message.more')}
             </Link>
           </Button>
         </Menu>
@@ -393,7 +392,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               sx={{
                 width: '30px',
                 height: '30px',
-                backgroundColor: (theme)=>theme.palette.background.ripple
+                backgroundColor: (theme) => theme.palette.background.ripple,
               }}
             />
             <Box

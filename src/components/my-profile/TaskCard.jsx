@@ -118,6 +118,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   };
   // when already has a ticket
   const handleOpenTicketing = (ticketId) => {
+    dispatch({ type: UPDATE_TICKET_COLOR_RESET });
     setOpenTicket(true);
     setOpenConfirm(false);
     dispatch(selectTicket(ticketId));
