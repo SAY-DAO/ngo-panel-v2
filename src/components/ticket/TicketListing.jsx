@@ -34,8 +34,8 @@ const TicketListing = () => {
   const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
   const { socketContent } = ticketMsgAdd;
 
-  const ticketById = useSelector((state) => state.ticketById);
-  const { ticket: fetchedTicket } = ticketById;
+  // const ticketById = useSelector((state) => state.ticketById);
+  // const { ticket: fetchedTicket } = ticketById;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { updatedTicket } = ticketUpdate;
@@ -44,11 +44,13 @@ const TicketListing = () => {
     if (tickets) {
       const filteredTickets = filterTickets(tickets, ticketSearch);
       filteredTickets.map((ticket) => {
-        if (updatedTicket && ticket.id === updatedTicket.id) {
+        if (updatedTicket && updatedTicket.id === ticket.id) {
           const modifiedTicket = ticket;
           modifiedTicket.color = updatedTicket.color;
-          return modifiedTicket;
+        console.log(modifiedTicket);
+        return modifiedTicket;
         }
+
         return ticket;
       });
       setSortedTickets(
@@ -100,10 +102,7 @@ const TicketListing = () => {
                       left: 0,
                       top: 0,
                       backgroundColor:
-                        (fetchedTicket &&
-                          fetchedTicket.id === ticket.id &&
-                          fetchedTicket.color === Colors.BLUE) ||
-                        ticket.color === Colors.BLUE
+                        parseInt(ticket.color, 10) === Colors.BLUE
                           ? colorChoices[0].code
                           : colorChoices[1].code,
                     }}

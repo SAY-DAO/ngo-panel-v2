@@ -118,7 +118,7 @@ export const updateTicketColor = (values) => async (dispatch) => {
       },
     };
     const { data } = await daoApi.patch(
-      `/tickets/ticket/${values.ticketId}?color=${values.color}`,
+      `/tickets/ticket/${values.ticketId}?needId=${values.needId}&color=${values.color}`,
       config,
     );
     dispatch({

@@ -149,7 +149,13 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                       }}
                       key={choice.color}
                       onClick={() =>
-                        dispatch(updateTicketColor({ ticketId: theTicket.id, color: choice.color }))
+                        dispatch(
+                          updateTicketColor({
+                            ticketId: theTicket.id,
+                            needId: theTicket.need.flaskId,
+                            color: choice.color,
+                          }),
+                        )
                       }
                     >
                       {fetchedTicket && fetchedTicket.color === choice.color ? (

@@ -15,6 +15,29 @@ import CoverCard from '../../components/my-profile/CoverCard';
 import TaskCard from '../../components/my-profile/TaskCard';
 import { fetchMyPage } from '../../redux/actions/userAction';
 import { connectWallet } from '../../redux/actions/blockchainAction';
+import {
+  NeedTypeEnum,
+  PaymentStatusEnum,
+  ProductStatusEnum,
+  ServiceStatusEnum,
+} from '../../utils/types';
+
+function getModifiedNeeds(updatedTicket, addedTicket, need) {
+  let theNeed;
+  //  when ticket added
+  if (!updatedTicket && need.id === addedTicket.need.flaskId) {
+    theNeed = need;
+    theNeed.ticket = addedTicket;
+    return theNeed;
+  }
+  //  when ticket color changed from TicketContent
+  if (updatedTicket && need.id === parseInt(updatedTicket.flaskNeedId, 10)) {
+    theNeed = need;
+    theNeed.ticket.color = updatedTicket.color;
+    return theNeed;
+  }
+  return need;
+}
 
 const MyPage = () => {
   const dispatch = useDispatch();
@@ -23,6 +46,8 @@ const MyPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [cardSelected, setCardSelected] = useState(0);
+  const [swNewDetails, setSwNewDetails] = useState({});
+  const [modifiedNeeds, setModifiedNeeds] = useState();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -30,7 +55,11 @@ const MyPage = () => {
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails, loading: loadingProfile } = myPage;
 
-  const [swNewDetails, setSwNewDetails] = useState({});
+  const ticketAdd = useSelector((state) => state.ticketAdd);
+  const { addedTicket } = ticketAdd;
+
+  const ticketUpdate = useSelector((state) => state.ticketUpdate);
+  const { updatedTicket } = ticketUpdate;
 
   useEffect(() => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
@@ -53,6 +82,64 @@ const MyPage = () => {
     }
   }, [swNewDetails]);
 
+  useEffect(() => {
+    if (pageDetails && pageDetails.needs) {
+      const organizedNeeds = pageDetails.needs; // [[not paid], [payment], [purchased/delivered Ngo/Ngo Payment], [Done]]
+      if (addedTicket || updatedTicket) {
+        // 0 index / not Paid
+        if (updatedTicket || (addedTicket && addedTicket.need.status === 0)) {
+          organizedNeeds[0] = modifiedNeeds[0].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
+        }
+        // 1 index /  Payment Received
+        else if (
+          updatedTicket ||
+          addedTicket.need.status === PaymentStatusEnum.PARTIAL_PAY ||
+          addedTicket.need.status === PaymentStatusEnum.COMPLETE_PAY
+        ) {
+          organizedNeeds[1] = modifiedNeeds[1].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
+        }
+        if (updatedTicket || addedTicket.need.type === NeedTypeEnum.SERVICE) {
+          // 2 index /  Payment sent to NGO
+          if (updatedTicket || addedTicket.need.status === ServiceStatusEnum.MONEY_TO_NGO) {
+            organizedNeeds[2] = modifiedNeeds[2].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
+          }
+          // 3 index /  Delivered to child
+          if (updatedTicket || addedTicket.need.status === ServiceStatusEnum.DELIVERED) {
+            organizedNeeds[3] = modifiedNeeds[3].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
+          }
+        } else if (updatedTicket || addedTicket.need.type === NeedTypeEnum.PRODUCT) {
+          // Purchased
+          if (updatedTicket || addedTicket.need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
+            organizedNeeds[2] = modifiedNeeds[2].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
+          }
+          // Delivered to Ngo
+          if (updatedTicket || addedTicket.need.status === ProductStatusEnum.DELIVERED_TO_NGO) {
+            organizedNeeds[2] = modifiedNeeds[2].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
+          }
+          // Delivered to child
+          if (updatedTicket || addedTicket.need.status === ProductStatusEnum.DELIVERED) {
+            organizedNeeds[3] = modifiedNeeds[3].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
+          }
+        }
+      }
+      setModifiedNeeds(organizedNeeds);
+    }
+  }, [addedTicket, pageDetails, updatedTicket]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -61,154 +148,163 @@ const MyPage = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
   return (
     <PageContainer title="User Profile" description="this is User Profile page">
-      <>
-        <CoverCard
-          theUser={swNewDetails}
-          needCount={pageDetails ? pageDetails.needsCount : 0}
-          signatureCount={pageDetails ? pageDetails.signaturesCount : 0}
-          swInfo={swInfo}
-          swNewDetails={swNewDetails}
-          setSwNewDetails={setSwNewDetails}
-        />
-        <Grid container spacing={0}>
-          <Card sx={{ width: '100%', overflowX: 'scroll', minHeight: '500px' }}>
-            <Grid
-              container
-              justifyContent="space-around"
-              alignItems="center"
-              sx={{ mt: 1, mb: 1, minWidth: '950px' }}
-            >
-              <Grid item>
-                <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
-                {pageDetails && (
-                  <Typography component="span" sx={{ fontSize: 12 }}>
-                    ({pageDetails.needs[0].length})
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item>
-                <Typography component="span">{t('myPage.taskManager.title.paid')}</Typography>
-                {pageDetails && (
-                  <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {pageDetails.needs[1].length})
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item>
-                <Typography component="span">{t('myPage.taskManager.title.purchased')}</Typography>
-                {pageDetails && (
-                  <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {pageDetails.needs[2].length})
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item>
-                <Typography component="span">{t('myPage.taskManager.title.done')}</Typography>
-                {pageDetails && (
-                  <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {pageDetails.needs[3].length})
-                  </Typography>
-                )}
-              </Grid>
-              <Grid sx={{ minWidth: '-webkit-fill-available' }}>
-                <Divider sx={{ pb: 2, mb: 2, minWidth: 'inherit' }} variant="fullWidth" />
-              </Grid>
-            </Grid>
-
-            {loadingProfile ? (
-              <Grid sx={{ textAlign: 'center' }}>
-                <CircularProgress />
-              </Grid>
-            ) : (
+      {!modifiedNeeds ? (
+        <Grid sx={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </Grid>
+      ) : (
+        <>
+          <CoverCard
+            theUser={swNewDetails}
+            needCount={pageDetails ? pageDetails.needsCount : 0}
+            signatureCount={pageDetails ? pageDetails.signaturesCount : 0}
+            swInfo={swInfo}
+            swNewDetails={swNewDetails}
+            setSwNewDetails={setSwNewDetails}
+          />
+          <Grid container spacing={0}>
+            <Card sx={{ width: '100%', overflowX: 'scroll', minHeight: '500px' }}>
               <Grid
                 container
-                spacing={0}
-                sx={{ minWidth: '1000px', maxHeight: '650px', overflowY: 'scroll' }}
+                justifyContent="space-around"
+                alignItems="center"
+                sx={{ mt: 1, mb: 1, minWidth: '950px' }}
               >
-                <Grid item xs={3}>
-                  {pageDetails &&
-                    pageDetails.needs[0]
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => (
-                        <TaskCard
-                          key={need.id}
-                          need={need}
-                          setCardSelected={setCardSelected}
-                          cardSelected={cardSelected}
-                          swNewDetails={swNewDetails}
-                        />
-                      ))}
+                <Grid item>
+                  <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
+                  {modifiedNeeds && (
+                    <Typography component="span" sx={{ fontSize: 12 }}>
+                      ( {modifiedNeeds[0].length})
+                    </Typography>
+                  )}
                 </Grid>
-                <Grid item xs={3}>
-                  {pageDetails &&
-                    pageDetails.needs[1]
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => (
-                        <TaskCard
-                          key={need.id}
-                          need={need}
-                          setCardSelected={setCardSelected}
-                          cardSelected={cardSelected}
-                          swNewDetails={swNewDetails}
-                        />
-                      ))}
+                <Grid item>
+                  <Typography component="span">{t('myPage.taskManager.title.paid')}</Typography>
+                  {modifiedNeeds && (
+                    <Typography component="span" sx={{ fontSize: 12 }}>
+                      ( {modifiedNeeds[1].length})
+                    </Typography>
+                  )}
                 </Grid>
-                <Grid item xs={3}>
-                  {pageDetails &&
-                    pageDetails.needs[2]
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => (
-                        <TaskCard
-                          key={need.id}
-                          need={need}
-                          setCardSelected={setCardSelected}
-                          cardSelected={cardSelected}
-                          swNewDetails={swNewDetails}
-                        />
-                      ))}
+                <Grid item>
+                  <Typography component="span">
+                    {t('myPage.taskManager.title.purchased')}
+                  </Typography>
+                  {modifiedNeeds && (
+                    <Typography component="span" sx={{ fontSize: 12 }}>
+                      ( {modifiedNeeds[2].length})
+                    </Typography>
+                  )}
                 </Grid>
-                <Grid item xs={3}>
-                  {pageDetails &&
-                    pageDetails.needs[3]
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((need) => (
-                        <TaskCard
-                          key={need.id}
-                          need={need}
-                          setCardSelected={setCardSelected}
-                          cardSelected={cardSelected}
-                          swNewDetails={swNewDetails}
-                        />
-                      ))}
+                <Grid item>
+                  <Typography component="span">{t('myPage.taskManager.title.done')}</Typography>
+                  {modifiedNeeds && (
+                    <Typography component="span" sx={{ fontSize: 12 }}>
+                      ( {modifiedNeeds[3].length})
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid sx={{ minWidth: '-webkit-fill-available' }}>
+                  <Divider sx={{ pb: 2, mb: 2, minWidth: 'inherit' }} variant="fullWidth" />
                 </Grid>
               </Grid>
-            )}
-          </Card>
-          <Stack spacing={2}>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, 50]}
-              labelRowsPerPage={t('table.rowCount')}
-              component="div"
-              count={
-                pageDetails
-                  ? Math.max(
-                      pageDetails.needs[0].length,
-                      pageDetails.needs[1].length,
-                      pageDetails.needs[2].length,
-                      pageDetails.needs[3].length,
-                    )
-                  : 2
-              }
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Stack>
-        </Grid>
-      </>
+
+              {loadingProfile ? (
+                <Grid sx={{ textAlign: 'center' }}>
+                  <CircularProgress />
+                </Grid>
+              ) : (
+                <Grid
+                  container
+                  spacing={0}
+                  sx={{ minWidth: '1000px', maxHeight: '650px', overflowY: 'scroll' }}
+                >
+                  <Grid item xs={3}>
+                    {pageDetails &&
+                      modifiedNeeds[0]
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((need) => (
+                          <TaskCard
+                            key={need.id}
+                            need={need}
+                            setCardSelected={setCardSelected}
+                            cardSelected={cardSelected}
+                            swNewDetails={swNewDetails}
+                          />
+                        ))}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {pageDetails &&
+                      modifiedNeeds[1]
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((need) => (
+                          <TaskCard
+                            key={need.id}
+                            need={need}
+                            setCardSelected={setCardSelected}
+                            cardSelected={cardSelected}
+                            swNewDetails={swNewDetails}
+                          />
+                        ))}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {pageDetails &&
+                      modifiedNeeds[2]
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((need) => (
+                          <TaskCard
+                            key={need.id}
+                            need={need}
+                            setCardSelected={setCardSelected}
+                            cardSelected={cardSelected}
+                            swNewDetails={swNewDetails}
+                          />
+                        ))}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {pageDetails &&
+                      modifiedNeeds[3]
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((need) => (
+                          <TaskCard
+                            key={need.id}
+                            need={need}
+                            setCardSelected={setCardSelected}
+                            cardSelected={cardSelected}
+                            swNewDetails={swNewDetails}
+                          />
+                        ))}
+                  </Grid>
+                </Grid>
+              )}
+            </Card>
+            <Stack spacing={2}>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, 50]}
+                labelRowsPerPage={t('table.rowCount')}
+                component="div"
+                count={
+                  pageDetails
+                    ? Math.max(
+                        modifiedNeeds[0].length,
+                        modifiedNeeds[1].length,
+                        modifiedNeeds[2].length,
+                        modifiedNeeds[3].length,
+                      )
+                    : 2
+                }
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Stack>
+          </Grid>
+        </>
+      )}
     </PageContainer>
   );
 };

@@ -41,7 +41,7 @@ import { connectWallet, signTransaction } from '../../redux/actions/blockchainAc
 import DurationTimeLine from './DurationTimeLine';
 import FullScreenDialog from '../dialogs/FullScreenDialog';
 import { addTicket, fetchTicketList, selectTicket } from '../../redux/actions/ticketAction';
-import { ADD_TICKET_RESET } from '../../redux/constants/ticketConstants';
+import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 
 const TaskCard = ({ need, setCardSelected, cardSelected }) => {
@@ -132,6 +132,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
       needId: need.id,
       need,
     });
+    dispatch({ type: UPDATE_TICKET_COLOR_RESET });
     dispatch(
       addTicket({
         title: need.name,
@@ -259,14 +260,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                     {t('myPage.taskCard.menu.updateٔNeed')}
                   </MenuItem>
                 )}
-                {need.ticket || (addedTicket && addedTicket.need.flaskId === need.id) ? (
-                  <MenuItem
-                    onClick={() =>
-                      need.ticket
-                        ? handleOpenTicketing(need.ticket.id)
-                        : handleOpenTicketing(addedTicket.id)
-                    }
-                  >
+                {need.ticket ? (
+                  <MenuItem onClick={() => handleOpenTicketing(need.ticket.id)}>
                     {t('myPage.taskCard.menu.readTicket')}
                   </MenuItem>
                 ) : (
@@ -299,16 +294,16 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 </Typography>
               </Grid>
               <Grid item xs={2}>
-                {(need.ticket || (addedTicket && addedTicket.need.flaskId === need.id)) && (
+                {need.ticket && (
                   <Box
                     sx={{
                       textAlign: 'center',
                       backgroundColor:
-                        (need.ticket || addedTicket).color === Colors.YELLOW
+                        need.ticket.color === Colors.YELLOW
                           ? (theme) => theme.palette.background.ripple
                           : '',
                       animation:
-                        (need.ticket || addedTicket).color === Colors.YELLOW
+                        need.ticket.color === Colors.YELLOW
                           ? 'ripple 1.4s  infinite ease-in-out'
                           : '',
 
@@ -331,7 +326,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                     <FlagIcon
                       sx={{
                         color:
-                          (need.ticket || addedTicket).color === Colors.YELLOW
+                          need.ticket.color === Colors.YELLOW
                             ? colorChoices[1].code
                             : colorChoices[0].code,
                       }}
@@ -474,6 +469,24 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 />
               </ListItem>
             )}
+            {need.type === NeedTypeEnum.SERVICE &&
+              need.status === ServiceStatusEnum.MONEY_TO_NGO && (
+                <ListItem
+                  sx={{
+                    mt: '40px',
+                    position: 'absolute',
+                  }}
+                >
+                  <Chip
+                    sx={{
+                      color: '#000000',
+                      backgroundColor: '#ff9800',
+                    }}
+                    label="Money to NGO"
+                    size="small"
+                  />
+                </ListItem>
+              )}
             <img
               style={{ opacity: '50%', minHeight: '100px' }}
               srcSet={`${need.img} 1x, ${need.img} 2x`}
