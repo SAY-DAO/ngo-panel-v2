@@ -662,6 +662,7 @@
     "taskCard": {
       "paid": "پرداختی",
       "cost": "قیمت",
+      "durationEstimate": "پیش‌بینی زمان انجام",
       "duration": "زمان انجام",
       "noReceipt": "بدون رسید",
       "date": {

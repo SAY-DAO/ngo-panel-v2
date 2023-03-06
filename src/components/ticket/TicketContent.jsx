@@ -47,10 +47,16 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { loading: loadingTicketUpdated, success: successTicketUpdate } = ticketUpdate;
 
+  const ticketAdd = useSelector((state) => state.ticketAdd);
+  const { addedTicket } = ticketAdd;
+  console.log('inja3s0');
+
   // set ticket
   useEffect(() => {
-    setTheTicket(tickets && tickets.find((tik) => tik.id === currentTicket));
-  }, [currentTicket, tickets]);
+    if (tickets) {
+      setTheTicket(tickets.find((tik) => tik.id === currentTicket));
+    }
+  }, [currentTicket, addedTicket, tickets]);
 
   // set ticket when socket msg received
   useEffect(() => {

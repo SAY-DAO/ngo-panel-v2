@@ -20,7 +20,6 @@ const Tickets = () => {
   const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
   const { error: errorTicketMsg } = ticketMsgAdd;
 
-
   // toast
   useEffect(() => {
     if (errorTicketMsg) {

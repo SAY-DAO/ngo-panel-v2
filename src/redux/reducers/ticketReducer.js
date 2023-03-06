@@ -18,12 +18,14 @@ import {
   UPDATE_TICKET_COLOR_SUCCESS,
   UPDATE_TICKET_COLOR_FAIL,
   UPDATE_TICKET_COLOR_RESET,
+  OPEN_TICKETING,
 } from '../constants/ticketConstants';
 
 const INIT_STATE = {
   currentTicket: 1,
   ticketSearch: '',
   tickets: [],
+  isTicketingOpen: false,
 };
 
 export const ticketAddReducer = (state = {}, action) => {
@@ -78,15 +80,19 @@ export const ticketByIdReducer = (state = {}, action) => {
       return state;
   }
 };
-
 export const ticketListReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     case TICKET_LIST_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, tickets: null, loading: true };
     case TICKET_LIST_SUCCESS:
       return { ...state, loading: false, success: true, tickets: action.payload };
     case TICKET_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
+    case OPEN_TICKETING:
+      return {
+        ...state,
+        isTicketingOpen: action.open,
+      };
     case SELECTED_TICKET:
       return {
         ...state,

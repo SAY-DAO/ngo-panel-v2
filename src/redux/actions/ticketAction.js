@@ -17,7 +17,13 @@ import {
   UPDATE_TICKET_COLOR_REQUEST,
   UPDATE_TICKET_COLOR_SUCCESS,
   UPDATE_TICKET_COLOR_FAIL,
+  OPEN_TICKETING,
 } from '../constants/ticketConstants';
+
+export const openTicketing = (open) => ({
+  type: OPEN_TICKETING,
+  open,
+});
 
 export const selectTicket = (id) => ({
   type: SELECTED_TICKET,

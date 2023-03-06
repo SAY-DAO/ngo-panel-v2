@@ -55,7 +55,9 @@ import {
   CHILD_BY_ID_RESET,
   CHILD_LIST_RESET,
 } from '../../../redux/constants/childrenConstants';
-import { fetchTicketList } from '../../../redux/actions/ticketAction';
+import { fetchTicketList, openTicketing } from '../../../redux/actions/ticketAction';
+import { UPDATE_TICKET_COLOR_RESET } from '../../../redux/constants/ticketConstants';
+import FullScreenDialog from '../../../components/dialogs/FullScreenDialog';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -78,7 +80,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { success: successLogin } = userLogin;
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { loading: loadingTicketList, success: successTicketList } = myTickets;
+  const { isTicketingOpen, loading: loadingTicketList, success: successTicketList } = myTickets;
 
   useEffect(() => {
     if (!successTicketList && !loadingTicketList) {
@@ -185,6 +187,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+  const handleOpenTicketing = () => {
+    handleClose2();
+    dispatch({ type: UPDATE_TICKET_COLOR_RESET });
+    dispatch(openTicketing(true));
   };
 
   return (
@@ -318,7 +325,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           >
             <Box display="flex" alignItems="center">
               <Typography variant="h4" fontWeight="500">
-              {t('profile.message.messages')}
+                {t('profile.message.messages')}
               </Typography>
               <Box
                 sx={{
@@ -348,19 +355,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             }}
             variant="outlined"
             color="primary"
-            onClick={handleClose2}
+            onClick={handleOpenTicketing}
           >
-            <Link
-              to="/email"
-              style={{
-                color: '#fff',
-                width: '100%',
-                display: 'block',
-                textDecoration: 'none',
-              }}
-            >
-              {t('profile.message.more')}
-            </Link>
+            {t('profile.message.more')}
           </Button>
         </Menu>
         {/* ------------------------------------------- */}
@@ -472,6 +469,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           </Link>
         </Menu>
       </Toolbar>
+      {isTicketingOpen && <FullScreenDialog />}
     </AppBar>
   );
 };

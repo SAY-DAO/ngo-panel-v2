@@ -1,3 +1,4 @@
+export const OPEN_TICKETING = 'OPEN_TICKETING';
 export const SELECTED_TICKET = 'SELECTED_TICKET';
 export const SEARCH_USER = 'SEARCH_USER';
 

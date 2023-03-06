@@ -33,8 +33,6 @@ function getModifiedNeeds(updatedTicket, addedTicket, need) {
 
   //  when ticket color changed from TicketContent
   if (updatedTicket && need.id === parseInt(updatedTicket.needFlaskId, 10)) {
-    console.log('mamad2');
-
     theNeed = need;
     theNeed.ticket.color = parseInt(updatedTicket.color, 10);
     return theNeed;
@@ -90,7 +88,6 @@ const MyPage = () => {
       const organizedNeeds = pageDetails.needs; // [[not paid], [payment], [purchased/delivered Ngo/Ngo Payment], [Done]]
       // -------------------------PAYMENT-----------------------------
       // 0 index / not Paid
-      console.log(updatedTicket);
       if (
         (updatedTicket && updatedTicket.needStatus === PaymentStatusEnum.NOT_PAID) ||
         (addedTicket && addedTicket.need.status === PaymentStatusEnum.NOT_PAID)
@@ -107,8 +104,6 @@ const MyPage = () => {
           (addedTicket.need.status === PaymentStatusEnum.PARTIAL_PAY ||
             addedTicket.need.status === PaymentStatusEnum.COMPLETE_PAY))
       ) {
-        console.log('mamad');
-
         organizedNeeds[1] = modifiedNeeds[1].map((need) => {
           return getModifiedNeeds(updatedTicket, addedTicket, need);
         });

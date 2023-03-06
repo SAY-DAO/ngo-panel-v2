@@ -175,11 +175,19 @@ export default function DurationTimeLine({ need }) {
           <TimelineContent>{need.created && t('myPage.taskCard.date.created')}</TimelineContent>
         </TimelineItem>
       )}
-      <Grid container>
-        <Typography color="textSecondary" variant="h6" fontWeight="400">
-          {t('myPage.taskCard.duration')}: {need.doingDuration || '-'}
-          {t('myPage.taskCard.date.daysAgo')}
-        </Typography>
+      <Grid container direction="column">
+        <Grid item sx={{ textAlign: 'center' }}>
+          <Typography color="textSecondary" variant="h5" fontWeight="600">
+            {t('myPage.taskCard.duration')}: {moment(need.childDeliveryDate).diff(moment(need.doneAt), 'days') || '-'}
+            {t('myPage.taskCard.date.days')}
+          </Typography>
+        </Grid>
+        <Grid item sx={{  textAlign: 'center'  }}>
+          <Typography  color="textSecondary" variant="h6" fontWeight="400">
+          {t('myPage.taskCard.durationEstimate')}: {need.doingDuration || '-'}
+            {t('myPage.taskCard.date.days')}
+          </Typography>
+        </Grid>
       </Grid>
     </Timeline>
   );

@@ -623,6 +623,7 @@
     "taskCard": {
       "paid": "Paid",
       "cost": "Cost",
+      "durationEstimate": "Duration Estimate",
       "duration": "Duration",
       "noReceipt": "No receipt",
       "date": {

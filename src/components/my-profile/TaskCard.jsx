@@ -39,8 +39,12 @@ import {
 import ReceiptImage from './ReceiptImage';
 import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
 import DurationTimeLine from './DurationTimeLine';
-import FullScreenDialog from '../dialogs/FullScreenDialog';
-import { addTicket, fetchTicketList, selectTicket } from '../../redux/actions/ticketAction';
+import {
+  addTicket,
+  fetchTicketList,
+  openTicketing,
+  selectTicket,
+} from '../../redux/actions/ticketAction';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 
@@ -51,7 +55,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [height, setHeight] = useState(false);
-  const [openTicket, setOpenTicket] = useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [toastOpen, setToastOpen] = useState(false);
 
@@ -63,6 +66,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
   const { addedTicket, loading: loadingTicketAdd, error: errorTicketAdd } = ticketAdd;
+
+  const myTickets = useSelector((state) => state.myTickets);
+  const { isTicketingOpen } = myTickets;
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -96,18 +102,18 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
 
   // when confirm get all tickets & select the added one
   useEffect(() => {
-    if (openConfirm && !openTicket && addedTicket) {
+    if (openConfirm && !isTicketingOpen && addedTicket) {
       dispatch(selectTicket(addedTicket.id));
       dispatch(fetchTicketList());
-      setOpenTicket(true);
+      dispatch(openTicketing(true));
     }
   }, [addedTicket]);
 
   // when added open tickets
   useEffect(() => {
-    if (openConfirm && !openTicket && addedTicket) {
+    if (openConfirm && !isTicketingOpen && addedTicket) {
       dispatch(selectTicket(addedTicket.id));
-      setOpenTicket(true);
+      dispatch(openTicketing(true));
       setOpenConfirm(false);
     }
   }, [addedTicket]);
@@ -119,7 +125,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   // when already has a ticket
   const handleOpenTicketing = (ticketId) => {
     dispatch({ type: UPDATE_TICKET_COLOR_RESET });
-    setOpenTicket(true);
+    dispatch(openTicketing(true));
     setOpenConfirm(false);
     dispatch(selectTicket(ticketId));
   };
@@ -359,7 +365,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
           </CardContent>
 
           <Grid container>
-            {need.affiliateLinkUrl && (
+            {need.affiliateLinkUrl && need.affiliateLinkUrl !== 'null' && (
               <Link href={need.affiliateLinkUrl} underline="none" target="_blank">
                 <Typography
                   color="textSecondary"
@@ -502,7 +508,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
             </Grid>
             <Grid container>
               {need.updated && (
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{ pl: 1, pr: 1 }}>
                   <Typography color="textSecondary" variant="h6" fontWeight="400">
                     <strong>{t('myPage.taskCard.date.updated')}:</strong>
                     {moment().diff(moment(need.updated), 'days')}{' '}
@@ -511,7 +517,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                   </Typography>
                 </Grid>
               )}
-
+              {/* 
               {need.ngoDeliveryDate && (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" variant="h6" fontWeight="400">
@@ -521,8 +527,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                     <br />
                   </Typography>
                 </Grid>
-              )}
-              {need.childDeliveryDate && (
+              )} */}
+              {/* {need.childDeliveryDate && (
                 <Grid item xs={12}>
                   <Typography color="textSecondary" variant="h6" fontWeight="400">
                     <strong>{t('myPage.taskCard.date.childDelivery')}: </strong>
@@ -530,7 +536,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                     {t('myPage.taskCard.date.daysAgo')}
                   </Typography>
                 </Grid>
-              )}
+              )} */}
             </Grid>
           </Box>
         </CardActionArea>
@@ -551,7 +557,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
         loading={loadingTicketAdd}
         need={need}
       />
-      <FullScreenDialog openTicket={openTicket} setOpenTicket={setOpenTicket} />
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert
