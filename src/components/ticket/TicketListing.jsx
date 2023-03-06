@@ -34,9 +34,6 @@ const TicketListing = () => {
   const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
   const { socketContent } = ticketMsgAdd;
 
-  // const ticketById = useSelector((state) => state.ticketById);
-  // const { ticket: fetchedTicket } = ticketById;
-
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { updatedTicket } = ticketUpdate;
 
@@ -45,10 +42,9 @@ const TicketListing = () => {
       
       const filteredTickets = filterTickets(tickets, ticketSearch);
       filteredTickets.map((ticket) => {
-        if (updatedTicket && updatedTicket.id === ticket.id) {
+        if (updatedTicket && updatedTicket.ticketId === ticket.id) {
           const modifiedTicket = ticket;
           modifiedTicket.color = updatedTicket.color;
-          console.log(modifiedTicket);
           return modifiedTicket;
         }
 

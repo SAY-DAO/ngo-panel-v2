@@ -117,13 +117,21 @@ export const updateTicketColor = (values) => async (dispatch) => {
         'Content-type': 'application/json',
       },
     };
+
     const { data } = await daoApi.patch(
-      `/tickets/ticket/${values.ticketId}?needId=${values.needId}&color=${values.color}`,
+      `/tickets/ticket/${values.ticketId}?color=${values.color}`,
       config,
     );
     dispatch({
       type: UPDATE_TICKET_COLOR_SUCCESS,
-      payload: data,
+      payload: {
+        updated: data,
+        color: values.color,
+        needFlaskId: values.needFlaskId,
+        needStatus: values.needStatus,
+        needType: values.needType,
+        ticketId: values.ticketId,
+      },
     });
   } catch (e) {
     console.log(e);

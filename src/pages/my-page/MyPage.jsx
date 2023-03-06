@@ -30,13 +30,13 @@ function getModifiedNeeds(updatedTicket, addedTicket, need) {
     theNeed.ticket = addedTicket;
     return theNeed;
   }
+
   //  when ticket color changed from TicketContent
-  console.log(need.id);
-  console.log(updatedTicket && updatedTicket.flaskNeedId);
-  if (updatedTicket && need.id === parseInt(updatedTicket.flaskNeedId, 10)) {
+  if (updatedTicket && need.id === parseInt(updatedTicket.needFlaskId, 10)) {
+    console.log('mamad2');
+
     theNeed = need;
     theNeed.ticket.color = parseInt(updatedTicket.color, 10);
-    console.log(theNeed);
     return theNeed;
   }
   return need;
@@ -88,54 +88,85 @@ const MyPage = () => {
   useEffect(() => {
     if (pageDetails && pageDetails.needs) {
       const organizedNeeds = pageDetails.needs; // [[not paid], [payment], [purchased/delivered Ngo/Ngo Payment], [Done]]
-      if (addedTicket || updatedTicket) {
-        // 0 index / not Paid
-        if (updatedTicket || (addedTicket && addedTicket.need.status === 0)) {
-          organizedNeeds[0] = modifiedNeeds[0].map((need) => {
-            return getModifiedNeeds(updatedTicket, addedTicket, need);
-          });
-        } else if (
-          updatedTicket ||
-          addedTicket.need.status === PaymentStatusEnum.PARTIAL_PAY ||
-          addedTicket.need.status === PaymentStatusEnum.COMPLETE_PAY
+      // -------------------------PAYMENT-----------------------------
+      // 0 index / not Paid
+      console.log(updatedTicket);
+      if (
+        (updatedTicket && updatedTicket.needStatus === PaymentStatusEnum.NOT_PAID) ||
+        (addedTicket && addedTicket.need.status === PaymentStatusEnum.NOT_PAID)
+      ) {
+        organizedNeeds[0] = modifiedNeeds[0].map((need) => {
+          return getModifiedNeeds(updatedTicket, addedTicket, need);
+        });
+        // 1 index /  Payment Received
+      } else if (
+        (updatedTicket &&
+          (updatedTicket.needStatus === PaymentStatusEnum.PARTIAL_PAY ||
+            updatedTicket.needStatus === PaymentStatusEnum.COMPLETE_PAY)) ||
+        (addedTicket &&
+          (addedTicket.need.status === PaymentStatusEnum.PARTIAL_PAY ||
+            addedTicket.need.status === PaymentStatusEnum.COMPLETE_PAY))
+      ) {
+        console.log('mamad');
+
+        organizedNeeds[1] = modifiedNeeds[1].map((need) => {
+          return getModifiedNeeds(updatedTicket, addedTicket, need);
+        });
+      }
+      // -------------------------SERVICE-----------------------------
+      if (
+        (updatedTicket && updatedTicket.needType === NeedTypeEnum.SERVICE) ||
+        (addedTicket && addedTicket.need.type === NeedTypeEnum.SERVICE)
+      ) {
+        // 2 index /  Payment sent to NGO
+        if (
+          (updatedTicket && updatedTicket.needStatus === ServiceStatusEnum.MONEY_TO_NGO) ||
+          (addedTicket && addedTicket.need.status === ServiceStatusEnum.MONEY_TO_NGO)
         ) {
-          // 1 index /  Payment Received
-          organizedNeeds[1] = modifiedNeeds[1].map((need) => {
+          organizedNeeds[2] = modifiedNeeds[2].map((need) => {
             return getModifiedNeeds(updatedTicket, addedTicket, need);
           });
         }
-        if (updatedTicket || addedTicket.need.type === NeedTypeEnum.SERVICE) {
-          // 2 index /  Payment sent to NGO
-          if (updatedTicket || addedTicket.need.status === ServiceStatusEnum.MONEY_TO_NGO) {
-            organizedNeeds[2] = modifiedNeeds[2].map((need) => {
-              return getModifiedNeeds(updatedTicket, addedTicket, need);
-            });
-          }
-          // 3 index /  Delivered to child
-          if (updatedTicket || addedTicket.need.status === ServiceStatusEnum.DELIVERED) {
-            organizedNeeds[3] = modifiedNeeds[3].map((need) => {
-              return getModifiedNeeds(updatedTicket, addedTicket, need);
-            });
-          }
-        } else if (updatedTicket || addedTicket.need.type === NeedTypeEnum.PRODUCT) {
-          // 2 index / Purchased
-          if (updatedTicket || addedTicket.need.status === ProductStatusEnum.PURCHASED_PRODUCT) {
-            organizedNeeds[2] = modifiedNeeds[2].map((need) => {
-              return getModifiedNeeds(updatedTicket, addedTicket, need);
-            });
-          }
-          // 2 index / Delivered to Ngo
-          if (updatedTicket || addedTicket.need.status === ProductStatusEnum.DELIVERED_TO_NGO) {
-            organizedNeeds[2] = modifiedNeeds[2].map((need) => {
-              return getModifiedNeeds(updatedTicket, addedTicket, need);
-            });
-          }
-          // 3 index / Delivered to child
-          if (updatedTicket || addedTicket.need.status === ProductStatusEnum.DELIVERED) {
-            organizedNeeds[3] = modifiedNeeds[3].map((need) => {
-              return getModifiedNeeds(updatedTicket, addedTicket, need);
-            });
-          }
+        // 3 index /  Delivered to child
+        if (
+          (updatedTicket && updatedTicket.needStatus === ServiceStatusEnum.DELIVERED) ||
+          (addedTicket && addedTicket.need.status === ServiceStatusEnum.DELIVERED)
+        ) {
+          organizedNeeds[3] = modifiedNeeds[3].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
+        }
+        // -------------------------PRODUCT----------------------------
+      } else if (
+        (updatedTicket && updatedTicket.needType === NeedTypeEnum.PRODUCT) ||
+        (addedTicket && addedTicket.need.type === NeedTypeEnum.PRODUCT)
+      ) {
+        // 2 index / Purchased
+        if (
+          (updatedTicket && updatedTicket.needStatus === ProductStatusEnum.PURCHASED_PRODUCT) ||
+          (addedTicket && addedTicket.need.status === ProductStatusEnum.PURCHASED_PRODUCT)
+        ) {
+          organizedNeeds[2] = modifiedNeeds[2].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
+        }
+        // 2 index / Delivered to Ngo
+        if (
+          (updatedTicket && updatedTicket.needStatus === ProductStatusEnum.DELIVERED_TO_NGO) ||
+          (addedTicket && addedTicket.need.status === ProductStatusEnum.DELIVERED_TO_NGO)
+        ) {
+          organizedNeeds[2] = modifiedNeeds[2].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
+        }
+        // 3 index / Delivered to child
+        if (
+          (updatedTicket && updatedTicket.needStatus === ProductStatusEnum.DELIVERED) ||
+          (addedTicket && addedTicket.need.status === ProductStatusEnum.DELIVERED)
+        ) {
+          organizedNeeds[3] = modifiedNeeds[3].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
         }
       }
       setModifiedNeeds(organizedNeeds);

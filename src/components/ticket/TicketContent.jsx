@@ -153,7 +153,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                         dispatch(
                           updateTicketColor({
                             ticketId: theTicket.id,
-                            needId: theTicket.need.flaskId,
+                            needFlaskId: theTicket.need.flaskId,
+                            needStatus: theTicket.need.status,
+                            needType: theTicket.need.type,
                             color: choice.color,
                           }),
                         )
