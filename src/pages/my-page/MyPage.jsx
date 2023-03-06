@@ -32,7 +32,7 @@ function getModifiedNeeds(updatedTicket, addedTicket, need) {
   }
   //  when ticket color changed from TicketContent
   console.log(need.id);
-  console.log(updatedTicket.flaskNeedId);
+  console.log(updatedTicket && updatedTicket.flaskNeedId);
   if (updatedTicket && need.id === parseInt(updatedTicket.flaskNeedId, 10)) {
     theNeed = need;
     theNeed.ticket.color = parseInt(updatedTicket.color, 10);
