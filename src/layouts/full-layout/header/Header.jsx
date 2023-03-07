@@ -190,7 +190,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   useEffect(() => {
     if (swInfo && tickets)
       // socket emits
-      setInterval(checkNotifications, 15000);
+      setInterval(checkNotifications, 1000 * 60);
   }, [swInfo, tickets]);
 
   const handleClickNotify = (event) => {
