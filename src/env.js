@@ -33,4 +33,6 @@ console.log(env);
 console.log(apiUrl);
 console.log(apiUrl3);
 console.log(apiDao);
+console.log(socketUrl);
+console.log('-------------------------------------------');
 export { apiUrl, apiUrl3, apiDao, socketUrl };
