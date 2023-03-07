@@ -12,6 +12,7 @@ import {
   Badge,
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Scrollbar from '../custom-scroll/Scrollbar';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { TicketSearch, selectTicket } from '../../redux/actions/ticketAction';
@@ -25,6 +26,7 @@ const filterTickets = (tickets, cSearch) => {
 
 const TicketListing = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [sortedTickets, setSortedTickets] = useState();
 
@@ -39,7 +41,6 @@ const TicketListing = () => {
 
   useEffect(() => {
     if (tickets) {
-      
       const filteredTickets = filterTickets(tickets, ticketSearch);
       filteredTickets.map((ticket) => {
         if (updatedTicket && updatedTicket.ticketId === ticket.id) {
@@ -67,7 +68,7 @@ const TicketListing = () => {
       >
         <CustomTextField
           id="outlined-search"
-          placeholder="Search contacts"
+          placeholder={t('ticket.ticketing.search')}
           size="small"
           type="search"
           variant="outlined"

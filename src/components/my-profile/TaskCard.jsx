@@ -511,7 +511,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 <Grid item xs={12} sx={{ pl: 1, pr: 1 }}>
                   <Typography color="textSecondary" variant="h6" fontWeight="400">
                     <strong>{t('myPage.taskCard.date.updated')}:</strong>
-                    {moment().diff(moment(need.updated), 'days')}{' '}
+                    {moment().diff(moment(need.updated), 'days')}
                     {t('myPage.taskCard.date.daysAgo')}
                     <br />
                   </Typography>

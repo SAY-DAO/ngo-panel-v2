@@ -2,12 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { IconButton, Box } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
+import { useTranslation } from 'react-i18next';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { addTicketMsg } from '../../redux/actions/ticketAction';
 import { socketHttp, WebsocketContext } from '../../contexts/WebsocketContext';
 
 const TicketMsgSent = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [socketData, setSocketData] = useState();
   const swDetails = useSelector((state) => state.swDetails);
@@ -30,6 +32,9 @@ const TicketMsgSent = () => {
     socket.on('onTicketMessage', (data) => {
       console.log('message received!');
       setSocketData(data);
+    });
+    socket.on(`onViewMessage${swInfo.id}`, (data) => {
+      console.log(`user ${data.flaskUserId} Viewed ticket ${data.ticketId}!`);
     });
     return () => {
       console.log('Server-Off');
@@ -62,7 +67,7 @@ const TicketMsgSent = () => {
           id="msg-sent"
           fullWidth
           value={msg}
-          placeholder="Type a Message"
+          placeholder={t('ticket.ticketing.type')}
           size="small"
           type="text"
           variant="outlined"

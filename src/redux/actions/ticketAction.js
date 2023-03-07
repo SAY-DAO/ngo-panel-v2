@@ -19,6 +19,7 @@ import {
   UPDATE_TICKET_COLOR_FAIL,
   OPEN_TICKETING,
 } from '../constants/ticketConstants';
+import { socketHttp } from '../../contexts/WebsocketContext';
 
 export const openTicketing = (open) => ({
   type: OPEN_TICKETING,
@@ -62,10 +63,16 @@ export const fetchTicketList = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchTicketById = (ticketId) => async (dispatch) => {
+export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
   try {
     dispatch({ type: TICKET_BY_ID_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const { data } = await daoApi.get(`/tickets/ticket/${ticketId}`);
+
+    socketHttp.emit('newViewMessage', { ticketId, flaskUserId: userInfo.id });
+
     dispatch({
       type: TICKET_BY_ID_SUCCESS,
       payload: data,

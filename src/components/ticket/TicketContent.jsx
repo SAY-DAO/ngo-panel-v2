@@ -49,7 +49,6 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
   const { addedTicket } = ticketAdd;
-  console.log('inja3s0');
 
   // set ticket
   useEffect(() => {
@@ -61,6 +60,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   // set ticket when socket msg received
   useEffect(() => {
     if (socketContent) {
+      console.log(socketContent);
       const modifiedTickets = tickets.map((ticket) =>
         ticket.id === socketContent.content.ticket.id
           ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
@@ -90,6 +90,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 pb: '7px',
               }}
             >
+              {theTicket.updatedAt}
               <Box
                 sx={{
                   display: { xs: 'block', md: 'block', lg: 'none' },

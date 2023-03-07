@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 
@@ -58,17 +58,25 @@ import {
 import { fetchTicketList, openTicketing } from '../../../redux/actions/ticketAction';
 import { UPDATE_TICKET_COLOR_RESET } from '../../../redux/constants/ticketConstants';
 import FullScreenDialog from '../../../components/dialogs/FullScreenDialog';
+import NotificationDropdown from './NotificationDropdown';
+import { socketHttp, WebsocketContext } from '../../../contexts/WebsocketContext';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
+
+  const [unReads, setUnReads] = useState();
+  const [anchorProfile, setAnchorProfile] = useState(null);
+  const [anchorNotify, setAnchorNotify] = useState(null);
+  const [showSearchDrawer, setShowSearchDrawer] = useState(false);
 
   const swDetails = useSelector((state) => state.swDetails);
   const {
     swInfo,
-    loading: loadingswDetails,
+    loading: loadingSwDetails,
     success: successSwDetails,
     error: errorSwDetails,
   } = swDetails;
@@ -80,7 +88,12 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { success: successLogin } = userLogin;
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { isTicketingOpen, loading: loadingTicketList, success: successTicketList } = myTickets;
+  const {
+    tickets,
+    isTicketingOpen,
+    loading: loadingTicketList,
+    success: successTicketList,
+  } = myTickets;
 
   useEffect(() => {
     if (!successTicketList && !loadingTicketList) {
@@ -116,7 +129,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   }, [successLogin, location, errorSwDetails]);
 
   useEffect(() => {
-    if (!successSwDetails && !loadingswDetails) {
+    if (!successSwDetails && !loadingSwDetails) {
       dispatch(fetchSocialWorkerDetails());
     }
     if (
@@ -142,24 +155,58 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     }
   }, [successSwDetails]);
 
-  const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
+  const socket = useContext(WebsocketContext);
 
-  // 4
-  const [anchorEl4, setAnchorEl4] = useState(null);
+  // socket receiver
+  useEffect(() => {
+    if (swInfo) {
+      socket.on('connect', () => {
+        console.log('Connected!');
+      });
+      socket.on(`onUnReadTickets${swInfo.id}`, ({ ...data }) => {
+        console.log('onUnReadTickets received!');
+        let myList = [];
+        console.log(data);
+        for (let i = 0; i < data.newTickets.length; i++) {
+          const ticket = tickets.find((tik) => tik.id === data.newTickets[i].id);
+          myList = [...myList, ticket];
+        }
+        setUnReads(myList);
+        return () => {
+          console.log('Server-Off');
+          socket.off('connect');
+          socket.off(`onUnReadTickets${swInfo.id}`);
+        };
+      });
+    }
+  }, [anchorNotify, swInfo]);
 
-  const handleClick4 = (event) => {
-    setAnchorEl4(event.currentTarget);
+  const checkNotifications = () => {
+    // socket emits
+    socketHttp.emit('ticketNotifications', { flaskUserId: swInfo.id });
+    console.log('emitted ticket notification update!');
   };
 
-  const handleClose4 = () => {
-    setAnchorEl4(null);
+  useEffect(() => {
+    if (swInfo && tickets)
+      // socket emits
+      setInterval(checkNotifications, 15000);
+  }, [swInfo, tickets]);
+
+  const handleClickNotify = (event) => {
+    setAnchorNotify(event.currentTarget);
+    checkNotifications();
   };
 
-  // drawer top
-  const [showDrawer2, setShowDrawer2] = useState(false);
+  const handleClickProfile = (event) => {
+    setAnchorProfile(event.currentTarget);
+  };
 
+  const handleCloseProfile = () => {
+    setAnchorProfile(null);
+  };
   const handleDrawerClose2 = () => {
-    setShowDrawer2(false);
+    setShowSearchDrawer(false);
   };
 
   const handleLogOut = () => {
@@ -179,17 +226,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     dispatch(logout());
   };
 
-  const [anchorEl2, setAnchorEl2] = React.useState(null);
-
-  const handleClick2 = (event) => {
-    setAnchorEl2(event.currentTarget);
-  };
-
-  const handleClose2 = () => {
-    setAnchorEl2(null);
+  const handleCloseNotifies = () => {
+    setAnchorNotify(null);
   };
   const handleOpenTicketing = () => {
-    handleClose2();
+    handleCloseNotifies();
     dispatch({ type: UPDATE_TICKET_COLOR_RESET });
     dispatch(openTicketing(true));
   };
@@ -232,11 +273,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         {/* Search Dropdown */}
         {/* ------------------------------------------- */}
         <IconButton
-          aria-label="show 4 new mails"
+          aria-label="show search"
           color="inherit"
           aria-controls="search-menu"
           aria-haspopup="true"
-          onClick={() => setShowDrawer2(true)}
+          onClick={() => setShowSearchDrawer(true)}
           size="large"
         >
           <FeatherIcon icon="search" width="20" height="20" />
@@ -248,8 +289,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         </Alert> */}
         <Drawer
           anchor="top"
-          open={showDrawer2}
-          onClose={() => setShowDrawer2(false)}
+          open={showSearchDrawer}
+          onClose={() => setShowSearchDrawer(false)}
           sx={{
             '& .MuiDrawer-paper': {
               padding: '15px 30px',
@@ -289,22 +330,22 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         {/* ------------------------------------------- */}
         <IconButton
           size="large"
-          aria-label="show 11 new notifications"
+          aria-label="show new notifications"
           color="inherit"
           aria-controls="msgs-menu"
           aria-haspopup="true"
-          onClick={handleClick2}
+          onClick={handleClickNotify}
         >
-          <Badge variant="dot" color="secondary">
+          <Badge color="secondary" badgeContent={unReads && unReads.length}>
             <FeatherIcon icon="message-square" width="20" height="20" />
           </Badge>
         </IconButton>
         <Menu
           id="msgs-menu"
-          anchorEl={anchorEl2}
+          anchorEl={anchorNotify}
           keepMounted
-          open={Boolean(anchorEl2)}
-          onClose={handleClose2}
+          open={Boolean(anchorNotify)}
+          onClose={handleCloseNotifies}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           sx={{
@@ -334,7 +375,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               >
                 <Chip
                   size="small"
-                  label="5 new"
+                  label={`${unReads && unReads.length} ${t('ticket.new')}`}
                   sx={{
                     borderRadius: '6px',
                     pl: '5px',
@@ -346,7 +387,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               </Box>
             </Box>
           </Box>
-          {/* <MessageDropdown /> */}
+          <NotificationDropdown unReads={unReads} />
           <Button
             sx={{
               mt: 2,
@@ -380,7 +421,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           color="inherit"
           aria-controls="profile-menu"
           aria-haspopup="true"
-          onClick={handleClick4}
+          onClick={handleClickProfile}
         >
           <Box display="flex" alignItems="center">
             <Avatar
@@ -420,10 +461,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
         <Menu
           id="profile-menu"
-          anchorEl={anchorEl4}
+          anchorEl={anchorProfile}
           keepMounted
-          open={Boolean(anchorEl4)}
-          onClose={handleClose4}
+          open={Boolean(anchorProfile)}
+          onClose={handleCloseProfile}
           sx={{
             '& .MuiMenu-paper': {
               width: '385px',

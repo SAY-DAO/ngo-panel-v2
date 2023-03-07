@@ -650,9 +650,12 @@
     }
   },
   "ticket":{
+    "new": "New",
     "dialog":{
       "title":"Create Ticket",
       "confirm":"Are you sure you want to add a ticket for this need?",
+      "type": "Type a message...",
+      "search": "Search Tickets",
       "chatWith": "Chat with"
     },
     "ticketing":{
