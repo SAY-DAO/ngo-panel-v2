@@ -59,7 +59,8 @@ import { fetchTicketList, openTicketing } from '../../../redux/actions/ticketAct
 import { UPDATE_TICKET_COLOR_RESET } from '../../../redux/constants/ticketConstants';
 import FullScreenDialog from '../../../components/dialogs/FullScreenDialog';
 import NotificationDropdown from './NotificationDropdown';
-import { socketHttp, WebsocketContext } from '../../../contexts/WebsocketContext';
+import { WebsocketContext } from '../../../contexts/WebsocketContext';
+import { checkNotifications } from '../../../utils/socketHelpers';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -159,7 +160,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   // socket receiver
   useEffect(() => {
-    if (swInfo) {
+    if (swInfo && tickets) {
       socket.on('connect', () => {
         console.log('Connected!');
       });
@@ -169,9 +170,14 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         console.log(data);
         for (let i = 0; i < data.newTickets.length; i++) {
           const ticket = tickets.find((tik) => tik.id === data.newTickets[i].id);
-          myList = [...myList, ticket];
+          if (ticket) {
+            myList = [...myList, ticket];
+            setUnReads(myList);
+          } else {
+            dispatch(fetchTicketList());
+            setUnReads(tickets);
+          }
         }
-        setUnReads(myList);
         return () => {
           console.log('Server-Off');
           socket.off('connect');
@@ -181,21 +187,16 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     }
   }, [anchorNotify, swInfo]);
 
-  const checkNotifications = () => {
-    // socket emits
-    socketHttp.emit('ticketNotifications', { flaskUserId: swInfo.id });
-    console.log('emitted ticket notification update!');
-  };
-
   useEffect(() => {
     if (swInfo && tickets)
       // socket emits
-      setInterval(checkNotifications, 1000 * 60);
-  }, [swInfo, tickets]);
+      checkNotifications(swInfo);
+    setInterval(() => checkNotifications(swInfo), 1000 * 60);
+  }, [swInfo]);
 
   const handleClickNotify = (event) => {
     setAnchorNotify(event.currentTarget);
-    checkNotifications();
+    checkNotifications(swInfo);
   };
 
   const handleClickProfile = (event) => {

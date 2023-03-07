@@ -5,7 +5,8 @@ import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { addTicketMsg } from '../../redux/actions/ticketAction';
-import { socketHttp, WebsocketContext } from '../../contexts/WebsocketContext';
+import { WebsocketContext } from '../../contexts/WebsocketContext';
+import { newTicketMessage } from '../../utils/socketHelpers';
 
 const TicketMsgSent = () => {
   const dispatch = useDispatch();
@@ -53,8 +54,7 @@ const TicketMsgSent = () => {
   const onTicketMsgSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // socket emits
-    socketHttp.emit('newTicketMessage', { ticketId, message: msg, from: swInfo.id });
+    newTicketMessage(ticketId, msg, swInfo);
     setMsg('');
   };
 
