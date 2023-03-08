@@ -1,5 +1,16 @@
 import React from 'react';
-import { Box, MenuItem, Typography, Avatar, Divider, Card, CardActions } from '@mui/material';
+import {
+  Box,
+  MenuItem,
+  MenuList,
+  ListItemIcon,
+  Typography,
+  Avatar,
+  Divider,
+  Card,
+} from '@mui/material';
+import LockResetRoundedIcon from '@mui/icons-material/LockResetRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import FeatherIcon from 'feather-icons-react';
 
 import { useSelector } from 'react-redux';
@@ -76,34 +87,32 @@ const ProfileDropdown = () => {
       />
 
       <Card>
-        <CardActions onClick={handleClick}>
-          <MenuItem
-            sx={{
-              pt: 3,
-              pb: 3,
-            }}
-          >
-            <Box display="flex" alignItems="center">
-              <Box
+        <MenuList disablePadding>
+          <MenuItem onClick={handleClick}>
+            <ListItemIcon>
+              <EditRoundedIcon />
+            </ListItemIcon>
+            <Box>
+              <Typography
+                variant="h5"
                 sx={{
-                  ml: 2,
+                  lineHeight: '1.235',
                 }}
               >
-                <Typography
-                  variant="h5"
-                  sx={{
-                    lineHeight: '1.235',
-                  }}
-                >
-                  {t('profile.settings.edit')}
-                </Typography>
-                <Typography color="textSecondary" variant="h6" fontWeight="400">
-                  {t('profile.settings.settings')}
-                </Typography>
-              </Box>
+                {t('profile.settings.edit')}
+              </Typography>
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                {t('profile.settings.settings')}
+              </Typography>
             </Box>
           </MenuItem>
-        </CardActions>
+          <MenuItem>
+            <ListItemIcon>
+              <LockResetRoundedIcon />
+            </ListItemIcon>
+            <Box>{t('profile.settings.changePass')}</Box>
+          </MenuItem>
+        </MenuList>
       </Card>
     </Box>
   );

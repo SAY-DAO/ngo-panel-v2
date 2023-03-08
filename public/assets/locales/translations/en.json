@@ -581,7 +581,8 @@
       "edit": "Edit Profile",
       "settings": "Account Settings",
       "logIn": "Log in",
-      "logOut": "Log out"
+      "logOut": "Log out",
+      "changePass": "Change password"
     },
     "message":{
       "more": "See All Messages",
