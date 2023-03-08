@@ -154,6 +154,11 @@
     "content": "ایمیل خود را وارد کنید.",
     "successNotif": "درخواست شما ثبت و لینک تغییر گذرواژه برای شما ارسال شد."
   },
+  "changePassword": {
+    "currentPassword": "گذرواژه فعلی",
+    "newPassword": "گذرواژه جدید",
+    "confirmNewPassword": "تکرار گذرواژه جدید"
+  },
   "childData": {
     "needCategory": {
       "urgent": "ضروری",

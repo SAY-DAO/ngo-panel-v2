@@ -116,6 +116,11 @@
     "content": "Enter your email address.",
     "successNotif": "A link has been sent to you for changing your password."
   },
+  "changePassword": {
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password"
+  },
   "childData": {
     "needCategory": {
       "urgent": "Urgent",
@@ -418,9 +423,8 @@
       "pending": "Not Delivered yet"
     },
     "needDialogue": {
-      "confirm":{
+      "confirm": {
         "dialogTitle": "The duplicate needs"
-
       },
       "service": {
         "1": "Partial payment",
@@ -584,7 +588,7 @@
       "logOut": "Log out",
       "changePass": "Change password"
     },
-    "message":{
+    "message": {
       "more": "See All Messages",
       "messages": "Messages"
     }
@@ -646,7 +650,6 @@
         "addTicket": "َAdd ticket",
         "readTicket": "َRead ticket",
         "tickets": "َAll tickets"
-
       }
     }
   },
@@ -662,14 +665,14 @@
       "search": "Search Tickets",
       "chatWith": "Chat with"
     },
-    "ticketing":{
+    "ticketing": {
       "subHeader": "SAY ticketing",
       "header": "Tickets"
     }
   },
-  "roles":{
-    "socialWorker":"Social Worker",
-    "auditor":"Auditor",
+  "roles": {
+    "socialWorker": "Social Worker",
+    "auditor": "Auditor",
     "purchaser": "Purchaser",
     "ngoSupervisor": "NGO supervisor",
     "noRole": "No Role",
