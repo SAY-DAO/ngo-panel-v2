@@ -1,6 +1,7 @@
 export const HOME = '/';
 export const PROFILE_VIEW = '/page/view';
 export const PROFILE_EDIT = '/profile/edit';
+export const CHANGE_PASS = '/profile/changePass';
 export const SW_LIST = '/sw/list';
 export const SW_EDIT = '/sw/edit/:id';
 export const SW_ADD = '/sw/add';

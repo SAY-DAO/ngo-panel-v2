@@ -24,8 +24,11 @@ const ProfileDropdown = () => {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const handleClick = () => {
+  const handleEdit = () => {
     navigate(`/sw/edit/${swInfo.id}`);
+  };
+  const handleChangePass = () => {
+    navigate('/profile/changePass');
   };
   return (
     <Box>
@@ -88,7 +91,7 @@ const ProfileDropdown = () => {
 
       <Card>
         <MenuList disablePadding>
-          <MenuItem onClick={handleClick}>
+          <MenuItem onClick={handleEdit}>
             <ListItemIcon>
               <EditRoundedIcon />
             </ListItemIcon>
@@ -106,7 +109,7 @@ const ProfileDropdown = () => {
               </Typography>
             </Box>
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={handleChangePass}>
             <ListItemIcon>
               <LockResetRoundedIcon />
             </ListItemIcon>
