@@ -20,7 +20,7 @@ const NotificationDropdown = ({ unReads }) => {
               }}
             >
               <Box display="flex" alignItems="center">
-                <AvatarGroup max={3}>
+                <AvatarGroup max={2}>
                   {ticket.contributors.map((c) => (
                     <Tooltip
                       title={`${c.firstName} - ${t(`roles.${getUserSAYRoleString(c.typeId)}`)}`}

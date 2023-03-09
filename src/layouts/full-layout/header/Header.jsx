@@ -55,12 +55,13 @@ import {
   CHILD_BY_ID_RESET,
   CHILD_LIST_RESET,
 } from '../../../redux/constants/childrenConstants';
-import { fetchTicketList, openTicketing } from '../../../redux/actions/ticketAction';
+import { fetchTicketList, openTicketing, selectTicket } from '../../../redux/actions/ticketAction';
 import { UPDATE_TICKET_COLOR_RESET } from '../../../redux/constants/ticketConstants';
 import FullScreenDialog from '../../../components/dialogs/FullScreenDialog';
 import NotificationDropdown from './NotificationDropdown';
 import { WebsocketContext } from '../../../contexts/WebsocketContext';
-import { checkNotifications } from '../../../utils/socketHelpers';
+import { socketRefreshNotifications } from '../../../utils/socketHelpers';
+import { NOTIFICATION_TIMER } from '../../../utils/configs';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -86,10 +87,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { loading: loadingNgoList, success: successNgoList } = ngoAll;
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { success: successLogin } = userLogin;
+  const { userInfo, success: successLogin } = userLogin;
 
   const myTickets = useSelector((state) => state.myTickets);
   const {
+    currentTicket,
     tickets,
     isTicketingOpen,
     loading: loadingTicketList,
@@ -97,12 +99,12 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   } = myTickets;
 
   useEffect(() => {
-    if (!successTicketList && !loadingTicketList) {
+    if (swInfo && !successTicketList && !loadingTicketList) {
       dispatch(fetchTicketList());
     }
-  }, [successTicketList]);
+  }, [successTicketList, swInfo]);
 
-  // do not let non admin user to navigate to the folloing pages
+  // do not let non admin user to navigate to the following pages
   useEffect(() => {
     if (swInfo && swInfo.typeId !== RolesEnum.ADMIN && swInfo.typeId !== RolesEnum.SUPER_ADMIN) {
       if (
@@ -130,7 +132,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   }, [successLogin, location, errorSwDetails]);
 
   useEffect(() => {
-    if (!successSwDetails && !loadingSwDetails) {
+    if (userInfo && !successSwDetails && !loadingSwDetails) {
       dispatch(fetchSocialWorkerDetails());
     }
     if (
@@ -147,7 +149,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         dispatch(fetchNgoList());
       }
     }
-  }, [successSwDetails, successNgoList, loadingNgoList, successLogin, location]);
+  }, [successSwDetails, successNgoList, loadingNgoList, successLogin, location, userInfo]);
 
   // if not active log out
   useEffect(() => {
@@ -157,46 +159,106 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   }, [successSwDetails]);
 
   const socket = useContext(WebsocketContext);
+  let notificationsInterval;
 
   // socket receiver
-  useEffect(() => {
-    if (swInfo && tickets) {
-      socket.on('connect', () => {
-        console.log('Connected!');
-      });
-      socket.on(`onUnReadTickets${swInfo.id}`, ({ ...data }) => {
-        console.log('onUnReadTickets received!');
-        let myList = [];
+  function fetchServerNotifications(swId, allTickets) {
+    if (!allTickets) {
+      console.log('First page load!');
+      dispatch(fetchTicketList());
+      clearInterval(notificationsInterval);
+      socketRefreshNotifications(swInfo);
+      // setInterval(() => socketRefreshNotifications(swInfo), 1000 * NOTIFICATION_TIMER);
+    }
+    // client-side
+    socket.on('connect', () => {
+      console.log('Connected!');
+    });
+    // clear previously buffered data when reconnecting
+    socket.on(`onUnReadTickets${swId}`, () => {
+      socket.sendBuffer = [];
+      console.log('cleared the buffer!');
+    });
+
+    let myList = [];
+    if (allTickets && socket.connected) {
+      socket.on(`onUnReadTickets${swId}`, ({ ...data }) => {
+        console.log(
+          '\x1b[32m%s\x1b[0m',
+          `Checking for notifications every ${NOTIFICATION_TIMER} seconds...\n`,
+        );
+        console.log(
+          '\x1b[36m%s\x1b[0m',
+          `onUnReadTickets received! from socket: ${socket.id}...\n`,
+        );
+
         console.log(data);
         for (let i = 0; i < data.newTickets.length; i++) {
-          const ticket = tickets.find((tik) => tik.id === data.newTickets[i].id);
+          const ticket = allTickets.find((tik) => tik.id === data.newTickets[i].id);
+          if (!ticket) {
+            dispatch(fetchTicketList());
+            clearInterval(notificationsInterval);
+            console.log('mamad');
+            socketRefreshNotifications(swInfo);
+            break;
+          }
           if (ticket) {
             myList = [...myList, ticket];
-            setUnReads(myList);
-          } else {
-            dispatch(fetchTicketList());
-            setUnReads(tickets);
           }
         }
-        return () => {
-          console.log('Server-Off');
-          socket.off('connect');
-          socket.off(`onUnReadTickets${swInfo.id}`);
-        };
+        setUnReads(myList);
       });
     }
-  }, [anchorNotify, swInfo]);
+  }
+
+  // INTERVAL -fetch socket-server notification
+  useEffect(() => {
+    if (swInfo) {
+      fetchServerNotifications(swInfo.id, tickets);
+      notificationsInterval = setInterval(
+        () => fetchServerNotifications(swInfo.id, tickets),
+        1000 * NOTIFICATION_TIMER,
+      );
+    }
+    return () => {
+      clearInterval(notificationsInterval);
+    };
+  }, [swInfo, tickets]);
 
   useEffect(() => {
-    if (swInfo && tickets)
-      // socket emits
-      checkNotifications(swInfo);
-    setInterval(() => checkNotifications(swInfo), 1000 * 60);
+    if (swInfo) {
+      fetchServerNotifications(swInfo.id, tickets);
+    }
+  }, [anchorNotify, isTicketingOpen]);
+
+  // INTERVAL -emit from client-socket to refresh notifications
+  useEffect(() => {
+    let refreshInterval;
+    if (swInfo) {
+      socketRefreshNotifications(swInfo);
+      refreshInterval = setInterval(
+        () => socketRefreshNotifications(swInfo),
+        1000 * NOTIFICATION_TIMER,
+      );
+    }
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, [swInfo]);
 
+  // Shut off socket
+  useEffect(() => {
+    // client-side
+    if (unReads) {
+      console.log('\x1b[31m%s\x1b[0m', 'Server-Off');
+      socket.off('connect');
+      socket.off(`onUnReadTickets${swInfo.id}`);
+    }
+  }, [unReads]);
+
   const handleClickNotify = (event) => {
+    socketRefreshNotifications(swInfo);
     setAnchorNotify(event.currentTarget);
-    checkNotifications(swInfo);
   };
 
   const handleClickProfile = (event) => {
@@ -229,8 +291,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const handleCloseNotifies = () => {
     setAnchorNotify(null);
+    socketRefreshNotifications(swInfo); // refresh notifications since we viewed a ticket
   };
   const handleOpenTicketing = () => {
+    dispatch(selectTicket(currentTicket || tickets[0].id));
     handleCloseNotifies();
     dispatch({ type: UPDATE_TICKET_COLOR_RESET });
     dispatch(openTicketing(true));
@@ -376,7 +440,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               >
                 <Chip
                   size="small"
-                  label={`${unReads && unReads.length} ${t('ticket.new')}`}
+                  label={`${unReads ? unReads.length : 0} ${t('ticket.new')}`}
                   sx={{
                     borderRadius: '6px',
                     pl: '5px',
@@ -390,6 +454,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           </Box>
           <NotificationDropdown unReads={unReads} />
           <Button
+            disabled={!tickets || !tickets[0]}
             sx={{
               mt: 2,
               display: 'block',
@@ -515,7 +580,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     </AppBar>
   );
 };
-
 Header.propTypes = {
   sx: PropTypes.object,
   customClass: PropTypes.string,

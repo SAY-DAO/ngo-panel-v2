@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { addTicketMsg } from '../../redux/actions/ticketAction';
 import { WebsocketContext } from '../../contexts/WebsocketContext';
-import { newTicketMessage } from '../../utils/socketHelpers';
+import { socketRefreshNotifications, socketNewTicketMessage } from '../../utils/socketHelpers';
 
 const TicketMsgSent = () => {
   const dispatch = useDispatch();
@@ -27,26 +27,24 @@ const TicketMsgSent = () => {
 
   // socket receiver
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected!');
-    });
     socket.on('onTicketMessage', (data) => {
       console.log('message received!');
+      // 2- receive the msg which was just saved in db
       setSocketData(data);
     });
     socket.on(`onViewMessage${swInfo.id}`, (data) => {
       console.log(`user ${data.flaskUserId} Viewed ticket ${data.ticketId}!`);
+      socketRefreshNotifications(swInfo);
     });
     return () => {
-      console.log('Server-Off');
-      socket.off('connect');
       socket.off('onTicketMessage');
     };
-  }, [ticketId]);
+  }, []);
 
   // dispatch add when socket receives data
   useEffect(() => {
     if (socketData) {
+      // 3- update reducers to display
       dispatch(addTicketMsg(socketData));
     }
   }, [socketData]);
@@ -54,7 +52,8 @@ const TicketMsgSent = () => {
   const onTicketMsgSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    newTicketMessage(ticketId, msg, swInfo);
+    // 1- new message is sent to server via sockets and update DB
+    socketNewTicketMessage(ticketId, msg, swInfo);
     setMsg('');
   };
 

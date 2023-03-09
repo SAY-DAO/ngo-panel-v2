@@ -132,7 +132,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                           >
                             <Avatar
                               alt={c.firstName}
-                              src={c.avatarUrl}
+                              src={`https://api.sayapp.company/${c.avatarUrl}`}
                               sx={{
                                 backgroundColor: (theme) => theme.palette.grey.A200,
                               }}

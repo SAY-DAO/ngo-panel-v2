@@ -22,7 +22,7 @@ import {
 } from '../constants/ticketConstants';
 
 const INIT_STATE = {
-  currentTicket: 1,
+  currentTicket: null,
   ticketSearch: '',
   tickets: [],
   isTicketingOpen: false,
