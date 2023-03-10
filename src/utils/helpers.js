@@ -84,23 +84,22 @@ export function convertFlaskToSayRoles(flakUserType) {
   return role;
 }
 
-
-export function getSAYRole(sayRole) {
+export function getSAYRoleInteger(sayRole) {
   let roleInteger;
   if (sayRole === SAYPlatformRoles.AUDITOR) {
-    roleInteger = 'auditor';
+    roleInteger = SAYPlatformRoles.AUDITOR;
   } else if (sayRole === SAYPlatformRoles.SOCIAL_WORKER) {
-    roleInteger = 'socialWorker';
+    roleInteger = SAYPlatformRoles.SOCIAL_WORKER;
   } else if (sayRole === SAYPlatformRoles.PURCHASER) {
-    roleInteger = 'purchaser';
+    roleInteger = SAYPlatformRoles.PURCHASER;
   } else if (sayRole === SAYPlatformRoles.NGO_SUPERVISOR) {
-    roleInteger = 'ngoSupervisor';
+    roleInteger = SAYPlatformRoles.NGO_SUPERVISOR;
   } else if (sayRole === SAYPlatformRoles.FAMILY) {
-    roleInteger = 'familyMember';
+    roleInteger = SAYPlatformRoles.FAMILY;
   } else if (sayRole === SAYPlatformRoles.FRIEND) {
-    roleInteger = 'friend';
+    roleInteger = SAYPlatformRoles.FRIEND;
   } else if (sayRole === SAYPlatformRoles.NO_ROLE) {
-    roleInteger = 'noRole';
+    roleInteger = SAYPlatformRoles.NO_ROLE;
   }
   return roleInteger;
 }

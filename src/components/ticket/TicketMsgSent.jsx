@@ -40,7 +40,6 @@ const TicketMsgSent = () => {
       socket.on(`onTicketMessage${ticketId}`, (data) => {
         console.log('listening for new messages');
         console.log('message received!');
-
         // 2- receive the msg which was just saved in db
         setSocketData(data);
       });
@@ -62,7 +61,7 @@ const TicketMsgSent = () => {
   // dispatch add when socket receives data
   useEffect(() => {
     if (socketData) {
-      // 3- update reducers to display
+        // 3- update reducers to display
       dispatch(addTicketMsg(socketData));
     }
   }, [socketData]);
@@ -89,12 +88,7 @@ const TicketMsgSent = () => {
           inputProps={{ 'aria-label': 'Type a Message' }}
           onChange={handleTicketMsgChange.bind(null)}
         />
-        <IconButton
-          aria-label="send"
-          color="primary"
-          // onClick={() => () => dispatch(addTicketMsg(ticketId, msg))}
-          disabled={!msg}
-        >
+        <IconButton aria-label="send" color="primary" disabled={!msg}>
           <FeatherIcon icon="send" width="18" />
         </IconButton>
       </form>

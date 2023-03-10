@@ -20,7 +20,7 @@ import FeatherIcon from 'feather-icons-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from '../custom-scroll/Scrollbar';
-import { getCurrentStatusString, getUserSAYRoleString } from '../../utils/helpers';
+import { getCurrentStatusString, getSAYRoleString } from '../../utils/helpers';
 import { fetchTicketById, updateTicketColor } from '../../redux/actions/ticketAction';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { colorChoices } from '../../utils/types';
@@ -60,19 +60,19 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   // set ticket when socket msg received
   useEffect(() => {
     if (socketContent && tickets) {
-      const socketTicket = tickets.find((tt) => tt.id === socketContent.content.ticket.id);
-      if (
-        socketTicket &&
-        socketTicket.ticketHistory &&
-        socketTicket.ticketHistory.find((h) => h.id !== socketContent.id)
-      ) {
+      // const socketTicket = tickets.find((tt) => tt.id === socketContent.content.ticket.id);
+      // if (
+      //   socketTicket &&
+      //   socketTicket.ticketHistory &&
+      //   socketTicket.ticketHistory.find((h) => h.id !== socketContent.id)
+      // ) {
         const modifiedTickets = tickets.map((ticket) =>
           ticket.id === socketContent.content.ticket.id
             ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
             : ticket,
         );
         setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
-      }
+      // }
     }
   }, [socketContent, tickets]);
 
@@ -131,7 +131,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                         {theTicket.contributors.map((c) => (
                           <Tooltip
                             title={`${c.firstName} - ${t(
-                              `roles.${getUserSAYRoleString(c.typeId)}`,
+                              `roles.${getSAYRoleString(c.role)}`,
                             )}`}
                             key={c.id}
                           >

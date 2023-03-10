@@ -86,7 +86,7 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
   }
 };
 
-export const addTicket = (values) => async (dispatch, getState) => {
+export const addTicket = (socketValues) => async (dispatch, getState) => {
   try {
     dispatch({ type: ADD_TICKET_REQUEST });
     const {
@@ -99,14 +99,15 @@ export const addTicket = (values) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { child, ...others } = values.need;
+    const { child, ...others } = socketValues.need;
     const dataObject = {
-      userId: values.userId,
-      needId: values.needId,
+      roles: socketValues.roles,
+      userId: socketValues.userId,
+      userType: socketValues.userType,
+      needId: socketValues.needId,
       childId: child.id,
-      title: values.title,
+      title: socketValues.title,
       need: others,
-      ngoId: values.ngoId,
     };
     const { data } = await daoApi.post(`/tickets/add`, dataObject, config);
     dispatch({

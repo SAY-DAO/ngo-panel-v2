@@ -39,12 +39,7 @@ import {
 import ReceiptImage from './ReceiptImage';
 import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
 import DurationTimeLine from './DurationTimeLine';
-import {
-  addTicket,
-  fetchTicketList,
-  openTicketing,
-  selectTicket,
-} from '../../redux/actions/ticketAction';
+import { fetchTicketList, openTicketing, selectTicket } from '../../redux/actions/ticketAction';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 
@@ -128,27 +123,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
     dispatch(openTicketing(true));
     setOpenConfirm(false);
     dispatch(selectTicket(ticketId));
-  };
-
-  const handleConfirm = (selectedRoles) => {
-    console.log({
-      roles: selectedRoles,
-      title: need.name,
-      userId: pageDetails.userId,
-      ngoId: pageDetails.ngoId,
-      needId: need.id,
-      need,
-    });
-    dispatch({ type: UPDATE_TICKET_COLOR_RESET });
-    dispatch(
-      addTicket({
-        title: need.name,
-        userId: pageDetails.userId,
-        ngoId: pageDetails.ngoId,
-        needId: need.id,
-        need,
-      }),
-    );
   };
 
   // close toast
@@ -550,13 +524,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
           </Grid>
         </CardActions>
       </Card>
-      <TicketConfirmDialog
-        openConfirm={openConfirm}
-        setOpenConfirm={setOpenConfirm}
-        handleConfirm={handleConfirm}
-        loading={loadingTicketAdd}
-        need={need}
-      />
+      {openConfirm && (
+        <TicketConfirmDialog
+          openConfirm={openConfirm}
+          setOpenConfirm={setOpenConfirm}
+          loading={loadingTicketAdd}
+          need={need}
+        />
+      )}
+
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert

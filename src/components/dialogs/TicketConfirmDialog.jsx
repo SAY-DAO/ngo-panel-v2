@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -15,8 +15,11 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import { useDispatch, useSelector } from 'react-redux';
 import { NeedTypeEnum, ProductStatusEnum, SAYPlatformRoles } from '../../utils/types';
 import { getSAYRoleString } from '../../utils/helpers';
+import { addTicket } from '../../redux/actions/ticketAction';
+import { UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 
 const ITEM_HEIGHT = 65;
 const ITEM_PADDING_TOP = 8;
@@ -30,20 +33,40 @@ const MenuProps = {
 };
 const roles = Object.keys(SAYPlatformRoles);
 
-export default function TicketConfirmDialog({
-  openConfirm,
-  setOpenConfirm,
-  handleConfirm,
-  loading,
-  need,
-}) {
+export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loading, need }) {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const [selectedRoles, setSelectedRoles] = useState([]);
+
+  const myPage = useSelector((state) => state.myPage);
+  const { pageDetails } = myPage;
 
   const handleClose = () => {
     setOpenConfirm(false);
   };
-  const [selectedRoles, setSelectedRoles] = React.useState([]);
 
+  const handleConfirm = () => {
+    console.log({
+      roles: selectedRoles,
+      title: need.name,
+      userId: pageDetails.userId,
+      ngoId: pageDetails.ngoId,
+      needId: need.id,
+      need,
+    });
+    dispatch({ type: UPDATE_TICKET_COLOR_RESET });
+    dispatch(
+      addTicket({
+        roles: selectedRoles,
+        title: need.name,
+        userId: pageDetails.userId,
+        userType: pageDetails.typeId,
+        needId: need.id,
+        need,
+      }),
+    );
+  };
   const handleChange = (event) => {
     const {
       target: { value },
@@ -53,7 +76,7 @@ export default function TicketConfirmDialog({
       typeof value === 'string' ? value.split(',') : value,
     );
   };
-
+  console.log(selectedRoles);
   return (
     <div>
       <Dialog open={openConfirm} onClose={handleClose} aria-labelledby="draggable-dialog-title">
@@ -116,6 +139,7 @@ export default function TicketConfirmDialog({
         </DialogContent>
         <DialogActions>
           <LoadingButton
+            disabled={selectedRoles.length <= 0}
             loading={loading}
             color="primary"
             onClick={() => handleConfirm(selectedRoles)}
@@ -134,6 +158,5 @@ TicketConfirmDialog.propTypes = {
   setOpenConfirm: PropTypes.func,
   openConfirm: PropTypes.bool,
   loading: PropTypes.bool,
-  handleConfirm: PropTypes.func,
   need: PropTypes.object,
 };
