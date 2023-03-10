@@ -75,6 +75,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorNotify, setAnchorNotify] = useState(null);
   const [showSearchDrawer, setShowSearchDrawer] = useState(false);
 
+  const customizer = useSelector((state) => state.CustomizerReducer);
+
   const swDetails = useSelector((state) => state.swDetails);
   const {
     swInfo,
@@ -175,9 +177,17 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       console.log('Connected!');
     });
     // clear previously buffered data when reconnecting
+    socket.on(`onColorChange${swId}`, () => {
+      console.log('changed Color!');
+    });
+    // clear previously buffered data when reconnecting
     socket.on(`onUnReadTickets${swId}`, () => {
       socket.sendBuffer = [];
-      console.log('cleared the buffer!');
+      console.log('cleared the notification buffer!');
+    });
+    socket.on(`onColorChange${swId}`, () => {
+      socket.sendBuffer = [];
+      console.log('cleared the color buffer!');
     });
 
     let myList = [];
@@ -198,7 +208,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           if (!ticket) {
             dispatch(fetchTicketList());
             clearInterval(notificationsInterval);
-            console.log('mamad');
             socketRefreshNotifications(swInfo);
             break;
           }
@@ -496,7 +505,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               sx={{
                 width: '30px',
                 height: '30px',
-                backgroundColor: (theme) => theme.palette.background.ripple,
+                backgroundColor: (theme) =>
+                customizer.activeMode === 'dark' && theme.palette.background.ripple,
               }}
             />
             <Box

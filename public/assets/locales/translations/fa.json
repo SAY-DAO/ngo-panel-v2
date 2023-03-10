@@ -460,7 +460,7 @@
       "pending": "به کودک ارسال نشده"
     },
     "needDialogue": {
-      "confirm":{
+      "confirm": {
         "dialogTitle": "نیازهای مشابه"
       },
       "service": {
@@ -622,7 +622,7 @@
       "logIn": "ورود",
       "logOut": "خروج"
     },
-    "message":{
+    "message": {
       "more": "پیام‌های دیگر",
       "messages": "پیام‌ها"
     }
@@ -684,27 +684,29 @@
         "addTicket": "اضافه کردن تیکت",
         "readTicket": "خواندن تیکت",
         "tickets": "تیکت‌ها"
-
       }
     }
   },
-  "ticket":{
+  "ticket": {
     "new": "نخوانده",
-    "dialog":{
-      "title":"ایجاد تیکت",
-      "confirm":"آیا مطمئن به ایجاد تیکت برای این نیاز هستید؟",
+    "daysAgo": "روز پیش",
+    "hoursAgo": "ساعت پیش",
+    "minutesAgo": "دقیقه پیش",
+    "dialog": {
+      "title": "ایجاد تیکت",
+      "confirm": "آیا مطمئن به ایجاد تیکت برای این نیاز هستید؟",
       "chatWith": "گفتگو با"
     },
-    "ticketing":{
+    "ticketing": {
       "subHeader": "پیام‌رسان",
       "type": "پیامی بنویسید...",
       "header": "گفتگوها",
       "search": "جستجو"
     }
   },
-  "roles":{
-    "socialWorker":"مددکار",
-    "auditor":"ناظر",
+  "roles": {
+    "socialWorker": "مددکار",
+    "auditor": "ناظر",
     "purchaser": "خرید کننده",
     "ngoSupervisor": "سرپرست انجمن",
     "noRole": "بدون نقش :(",

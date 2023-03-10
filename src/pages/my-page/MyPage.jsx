@@ -62,6 +62,9 @@ const MyPage = () => {
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { updatedTicket } = ticketUpdate;
 
+  const myTickets = useSelector((state) => state.myTickets);
+  const { tickets } = myTickets;
+
   useEffect(() => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
   }, [swInfo]);
@@ -166,7 +169,7 @@ const MyPage = () => {
       }
       setModifiedNeeds(organizedNeeds);
     }
-  }, [addedTicket, pageDetails, updatedTicket]);
+  }, [addedTicket, pageDetails, updatedTicket, tickets]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

@@ -5,9 +5,9 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import Tickets from '../../pages/ticket/Tickets';
-import {  openTicketing } from '../../redux/actions/ticketAction';
+import { fetchTicketList, openTicketing } from '../../redux/actions/ticketAction';
 import { socketRefreshNotifications } from '../../utils/socketHelpers';
 
 const Transition = forwardRef((props, ref) => {
@@ -18,16 +18,16 @@ export default function FullScreenDialog() {
   const dispatch = useDispatch();
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { isTicketingOpen } = myTickets;
+  const {  isTicketingOpen } = myTickets;
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  // useEffect(() => {
-  //   if (swInfo && isTicketingOpen) {
-  //     dispatch(fetchTicketList());
-  //   }
-  // }, [isTicketingOpen]);
+  useEffect(() => {
+    if ( isTicketingOpen) {
+      dispatch(fetchTicketList());
+    }
+  }, []);
 
   const handleClose = () => {
     dispatch(openTicketing(false));

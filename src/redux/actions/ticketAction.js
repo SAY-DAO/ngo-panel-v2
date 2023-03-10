@@ -19,7 +19,7 @@ import {
   UPDATE_TICKET_COLOR_FAIL,
   OPEN_TICKETING,
 } from '../constants/ticketConstants';
-import { socketHttp } from '../../contexts/WebsocketContext';
+import { socketChangeTicketColor, socketNewTicketView } from '../../utils/socketHelpers';
 
 export const openTicketing = (open) => ({
   type: OPEN_TICKETING,
@@ -71,7 +71,8 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
     } = getState();
     const { data } = await daoApi.get(`/tickets/ticket/${ticketId}`);
 
-    socketHttp.emit('newViewMessage', { ticketId, flaskUserId: userInfo.id });
+    // update ticket view
+    socketNewTicketView(ticketId, userInfo.id);
 
     dispatch({
       type: TICKET_BY_ID_SUCCESS,
@@ -121,30 +122,28 @@ export const addTicket = (values) => async (dispatch, getState) => {
   }
 };
 
-export const updateTicketColor = (values) => async (dispatch) => {
+export const updateTicketColor = (values) => async (dispatch, getState) => {
   try {
     dispatch({ type: UPDATE_TICKET_COLOR_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-      },
-    };
-
-    const { data } = await daoApi.patch(
-      `/tickets/ticket/${values.ticketId}?color=${values.color}`,
-      config,
-    );
+    socketChangeTicketColor(values.ticketId, userInfo.id, values.color);
+    // const { data } = await daoApi.patch(
+    //   `/tickets/ticket/${values.ticketId}?color=${values.color}`,
+    //   config,
+    // );
     dispatch({
       type: UPDATE_TICKET_COLOR_SUCCESS,
-      payload: {
-        updated: data,
-        color: values.color,
-        needFlaskId: values.needFlaskId,
-        needStatus: values.needStatus,
-        needType: values.needType,
-        ticketId: values.ticketId,
-      },
+      // payload: {
+      //   updated: data,
+      //   color: values.color,
+      //   needFlaskId: values.needFlaskId,
+      //   needStatus: values.needStatus,
+      //   needType: values.needType,
+      //   ticketId: values.ticketId,
+      // },
     });
   } catch (e) {
     console.log(e);

@@ -132,7 +132,7 @@ const TicketListing = () => {
                           >
                             <Avatar
                               alt={p.firstName}
-                              src={p.avatarUrl}
+                              src={`https://api.sayapp.company/${p.avatarUrl}`}
                               sx={{
                                 width: 24,
                                 height: 24,

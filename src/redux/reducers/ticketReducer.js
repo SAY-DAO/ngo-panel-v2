@@ -19,6 +19,7 @@ import {
   UPDATE_TICKET_COLOR_FAIL,
   UPDATE_TICKET_COLOR_RESET,
   OPEN_TICKETING,
+  ADD_TICKET_MSG_RESET,
 } from '../constants/ticketConstants';
 
 const INIT_STATE = {
@@ -121,6 +122,8 @@ export const ticketAddMsgReducer = (state = {}, action) => {
       };
     case ADD_TICKET_MSG_FAIL:
       return { ...state, loading: false, error: action.payload };
+    case ADD_TICKET_MSG_RESET:
+      return {};
     default:
       return state;
   }

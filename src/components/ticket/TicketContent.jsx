@@ -19,12 +19,12 @@ import {
 import FeatherIcon from 'feather-icons-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
 import Scrollbar from '../custom-scroll/Scrollbar';
 import { getCurrentStatusString, getUserSAYRoleString } from '../../utils/helpers';
 import { fetchTicketById, updateTicketColor } from '../../redux/actions/ticketAction';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { colorChoices } from '../../utils/types';
+import { dateTimeConvertor } from '../../utils/persianToEnglish';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
   const dispatch = useDispatch();
@@ -59,16 +59,22 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   // set ticket when socket msg received
   useEffect(() => {
-    if (socketContent) {
-      console.log(socketContent);
-      const modifiedTickets = tickets.map((ticket) =>
-        ticket.id === socketContent.content.ticket.id
-          ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
-          : ticket,
-      );
-      setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
+    if (socketContent && tickets) {
+      const socketTicket = tickets.find((tt) => tt.id === socketContent.content.ticket.id);
+      if (
+        socketTicket &&
+        socketTicket.ticketHistory &&
+        socketTicket.ticketHistory.find((h) => h.id !== socketContent.id)
+      ) {
+        const modifiedTickets = tickets.map((ticket) =>
+          ticket.id === socketContent.content.ticket.id
+            ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
+            : ticket,
+        );
+        setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
+      }
     }
-  }, [socketContent]);
+  }, [socketContent, tickets]);
 
   // fetch ticket when selected
   useEffect(() => {
@@ -76,6 +82,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   }, [currentTicket, successTicketUpdate]);
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  console.log(theTicket && theTicket.ticketHistory);
   return (
     <WebsocketProvider value={socketHttp}>
       <Box>
@@ -90,7 +97,6 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 pb: '7px',
               }}
             >
-              {theTicket.updatedAt}
               <Box
                 sx={{
                   display: { xs: 'block', md: 'block', lg: 'none' },
@@ -181,8 +187,29 @@ const TicketContent = ({ toggleTicketSidebar }) => {
               </Grid>
             </Box>
             <Divider />
-            <Scrollbar style={{ height: 'calc(100vh - 445px)' }}>
-              <Box p={2}>
+            <Scrollbar
+              style={{
+                // for keeping scroll down
+                height: 'calc(100vh - 445px)',
+                transform:  'rotateX(180deg)',
+                MozTransform: 'rotateX(180deg)' /* Mozilla */,
+                WebkitTransform:  'rotateX(180deg)' /* Safari and Chrome */,
+                msTransform:  'rotateX(180deg)' /* IE 9+ */,
+                OTransform:  'rotateX(180deg)' /* Opera */,
+              }}
+            >
+              <Box
+                p={2}
+                sx={{
+                  // for keeping scroll down
+                  maxHeight: '50vh',
+                  transform: lgUp && 'rotateX(180deg)',
+                  MozTransform: lgUp && 'rotateX(180deg)' /* Mozilla */,
+                  WebkitTransform: lgUp && 'rotateX(180deg)' /* Safari and Chrome */,
+                  MsTransform: lgUp && 'rotateX(180deg)' /* IE 9+ */,
+                  OTransform: lgUp && 'rotateX(180deg)' /* Opera */,
+                }}
+              >
                 {theTicket &&
                   theTicket.ticketHistory.map((h) =>
                     h.from !== swInfo.id ? (
@@ -192,7 +219,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                             alt="user"
                             src={
                               theTicket.contributors.find((p) => p.flaskId === h.from) &&
-                              theTicket.contributors.find((p) => p.flaskId === h.from).avatarUrl
+                              `https://api.sayapp.company/${
+                                theTicket.contributors.find((p) => p.flaskId === h.from).avatarUrl
+                              }`
                             }
                             sx={{ backgroundColor: (theme) => theme.palette.grey[600] }}
                           />
@@ -213,12 +242,15 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                             }}
                           >
                             {h.message}
-                            <Typography>{moment().diff(moment(h.createdAt), 'minutes')}</Typography>
+                            <Typography variant="subtitle2" sx={{ color: 'gray', fontSize: 12 }}>
+                              {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
+                              {dateTimeConvertor(h.createdAt)}
+                            </Typography>
                           </Box>
                         </div>
                       </Box>
                     ) : (
-                      <Box key={h.id}>
+                      <Box key={h.id + 1}>
                         <Box
                           mb={1}
                           display="flex"
@@ -230,7 +262,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                           <Box
                             sx={{
                               p: 2,
-                              backgroundColor: 'primary.light',
+                              backgroundColor: 'secondary.light',
                               ml: 'auto',
                               borderRadius: '6px',
                               color: (theme) =>
@@ -242,6 +274,10 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                             }}
                           >
                             {h.message}
+                            <Typography variant="subtitle2" sx={{ color: 'gray', fontSize: 12 }}>
+                              {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
+                              {dateTimeConvertor(h.createdAt)}
+                            </Typography>
                           </Box>
                         </Box>
                       </Box>

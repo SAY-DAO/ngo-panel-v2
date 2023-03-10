@@ -6,7 +6,6 @@ import { getUserSAYRoleString } from '../../../utils/helpers';
 
 const NotificationDropdown = ({ unReads }) => {
   const { t } = useTranslation();
-
   return (
     <Box>
       {unReads &&

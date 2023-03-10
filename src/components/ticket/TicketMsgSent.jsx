@@ -7,6 +7,7 @@ import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { addTicketMsg } from '../../redux/actions/ticketAction';
 import { WebsocketContext } from '../../contexts/WebsocketContext';
 import { socketRefreshNotifications, socketNewTicketMessage } from '../../utils/socketHelpers';
+import { ADD_TICKET_MSG_RESET } from '../../redux/constants/ticketConstants';
 
 const TicketMsgSent = () => {
   const dispatch = useDispatch();
@@ -27,19 +28,26 @@ const TicketMsgSent = () => {
 
   // socket receiver
   useEffect(() => {
-    socket.on('onTicketMessage', (data) => {
-      console.log('message received!');
-      // 2- receive the msg which was just saved in db
-      setSocketData(data);
-    });
-    socket.on(`onViewMessage${swInfo.id}`, (data) => {
-      console.log(`user ${data.flaskUserId} Viewed ticket ${data.ticketId}!`);
-      socketRefreshNotifications(swInfo);
-    });
+    if (ticketId) {
+      socket.on(`onTicketMessage${ticketId}`, (data) => {
+        console.log('listening for new messages');
+        console.log('message received!');
+        // 2- receive the msg which was just saved in db
+        setSocketData(data);
+      });
+      socket.on(`onViewMessage${swInfo.id}`, (data) => {
+        console.log(`user ${data.flaskUserId} Viewed ticket ${data.ticketId}!`);
+        socketRefreshNotifications(swInfo);
+      });
+    }
     return () => {
-      socket.off('onTicketMessage');
+      if (ticketId) {
+        console.log('\x1b[31m%s\x1b[0m', 'NOT listening for new messages');
+        socket.off(`onTicketMessage${ticketId}`);
+      }
+      dispatch({ type: ADD_TICKET_MSG_RESET });
     };
-  }, []);
+  }, [ticketId]);
 
   // dispatch add when socket receives data
   useEffect(() => {
@@ -57,8 +65,6 @@ const TicketMsgSent = () => {
     setMsg('');
   };
 
-  // 1 user 1 emit to nest
-  // 2 nest save and emit back to all
   return (
     <Box p={2}>
       <form onSubmit={onTicketMsgSubmit.bind()} style={{ display: 'flex', alignItems: 'center' }}>
@@ -76,7 +82,7 @@ const TicketMsgSent = () => {
         <IconButton
           aria-label="send"
           color="primary"
-          onClick={() => () => dispatch(addTicketMsg(ticketId, msg))}
+          // onClick={() => () => dispatch(addTicketMsg(ticketId, msg))}
           disabled={!msg}
         >
           <FeatherIcon icon="send" width="18" />

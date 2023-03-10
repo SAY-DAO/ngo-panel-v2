@@ -651,6 +651,9 @@
   },
   "ticket":{
     "new": "New",
+    "daysAgo": "days ago",
+    "hoursAgo": "hrs ago",
+    "minutesAgo": "minutes ago",
     "dialog":{
       "title":"Create Ticket",
       "confirm":"Are you sure you want to add a ticket for this need?",
