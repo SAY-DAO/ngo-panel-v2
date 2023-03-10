@@ -6,7 +6,12 @@ import { useTranslation } from 'react-i18next';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { addTicketMsg } from '../../redux/actions/ticketAction';
 import { WebsocketContext } from '../../contexts/WebsocketContext';
-import { socketRefreshNotifications, socketNewTicketMessage } from '../../utils/socketHelpers';
+import {
+  socketRefreshNotifications,
+  socketNewTicketMessage,
+  socketJoinRoom,
+  socketLeaveRoom,
+} from '../../utils/socketHelpers';
 import { ADD_TICKET_MSG_RESET } from '../../redux/constants/ticketConstants';
 
 const TicketMsgSent = () => {
@@ -29,9 +34,13 @@ const TicketMsgSent = () => {
   // socket receiver
   useEffect(() => {
     if (ticketId) {
+      console.log(ticketId);
+      socketJoinRoom(ticketId);
+
       socket.on(`onTicketMessage${ticketId}`, (data) => {
         console.log('listening for new messages');
         console.log('message received!');
+
         // 2- receive the msg which was just saved in db
         setSocketData(data);
       });
@@ -42,6 +51,7 @@ const TicketMsgSent = () => {
     }
     return () => {
       if (ticketId) {
+        socketLeaveRoom(ticketId);
         console.log('\x1b[31m%s\x1b[0m', 'NOT listening for new messages');
         socket.off(`onTicketMessage${ticketId}`);
       }

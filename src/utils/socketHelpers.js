@@ -30,3 +30,17 @@ export const socketChangeTicketColor = (ticketId, userId, color) => {
     console.log('\x1b[33m%s\x1b[0m', 'emitted ticket change color!');
   }
 };
+
+export const socketJoinRoom = (ticketId) => {
+  if (ticketId) {
+    socketHttp.emit('join:room', { ticketId });
+    console.log('\x1b[33m%s\x1b[0m', 'joining room!');
+  }
+};
+
+export const socketLeaveRoom = (ticketId) => {
+  if (ticketId) {
+    socketHttp.emit('leave:room', { ticketId });
+    console.log('\x1b[33m%s\x1b[0m', 'Leaving room!');
+  }
+};

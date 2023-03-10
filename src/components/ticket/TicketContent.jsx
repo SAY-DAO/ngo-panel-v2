@@ -82,7 +82,6 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   }, [currentTicket, successTicketUpdate]);
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
-  console.log(theTicket && theTicket.ticketHistory);
   return (
     <WebsocketProvider value={socketHttp}>
       <Box>
@@ -202,7 +201,6 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 p={2}
                 sx={{
                   // for keeping scroll down
-                  maxHeight: '50vh',
                   transform: lgUp && 'rotateX(180deg)',
                   MozTransform: lgUp && 'rotateX(180deg)' /* Mozilla */,
                   WebkitTransform: lgUp && 'rotateX(180deg)' /* Safari and Chrome */,
