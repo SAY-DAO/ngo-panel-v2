@@ -19,6 +19,9 @@ import {
   MY_PAGE_REQUEST,
   MY_PAGE_SUCCESS,
   MY_PAGE_FAIL,
+  USER_CHANGE_PASSWORD_REQUEST,
+  USER_CHANGE_PASSWORD_SUCCESS,
+  USER_CHANGE_PASSWORD_FAIL,
 } from '../constants/userConstants';
 
 export const register = (userName, password, theKey, value, otp) => async (dispatch) => {
@@ -238,6 +241,36 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
   } catch (e) {
     dispatch({
       type: MY_PAGE_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const changePassword = (currentPassword, newPassword) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_CHANGE_PASSWORD_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const formData = new FormData();
+    formData.append('currenPassword', currentPassword);
+    formData.append('newPassword', newPassword);
+    const { data } = await publicApi.post('/socialworkers/me/change-password', formData, config);
+    dispatch({
+      type: USER_CHANGE_PASSWORD_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: USER_CHANGE_PASSWORD_FAIL,
       payload: e.response && e.response.status ? e.response : e.response.data.message,
     });
   }
