@@ -176,18 +176,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     socket.on('connect', () => {
       console.log('Connected!');
     });
-    // clear previously buffered data when reconnecting
-    socket.on(`onColorChange${swId}`, () => {
-      console.log('changed Color!');
-    });
+
     // clear previously buffered data when reconnecting
     socket.on(`onUnReadTickets${swId}`, () => {
       socket.sendBuffer = [];
       console.log('cleared the notification buffer!');
-    });
-    socket.on(`onColorChange${swId}`, () => {
-      socket.sendBuffer = [];
-      console.log('cleared the color buffer!');
     });
 
     let myList = [];

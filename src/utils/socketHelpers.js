@@ -31,16 +31,16 @@ export const socketChangeTicketColor = (ticketId, userId, color) => {
   }
 };
 
-export const socketJoinRoom = (ticketId) => {
+export const socketJoinRoom = (ticketId, userId) => {
   if (ticketId) {
-    socketHttp.emit('join:room', { ticketId });
+    socketHttp.emit('join:room', { ticketId, flaskUserId: userId });
     console.log('\x1b[33m%s\x1b[0m', 'joining room!');
   }
 };
 
-export const socketLeaveRoom = (ticketId) => {
+export const socketLeaveRoom = (ticketId, userId) => {
   if (ticketId) {
-    socketHttp.emit('leave:room', { ticketId });
+    socketHttp.emit('leave:room', { ticketId, flaskUserId: userId });
     console.log('\x1b[33m%s\x1b[0m', 'Leaving room!');
   }
 };

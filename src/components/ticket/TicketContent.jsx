@@ -17,18 +17,16 @@ import {
   CircularProgress,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from '../custom-scroll/Scrollbar';
 import { getCurrentStatusString, getSAYRoleString } from '../../utils/helpers';
-import { fetchTicketById, updateTicketColor } from '../../redux/actions/ticketAction';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { colorChoices } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
 import { socketChangeTicketColor } from '../../utils/socketHelpers';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const [theTicket, setTheTicket] = useState(null);
@@ -46,11 +44,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const { ticket: fetchedTicket } = ticketById;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
-  const {
-    updatedTicket,
-    loading: loadingTicketUpdated,
-    success: successTicketUpdate,
-  } = ticketUpdate;
+  const { updatedTicket, loading: loadingTicketUpdated } = ticketUpdate;
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
   const { addedTicket } = ticketAdd;
@@ -65,30 +59,18 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   // set ticket when socket msg received
   useEffect(() => {
     if (socketContent && tickets) {
-      // const socketTicket = tickets.find((tt) => tt.id === socketContent.content.ticket.id);
-      // if (
-      //   socketTicket &&
-      //   socketTicket.ticketHistory &&
-      //   socketTicket.ticketHistory.find((h) => h.id !== socketContent.id)
-      // ) {
       const modifiedTickets = tickets.map((ticket) =>
         ticket.id === socketContent.content.ticket.id
           ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
           : ticket,
       );
       setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
-      // }
     }
   }, [socketContent, tickets]);
 
-  // fetch ticket when selected
-  useEffect(() => {
-    dispatch(fetchTicketById(currentTicket));
-    if (updatedTicket) {
-      socketChangeTicketColor(updatedTicket.ticketId, swInfo.id, updatedTicket.color);
-    }
-  }, [currentTicket, successTicketUpdate]);
-
+  const handleTicketUpdate = (choice) => {
+    socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
+  };
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   return (
     <WebsocketProvider value={socketHttp}>
@@ -167,21 +149,12 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                         color: 'black',
                       }}
                       key={choice.color}
-                      onClick={() =>
-                        dispatch(
-                          updateTicketColor({
-                            ticketId: theTicket.id,
-                            needFlaskId: theTicket.need.flaskId,
-                            needStatus: theTicket.need.status,
-                            needType: theTicket.need.type,
-                            color: choice.color,
-                          }),
-                        )
-                      }
+                      onClick={() => handleTicketUpdate(choice)}
                     >
                       {loadingTicketUpdated ? (
                         <CircularProgress size="small" />
-                      ) : fetchedTicket && fetchedTicket.color === choice.color ? (
+                      ) : (updatedTicket || fetchedTicket) &&
+                        (updatedTicket || fetchedTicket).color === choice.color ? (
                         <FeatherIcon icon="check" size="24" />
                       ) : (
                         ''

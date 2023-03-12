@@ -19,7 +19,6 @@ import {
   UPDATE_TICKET_COLOR_FAIL,
   OPEN_TICKETING,
 } from '../constants/ticketConstants';
-import { socketNewTicketView } from '../../utils/socketHelpers';
 
 export const openTicketing = (open) => ({
   type: OPEN_TICKETING,
@@ -69,10 +68,8 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
     const {
       userLogin: { userInfo },
     } = getState();
-    const { data } = await daoApi.get(`/tickets/ticket/${ticketId}`);
 
-    // update ticket view
-    socketNewTicketView(ticketId, userInfo.id);
+    const { data } = await daoApi.get(`/tickets/ticket/${ticketId}/${userInfo.id}`);
 
     dispatch({
       type: TICKET_BY_ID_SUCCESS,
@@ -123,32 +120,22 @@ export const addTicket = (socketValues) => async (dispatch, getState) => {
   }
 };
 
-export const updateTicketColor = (values) => async (dispatch, getState) => {
+export const updateTicketColor = (socketData) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_TICKET_COLOR_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
 
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-    const { data } = await daoApi.patch(
-      `/tickets/ticket/${values.ticketId}?color=${values.color}`,
-      config,
-    );
+    // const { data } = await daoApi.patch(
+    //   `/tickets/ticket/${values.ticketId}?color=${values.color}`,
+    //   config,
+    // );
     dispatch({
       type: UPDATE_TICKET_COLOR_SUCCESS,
       payload: {
-        updated: data,
-        color: values.color,
-        needFlaskId: values.needFlaskId,
-        needStatus: values.needStatus,
-        needType: values.needType,
-        ticketId: values.ticketId,
+        color: socketData.color,
+        needFlaskId: socketData.needFlaskId,
+        needStatus: socketData.needStatus,
+        needType: socketData.needType,
+        ticketId: socketData.ticketId,
       },
     });
   } catch (e) {
