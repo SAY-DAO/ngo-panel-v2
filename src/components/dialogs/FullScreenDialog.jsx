@@ -9,6 +9,7 @@ import React, { forwardRef, useEffect } from 'react';
 import Tickets from '../../pages/ticket/Tickets';
 import { fetchTicketList, openTicketing } from '../../redux/actions/ticketAction';
 import { socketRefreshNotifications } from '../../utils/socketHelpers';
+import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 
 const Transition = forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -26,6 +27,10 @@ export default function FullScreenDialog() {
   useEffect(() => {
     if ( isTicketingOpen) {
       dispatch(fetchTicketList());
+    }
+    return()=>{
+      dispatch({type: ADD_TICKET_RESET})
+      dispatch({type: UPDATE_TICKET_COLOR_RESET})
     }
   }, []);
 

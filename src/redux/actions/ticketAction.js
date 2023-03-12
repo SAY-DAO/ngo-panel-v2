@@ -19,7 +19,7 @@ import {
   UPDATE_TICKET_COLOR_FAIL,
   OPEN_TICKETING,
 } from '../constants/ticketConstants';
-import { socketChangeTicketColor, socketNewTicketView } from '../../utils/socketHelpers';
+import { socketNewTicketView } from '../../utils/socketHelpers';
 
 export const openTicketing = (open) => ({
   type: OPEN_TICKETING,
@@ -130,21 +130,26 @@ export const updateTicketColor = (values) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    socketChangeTicketColor(values.ticketId, userInfo.id, values.color);
-    // const { data } = await daoApi.patch(
-    //   `/tickets/ticket/${values.ticketId}?color=${values.color}`,
-    //   config,
-    // );
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await daoApi.patch(
+      `/tickets/ticket/${values.ticketId}?color=${values.color}`,
+      config,
+    );
     dispatch({
       type: UPDATE_TICKET_COLOR_SUCCESS,
-      // payload: {
-      //   updated: data,
-      //   color: values.color,
-      //   needFlaskId: values.needFlaskId,
-      //   needStatus: values.needStatus,
-      //   needType: values.needType,
-      //   ticketId: values.ticketId,
-      // },
+      payload: {
+        updated: data,
+        color: values.color,
+        needFlaskId: values.needFlaskId,
+        needStatus: values.needStatus,
+        needType: values.needType,
+        ticketId: values.ticketId,
+      },
     });
   } catch (e) {
     console.log(e);

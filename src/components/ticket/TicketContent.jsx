@@ -25,6 +25,7 @@ import { fetchTicketById, updateTicketColor } from '../../redux/actions/ticketAc
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { colorChoices } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
+import { socketChangeTicketColor } from '../../utils/socketHelpers';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
   const dispatch = useDispatch();
@@ -45,7 +46,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const { ticket: fetchedTicket } = ticketById;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
-  const { loading: loadingTicketUpdated, success: successTicketUpdate } = ticketUpdate;
+  const {
+    updatedTicket,
+    loading: loadingTicketUpdated,
+    success: successTicketUpdate,
+  } = ticketUpdate;
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
   const { addedTicket } = ticketAdd;
@@ -66,12 +71,12 @@ const TicketContent = ({ toggleTicketSidebar }) => {
       //   socketTicket.ticketHistory &&
       //   socketTicket.ticketHistory.find((h) => h.id !== socketContent.id)
       // ) {
-        const modifiedTickets = tickets.map((ticket) =>
-          ticket.id === socketContent.content.ticket.id
-            ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
-            : ticket,
-        );
-        setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
+      const modifiedTickets = tickets.map((ticket) =>
+        ticket.id === socketContent.content.ticket.id
+          ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
+          : ticket,
+      );
+      setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
       // }
     }
   }, [socketContent, tickets]);
@@ -79,6 +84,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   // fetch ticket when selected
   useEffect(() => {
     dispatch(fetchTicketById(currentTicket));
+    if (updatedTicket) {
+      socketChangeTicketColor(updatedTicket.ticketId, swInfo.id, updatedTicket.color);
+    }
   }, [currentTicket, successTicketUpdate]);
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
@@ -130,9 +138,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                       <AvatarGroup max={4}>
                         {theTicket.contributors.map((c) => (
                           <Tooltip
-                            title={`${c.firstName} - ${t(
-                              `roles.${getSAYRoleString(c.role)}`,
-                            )}`}
+                            title={`${c.firstName} - ${t(`roles.${getSAYRoleString(c.role)}`)}`}
                             key={c.id}
                           >
                             <Avatar
@@ -190,11 +196,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
               style={{
                 // for keeping scroll down
                 height: 'calc(100vh - 445px)',
-                transform:  'rotateX(180deg)',
+                transform: 'rotateX(180deg)',
                 MozTransform: 'rotateX(180deg)' /* Mozilla */,
-                WebkitTransform:  'rotateX(180deg)' /* Safari and Chrome */,
-                msTransform:  'rotateX(180deg)' /* IE 9+ */,
-                OTransform:  'rotateX(180deg)' /* Opera */,
+                WebkitTransform: 'rotateX(180deg)' /* Safari and Chrome */,
+                msTransform: 'rotateX(180deg)' /* IE 9+ */,
+                OTransform: 'rotateX(180deg)' /* Opera */,
               }}
             >
               <Box
