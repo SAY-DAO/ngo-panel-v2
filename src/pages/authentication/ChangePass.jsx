@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid, Box, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -7,11 +7,31 @@ import img1 from '../../assets/images/backgrounds/login-bg.svg';
 
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-
+// import Message from '../../components/Message';
 import PageContainer from '../../components/container/PageContainer';
+
+// import { changePassword } from '../../redux/actions/userAction';
 
 const ResetPassword = () => {
   const { t } = useTranslation();
+  const [currentPass, setCurrentPass] = useState('');
+  const [newPass, setNewPass] = useState('');
+  const [confirmNewPass, setConfirmNewPass] = useState('');
+
+  const handleChangeCurrentPass = (e) => {
+    setCurrentPass(e.target.value);
+  };
+  const handleChangeNewPass = (e) => {
+    setNewPass(e.target.value);
+  };
+  const handleChangeConfirmNewPass = (e) => {
+    setConfirmNewPass(e.target.value);
+  };
+  const handleChangePass = (e) => {
+    e.preventDefault();
+    console.log('I am clicked');
+    console.log(currentPass, newPass, confirmNewPass);
+  };
   return (
     <PageContainer title="Reset Password" description="this is Reset Password page">
       <Grid container spacing={0} sx={{ height: '100vh', justifyContent: 'center' }}>
@@ -74,17 +94,38 @@ const ResetPassword = () => {
                   <CustomFormLabel htmlFor="current-pass">
                     {t('changePassword.currentPassword')}
                   </CustomFormLabel>
-                  <CustomTextField id="current-pass" variant="outlined" fullWidth />
+                  <CustomTextField
+                    id="current-pass"
+                    type="password"
+                    onChange={handleChangeCurrentPass}
+                    value={currentPass}
+                    variant="outlined"
+                    fullWidth
+                  />
 
                   <CustomFormLabel htmlFor="new-pass">
                     {t('changePassword.newPassword')}
                   </CustomFormLabel>
-                  <CustomTextField id="new-pass" variant="outlined" fullWidth />
+                  <CustomTextField
+                    id="new-pass"
+                    type="password"
+                    onChange={handleChangeNewPass}
+                    value={newPass}
+                    variant="outlined"
+                    fullWidth
+                  />
 
                   <CustomFormLabel htmlFor="confirm-pass">
                     {t('changePassword.confirmNewPassword')}
                   </CustomFormLabel>
-                  <CustomTextField id="confirm-pass" variant="outlined" fullWidth />
+                  <CustomTextField
+                    id="confirm-pass"
+                    type="password"
+                    onChange={handleChangeConfirmNewPass}
+                    value={confirmNewPass}
+                    variant="outlined"
+                    fullWidth
+                  />
 
                   <Button
                     color="secondary"
@@ -92,7 +133,7 @@ const ResetPassword = () => {
                     size="large"
                     fullWidth
                     component={Link}
-                    to="/"
+                    onClick={handleChangePass}
                     sx={{
                       pt: '10px',
                       pb: '10px',
@@ -102,6 +143,11 @@ const ResetPassword = () => {
                     {t('profile.settings.changePass')}
                   </Button>
                 </Box>
+                <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                  {/* {errorLogin && (
+                    <Message backError={errorLogin} variant="standard" severity="error" />
+                  )} */}
+                </Grid>
               </Box>
             </Grid>
           </Grid>
