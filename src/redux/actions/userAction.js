@@ -246,7 +246,7 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
   }
 };
 
-export const changePassword = (currentPassword, newPassword) => async (dispatch, getState) => {
+export const changeUserPassword = (currentPassword, newPassword) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_CHANGE_PASSWORD_REQUEST });
     const {
@@ -261,7 +261,7 @@ export const changePassword = (currentPassword, newPassword) => async (dispatch,
     };
 
     const formData = new FormData();
-    formData.append('currenPassword', currentPassword);
+    formData.append('currentPassword', currentPassword);
     formData.append('newPassword', newPassword);
     const { data } = await publicApi.post('/socialworkers/me/change-password', formData, config);
     dispatch({

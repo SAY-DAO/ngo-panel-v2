@@ -1,22 +1,81 @@
-import React, { useState } from 'react';
-import { Grid, Box, Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Grid, Box, Typography } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
 
 import img1 from '../../assets/images/backgrounds/login-bg.svg';
+import contents from '../../inputsValidation/Contents';
 
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-// import Message from '../../components/Message';
+import Message from '../../components/Message';
 import PageContainer from '../../components/container/PageContainer';
+import ValidatePassword from '../../inputsValidation/ValidatePassword';
 
-// import { changePassword } from '../../redux/actions/userAction';
+import { changeUserPassword } from '../../redux/actions/userAction';
 
 const ResetPassword = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  const changePassword = useSelector((state) => state.changePassword);
+  const { loading, error } = changePassword;
+
   const [currentPass, setCurrentPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmNewPass, setConfirmNewPass] = useState('');
+  const [currentPassErr, setCurrentPassErr] = useState(false);
+  const [newPassErr, setNewPassErr] = useState(false);
+  const [repeatPassErr, setRepeatPassErr] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Handle loading button
+  useEffect(() => {
+    if (loading) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [loading]);
+
+  // Handle disable button
+  useEffect(() => {
+    if (!currentPass || !newPass || !confirmNewPass || newPassErr || repeatPassErr || !isValid) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [currentPass, newPass, confirmNewPass, newPassErr, repeatPassErr]);
+
+  // Handle API error
+  useEffect(() => {
+    setErrorMsg('');
+    setCurrentPassErr(false);
+    if (error) {
+      if (error.status === 400) {
+        setErrorMsg(t(contents.invalidPassword));
+      } else if (error.status === 600) {
+        setCurrentPassErr(true);
+        setErrorMsg(t(contents.wrongCurrentPassword));
+      } else {
+        setErrorMsg(t(contents.sthIsWrong));
+      }
+    }
+  }, [error]);
+
+  // Handle fields error
+  useEffect(() => {
+    setNewPassErr(false);
+    setRepeatPassErr(false);
+    if (!isValid) {
+      setNewPassErr(true);
+      setRepeatPassErr(true);
+    }
+  }, [newPass, confirmNewPass, isValid]);
 
   const handleChangeCurrentPass = (e) => {
     setCurrentPass(e.target.value);
@@ -29,9 +88,9 @@ const ResetPassword = () => {
   };
   const handleChangePass = (e) => {
     e.preventDefault();
-    console.log('I am clicked');
-    console.log(currentPass, newPass, confirmNewPass);
+    dispatch(changeUserPassword(currentPass, newPass));
   };
+
   return (
     <PageContainer title="Reset Password" description="this is Reset Password page">
       <Grid container spacing={0} sx={{ height: '100vh', justifyContent: 'center' }}>
@@ -97,6 +156,7 @@ const ResetPassword = () => {
                   <CustomTextField
                     id="current-pass"
                     type="password"
+                    error={currentPassErr}
                     onChange={handleChangeCurrentPass}
                     value={currentPass}
                     variant="outlined"
@@ -109,6 +169,7 @@ const ResetPassword = () => {
                   <CustomTextField
                     id="new-pass"
                     type="password"
+                    error={newPassErr}
                     onChange={handleChangeNewPass}
                     value={newPass}
                     variant="outlined"
@@ -121,18 +182,20 @@ const ResetPassword = () => {
                   <CustomTextField
                     id="confirm-pass"
                     type="password"
+                    error={repeatPassErr}
                     onChange={handleChangeConfirmNewPass}
                     value={confirmNewPass}
                     variant="outlined"
                     fullWidth
                   />
 
-                  <Button
+                  <LoadingButton
+                    disabled={isDisabled}
+                    loading={isLoading}
                     color="secondary"
                     variant="contained"
                     size="large"
                     fullWidth
-                    component={Link}
                     onClick={handleChangePass}
                     sx={{
                       pt: '10px',
@@ -141,12 +204,19 @@ const ResetPassword = () => {
                     }}
                   >
                     {t('profile.settings.changePass')}
-                  </Button>
+                  </LoadingButton>
                 </Box>
                 <Grid item xs={12} sx={{ textAlign: 'center' }}>
-                  {/* {errorLogin && (
-                    <Message backError={errorLogin} variant="standard" severity="error" />
-                  )} */}
+                  {errorMsg && (
+                    <Message variant="standard" severity="error">
+                      {errorMsg}
+                    </Message>
+                  )}
+                  <ValidatePassword
+                    password={newPass}
+                    confirmPassword={confirmNewPass}
+                    setIsValid={setIsValid}
+                  />
                 </Grid>
               </Box>
             </Grid>
