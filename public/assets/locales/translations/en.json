@@ -128,7 +128,8 @@
   "changePassword": {
     "currentPassword": "Current Password",
     "newPassword": "New Password",
-    "confirmNewPassword": "Confirm New Password"
+    "confirmNewPassword": "Confirm New Password",
+    "successNotif": "Password changed successfully"
   },
   "childData": {
     "needCategory": {

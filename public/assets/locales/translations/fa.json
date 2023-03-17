@@ -163,7 +163,8 @@
   "changePassword": {
     "currentPassword": "گذرواژه فعلی",
     "newPassword": "گذرواژه جدید",
-    "confirmNewPassword": "تکرار گذرواژه جدید"
+    "confirmNewPassword": "تکرار گذرواژه جدید",
+    "successNotif": "تغییر گذرواژه با موفقیت انجام شد."
   },
   "childData": {
     "needCategory": {

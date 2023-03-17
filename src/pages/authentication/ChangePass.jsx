@@ -20,7 +20,7 @@ const ResetPassword = () => {
   const dispatch = useDispatch();
 
   const changePassword = useSelector((state) => state.changePassword);
-  const { loading, error } = changePassword;
+  const { loading, error, success } = changePassword;
 
   const [currentPass, setCurrentPass] = useState('');
   const [newPass, setNewPass] = useState('');
@@ -28,10 +28,11 @@ const ResetPassword = () => {
   const [currentPassErr, setCurrentPassErr] = useState(false);
   const [newPassErr, setNewPassErr] = useState(false);
   const [repeatPassErr, setRepeatPassErr] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [alertMsg, setAlertMsg] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSucceed, setIsSucceed] = useState(false);
 
   // Handle loading button
   useEffect(() => {
@@ -53,16 +54,16 @@ const ResetPassword = () => {
 
   // Handle API error
   useEffect(() => {
-    setErrorMsg('');
+    setAlertMsg('');
     setCurrentPassErr(false);
     if (error) {
       if (error.status === 400) {
-        setErrorMsg(t(contents.invalidPassword));
+        setAlertMsg(t(contents.invalidPassword));
       } else if (error.status === 600) {
         setCurrentPassErr(true);
-        setErrorMsg(t(contents.wrongCurrentPassword));
+        setAlertMsg(t(contents.wrongCurrentPassword));
       } else {
-        setErrorMsg(t(contents.sthIsWrong));
+        setAlertMsg(t(contents.sthIsWrong));
       }
     }
   }, [error]);
@@ -77,7 +78,19 @@ const ResetPassword = () => {
     }
   }, [newPass, confirmNewPass, isValid]);
 
+  useEffect(() => {
+    if (success) {
+      setCurrentPass('');
+      setNewPass('');
+      setConfirmNewPass('');
+      setIsSucceed(true);
+      setAlertMsg(t('changePassword.successNotif'));
+    }
+  }, [success]);
+
   const handleChangeCurrentPass = (e) => {
+    setCurrentPassErr(false);
+    setAlertMsg('');
     setCurrentPass(e.target.value);
   };
   const handleChangeNewPass = (e) => {
@@ -93,6 +106,7 @@ const ResetPassword = () => {
 
   return (
     <PageContainer title="Reset Password" description="this is Reset Password page">
+      {/* TODO: handle success */}
       <Grid container spacing={0} sx={{ height: '100vh', justifyContent: 'center' }}>
         <Grid
           item
@@ -207,9 +221,9 @@ const ResetPassword = () => {
                   </LoadingButton>
                 </Box>
                 <Grid item xs={12} sx={{ textAlign: 'center' }}>
-                  {errorMsg && (
-                    <Message variant="standard" severity="error">
-                      {errorMsg}
+                  {alertMsg && (
+                    <Message variant="standard" severity={isSucceed ? 'success' : 'error'}>
+                      {alertMsg}
                     </Message>
                   )}
                   <ValidatePassword
