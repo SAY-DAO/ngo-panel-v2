@@ -79,6 +79,7 @@ const ResetPassword = () => {
   }, [newPass, confirmNewPass, isValid]);
 
   useEffect(() => {
+    setIsSucceed(false);
     if (success) {
       setCurrentPass('');
       setNewPass('');
@@ -105,8 +106,10 @@ const ResetPassword = () => {
   };
 
   return (
-    <PageContainer title="Reset Password" description="this is Reset Password page">
-      {/* TODO: handle success */}
+    <PageContainer
+      title={t('profile.settings.changePass')}
+      description="this is Change Password page"
+    >
       <Grid container spacing={0} sx={{ height: '100vh', justifyContent: 'center' }}>
         <Grid
           item
