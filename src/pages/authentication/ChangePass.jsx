@@ -110,7 +110,7 @@ const ResetPassword = () => {
       title={t('profile.settings.changePass')}
       description="this is Change Password page"
     >
-      <Grid container spacing={0} sx={{ height: '100vh', justifyContent: 'center' }}>
+      <Grid container spacing={0} sx={{ justifyContent: 'center', alignItems: 'center' }}>
         <Grid
           item
           xs={12}
@@ -134,7 +134,7 @@ const ResetPassword = () => {
                   xs: 'relative',
                   lg: 'absolute',
                 },
-                height: { xs: 'auto', lg: '100vh' },
+                height: { xs: 'auto', lg: '100%' },
                 right: { xs: 'auto', lg: '-50px' },
                 margin: '0 auto',
               }}
