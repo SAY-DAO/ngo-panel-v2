@@ -9,9 +9,17 @@ import {
   STATE_LIST_FAIL,
   STATE_LIST_REQUEST,
   STATE_LIST_SUCCESS,
+  COUNTRY_BY_ID_REQUEST,
+  COUNTRY_BY_ID_SUCCESS,
+  COUNTRY_BY_ID_FAIL,
+  COUNTRY_BY_ID_RESET,
+  CITY_BY_ID_REQUEST,
+  CITY_BY_ID_SUCCESS,
+  CITY_BY_ID_FAIL,
+  CITY_BY_ID_RESET,
 } from '../constants/countryConstants';
 
-export default function countryListReducer(state = { success: false }, action) {
+export function countryListReducer(state = { success: false }, action) {
   switch (action.type) {
     case COUNTRY_LIST_REQUEST:
       return { loading: true };
@@ -37,3 +45,33 @@ export default function countryListReducer(state = { success: false }, action) {
       return state;
   }
 }
+
+export const countryByIdReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case COUNTRY_BY_ID_REQUEST:
+      return { loading: true };
+    case COUNTRY_BY_ID_SUCCESS:
+      return { ...state, loading: false, success: true, country: action.payload };
+    case COUNTRY_BY_ID_FAIL:
+      return { loading: false, error: action.payload };
+    case COUNTRY_BY_ID_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const cityByIdReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case CITY_BY_ID_REQUEST:
+      return { loading: true };
+    case CITY_BY_ID_SUCCESS:
+      return { ...state, loading: false, success: true, country: action.payload };
+    case CITY_BY_ID_FAIL:
+      return { loading: false, error: action.payload };
+    case CITY_BY_ID_RESET:
+      return {};
+    default:
+      return state;
+  }
+};

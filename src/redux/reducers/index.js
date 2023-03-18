@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import countryListReducer from './countryReducer';
+import { countryListReducer, countryByIdReducer, cityByIdReducer } from './countryReducer';
 import CustomizerReducer from './customizerReducer';
 import {
   ngoAddReducer,
@@ -89,6 +89,8 @@ export default combineReducers({
   walletVerify: walletVerifyReducer,
   walletInformation: WalletInformationReducer,
   countryList: countryListReducer,
+  countryById: countryByIdReducer,
+  cityById: cityByIdReducer,
   myPage: myPageReducer,
   userLogin: userLoginReducer,
   changePassword: userChangePasswordReducer,
