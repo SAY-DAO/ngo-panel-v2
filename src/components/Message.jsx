@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+// import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Alert, Stack } from '@mui/material';
 import contents from '../inputsValidation/Contents';
 import '../i18n';
 
+// NOTICE: "icon" commented cause showed only tick on eather error or success. By default it'll work correctly.
 export default function Message({
-  icon,
+  // icon,
   input,
   frontError,
   backError,
@@ -16,7 +17,6 @@ export default function Message({
   children,
   severity,
 }) {
-
   const { t } = useTranslation();
   const onRequestCheck = () => {
     if (backSuccess) {
@@ -110,7 +110,7 @@ export default function Message({
 
   return (
     <Stack sx={{ width: '100%' }} spacing={2}>
-      <Alert icon={icon} variant={variant} severity={severity} sx={{ margin: 'auto' }}>
+      <Alert variant={variant} severity={severity} sx={{ margin: 'auto' }}>
         {children || onRequestCheck()}
       </Alert>
     </Stack>
@@ -118,7 +118,7 @@ export default function Message({
 }
 
 Message.propTypes = {
-  icon: PropTypes.node,
+  // icon: PropTypes.node,
   input: PropTypes.string,
   frontError: PropTypes.any,
   backError: PropTypes.any,
@@ -129,7 +129,7 @@ Message.propTypes = {
 };
 
 Message.defaultProps = {
-  icon: <CheckCircleOutlineIcon fontSize="inherit" />,
+  // icon: <CheckCircleOutlineIcon fontSize="inherit" />,
   input: '',
   frontError: '',
   backError: '',

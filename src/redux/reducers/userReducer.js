@@ -19,6 +19,10 @@ import {
   MY_PAGE_SUCCESS,
   MY_PAGE_FAIL,
   MY_PAGE_RESET,
+  USER_CHANGE_PASSWORD_REQUEST,
+  USER_CHANGE_PASSWORD_SUCCESS,
+  USER_CHANGE_PASSWORD_FAIL,
+  USER_CHANGE_PASSWORD_RESET,
 } from '../constants/userConstants';
 
 export const userRegisterReducer = (state = { success: false }, action) => {
@@ -94,6 +98,21 @@ export const myPageReducer = (state = { success: false }, action) => {
     case MY_PAGE_FAIL:
       return { loading: false, error: action.payload };
     case MY_PAGE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userChangePasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_CHANGE_PASSWORD_REQUEST:
+      return { loading: true };
+    case USER_CHANGE_PASSWORD_SUCCESS:
+      return { loading: false, success: true, changePass: action.payload };
+    case USER_CHANGE_PASSWORD_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_CHANGE_PASSWORD_RESET:
       return {};
     default:
       return state;

@@ -28,7 +28,7 @@ import {
   childrenByNgoReducer,
   childUpdateReducer,
 } from './childrenReducer';
-import { userLoginReducer, myPageReducer } from './userReducer';
+import { userLoginReducer, myPageReducer, userChangePasswordReducer } from './userReducer';
 import {
   allNeedsReducer,
   allReportNeedsReducer,
@@ -80,6 +80,7 @@ export default combineReducers({
   countryList: countryListReducer,
   myPage: myPageReducer,
   userLogin: userLoginReducer,
+  changePassword: userChangePasswordReducer,
   swDetails: swDetailsReducer,
   swById: swByIdReducer,
   swStatusUpdate: swUpdateIsActiveReducer,

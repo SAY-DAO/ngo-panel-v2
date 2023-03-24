@@ -23,6 +23,15 @@
   },
   "error": {
     "nestDown": "Nest server is not running",
+    "allRequired": "Please fill in all the required fields",
+    "passwordMatch": "Password entries don’t match",
+    "invalidPassword": "Incorrect password",
+    "minLengthPassword": "Password is too short",
+    "specialCharPassword": "Password should contain at least a special character",
+    "numberPassword": "Password should contain at least a number",
+    "capitalPassword": "Password should contain at least a capital letter",
+    "lowercasePassword": "Password should contain at least a lowercase letter",
+    "wrongCurrentPassword": "Incorrect current password",
     "report": {
       "expectedDeliveryToNgo": "Please enter estimated arrival time to NGO.",
       "retailerCode": "Please enter retialer unique code.",
@@ -125,6 +134,12 @@
     "title": "Forgot password",
     "content": "Enter your email address.",
     "successNotif": "A link has been sent to you for changing your password."
+  },
+  "changePassword": {
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "successNotif": "Password changed successfully"
   },
   "childData": {
     "needCategory": {
@@ -591,7 +606,8 @@
       "edit": "Edit Profile",
       "settings": "Account Settings",
       "logIn": "Log in",
-      "logOut": "Log out"
+      "logOut": "Log out",
+      "changePass": "Change password"
     },
     "message": {
       "more": "See All Messages",

@@ -16,6 +16,7 @@ import {
   NGO_EDIT,
   NGO_LIST,
   PROFILE_VIEW,
+  CHANGE_PASS,
   PROVIDER_ADD,
   PROVIDER_EDIT,
   PROVIDER_LIST,
@@ -31,6 +32,7 @@ const BlankLayout = Loadable(lazy(() => import('../layouts/blank-layout/BlankLay
 /* ***End Layouts**** */
 const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
+const ChangePass = Loadable(lazy(() => import('../pages/authentication/ChangePass')));
 
 /* ****Pages***** */
 const SocialWorkerList = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerList')));
@@ -66,6 +68,7 @@ const Router = [
     children: [
       { path: HOME, element: <Navigate to={PROFILE_VIEW} /> },
       { path: PROFILE_VIEW, exact: true, element: <SocialWorkerProfile /> },
+      { path: CHANGE_PASS, exac: true, element: <ChangePass /> },
       { path: SW_LIST, exact: true, element: <SocialWorkerList /> },
       { path: SW_EDIT, exact: true, element: <SocialWorkerEdit /> },
       { path: SW_ADD, exact: true, element: <SocialWorkerAdd /> },
