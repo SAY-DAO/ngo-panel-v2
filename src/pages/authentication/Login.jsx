@@ -9,7 +9,7 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import PageContainer from '../../components/container/PageContainer';
-import backImage from '../../assets/images/login/intro.png';
+import backImage from '../../resources/images/login/intro.png';
 import LogoIcon from '../../layouts/full-layout/logo/LogoIcon';
 import { login } from '../../redux/actions/userAction';
 import Message from '../../components/Message';
@@ -23,7 +23,7 @@ const Login = () => {
 
   const redirect = location.search
     ? // eslint-disable-next-line no-restricted-globals
-    location.search.split('redirect=')[1]
+      location.search.split('redirect=')[1]
     : '/';
 
   const [isDisabled, setIsDisabled] = useState(true);
@@ -34,16 +34,14 @@ const Login = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { loading: loadingLogin, error: errorLogin, success: successLogin } = userLogin;
 
-
   const swDetails = useSelector((state) => state.swDetails);
-  const { success: successSwDetails } = swDetails;
+  const { loading: loadingSwDetails, success: successSwDetails } = swDetails;
 
   useEffect(() => {
     if (successLogin && successSwDetails) {
       navigate(`/${redirect}`);
     }
   }, [redirect, successLogin, successSwDetails]);
-
 
   useEffect(() => {
     if (successLogin) {
@@ -53,12 +51,12 @@ const Login = () => {
 
   // loading button
   useEffect(() => {
-    if (loadingLogin) {
+    if (loadingLogin || loadingSwDetails) {
       setIsLoading(true);
     } else {
       setIsLoading(false);
     }
-  }, [loadingLogin]);
+  }, [loadingLogin, loadingSwDetails]);
 
   // // disable button
   useEffect(() => {

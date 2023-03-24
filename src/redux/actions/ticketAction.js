@@ -44,7 +44,7 @@ export const fetchTicketList = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -57,7 +57,7 @@ export const fetchTicketList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: TICKET_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -78,7 +78,7 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: TICKET_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -92,7 +92,7 @@ export const addTicket = (socketValues) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -115,7 +115,7 @@ export const addTicket = (socketValues) => async (dispatch, getState) => {
     console.log(e);
     dispatch({
       type: ADD_TICKET_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -142,7 +142,7 @@ export const updateTicketColor = (socketData) => async (dispatch) => {
     console.log(e);
     dispatch({
       type: UPDATE_TICKET_COLOR_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -157,7 +157,7 @@ export const addTicketMsg = (socketData) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: ADD_TICKET_MSG_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };

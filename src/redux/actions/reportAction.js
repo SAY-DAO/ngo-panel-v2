@@ -19,7 +19,7 @@ export const fetchNeedReceipts = (needId) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -33,7 +33,7 @@ export const fetchNeedReceipts = (needId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: NEED_RECEIPT_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -46,7 +46,7 @@ export const deleteReceipt = (needId, receiptId) => async (dispatch, getState) =
     } = getState();
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -60,7 +60,7 @@ export const deleteReceipt = (needId, receiptId) => async (dispatch, getState) =
   } catch (e) {
     dispatch({
       type: DELETE_RECEIPT_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -73,7 +73,7 @@ export const addReceiptToNeed = (values) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -106,7 +106,7 @@ export const addReceiptToNeed = (values) => async (dispatch, getState) => {
     console.log(e);
     dispatch({
       type: ADD_RECEIPT_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };

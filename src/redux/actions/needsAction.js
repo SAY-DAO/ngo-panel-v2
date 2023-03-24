@@ -44,7 +44,7 @@ export const fetchAllNeeds = (ngoId, take) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         'X-TAKE': take,
       },
@@ -59,7 +59,7 @@ export const fetchAllNeeds = (ngoId, take) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ALL_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -72,7 +72,7 @@ export const fetchReportNeeds = (isDone, ngoId, type, status) => async (dispatch
     } = getState();
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         'X-TAKE': 100,
       },
@@ -101,7 +101,7 @@ export const fetchReportNeeds = (isDone, ngoId, type, status) => async (dispatch
   } catch (e) {
     dispatch({
       type: ALL_REPORT_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -115,7 +115,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -129,40 +129,42 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_EXAMPLE_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
 
-export const fetchChildNeeds = (childId, take) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CHILD_NEEDS_REQUEST });
+export const fetchChildNeeds =
+  (childId, take = 500) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: CHILD_NEEDS_REQUEST });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-        'X-TAKE': take, 
-      },
-    };
-    const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+          'X-TAKE': take,
+        },
+      };
+      const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
 
-    dispatch({
-      type: CHILD_NEEDS_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    // check for generic and custom message to return using ternary statement
-    dispatch({
-      type: CHILD_NEEDS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
-    });
-  }
-};
+      dispatch({
+        type: CHILD_NEEDS_SUCCESS,
+        payload: data,
+      });
+    } catch (e) {
+      // check for generic and custom message to return using ternary statement
+      dispatch({
+        type: CHILD_NEEDS_FAIL,
+        payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      });
+    }
+  };
 
 export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
   try {
@@ -174,7 +176,7 @@ export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -188,7 +190,7 @@ export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_ONE_NEED_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -203,7 +205,7 @@ export const fetchSwNeedList = (take) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         'X-TAKE': take,
       },
@@ -224,7 +226,7 @@ export const fetchSwNeedList = (take) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_NEED_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -238,7 +240,7 @@ export const updateNeedConfirm = (needId) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -251,7 +253,7 @@ export const updateNeedConfirm = (needId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NEED_CONFIRM_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -265,7 +267,7 @@ export const deleteNeed = (needId) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -278,7 +280,7 @@ export const deleteNeed = (needId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: DELETE_NEED_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -331,7 +333,7 @@ export const updateNeed = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_ONE_NEED_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -345,7 +347,7 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -388,7 +390,7 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NEED_STATUS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -456,7 +458,7 @@ export const AddNeed = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_ONE_NEED_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };

@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import Spinner from './pages/spinner/Spinner';
 import './i18n';
-import './assets/styles/css/style.css';
+import './resources/styles/css/style.css';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement); // createRoot(container!) if you use TypeScript

@@ -32,7 +32,7 @@ export const fetchMyChildById = (childId) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -46,7 +46,7 @@ export const fetchMyChildById = (childId) => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -60,7 +60,7 @@ export const fetchActiveChildList = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -70,11 +70,10 @@ export const fetchActiveChildList = () => async (dispatch, getState) => {
       type: CHILD_ACTIVE_LIST_SUCCESS,
       payload: data,
     });
-    
   } catch (e) {
     dispatch({
       type: CHILD_ACTIVE_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -88,7 +87,7 @@ export const fetchChildList = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -116,7 +115,7 @@ export const fetchChildList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: CHILD_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -132,7 +131,7 @@ export const fetchChildrenByNgo =
 
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          'Content-Type': 'application/json',
           Authorization: userInfo && userInfo.access_token,
         },
       };
@@ -146,7 +145,7 @@ export const fetchChildrenByNgo =
     } catch (e) {
       dispatch({
         type: CHILDREN_BY_NGO_FAIL,
-        payload: e.response && e.response.status ? e.response : e.response.data.message,
+        payload: e.response && (e.response.status ? e.response : e.response.data.message),
       });
     }
   };
@@ -160,7 +159,7 @@ export const updateChildIsActive = (id, status) => async (dispatch, getState) =>
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -173,7 +172,7 @@ export const updateChildIsActive = (id, status) => async (dispatch, getState) =>
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_IS_ACTIVE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -187,7 +186,7 @@ export const updateChild = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -231,7 +230,7 @@ export const updateChild = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -332,7 +331,7 @@ export const AddChild = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_CHILD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };

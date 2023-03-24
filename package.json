@@ -23,7 +23,7 @@
     "axios-mock-adapter": "^1.18.1",
     "babel-eslint": "^10.1.0",
     "date-fns": "^2.21.3",
-    "ethers": "^5.7.0",
+    "ethers": "^5",
     "feather-icons-react": "^0.4.3",
     "history": "^5.0.0",
     "i18next": "^21.6.12",
@@ -55,8 +55,10 @@
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
+    "siwe": "^1.1.6",
     "socket.io-client": "^4.6.1",
     "stylis-plugin-rtl": "^2.1.0",
+    "wagmi": "^0.12.1",
     "web-vitals": "^1.1.1",
     "yarn": "^1.22.19",
     "yup": "^0.32.11"
@@ -73,6 +75,11 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run build && git add dist"
+    }
   },
   "scripts": {
     "start": "react-scripts start",

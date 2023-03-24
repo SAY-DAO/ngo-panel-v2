@@ -21,12 +21,13 @@ import {
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import FlagIcon from '@mui/icons-material/Flag';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
+import { useAccount, useSigner } from 'wagmi';
+import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import {
   PaymentStatusEnum,
   NeedTypeEnum,
@@ -37,27 +38,31 @@ import {
   colorChoices,
 } from '../../utils/types';
 import ReceiptImage from './ReceiptImage';
-import { connectWallet, signTransaction } from '../../redux/actions/blockchainAction';
+import { signTransaction } from '../../redux/actions/blockchainAction';
 import DurationTimeLine from './DurationTimeLine';
 import { fetchTicketList, openTicketing, selectTicket } from '../../redux/actions/ticketAction';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
+import WalletDialog from '../dialogs/WalletDialog';
+import WalletButton from '../wallet/WalletButton';
 
 const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { data: signer } = useSigner();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [height, setHeight] = useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [toastOpen, setToastOpen] = useState(false);
+  const [openWallets, setOpenWallets] = useState(false);
+  const open = Boolean(anchorEl);
+
+  const { address, isConnected } = useAccount();
 
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails } = myPage;
-
-  const wallet = useSelector((state) => state.wallet);
-  const { myWallet } = wallet;
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
   const { addedTicket, loading: loadingTicketAdd, error: errorTicketAdd } = ticketAdd;
@@ -65,7 +70,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   const myTickets = useSelector((state) => state.myTickets);
   const { isTicketingOpen } = myTickets;
 
-  const open = Boolean(anchorEl);
+  const { result, loading: loadingSignature } = useSelector((state) => state.signature);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -136,11 +142,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleWallet = () => {
-    dispatch(connectWallet());
-  };
+
   const handleSignature = () => {
-    dispatch(signTransaction(need));
+    dispatch(signTransaction(address, need, signer));
   };
 
   return (
@@ -323,6 +327,29 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
             <Typography color="textSecondary" variant="h6" fontWeight="400">
               {t('myPage.taskCard.cost')}: {need.cost.toLocaleString()}
             </Typography>
+            <Grid container>
+              {need.affiliateLinkUrl && need.affiliateLinkUrl !== 'null' && (
+                <Typography color="textSecondary" variant="span" fontWeight="400">
+                  {t('myPage.taskCard.provider')}:
+                  <Link
+                    href={need.affiliateLinkUrl}
+                    sx={{ pl: 1, pr: 1 }}
+                    underline="none"
+                    target="_blank"
+                  >
+                    Affiliate
+                  </Link>
+                </Typography>
+              )}
+              {need.link && (
+                <Typography color="textSecondary" variant="span" fontWeight="400" sx={{ pb: 1 }}>
+                  {t('myPage.taskCard.provider')}:
+                  <Link href={need.link} underline="none" sx={{ pl: 1, pr: 1 }} target="_blank">
+                    Link
+                  </Link>
+                </Typography>
+              )}
+            </Grid>
             <Grid>
               {need.receipts_ && need.receipts_[0] ? (
                 <AvatarGroup>
@@ -337,33 +364,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
               )}
             </Grid>
           </CardContent>
-
-          <Grid container>
-            {need.affiliateLinkUrl && need.affiliateLinkUrl !== 'null' && (
-              <Link href={need.affiliateLinkUrl} underline="none" target="_blank">
-                <Typography
-                  color="textSecondary"
-                  variant="span"
-                  fontWeight="400"
-                  sx={{ textAlign: 'center', p: 1 }}
-                >
-                  Affiliate
-                </Typography>
-              </Link>
-            )}
-            {need.link && (
-              <Link href={need.link} underline="none" target="_blank">
-                <Typography
-                  color="textSecondary"
-                  variant="span"
-                  fontWeight="400"
-                  sx={{ textAlign: 'center', p: 1 }}
-                >
-                  Link
-                </Typography>
-              </Link>
-            )}
-          </Grid>
 
           <Box sx={{ position: 'relative' }}>
             <ListItem
@@ -480,48 +480,57 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 <DurationTimeLine need={need} />
               </Grid>
             </Grid>
-            <Grid container>
-              {need.updated && (
-                <Grid item xs={12} sx={{ pl: 1, pr: 1 }}>
-                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                    <strong>{t('myPage.taskCard.date.updated')}:</strong>
-                    {moment().diff(moment(need.updated), 'days')}
-                    {t('myPage.taskCard.date.daysAgo')}
-                    <br />
-                  </Typography>
-                </Grid>
-              )}
-              {/* 
-              {need.ngoDeliveryDate && (
-                <Grid item xs={12}>
-                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                    <strong>{t('myPage.taskCard.date.ngoDelivery')}: </strong>
-                    {moment().diff(moment(need.ngoDeliveryDate), 'days')}{' '}
-                    {t('myPage.taskCard.date.daysAgo')}
-                    <br />
-                  </Typography>
-                </Grid>
-              )} */}
-              {/* {need.childDeliveryDate && (
-                <Grid item xs={12}>
-                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                    <strong>{t('myPage.taskCard.date.childDelivery')}: </strong>
-                    {moment().diff(moment(need.childDeliveryDate), 'days')}{' '}
-                    {t('myPage.taskCard.date.daysAgo')}
-                  </Typography>
-                </Grid>
-              )} */}
-            </Grid>
+           
           </Box>
         </CardActionArea>
         <CardActions>
-          <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-            {!myWallet ? (
-              <LoadingButton onClick={handleWallet}>Connect Wallet</LoadingButton>
-            ) : (
-              <LoadingButton onClick={handleSignature}>Sign</LoadingButton>
-            )}
-          </Grid>
+          {need.status === ProductStatusEnum.DELIVERED && (
+            <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+              <Tooltip
+                title={
+                  <>
+                    <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                      {t('wallet.signatureInformation.top')}
+                    </Typography>
+                    <Typography component="li" sx={{ fontSize: 10 }}>
+                      {t('wallet.signatureInformation.1')} {t('wallet.signatureInformation.2')}
+                    </Typography>
+                    <Typography component="li" sx={{ fontSize: 10 }}>
+                      {t('wallet.signatureInformation.3')}
+                    </Typography>
+                  </>
+                }
+              >
+                <IconButton>
+                  <HelpRoundedIcon />
+                </IconButton>
+              </Tooltip>
+              {!isConnected ? (
+                <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
+                  {t('button.wallet.connect')}
+                </WalletButton>
+              ) : isConnected && !result && !need.signature ? (
+                <LoadingButton loading={loadingSignature} onClick={handleSignature}>
+                  {t('button.wallet.sign')}
+                </LoadingButton>
+              ) : (
+                <Link
+                  href={`https://ipfs.io/ipfs/${need.ipfsHash}/metadata.json`}
+                  underline="none"
+                  target="_blank"
+                >
+                  <Typography
+                    color="textSecondary"
+                    variant="span"
+                    fontWeight="400"
+                    sx={{ textAlign: 'center', p: 1 }}
+                  >
+                    {t('button.wallet.ipfs')}
+                  </Typography>
+                </Link>
+              )}
+            </Grid>
+          )}
         </CardActions>
       </Card>
       {openConfirm && (
@@ -532,6 +541,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
           need={need}
         />
       )}
+      <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
 
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>

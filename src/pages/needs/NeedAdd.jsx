@@ -18,6 +18,9 @@ import {
   MenuItem,
   InputAdornment,
   OutlinedInput,
+  InputLabel,
+  FormControl,
+  Tooltip,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +31,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FeatherIcon from 'feather-icons-react';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import Stack from '@mui/material/Stack';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -54,6 +59,7 @@ import { apiDao } from '../../env';
 import { getAge, getOrganizedNeeds } from '../../utils/helpers';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { RolesEnum } from '../../utils/types';
+import ProviderDialog from '../../components/dialogs/ProviderDialog';
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
@@ -70,6 +76,7 @@ const NeedAdd = () => {
     },
   ];
 
+  const [openProvider, setOpenProvider] = useState(false);
   const [isAffChecked, setIsAffChecked] = useState(false);
   const [isUrgentChecked, setIsUrgentChecked] = useState(false);
   const [needsData, setNeedsData] = useState();
@@ -709,50 +716,63 @@ const NeedAdd = () => {
                           mb={2}
                         >
                           <Grid item xs={6}>
-                            <CustomFormLabel htmlFor="provider">
-                              {t('need.provider')}
-                            </CustomFormLabel>
-                            <CustomSelect
-                              sx={{ width: '100%', color: 'gray' }}
-                              labelId="provider-controlled-open-select-label"
-                              id="provider-controlled-open-select"
-                              defaultValue={oneNeed && oneNeed.type}
-                              control={control}
-                              register={{ ...register('provider', { required: true }) }}
-                            >
-                              {providerList ? (
-                                providerList
-                                  .filter((p) => p.isActive === true)
-                                  .map((p) => (
-                                    <MenuItem key={p.id} value={p.id}>
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              <Tooltip title={t('need.addProvider')}>
+                                <IconButton onClick={() => setOpenProvider(true)}>
+                                  <AddCircleRoundedIcon />
+                                </IconButton>
+                              </Tooltip>
+                              <FormControl sx={{ m: 1, width: '100%' }}>
+                                <InputLabel htmlFor="provider" id="provider-controlled-open-select">
+                                  {t('need.provider')}
+                                </InputLabel>
+                                <CustomSelect
+                                  sx={{ width: '100%', color: 'gray' }}
+                                  labelId="provider-controlled-open-select-label"
+                                  id="provider-controlled-open-select"
+                                  defaultValue={oneNeed && oneNeed.type}
+                                  control={control}
+                                  register={{ ...register('provider', { required: true }) }}
+                                >
+                                  {providerList ? (
+                                    providerList
+                                      .filter((p) => p.isActive === true)
+                                      .map((p) => (
+                                        <MenuItem key={p.id} value={p.id}>
+                                          <Grid container spacing={2}>
+                                            <Grid item>
+                                              <Avatar
+                                                alt="provider logo"
+                                                src={`${apiDao}/providers/images/${p.logoUrl}`}
+                                                sx={{
+                                                  width: 30,
+                                                  height: 30,
+                                                  display: 'inline-block',
+                                                }}
+                                              />
+                                            </Grid>
+                                            <Grid item>
+                                              <Typography variant="body1" sx={{ p: 1 }}>
+                                                {p.name}
+                                              </Typography>
+                                            </Grid>
+                                          </Grid>
+                                        </MenuItem>
+                                      ))
+                                  ) : (
+                                    <MenuItem>
                                       <Grid container spacing={2}>
                                         <Grid item>
-                                          <Avatar
-                                            alt="provider logo"
-                                            src={`${apiDao}/providers/images/${p.logoUrl}`}
-                                            sx={{ width: 30, height: 30, display: 'inline-block' }}
-                                          />
-                                        </Grid>
-                                        <Grid item>
-                                          <Typography variant="body1" sx={{ p: 1 }}>
-                                            {p.name}
+                                          <Typography color="error" variant="body1" sx={{ p: 1 }}>
+                                            {t('error.nestDown')}
                                           </Typography>
                                         </Grid>
                                       </Grid>
                                     </MenuItem>
-                                  ))
-                              ) : (
-                                <MenuItem>
-                                  <Grid container spacing={2}>
-                                    <Grid item>
-                                      <Typography color="error" variant="body1" sx={{ p: 1 }}>
-                                        {t('error.nestDown')}
-                                      </Typography>
-                                    </Grid>
-                                  </Grid>
-                                </MenuItem>
-                              )}
-                            </CustomSelect>
+                                  )}
+                                </CustomSelect>
+                              </FormControl>
+                            </Stack>
                           </Grid>
                           <Grid item xs={6}>
                             <CustomFormLabel variant="body2" htmlFor="type">
@@ -958,8 +978,9 @@ const NeedAdd = () => {
                   <Button onClick={handleImageClose}>{t('button.close')}</Button>
                 </DialogActions>
               </Dialog>
+              {/* Need Provider */}
+              <ProviderDialog open={openProvider} setOpen={setOpenProvider} />
               <Grid>
-                
                 {(successAddNeed || errorAddNeed) && (
                   <Message
                     severity={successAddNeed ? 'success' : 'error'}

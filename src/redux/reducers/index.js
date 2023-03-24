@@ -42,7 +42,14 @@ import {
   swNeedListReducer,
 } from './needReducer';
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
-import { mileStoneReducer, signatureReducer, walletReducer } from './blockchainReducer';
+import {
+  mileStoneReducer,
+  signatureReducer,
+  WalletInformationReducer,
+  walletNonceReducer,
+  walletReducer,
+  walletVerifyReducer,
+} from './blockchainReducer';
 import {
   providerAddReducer,
   providerByIdReducer,
@@ -67,6 +74,9 @@ export default combineReducers({
   ticketUpdate: ticketUpdateReducer,
   ticketById: ticketByIdReducer,
   wallet: walletReducer,
+  walletNonce: walletNonceReducer,
+  walletVerify: walletVerifyReducer,
+  walletInformation: WalletInformationReducer,
   countryList: countryListReducer,
   myPage: myPageReducer,
   userLogin: userLoginReducer,

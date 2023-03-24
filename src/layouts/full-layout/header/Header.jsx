@@ -62,6 +62,7 @@ import NotificationDropdown from './NotificationDropdown';
 import { WebsocketContext } from '../../../contexts/WebsocketContext';
 import { socketRefreshNotifications } from '../../../utils/socketHelpers';
 import { NOTIFICATION_TIMER } from '../../../utils/configs';
+import { fetchNonce } from '../../../redux/actions/blockchainAction';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -99,6 +100,14 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     loading: loadingTicketList,
     success: successTicketList,
   } = myTickets;
+
+  const walletVerify = useSelector((state) => state.walletVerify);
+  const { error: errorWalletVerify } = walletVerify;
+
+  // fetch nonce for the wallet siwe
+  useEffect(() => {
+    dispatch(fetchNonce());
+  }, [errorWalletVerify]);
 
   useEffect(() => {
     if (swInfo && !successTicketList && !loadingTicketList) {
@@ -499,7 +508,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
                 width: '30px',
                 height: '30px',
                 backgroundColor: (theme) =>
-                customizer.activeMode === 'dark' && theme.palette.background.ripple,
+                  customizer.activeMode === 'dark' && theme.palette.background.ripple,
               }}
             />
             <Box

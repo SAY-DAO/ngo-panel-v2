@@ -23,7 +23,7 @@ export const fetchProviderById = (id) => async (dispatch) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
     };
     const { data } = await daoApi.get(`/providers/${id}`, config);
@@ -35,7 +35,7 @@ export const fetchProviderById = (id) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: PROVIDER_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -46,7 +46,7 @@ export const fetchProviderList = () => async (dispatch) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
     };
     const { data } = await daoApi.get(`/providers/all`, config);
@@ -58,7 +58,7 @@ export const fetchProviderList = () => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: PROVIDER_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -108,7 +108,7 @@ export const updateProvider = (values) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: UPDATE_PROVIDER_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -159,7 +159,7 @@ export const addProvider = (values) => async (dispatch) => {
     console.log(e);
     dispatch({
       type: ADD_PROVIDER_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -174,7 +174,7 @@ export const deleteProvider = (providerId) => async (dispatch) => {
 
     // const config = {
     //   headers: {
-    //     'Content-type': 'application/json',
+    //     'Content-Type': 'application/json',
     //     Authorization: 'authorizationToken',
     //     data: {},
     //   },
@@ -186,7 +186,7 @@ export const deleteProvider = (providerId) => async (dispatch) => {
     //     'Access-Control-Allow-Origin': 'https://s.nest.saydao.org',
     //     'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
     //     Authorization: userInfo && userInfo.access_token,
-    //     'Content-type': 'application/json',
+    //     'Content-Type': 'application/json',
     //   },
     // }
     const { data } = await daoApi.delete(`/providers/${providerId}`);
@@ -203,7 +203,7 @@ export const deleteProvider = (providerId) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: DELETE_PROVIDER_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };

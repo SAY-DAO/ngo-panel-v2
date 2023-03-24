@@ -29,7 +29,7 @@ export const fetchNgoById = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -42,7 +42,7 @@ export const fetchNgoById = (id) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: NGO_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -56,7 +56,7 @@ export const fetchNgoList = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -69,7 +69,7 @@ export const fetchNgoList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: NGO_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -83,7 +83,7 @@ export const updateNgoIsActive = (id, status) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -96,7 +96,7 @@ export const updateNgoIsActive = (id, status) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NGO_IS_ACTIVE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -154,7 +154,7 @@ export const updateNgo = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NGO_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -212,7 +212,7 @@ export const addNgo = (values) => async (dispatch, getState) => {
     console.log(e);
     dispatch({
       type: ADD_NGO_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -226,12 +226,12 @@ export const deleteNgo = (ngoId) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
 
-    const { data } = await publicApi.patch(`/ngo/delete/ngoId=${ngoId}`,{}, config);
+    const { data } = await publicApi.patch(`/ngo/delete/ngoId=${ngoId}`, {}, config);
     dispatch({
       type: DELETE_NGO_SUCCESS,
       payload: data,
@@ -239,7 +239,7 @@ export const deleteNgo = (ngoId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: DELETE_NGO_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };

@@ -41,20 +41,23 @@ export const fetchSocialWorkerDetails = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
-        Authorization: userInfo && userInfo.access_token ||  userInfo.accessToken,
+        'Content-Type': 'application/json',
+        Authorization: (userInfo && userInfo.access_token) || userInfo.accessToken,
       },
     };
-    const { data } = await publicApi.get(`/socialworkers/${userInfo.id || userInfo.user.id}`, config);
-
+    const { data } = await publicApi.get(
+      `/socialworkers/${userInfo.id || userInfo.user.id}`,
+      config,
+    );
     dispatch({
       type: SW_DETAILS_SUCCESS,
       payload: data,
     });
   } catch (e) {
+    console.log(e);
     dispatch({
       type: SW_DETAILS_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -68,7 +71,7 @@ export const fetchSocialWorkerById = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -81,7 +84,7 @@ export const fetchSocialWorkerById = (id) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_BY_ID_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -95,7 +98,7 @@ export const fetchSocialWorkersList = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -109,7 +112,7 @@ export const fetchSocialWorkersList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -123,7 +126,7 @@ export const updateSwIsActive = (id, status) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -160,7 +163,7 @@ export const fetchSwOrNgoChildList = (swId) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -180,7 +183,7 @@ export const fetchSwOrNgoChildList = (swId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: SW_CHILD_LIST_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -194,7 +197,7 @@ export const migrateSwOneChild = (childId, toId) => async (dispatch, getState) =
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -209,7 +212,7 @@ export const migrateSwOneChild = (childId, toId) => async (dispatch, getState) =
   } catch (e) {
     dispatch({
       type: MIGRATE_ONE_CHILD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -224,7 +227,7 @@ export const migrateSwChildren = (fromId, toId) => async (dispatch, getState) =>
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -243,7 +246,7 @@ export const migrateSwChildren = (fromId, toId) => async (dispatch, getState) =>
   } catch (e) {
     dispatch({
       type: MIGRATE_SW_CHILDREN_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -257,7 +260,7 @@ export const updateSw = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -325,7 +328,7 @@ export const updateSw = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_SW_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -339,7 +342,7 @@ export const AddSw = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -408,7 +411,7 @@ export const AddSw = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_SW_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -422,7 +425,7 @@ export const deleteSw = (swId) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -435,7 +438,7 @@ export const deleteSw = (swId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: DELETE_SW_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };

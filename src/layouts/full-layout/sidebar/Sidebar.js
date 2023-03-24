@@ -16,7 +16,7 @@ import FeatherIcon from 'feather-icons-react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { SidebarWidth } from '../../../assets/global/Theme-variable';
+import { SidebarWidth } from '../../../resources/global/Theme-variable';
 import Menuitems from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
 import { RolesEnum } from '../../../utils/types';

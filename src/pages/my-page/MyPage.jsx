@@ -200,11 +200,11 @@ const MyPage = () => {
             <Card sx={{ width: '100%', overflowX: 'scroll', minHeight: '500px' }}>
               <Grid
                 container
-                justifyContent="space-around"
+                justifyContent="center"
                 alignItems="center"
                 sx={{ mt: 1, mb: 1, minWidth: '950px' }}
               >
-                <Grid item>
+                <Grid item xs={3} sx={{ textAlign: 'center' }}>
                   <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
                   {modifiedNeeds && (
                     <Typography component="span" sx={{ fontSize: 12 }}>
@@ -212,7 +212,7 @@ const MyPage = () => {
                     </Typography>
                   )}
                 </Grid>
-                <Grid item>
+                <Grid item xs={3} sx={{ textAlign: 'center' }}>
                   <Typography component="span">{t('myPage.taskManager.title.paid')}</Typography>
                   {modifiedNeeds && (
                     <Typography component="span" sx={{ fontSize: 12 }}>
@@ -220,7 +220,7 @@ const MyPage = () => {
                     </Typography>
                   )}
                 </Grid>
-                <Grid item>
+                <Grid item xs={3} sx={{ textAlign: 'center' }}>
                   <Typography component="span">
                     {t('myPage.taskManager.title.purchased')}
                   </Typography>
@@ -230,7 +230,7 @@ const MyPage = () => {
                     </Typography>
                   )}
                 </Grid>
-                <Grid item>
+                <Grid item xs={3} sx={{ textAlign: 'center' }}>
                   <Typography component="span">{t('myPage.taskManager.title.done')}</Typography>
                   {modifiedNeeds && (
                     <Typography component="span" sx={{ fontSize: 12 }}>

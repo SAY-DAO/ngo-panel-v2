@@ -39,7 +39,7 @@ export const register = (userName, password, theKey, value, otp) => async (dispa
     dispatch({ type: USER_REGISTER_REQUEST });
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
     };
     const { data } = await publicApi.post('/auth/register', formData, {
@@ -60,7 +60,7 @@ export const register = (userName, password, theKey, value, otp) => async (dispa
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: USER_REGISTER_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -70,7 +70,7 @@ export const login = (userName, password) => async (dispatch) => {
     dispatch({ type: USER_LOGIN_REQUEST });
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
     };
     const formData = new FormData();
@@ -87,7 +87,7 @@ export const login = (userName, password) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: USER_LOGIN_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -103,7 +103,7 @@ export const forgotPassword = (theKey, value) => async (dispatch) => {
     dispatch({ type: USER_FORGOT_PASSWORD_REQUEST });
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
     };
     const formData = new FormData();
@@ -125,7 +125,7 @@ export const forgotPassword = (theKey, value) => async (dispatch) => {
   } catch (e) {
     dispatch({
       type: USER_FORGOT_PASSWORD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -140,7 +140,7 @@ export const resetPassword = (password) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
@@ -156,7 +156,7 @@ export const resetPassword = (password) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: USER_RESET_PASSWORD_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -173,7 +173,7 @@ export const userEditProfile =
 
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          'Content-Type': 'application/json',
           Authorization: userInfo && userInfo.access_token,
         },
       };
@@ -206,7 +206,7 @@ export const userEditProfile =
     } catch (e) {
       dispatch({
         type: USER_UPDATE_PROFILE_FAIL,
-        payload: e.response && e.response.status ? e.response : e.response.data.message,
+        payload: e.response && (e.response.status ? e.response : e.response.data.message),
       });
     }
   };
@@ -220,7 +220,7 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
 
     const config = {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         'X-SKIP': skip,
         'X-TAKE': take,
@@ -238,7 +238,7 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
   } catch (e) {
     dispatch({
       type: MY_PAGE_FAIL,
-      payload: e.response && e.response.status ? e.response : e.response.data.message,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
 };
@@ -253,7 +253,7 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
 
 //     const config = {
 //       headers: {
-//         'Content-type': 'application/json',
+//         'Content-Type': 'application/json',
 //         Authorization: userInfo && userInfo.access_token,
 //         'X-SKIP': 0,
 //         'X-TAKE': 20, // just get last 10 in case they created them newly
@@ -273,14 +273,14 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
 //     const response1 = await daoApi.get(
 //       `/users/social-worker/${swId}/confirmedNeeds?limit=${limit}`,
 //       {
-//         'Content-type': 'application/json',
+//         'Content-Type': 'application/json',
 //       },
 //     );
 
 //     const response2 = await daoApi.get(
 //       `/users/social-worker/${swId}/confirmedChildren?limit=${limit}`,
 //       {
-//         'Content-type': 'application/json',
+//         'Content-Type': 'application/json',
 //       },
 //     );
 
@@ -294,7 +294,7 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
 //   } catch (e) {
 //     dispatch({
 //       type: MY_PAGE_FAIL,
-//       payload: e.response && e.response.status ? e.response : e.response.data.message,
+//       payload: e.response && ( e.response.status ? e.response : e.response.data.message),
 //     });
 //   }
 // };

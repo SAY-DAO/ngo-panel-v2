@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { BuildTheme } from '../../../assets/global/Theme-variable';
+import { BuildTheme } from '../../../resources/global/Theme-variable';
 
 const ThemeSettings = () => {
   const customizer = useSelector((state) => state.CustomizerReducer);

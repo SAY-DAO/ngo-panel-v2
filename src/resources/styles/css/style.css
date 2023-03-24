@@ -1,4 +1,9 @@
-﻿
+﻿@import url(fontiran.css);
+
+body {
+  font-family: iranyekan !important;
+}
+
 /* Works on Firefox */
 * {
   scrollbar-width: thin;

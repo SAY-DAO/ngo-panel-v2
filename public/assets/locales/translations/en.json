@@ -28,6 +28,12 @@
       "retailerCode": "Please enter retialer unique code.",
       "deliveredToNgo": "Please enter arrival time to NGO.",
       "bankTrackId": "Please enter the bank tracking id."
+    },
+    "wallet": {
+      "0": "Some thing went wrong.",
+      "32002": "Metamask is already open.",
+      "4001": "User denied message signature.",
+      "32603": "Please switch the to correct network!"
     }
   },
   "image": {
@@ -76,7 +82,11 @@
     "cancel": "Decline",
     "delete": "Delete",
     "wallet": {
-      "connect": "Connect Wallet"
+      "wallets": "More wallets",
+      "learn": "Learn",
+      "ipfs": "IPFS",
+      "connect": "Connect Wallet",
+      "sign": "Sign"
     }
   },
   "table": {
@@ -359,6 +369,7 @@
     "statsRatio": "Done / Total",
     "newStatus": "New Status...",
     "provider": "Provider Name",
+    "addProvider": "Add Provider",
     "providerSelect": "Please select Provider",
     "providers": {
       "service": "service",
@@ -418,9 +429,8 @@
       "pending": "Not Delivered yet"
     },
     "needDialogue": {
-      "confirm":{
+      "confirm": {
         "dialogTitle": "The duplicate needs"
-
       },
       "service": {
         "1": "Partial payment",
@@ -583,7 +593,7 @@
       "logIn": "Log in",
       "logOut": "Log out"
     },
-    "message":{
+    "message": {
       "more": "See All Messages",
       "messages": "Messages"
     }
@@ -626,14 +636,15 @@
       "durationEstimate": "Duration Estimate",
       "duration": "Duration",
       "noReceipt": "No receipt",
+      "provider": "Provider",
       "date": {
         "created": "Created at",
         "updated": "Updated at",
         "purchased": "Purchased",
         "confirmed": "Confirmed",
         "paid": "Paid",
-        "ngoDelivery": "Delivered NGO",
-        "childDelivery": "Delivered Child",
+        "ngoDelivery": "Delivered to NGO",
+        "childDelivery": "Delivered to Child",
         "daysAgo": "days ago",
         "hoursAgo": "hrs ago",
         "days": "days",
@@ -645,34 +656,52 @@
         "addTicket": "َAdd ticket",
         "readTicket": "َRead ticket",
         "tickets": "َAll tickets"
-
       }
     }
   },
-  "ticket":{
+  "ticket": {
     "new": "New",
     "daysAgo": "days ago",
     "hoursAgo": "hrs ago",
     "minutesAgo": "minutes ago",
-    "dialog":{
-      "title":"Create Ticket",
-      "confirm":"Are you sure you want to add a ticket for this need?",
+    "dialog": {
+      "title": "Create Ticket",
+      "confirm": "Are you sure you want to add a ticket for this need?",
       "type": "Type a message...",
       "search": "Search Tickets",
       "chatWith": "Chat with"
     },
-    "ticketing":{
+    "ticketing": {
       "subHeader": "SAY ticketing",
       "header": "Tickets"
     }
   },
-  "roles":{
-    "socialWorker":"Social Worker",
-    "auditor":"Auditor",
+  "roles": {
+    "socialWorker": "Social Worker",
+    "auditor": "Auditor",
     "purchaser": "Purchaser",
     "ngoSupervisor": "NGO supervisor",
     "noRole": "No Role",
     "familyMember": "Family Member",
     "friend": "Friend"
+  },
+  "wallet": {
+    "signature": {
+      "top": "When a need is paid by the virtual family and the service/product is delivered to the child, the family member who paid for the need and those who contributed to getting this need delivered to the child are awarded by SAY token.",
+      "1": "Social worker, Auditor, Purchaser and virtual family member",
+      "2": "Calculating the token distribution based on the time line of the need, the virtual family role and the receipts.",
+      "3": "Tokens are created by a different user"
+    },
+    "download": "Download...",
+    "dialog": {
+      "title": "Connect to a wallet",
+      "context": "A wallet is used to send, receive, store, and display digital assets. It’s also a new way to log in, without needing to create new accounts and passwords on every website",
+      "learn": "learn about wallets",
+      "popular": "Popular",
+      "more": "More"
+    },
+    "siwe": {
+      "statement": "Sign in with Ethereum to the app"
+    }
   }
 }
