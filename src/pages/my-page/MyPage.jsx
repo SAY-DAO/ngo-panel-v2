@@ -14,7 +14,6 @@ import PageContainer from '../../components/container/PageContainer';
 import CoverCard from '../../components/my-profile/CoverCard';
 import TaskCard from '../../components/my-profile/TaskCard';
 import { fetchMyPage } from '../../redux/actions/userAction';
-import { connectWallet } from '../../redux/actions/blockchainAction';
 import {
   NeedTypeEnum,
   PaymentStatusEnum,
@@ -69,15 +68,6 @@ const MyPage = () => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
   }, [swInfo]);
 
-  // Metamask
-  useEffect(() => {
-    if (window.ethereum) {
-      window.ethereum.on('accountsChanged', (accounts) => {
-        console.log(accounts);
-        dispatch(connectWallet());
-      });
-    }
-  }, [window.ethereum]);
 
   useEffect(() => {
     if (swNewDetails && swNewDetails.id) {

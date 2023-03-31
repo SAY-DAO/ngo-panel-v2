@@ -83,7 +83,7 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
   }
 };
 
-export const addTicket = (socketValues) => async (dispatch, getState) => {
+export const addTicket = (values) => async (dispatch, getState) => {
   try {
     dispatch({ type: ADD_TICKET_REQUEST });
     const {
@@ -96,16 +96,23 @@ export const addTicket = (socketValues) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { child, ...others } = socketValues.need;
+
     const dataObject = {
-      roles: socketValues.roles,
-      userId: socketValues.userId,
-      userType: socketValues.userType,
-      needId: socketValues.needId,
-      childId: child.id,
-      title: socketValues.title,
-      need: others,
+      title: values.title,
+      roles: values.roles,
+      flaskUserId: values.flaskUserId,
+      userTypeId: values.userTypeId,
+      flaskNeedId: values.flaskNeedId,
+      statuses: values.statusUpdates,
+      receipts: values.receipts_,
+      payments: values.verifiedPayments,
+      isDone: values.isDone,
+      paid: values.paid,
+      unpayable: values.unpayable,
+      unpayableFrom: values.unpayable_from,
     };
+
+
     const { data } = await daoApi.post(`/tickets/add`, dataObject, config);
     dispatch({
       type: ADD_TICKET_SUCCESS,

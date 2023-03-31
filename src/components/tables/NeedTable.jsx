@@ -260,6 +260,13 @@ function EnhancedTableHead(props) {
       width: '200px',
     },
     {
+      id: 'created_by_id',
+      numeric: false,
+      disablePadding: false,
+      label: t('need.socialWorker'),
+      width: '200px',
+    },
+    {
       id: 'confirmUser',
       numeric: false,
       disablePadding: false,
@@ -1245,6 +1252,15 @@ const NeedTable = () => {
                                         ? dateConvertor(row.created)
                                         : row.created
                                       : '-'}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    fontWeight="400"
+                                  >
+                                    {row.created_by_id || row.createdBy}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>

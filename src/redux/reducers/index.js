@@ -43,11 +43,9 @@ import {
 } from './needReducer';
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
 import {
-  mileStoneReducer,
   signatureReducer,
   WalletInformationReducer,
   walletNonceReducer,
-  walletReducer,
   walletVerifyReducer,
 } from './blockchainReducer';
 import {
@@ -65,15 +63,23 @@ import {
   ticketByIdReducer,
   ticketUpdateReducer,
 } from './ticketReducer';
+import { milestoneReducer } from './milestoneReducer';
+import {
+  AnalyticChildNeedsReducer,
+  analyticsEcosystemReducer,
+  analyticsNgosReducer,
+} from './analyticReducer';
 
 export default combineReducers({
   CustomizerReducer,
+  childNeedsAnalytics: AnalyticChildNeedsReducer,
+  ngosAnalytics: analyticsNgosReducer,
+  ecosystemAnalytics: analyticsEcosystemReducer,
   myTickets: ticketListReducer,
   ticketMsgAdd: ticketAddMsgReducer,
   ticketAdd: ticketAddReducer,
   ticketUpdate: ticketUpdateReducer,
   ticketById: ticketByIdReducer,
-  wallet: walletReducer,
   walletNonce: walletNonceReducer,
   walletVerify: walletVerifyReducer,
   walletInformation: WalletInformationReducer,
@@ -98,7 +104,7 @@ export default combineReducers({
   childOneNeed: childOneNeedReducer,
   needConfirm: needConfirmReducer,
   childById: childByIdReducer,
-  mileStone: mileStoneReducer,
+  mileStone: milestoneReducer,
   needUpdate: needUpdateReducer,
   needStatusUpdate: needStatusUpdateReducer,
   needAdd: needAddReducer,

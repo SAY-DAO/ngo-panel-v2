@@ -121,6 +121,7 @@ const ChildEdit = () => {
 
   useEffect(() => {
     if (result) {
+      console.log(result);
       setBirthDate(result.birthDate);
       setValue('awakeAvatarUrl', result.awakeAvatarUrl);
       setValue('sayname_translations_en', result.sayname_translations.en);

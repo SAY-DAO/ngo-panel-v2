@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { Box, Stepper, Step, StepLabel, Button, Card } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -13,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import DaoMileStoneForm from './DaoMileStoneForm';
-import { createMileStone } from '../../redux/actions/blockchainAction';
+import { createMileStone } from '../../redux/actions/milestoneAction';
 
 const BCrumb = [
   {

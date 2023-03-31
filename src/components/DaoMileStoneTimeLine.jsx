@@ -10,8 +10,7 @@ import {
   TimelineDot,
   TimelineOppositeContent,
 } from '@mui/lab';
-
-import DashboardCard from './DashboardCard';
+import DashboardCard from './dao/DashboardCard';
 
 const options = ['Action', 'Another Action', 'Something else here'];
 

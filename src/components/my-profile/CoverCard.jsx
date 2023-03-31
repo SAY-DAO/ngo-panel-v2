@@ -40,7 +40,11 @@ import { persianMonth } from '../../utils/persianToEnglish';
 import ContributionOverview from './ContributionOverview';
 import { fetchMyPage } from '../../redux/actions/userAction';
 import WalletDialog from '../dialogs/WalletDialog';
-import { fetchWalletInformation, walletVerify } from '../../redux/actions/blockchainAction';
+import {
+  fetchNonce,
+  fetchWalletInformation,
+  walletVerify,
+} from '../../redux/actions/blockchainAction';
 import WalletButton from '../wallet/WalletButton';
 import MessageWallet from '../MessageWallet';
 import { WALLET_INFORMATION_RESET, WALLET_VERIFY_RESET } from '../../redux/constants/daoConstants';
@@ -79,7 +83,7 @@ const CoverCard = ({
   const { swList, success: successSwAll } = swAll;
 
   const walletNonce = useSelector((state) => state.walletNonce);
-  const { nonceData } = walletNonce;
+  const { nonceData, error: errorWalletVerify } = walletNonce;
 
   const { verifiedNonce, error: errorVerify } = useSelector((state) => state.walletVerify);
 
@@ -87,6 +91,11 @@ const CoverCard = ({
     (state) => state.walletInformation,
   );
   const { error: errorSignature } = useSelector((state) => state.signature);
+
+  // fetch nonce for the wallet siwe
+  useEffect(() => {
+    dispatch(fetchNonce());
+  }, [errorWalletVerify]);
 
   // toast
   useEffect(() => {
@@ -99,13 +108,12 @@ const CoverCard = ({
   useEffect(() => {
     // Check client and server nonce
     const localData = JSON.parse(localStorage.getItem('say-siwe'));
-    if (nonceData.nonce === (localData && localData.nonce)) {
+    if (nonceData && nonceData.nonce === (localData && localData.nonce)) {
       dispatch(fetchWalletInformation());
     }
   }, [verifiedNonce]);
 
   useEffect(() => {
-    console.log(status);
     if (!errorSignIn && isConnected && nonceData && nonceData.nonce) {
       setOpenWallets(false);
       const chainId = chain?.id;
@@ -118,9 +126,9 @@ const CoverCard = ({
       }
       // Create SIWE message with pre-fetched nonce and sign with wallet
       const message = new SiweMessage({
-        domain: 'localhost',
+        domain: window.location.host,
         address,
-        statement: 'ahmad',
+        statement: 'Sign in WITH Ethereum Wallet',
         uri: window.location.origin,
         version: '1',
         chainId,
@@ -162,11 +170,11 @@ const CoverCard = ({
 
   // Disconnect if did not sign in
   useEffect(() => {
-    if (errorSignIn || errorVerify || errorWalletInformation || !walletNonce) {
+    if (errorSignIn || errorVerify || errorSignature || errorWalletInformation || !walletNonce) {
       disconnect();
       localStorage.removeItem('say-siwe');
     }
-  }, [errorSignIn, errorVerify, errorWalletInformation, walletNonce]);
+  }, [errorSignIn, errorVerify, errorWalletInformation, walletNonce, errorSignature]);
 
   // seasonal cover
   useEffect(() => {
@@ -221,6 +229,8 @@ const CoverCard = ({
 
   const onDisconnect = () => {
     localStorage.removeItem('say-siwe');
+    dispatch({ type: WALLET_INFORMATION_RESET });
+    dispatch({ type: WALLET_VERIFY_RESET });
     disconnect();
   };
 

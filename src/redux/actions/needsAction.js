@@ -169,7 +169,8 @@ export const fetchChildNeeds =
 export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_ONE_NEED_REQUEST });
-
+    console.log("needId");
+    console.log(needId);
     const {
       userLogin: { userInfo },
     } = getState();
@@ -395,7 +396,7 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
   }
 };
 
-export const AddNeed = (values) => async (dispatch, getState) => {
+export const AddNeed = (values, providerId) => async (dispatch, getState) => {
   try {
     dispatch({ type: ADD_ONE_NEED_REQUEST });
     const {
@@ -451,6 +452,16 @@ export const AddNeed = (values) => async (dispatch, getState) => {
     }
 
     const { data } = await publicApi.post(`/need/`, formData, config);
+
+    // create relation between nest provider and flask need
+    const config2 = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const request = { flaskNeedId: data.id, nestProviderId: providerId };
+    await daoApi.post(`/providers/join`, request, config2);
     dispatch({
       type: ADD_ONE_NEED_SUCCESS,
       payload: data,

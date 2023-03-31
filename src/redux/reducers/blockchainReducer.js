@@ -5,15 +5,7 @@ import {
   SIGNATURE_REQUEST,
   SIGNATURE_SUCCESS,
   SIGNATURE_FAIL,
-  CREATE_MILESTONE_REQUEST,
-  CREATE_MILESTONE_SUCCESS,
-  CREATE_MILESTONE_FAIL,
-  GET_MILESTONES_REQUEST,
-  GET_MILESTONES_SUCCESS,
-  GET_MILESTONES_FAIL,
-  WALLET_CONNECT_REQUEST,
-  WALLET_CONNECT_SUCCESS,
-  WALLET_CONNECT_FAIL,
+  SIGNATURE_RESET,
   WALLET_NONCE_REQUEST,
   WALLET_NONCE_SUCCESS,
   WALLET_NONCE_FAIL,
@@ -24,22 +16,9 @@ import {
   WALLET_INFORMATION_SUCCESS,
   WALLET_INFORMATION_FAIL,
   WALLET_VERIFY_RESET,
-  SIGNATURE_RESET,
   WALLET_INFORMATION_RESET,
 } from '../constants/daoConstants';
 
-export const walletReducer = (state = {}, action) => {
-  switch (action.type) {
-    case WALLET_CONNECT_REQUEST:
-      return { loading: true, success: false };
-    case WALLET_CONNECT_SUCCESS:
-      return { loading: false, success: true, myWallet: action.payload };
-    case WALLET_CONNECT_FAIL:
-      return { loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
 export const walletNonceReducer = (state = {}, action) => {
   switch (action.type) {
     case WALLET_NONCE_REQUEST:
@@ -82,25 +61,6 @@ export const WalletInformationReducer = (state = {}, action) => {
   }
 };
 
-export const mileStoneReducer = (state = {}, action) => {
-  switch (action.type) {
-    case GET_MILESTONES_REQUEST:
-      return { loading: true, success: false };
-    case GET_MILESTONES_SUCCESS:
-      return { loading: false, success: true, fetched: action.payload };
-    case GET_MILESTONES_FAIL:
-      return { loading: false, error: action.payload };
-    case CREATE_MILESTONE_REQUEST:
-      return { loading: true, success: false };
-    case CREATE_MILESTONE_SUCCESS:
-      return { loading: false, success: true, created: action.payload };
-    case CREATE_MILESTONE_FAIL:
-      return { loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
-
 export const familyNetworksReducer = (state = {}, action) => {
   switch (action.type) {
     case FAMILY_NETWORK_REQUEST:
@@ -119,7 +79,13 @@ export const signatureReducer = (state = {}, action) => {
     case SIGNATURE_REQUEST:
       return { loading: true, success: false };
     case SIGNATURE_SUCCESS:
-      return { loading: false, success: true, result: action.payload };
+      return {
+        loading: false,
+        success: true,
+        signature: action.payload.signature,
+        ipfs: action.payload.ipfs,
+        transaction: action.payload.transaction,
+      };
     case SIGNATURE_FAIL:
       return { loading: false, error: action.payload };
     case SIGNATURE_RESET:

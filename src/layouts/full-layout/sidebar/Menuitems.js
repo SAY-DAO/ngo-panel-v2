@@ -12,6 +12,18 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 const Menuitems = [
   {
     navlabel: true,
+    subheader: 'sidebar.daoHeader',
+    href: 'DAO',
+    admin: true,
+  },
+  {
+    title: 'sidebar.dashboard',
+    icon: <HubIcon />,
+    href: '/dao',
+    admin: true,
+  },
+  {
+    navlabel: true,
     subheader: 'sidebar.swHeader',
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
@@ -189,18 +201,6 @@ const Menuitems = [
         admin: true,
       },
     ],
-  },
-  {
-    navlabel: true,
-    subheader: 'sidebar.daoHeader',
-    href: 'DAO',
-    admin: true,
-  },
-  {
-    title: 'sidebar.dashboard',
-    icon: <HubIcon />,
-    href: '/dao',
-    admin: true,
   },
 ];
 

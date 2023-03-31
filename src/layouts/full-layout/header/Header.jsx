@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
-
 import {
   AppBar,
   Box,
@@ -21,6 +20,7 @@ import PropTypes from 'prop-types';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useDisconnect } from 'wagmi';
 import ProfileDropdown from './ProfileDropdown';
 import LogoIcon from '../logo/LogoIcon';
 import CustomTextField from '../../../components/forms/custom-elements/CustomTextField';
@@ -62,7 +62,7 @@ import NotificationDropdown from './NotificationDropdown';
 import { WebsocketContext } from '../../../contexts/WebsocketContext';
 import { socketRefreshNotifications } from '../../../utils/socketHelpers';
 import { NOTIFICATION_TIMER } from '../../../utils/configs';
-import { fetchNonce } from '../../../redux/actions/blockchainAction';
+import { WALLET_INFORMATION_RESET } from '../../../redux/constants/daoConstants';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -75,6 +75,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorProfile, setAnchorProfile] = useState(null);
   const [anchorNotify, setAnchorNotify] = useState(null);
   const [showSearchDrawer, setShowSearchDrawer] = useState(false);
+
+  const { disconnect } = useDisconnect();
 
   const customizer = useSelector((state) => state.CustomizerReducer);
 
@@ -101,13 +103,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     success: successTicketList,
   } = myTickets;
 
-  const walletVerify = useSelector((state) => state.walletVerify);
-  const { error: errorWalletVerify } = walletVerify;
-
-  // fetch nonce for the wallet siwe
-  useEffect(() => {
-    dispatch(fetchNonce());
-  }, [errorWalletVerify]);
 
   useEffect(() => {
     if (swInfo && !successTicketList && !loadingTicketList) {
@@ -149,7 +144,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (
       location.pathname !== PROFILE_VIEW &&
       location.pathname !== NEED_EDIT &&
-      location.pathname !== NEED_ADD
+      location.pathname !== NEED_ADD &&
+      location.pathname !== DAO_HOME
     ) {
       if (
         !successNgoList &&
@@ -166,6 +162,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   useEffect(() => {
     if (successSwDetails && !swInfo.isActive) {
       dispatch(logout());
+      disconnect();
     }
   }, [successSwDetails]);
 
@@ -297,7 +294,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     dispatch({ type: SW_LIST_RESET });
     dispatch({ type: CHILD_BY_ID_RESET });
     dispatch({ type: CHILD_NEEDS_RESET });
+    dispatch({ type: WALLET_INFORMATION_RESET });
     dispatch(logout());
+    disconnect();
   };
 
   const handleCloseNotifies = () => {

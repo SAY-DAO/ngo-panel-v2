@@ -56,8 +56,8 @@ const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
 const NeedAdd = Loadable(lazy(() => import('../pages/needs/NeedAdd')));
 const ReportList = Loadable(lazy(() => import('../pages/reports/ReportStatus')));
 const DAO = Loadable(lazy(() => import('../pages/dao/Dao')));
-const DaoMileStoneAdd = Loadable(lazy(() => import('../pages/dao/DaoMileStoneAdd')));
-const DaoMileStoneList = Loadable(lazy(() => import('../pages/dao/DaoMileStoneList')));
+const DaoMileStoneAdd = Loadable(lazy(() => import('../pages/milestone/DaoMileStoneAdd')));
+const DaoMileStoneList = Loadable(lazy(() => import('../pages/milestone/DaoMileStoneList')));
 
 /* ****Routes***** */
 

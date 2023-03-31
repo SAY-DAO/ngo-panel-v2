@@ -193,36 +193,17 @@ export const updateChild = (values) => async (dispatch, getState) => {
 
     const formData = new FormData();
 
-    if (values.firstName) {
-      formData.set('name', values.name);
-    }
-    if (values.lastName) {
-      formData.set('lastName', values.lastName);
-    }
-    if (values.emailAddress) {
-      formData.set('emailAddress', values.emailAddress);
-    }
     if (values.country) {
       formData.set('country', values.country);
     }
     if (values.city) {
       formData.set('city', values.city);
     }
-    if (values.phoneNumber) {
-      formData.set('phoneNumber', values.phoneNumber);
-    }
-    if (values.postalAddress) {
-      formData.set('postalAddress', values.postalAddress);
-    }
-    if (values.website) {
-      formData.set('website', values.website);
+    if (values.nationality) {
+      formData.set('nationality', values.nationality);
     }
 
-    if (values.finalImageFile) {
-      formData.set('logoUrl', values.finalImageFile);
-    }
-
-    const { data } = await publicApi.patch(`/ngo/update/ngoId=${values.id}`, formData, config);
+    const { data } = await publicApi.patch(`/child/update/childId=${values.childId}`, formData, config);
     dispatch({
       type: UPDATE_CHILD_SUCCESS,
       payload: data,

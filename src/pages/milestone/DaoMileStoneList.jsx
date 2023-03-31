@@ -1,11 +1,10 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
 import { Box, Card } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import { getMileStones } from '../../redux/actions/blockchainAction';
 import DaoMileStoneTimeLine from '../../components/DaoMileStoneTimeLine';
+import { getMileStones } from '../../redux/actions/milestoneAction';
 
 const BCrumb = [
   {

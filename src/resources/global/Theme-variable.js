@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { createTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
+import { blue, green, purple, red, yellow } from '@mui/material/colors';
 import typography from './Typography';
 import components from './Override';
 import shadows from './Shadows';
@@ -74,6 +75,14 @@ const baseTheme = {
       disabledBackground: 'rgba(73,82,88,0.12)',
       hoverOpacity: 0.02,
       hover: 'rgba(0, 0, 0, 0.03)',
+    },
+    charts: {
+      red: red[200],
+      darkRed: red[800],
+      yellow: yellow[200],
+      green: green[200],
+      purple: purple[200],
+      blue: blue[200],
     },
   },
 

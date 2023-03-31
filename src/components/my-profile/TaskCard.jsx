@@ -57,9 +57,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [openWallets, setOpenWallets] = useState(false);
+  const [needSignatures, setNeedSignatures] = useState([]);
+  const [completed, setCompleted] = useState(false);
   const open = Boolean(anchorEl);
 
   const { address, isConnected } = useAccount();
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails } = myPage;
@@ -70,7 +75,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   const myTickets = useSelector((state) => state.myTickets);
   const { isTicketingOpen } = myTickets;
 
-  const { result, loading: loadingSignature } = useSelector((state) => state.signature);
+  const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -144,8 +149,39 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   };
 
   const handleSignature = () => {
-    dispatch(signTransaction(address, need, signer));
+    dispatch(
+      signTransaction(
+        {
+          address,
+          flaskNeedId: need.id,
+          statuses: need.statusUpdates,
+          receipts: need.receipts_,
+          payments: need.verifiedPayments,
+          isDone: need.isDone,
+          paid: need.paid,
+          unpayable: need.unpayable,
+          unpayableFrom: need.unpayable_from,
+        },
+        signer,
+      ),
+    );
   };
+
+  const theIpfs = ipfs && ipfs.need.flaskId === need.id && ipfs;
+
+  useEffect(() => {
+    if (pageDetails && !completed) {
+      setNeedSignatures(
+        pageDetails.signatures.filter(
+          (s) => s.flaskNeedId === need.id && s.flaskUserId === swInfo.id,
+        ),
+      );
+      setCompleted(true); // to only do this block once
+    }
+    if (signature && signature.flaskNeedId === need.id) {
+      setNeedSignatures([...needSignatures, signature]);
+    }
+  }, [signature, pageDetails]);
 
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
@@ -216,45 +252,47 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                   <FeatherIcon icon="more-horizontal" width="18" />
                 </IconButton>
               </Tooltip>
-              <Menu
-                id="long-menu"
-                MenuListProps={{
-                  'aria-labelledby': 'long-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                {(pageDetails.typeId === RolesEnum.ADMIN ||
-                  pageDetails.typeId === RolesEnum.SUPER_ADMIN) && (
-                  <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
-                    {t('myPage.taskCard.menu.updateChild')}
-                  </MenuItem>
-                )}
-                {(pageDetails.typeId === RolesEnum.ADMIN ||
-                  pageDetails.typeId === RolesEnum.SUPER_ADMIN) && (
-                  <MenuItem onClick={() => navigate(`/need/edit/${need.child.id}/${need.id}`)}>
-                    {t('myPage.taskCard.menu.updateٔNeed')}
-                  </MenuItem>
-                )}
-                {need.ticket ? (
-                  <MenuItem onClick={() => handleOpenTicketing(need.ticket.id)}>
-                    {t('myPage.taskCard.menu.readTicket')}
-                  </MenuItem>
-                ) : (
-                  <MenuItem onClick={() => handleOpenConfirm()}>
-                    {t('myPage.taskCard.menu.addTicket')}
-                  </MenuItem>
-                )}
-              </Menu>
+              {pageDetails && (
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    'aria-labelledby': 'long-button',
+                  }}
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                >
+                  {(pageDetails.typeId === RolesEnum.ADMIN ||
+                    pageDetails.typeId === RolesEnum.SUPER_ADMIN) && (
+                    <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
+                      {t('myPage.taskCard.menu.updateChild')}
+                    </MenuItem>
+                  )}
+                  {(pageDetails.typeId === RolesEnum.ADMIN ||
+                    pageDetails.typeId === RolesEnum.SUPER_ADMIN) && (
+                    <MenuItem onClick={() => navigate(`/need/edit/${need.child.id}/${need.id}`)}>
+                      {t('myPage.taskCard.menu.updateٔNeed')}
+                    </MenuItem>
+                  )}
+                  {need.ticket ? (
+                    <MenuItem onClick={() => handleOpenTicketing(need.ticket.id)}>
+                      {t('myPage.taskCard.menu.readTicket')}
+                    </MenuItem>
+                  ) : (
+                    <MenuItem onClick={() => handleOpenConfirm()}>
+                      {t('myPage.taskCard.menu.addTicket')}
+                    </MenuItem>
+                  )}
+                </Menu>
+              )}
             </Box>
           </Box>
         </CardContent>
@@ -468,19 +506,23 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                   />
                 </ListItem>
               )}
-            <img
-              style={{ opacity: '50%', minHeight: '100px' }}
-              srcSet={`${need.img} 1x, ${need.img} 2x`}
-              alt={need.img}
-              width="100%"
-            />
+            {need.type === NeedTypeEnum.PRODUCT ? (
+              <img
+                style={{ opacity: '50%', minHeight: '100px' }}
+                srcSet={`${need.img} 1x, ${need.img} 2x`}
+                alt={need.img}
+                width="100%"
+              />
+            ) : (
+              <Grid sx={{ mb: 4, minHeight: '100px' ,  width:"100%"}} />
+            )}
+
             {/* dates */}
             <Grid container sx={{ p: 0 }}>
               <Grid item xs={12}>
                 <DurationTimeLine need={need} />
               </Grid>
             </Grid>
-           
           </Box>
         </CardActionArea>
         <CardActions>
@@ -509,25 +551,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
                   {t('button.wallet.connect')}
                 </WalletButton>
-              ) : isConnected && !result && !need.signature ? (
-                <LoadingButton loading={loadingSignature} onClick={handleSignature}>
-                  {t('button.wallet.sign')}
-                </LoadingButton>
+              ) : needSignatures && needSignatures[0] ? (
+                needSignatures.map((s) => <Typography key={s.id}>{s.hash}</Typography>)
               ) : (
-                <Link
-                  href={`https://ipfs.io/ipfs/${need.ipfsHash}/metadata.json`}
-                  underline="none"
-                  target="_blank"
-                >
-                  <Typography
-                    color="textSecondary"
-                    variant="span"
-                    fontWeight="400"
-                    sx={{ textAlign: 'center', p: 1 }}
-                  >
-                    {t('button.wallet.ipfs')}
-                  </Typography>
-                </Link>
+                isConnected &&
+                (!theIpfs || (ipfs && ipfs.need && ipfs.need.flaskId !== need.id)) && (
+                  <LoadingButton loading={loadingSignature} onClick={handleSignature}>
+                    {t('button.wallet.sign')}
+                  </LoadingButton>
+                )
               )}
             </Grid>
           )}

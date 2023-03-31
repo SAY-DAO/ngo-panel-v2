@@ -50,20 +50,28 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
     console.log({
       roles: selectedRoles,
       title: need.name,
-      userId: pageDetails.userId,
-      ngoId: pageDetails.ngoId,
-      needId: need.id,
-      need,
+      flaskUserId: pageDetails.userId,
+      userTypeId: pageDetails.typeId,
+      flaskNeedId: need.id,
+      statuses: need.statusUpdates,
+      receipts: need.receipts_,
+      payments: need.verifiedPayments,
     });
     dispatch({ type: UPDATE_TICKET_COLOR_RESET });
     dispatch(
       addTicket({
         roles: selectedRoles,
         title: need.name,
-        userId: pageDetails.userId,
-        userType: pageDetails.typeId,
-        needId: need.id,
-        need,
+        flaskUserId: pageDetails.userId,
+        userTypeId: pageDetails.typeId,
+        flaskNeedId: need.id,
+        statuses: need.statusUpdates,
+        receipts: need.receipts_,
+        payments: need.verifiedPayments,
+        isDone: need.isDone,
+        paid: need.paid,
+        unpayable: need.unpayable,
+        unpayableFrom: need.unpayable_from,
       }),
     );
   };
