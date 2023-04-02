@@ -83,7 +83,7 @@ const CoverCard = ({
   const { swList, success: successSwAll } = swAll;
 
   const walletNonce = useSelector((state) => state.walletNonce);
-  const { nonceData, error: errorWalletVerify } = walletNonce;
+  const { nonceData, error: errorWalletNonce } = walletNonce;
 
   const { verifiedNonce, error: errorVerify } = useSelector((state) => state.walletVerify);
 
@@ -95,7 +95,7 @@ const CoverCard = ({
   // fetch nonce for the wallet siwe
   useEffect(() => {
     dispatch(fetchNonce());
-  }, [errorWalletVerify]);
+  }, [errorWalletNonce]);
 
   // toast
   useEffect(() => {
@@ -170,11 +170,11 @@ const CoverCard = ({
 
   // Disconnect if did not sign in
   useEffect(() => {
-    if (errorSignIn || errorVerify || errorSignature || errorWalletInformation || !walletNonce) {
+    if (errorSignIn || errorVerify || errorSignature || errorWalletInformation || !errorWalletNonce) {
       disconnect();
       localStorage.removeItem('say-siwe');
     }
-  }, [errorSignIn, errorVerify, errorWalletInformation, walletNonce, errorSignature]);
+  }, [errorSignIn, errorVerify, errorWalletInformation, errorWalletNonce, errorSignature]);
 
   // seasonal cover
   useEffect(() => {
