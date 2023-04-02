@@ -4,9 +4,9 @@ import {
   ADD_TICKET_REQUEST,
   ADD_TICKET_FAIL,
   ADD_TICKET_SUCCESS,
-  TICKET_LIST_REQUEST,
-  TICKET_LIST_SUCCESS,
-  TICKET_LIST_FAIL,
+  USER_TICKET_LIST_REQUEST,
+  USER_TICKET_LIST_SUCCESS,
+  USER_TICKET_LIST_FAIL,
   ADD_TICKET_MSG_REQUEST,
   ADD_TICKET_MSG_SUCCESS,
   ADD_TICKET_MSG_FAIL,
@@ -86,11 +86,11 @@ export const ticketByIdReducer = (state = {}, action) => {
 };
 export const ticketListReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
-    case TICKET_LIST_REQUEST:
+    case USER_TICKET_LIST_REQUEST:
       return { ...state, tickets: null, loading: true };
-    case TICKET_LIST_SUCCESS:
+    case USER_TICKET_LIST_SUCCESS:
       return { ...state, loading: false, success: true, tickets: action.payload };
-    case TICKET_LIST_FAIL:
+    case USER_TICKET_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
     case OPEN_TICKETING:
       return {

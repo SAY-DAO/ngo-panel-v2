@@ -5,9 +5,9 @@ import {
   ADD_TICKET_FAIL,
   ADD_TICKET_REQUEST,
   ADD_TICKET_SUCCESS,
-  TICKET_LIST_REQUEST,
-  TICKET_LIST_SUCCESS,
-  TICKET_LIST_FAIL,
+  USER_TICKET_LIST_REQUEST,
+  USER_TICKET_LIST_SUCCESS,
+  USER_TICKET_LIST_FAIL,
   ADD_TICKET_MSG_REQUEST,
   ADD_TICKET_MSG_SUCCESS,
   ADD_TICKET_MSG_FAIL,
@@ -35,16 +35,16 @@ export const TicketSearch = (searchTerm) => ({
   searchTerm,
 });
 
-export const fetchTicketList = () => async (dispatch, getState) => {
+export const fetchUserTicketList = () => async (dispatch, getState) => {
   try {
-    dispatch({ type: TICKET_LIST_REQUEST });
+    dispatch({ type: USER_TICKET_LIST_REQUEST });
     const {
       userLogin: { userInfo },
     } = getState();
 
     const config = {
       headers: {
-        "Access-Control-Allow-Origin": "*",
+        'Access-Control-Request-Method': 'GET',
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
@@ -52,12 +52,12 @@ export const fetchTicketList = () => async (dispatch, getState) => {
     const { data } = await daoApi.get(`/tickets/all/user/${userInfo.id}`, config);
 
     dispatch({
-      type: TICKET_LIST_SUCCESS,
+      type: USER_TICKET_LIST_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: TICKET_LIST_FAIL,
+      type: USER_TICKET_LIST_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
@@ -112,7 +112,6 @@ export const addTicket = (values) => async (dispatch, getState) => {
       unpayable: values.unpayable,
       unpayableFrom: values.unpayable_from,
     };
-
 
     const { data } = await daoApi.post(`/tickets/add`, dataObject, config);
     dispatch({

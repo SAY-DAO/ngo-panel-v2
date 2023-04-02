@@ -7,7 +7,7 @@ import Slide from '@mui/material/Slide';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { forwardRef, useEffect } from 'react';
 import Tickets from '../../pages/ticket/Tickets';
-import { fetchTicketList, openTicketing } from '../../redux/actions/ticketAction';
+import { fetchUserTicketList, openTicketing } from '../../redux/actions/ticketAction';
 import { socketRefreshNotifications } from '../../utils/socketHelpers';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 
@@ -19,19 +19,19 @@ export default function FullScreenDialog() {
   const dispatch = useDispatch();
 
   const myTickets = useSelector((state) => state.myTickets);
-  const {  isTicketingOpen } = myTickets;
+  const { isTicketingOpen } = myTickets;
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
   useEffect(() => {
-    if ( isTicketingOpen) {
-      dispatch(fetchTicketList());
+    if (isTicketingOpen) {
+      dispatch(fetchUserTicketList());
     }
-    return()=>{
-      dispatch({type: ADD_TICKET_RESET})
-      dispatch({type: UPDATE_TICKET_COLOR_RESET})
-    }
+    return () => {
+      dispatch({ type: ADD_TICKET_RESET });
+      dispatch({ type: UPDATE_TICKET_COLOR_RESET });
+    };
   }, []);
 
   const handleClose = () => {

@@ -40,7 +40,7 @@ import {
 import ReceiptImage from './ReceiptImage';
 import { signTransaction } from '../../redux/actions/blockchainAction';
 import DurationTimeLine from './DurationTimeLine';
-import { fetchTicketList, openTicketing, selectTicket } from '../../redux/actions/ticketAction';
+import { fetchUserTicketList, openTicketing, selectTicket } from '../../redux/actions/ticketAction';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
@@ -110,7 +110,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   useEffect(() => {
     if (openConfirm && !isTicketingOpen && addedTicket) {
       dispatch(selectTicket(addedTicket.id));
-      dispatch(fetchTicketList());
+      dispatch(fetchUserTicketList());
       dispatch(openTicketing(true));
     }
   }, [addedTicket]);
@@ -514,7 +514,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 width="100%"
               />
             ) : (
-              <Grid sx={{ mb: 4, minHeight: '100px' ,  width:"100%"}} />
+              <Grid sx={{ mb: 4, minHeight: '100px', width: '100%' }} />
             )}
 
             {/* dates */}

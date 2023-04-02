@@ -55,7 +55,11 @@ import {
   CHILD_BY_ID_RESET,
   CHILD_LIST_RESET,
 } from '../../../redux/constants/childrenConstants';
-import { fetchTicketList, openTicketing, selectTicket } from '../../../redux/actions/ticketAction';
+import {
+  fetchUserTicketList,
+  openTicketing,
+  selectTicket,
+} from '../../../redux/actions/ticketAction';
 import { UPDATE_TICKET_COLOR_RESET } from '../../../redux/constants/ticketConstants';
 import FullScreenDialog from '../../../components/dialogs/FullScreenDialog';
 import NotificationDropdown from './NotificationDropdown';
@@ -103,10 +107,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     success: successTicketList,
   } = myTickets;
 
-
   useEffect(() => {
     if (swInfo && !successTicketList && !loadingTicketList) {
-      dispatch(fetchTicketList());
+      dispatch(fetchUserTicketList());
     }
   }, [successTicketList, swInfo]);
 
@@ -173,7 +176,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   function fetchServerNotifications(swId, allTickets) {
     if (!allTickets) {
       console.log('First page load!');
-      dispatch(fetchTicketList());
+      dispatch(fetchUserTicketList());
       clearInterval(notificationsInterval);
       socketRefreshNotifications(swInfo);
       // setInterval(() => socketRefreshNotifications(swInfo), 1000 * NOTIFICATION_TIMER);
@@ -205,7 +208,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         for (let i = 0; i < data.newTickets.length; i++) {
           const ticket = allTickets.find((tik) => tik.id === data.newTickets[i].id);
           if (!ticket) {
-            dispatch(fetchTicketList());
+            dispatch(fetchUserTicketList());
             clearInterval(notificationsInterval);
             socketRefreshNotifications(swInfo);
             break;
