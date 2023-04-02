@@ -170,7 +170,13 @@ const CoverCard = ({
 
   // Disconnect if did not sign in
   useEffect(() => {
-    if (errorSignIn || errorVerify || errorSignature || errorWalletInformation || !errorWalletNonce) {
+    if (
+      errorSignIn ||
+      errorVerify ||
+      errorSignature ||
+      errorWalletInformation ||
+      errorWalletNonce
+    ) {
       disconnect();
       localStorage.removeItem('say-siwe');
     }
