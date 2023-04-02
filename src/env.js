@@ -9,7 +9,7 @@ if (env === 'production') {
   envApiUrl = `https://${process.env.REACT_APP_DOMAIN_PROD}/api/v2`;
   envApiUrl3 = `https://${process.env.REACT_APP_DOMAIN_PROD}/api/v3`;
   envApiDao = `https://${process.env.REACT_APP_NEST_SERVER_PROD}/api/dao`;
-  envSocket = `https://${process.env.REACT_APP_NEST_SERVER_PROD}`;
+  envSocket = `https://${process.env.REACT_APP_NEST_SERVER_PROD}/api/dao`;
 } else if (env === 'staging') {
   envApiUrl = `https://${process.env.REACT_APP_DOMAIN_STAGING}/api/v2`;
   envApiUrl3 = `https://${process.env.REACT_APP_DOMAIN_STAGING}/api/v3`;
