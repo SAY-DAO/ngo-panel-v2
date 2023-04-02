@@ -24,7 +24,6 @@ export const fetchNonce = () => async (dispatch) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Credentials': false,
-        'Access-Control-Allow-Origin': 'http://localhost:3000',
       },
       withCredentials: true,
       crossDomain: true,
