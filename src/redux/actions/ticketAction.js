@@ -44,6 +44,7 @@ export const fetchTicketList = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
+        "Access-Control-Allow-Origin": "*",
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
