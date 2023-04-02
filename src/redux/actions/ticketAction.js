@@ -45,6 +45,7 @@ export const fetchUserTicketList = () => async (dispatch, getState) => {
     const config = {
       headers: {
         'Access-Control-Request-Method': 'GET',
+        origin: 'https://panel.saydao.org',
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
