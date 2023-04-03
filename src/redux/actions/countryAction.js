@@ -1,4 +1,4 @@
-import { publicApi } from '../../apis/sayBase';
+import { publicApi, cachePublicApi } from '../../apis/sayBase';
 import {
   CITY_LIST_FAIL,
   CITY_LIST_REQUEST,
@@ -25,12 +25,13 @@ export const fetchCountryList = () => async (dispatch, getState) => {
     } = getState();
 
     const config = {
+      id: 'fetch-countries',
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await publicApi.get(`/countries`, config);
+    const { data } = await cachePublicApi.get(`/countries`, config);
 
     dispatch({
       type: COUNTRY_LIST_SUCCESS,

@@ -1,10 +1,22 @@
 import axios from 'axios';
+import { setupCache, buildWebStorage } from 'axios-cache-interceptor/dev';
 import i18next from 'i18next';
 import { apiUrl, apiUrl3, apiDao } from '../env';
+
+const myStorage = buildWebStorage(localStorage, 'axios-cache:');
 
 export const publicApi = axios.create({
   baseURL: apiUrl,
 });
+export const cachePublicApi = setupCache(
+  axios.create({
+    baseURL: apiUrl,
+  }),
+  {
+    storage: myStorage,
+    debug: console.log,
+  },
+);
 
 export const publicApi3 = axios.create({
   baseURL: apiUrl3,

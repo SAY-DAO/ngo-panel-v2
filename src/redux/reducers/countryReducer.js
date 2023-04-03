@@ -66,7 +66,7 @@ export const cityByIdReducer = (state = { success: false }, action) => {
     case CITY_BY_ID_REQUEST:
       return { loading: true };
     case CITY_BY_ID_SUCCESS:
-      return { ...state, loading: false, success: true, country: action.payload };
+      return { ...state, loading: false, success: true, city: action.payload };
     case CITY_BY_ID_FAIL:
       return { loading: false, error: action.payload };
     case CITY_BY_ID_RESET:

@@ -21,6 +21,7 @@
     "@testing-library/user-event": "^12.8.3",
     "apexcharts": "^3.23.1",
     "axios": "^0.21.1",
+    "axios-cache-interceptor": "1",
     "axios-mock-adapter": "^1.18.1",
     "babel-eslint": "^10.1.0",
     "date-fns": "^2.21.3",
