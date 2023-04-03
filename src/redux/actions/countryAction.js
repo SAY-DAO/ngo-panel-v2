@@ -127,12 +127,13 @@ export const fetchCityById = (cityId) => async (dispatch) => {
     dispatch({ type: CITY_BY_ID_REQUEST });
 
     const config = {
+      id: 'fetch-city-by-id',
       headers: {
         'Content-type': 'application/json',
       },
     };
 
-    const { data } = await publicApi.get(`/cities/${cityId}`, config);
+    const { data } = await cachePublicApi.get(`/cities/${cityId}`, config);
     dispatch({
       type: CITY_BY_ID_SUCCESS,
       payload: data,

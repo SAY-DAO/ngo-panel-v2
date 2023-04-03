@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import {
@@ -27,12 +27,17 @@ import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { ChildExistenceEnum } from '../../utils/types';
 import { getAge } from '../../utils/helpers';
-// import { fetchCountryById, fetchCityById } from '../../redux/actions/countryAction';
+import {
+  // fetchCountryById,
+  fetchCityById,
+  fetchCountryList,
+} from '../../redux/actions/countryAction';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -349,6 +354,7 @@ EnhancedTableToolbar.propTypes = {
 
 const ChildrenTable = ({ childList }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const BCrumb = [
@@ -366,6 +372,43 @@ const ChildrenTable = ({ childList }) => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const countryList = useSelector((state) => state.countryList);
+  const { success: successCountryList, countries } = countryList;
+
+  // const countryById = useSelector((state) => state.countryById);
+  // const { success: successCountry, country } = countryById;
+
+  // const cityById = useSelector((state) => state.cityById);
+  // const { success: successCity, city } = cityById;
+
+  useEffect(() => {
+    dispatch(fetchCountryList());
+  }, []);
+
+  useEffect(() => {
+    if (successCountryList) {
+      console.log(countries);
+    }
+  }, [successCountryList]);
+
+  const handleCity = (id) => {
+    if (id) {
+      dispatch(fetchCityById(id));
+    }
+  };
+
+  const handleCountry = (id) => {
+    if (id) {
+      if (countries) {
+        const theCountry = countries.find((country) => country.id === id);
+        if (theCountry) {
+          return theCountry.name;
+        }
+      }
+    }
+    return '';
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -703,16 +746,18 @@ const ChildrenTable = ({ childList }) => {
                               </Tooltip>
                             </TableCell>
                             <TableCell>
-                              <Typography variant="h6">{row.birthPlace}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.city}
+                              <Typography variant="h6">
+                                {handleCountry(row.birthPlaceId)}
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.country}
+                                {handleCity(row.cityId)}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                {handleCountry(row.nationalityId)}
                               </Typography>
                             </TableCell>
                             <TableCell>
