@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { useAccount, useSigner } from 'wagmi';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import {
   PaymentStatusEnum,
   NeedTypeEnum,
@@ -207,9 +208,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 borderRadius: '50%',
                 width: '50px',
                 height: '50px',
-                background: need.child.awakeAvatarUrl
-                  ? `url(${need.child.awakeAvatarUrl})`
-                  : `url(${need.imageUrl})`,
+                background:
+                  !need.imageUrl.includes('wrong') && need.child.awakeAvatarUrl
+                    ? `url(${need.child.awakeAvatarUrl})`
+                    : `url(${need.imageUrl})`,
                 '&:hover': {
                   background: `url(${need.imageUrl})`,
                   backgroundPosition: 'center',
@@ -218,7 +220,16 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
               }}
-            />
+            >
+              {need.imageUrl.includes('wrong') && (
+                <Tooltip title={t('need.tooltip.addIcon')}>
+                  <IconButton onClick={() => console.log(true)}>
+                    <AddCircleRoundedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
+
             <Box
               sx={{
                 ml: 2,

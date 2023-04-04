@@ -344,6 +344,9 @@
     }
   },
   "need": {
+    "tooltip": {
+      "addIcon": "add Icon"
+    },
     "title": "Needs",
     "updatedNeed": "Successfully Updated!",
     "autoCompleteType": "Service/Product",

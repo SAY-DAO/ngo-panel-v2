@@ -107,7 +107,17 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                             item.icon
                           )}
                         </ListItemIcon>
-                        <ListItemText>{t(item.title)}</ListItemText>
+                        <ListItemText
+                          sx={{
+                            '&.MuiListItemText-root': {
+                              '&	.MuiListItemText-primary': {
+                                fontWeight: 800,
+                              },
+                            },
+                          }}
+                        >
+                          {t(item.title)}
+                        </ListItemText>
                         {index === open || pathWithoutLastPart === item.href ? (
                           <FeatherIcon icon="chevron-down" size="16" />
                         ) : (
@@ -151,7 +161,17 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                                       child.icon
                                     )}
                                   </ListItemIcon>
-                                  <ListItemText>{t(child.title)}</ListItemText>
+                                  <ListItemText
+                                    sx={{
+                                      '&.MuiListItemText-root': {
+                                        '&	.MuiListItemText-primary': {
+                                          fontSize: '0.8rem !important',
+                                        },
+                                      },
+                                    }}
+                                  >
+                                    {t(child.title)}
+                                  </ListItemText>
                                 </ListItem>
                               );
                             })}
@@ -191,7 +211,17 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                                         child.icon
                                       )}
                                     </ListItemIcon>
-                                    <ListItemText>{t(child.title)}</ListItemText>
+                                    <ListItemText
+                                      sx={{
+                                        '&.MuiListItemText-root': {
+                                          '&	.MuiListItemText-primary': {
+                                            fontSize: '0.8rem !important',
+                                          },
+                                        },
+                                      }}
+                                    >
+                                      {t(child.title)}
+                                    </ListItemText>
                                   </ListItem>
                                 );
                               })}
@@ -229,7 +259,18 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                             item.icon
                           )}
                         </ListItemIcon>
-                        <ListItemText onClick={onSidebarClose}>{t(item.title)}</ListItemText>
+                        <ListItemText
+                          onClick={onSidebarClose}
+                          sx={{
+                            '&.MuiListItemText-root': {
+                              '&	.MuiListItemText-primary': {
+                                fontWeight: 800,
+                              },
+                            },
+                          }}
+                        >
+                          {t(item.title)}
+                        </ListItemText>
                       </ListItem>
                     </List>
                   );

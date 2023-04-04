@@ -383,6 +383,9 @@
     }
   },
   "need": {
+    "tooltip": {
+      "addIcon": "اضافه کزدن آیکون"
+    },
     "title": "نیازها",
     "updatedNeed": "با موفقیت انجام شد!",
     "autoCompleteType": "خدمات/کالا",

@@ -267,7 +267,7 @@ const NeedAdd = () => {
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
       AddNeed(
@@ -278,7 +278,7 @@ const NeedAdd = () => {
           cost: data.cost,
           type: data.type,
           category: data.category,
-          imageUrl: finalImageFile,
+          imageUrl: finalImageFile || (oneNeed && oneNeed.imageUrl.split('company/')[1]),
           details: data.details,
           information: data.informations,
           doing_duration: data.doing_duration,
@@ -286,7 +286,7 @@ const NeedAdd = () => {
           affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
           childId,
         },
-       data.provider,
+        data.provider,
       ),
     );
     dispatch({ type: CHILD_ONE_NEED_RESET });

@@ -69,7 +69,7 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, ch
     setTake(take + 100);
   };
   return (
-    <PageContainer title="Pie Charts" description="this is innerpage">
+    <PageContainer title="Need List" description="this is the Need List page">
       <Card>
         <Card
           sx={{

@@ -169,7 +169,7 @@ const NeedEdit = () => {
         doing_duration: data.doing_duration,
         link: data.link,
         isUrgentDesc: data.isUrgentDesc,
-        affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : null,
+        affiliateLinkUrl: isAffChecked && data.affiliateLinkUrl,
         childId,
       }),
     );
@@ -204,7 +204,7 @@ const NeedEdit = () => {
   };
 
   return (
-    <PageContainer title="Need Add" description="this is Need Add page">
+    <PageContainer title="Need Edit" description="this is Need Edit page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
@@ -264,23 +264,37 @@ const NeedEdit = () => {
                               </div>
                             }
                           >
-                            <Avatar
-                              variant="circle"
-                              alt="icon image"
-                              src={
-                                finalImageFile
-                                  ? URL.createObjectURL(finalImageFile) // image preview
-                                  : oneNeed && oneNeed.imageUrl
-                              }
-                              sx={{
-                                backgroundColor: 'white',
-                                width: 50,
-                                height: 50,
-                                boxShadow: '0px 7px 30px 0px',
-                              }}
-                            >
-                              <Typography sx={{ padding: 1 }}>Icon</Typography>
-                            </Avatar>
+                            {!finalImageFile && oneNeed ? (
+                              <Avatar
+                                variant="circle"
+                                alt="user photo"
+                                sx={{
+                                  width: 50,
+                                  height: 50,
+                                  boxShadow: '0px 7px 30px 0px',
+                                  opacity: '20%',
+                                }}
+                                src={oneNeed.imageUrl}
+                              />
+                            ) : (
+                              <Avatar
+                                variant="circle"
+                                alt="icon image"
+                                src={
+                                  finalImageFile
+                                    ? URL.createObjectURL(finalImageFile) // image preview
+                                    : oneNeed && oneNeed.imageUrl
+                                }
+                                sx={{
+                                  backgroundColor: 'white',
+                                  width: 50,
+                                  height: 50,
+                                  boxShadow: '0px 7px 30px 0px',
+                                }}
+                              >
+                                <Typography sx={{ padding: 1 }}>Icon</Typography>
+                              </Avatar>
+                            )}
                           </Badge>
                         }
                       >

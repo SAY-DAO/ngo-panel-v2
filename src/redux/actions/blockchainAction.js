@@ -23,6 +23,8 @@ export const fetchNonce = () => async (dispatch) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Credentials': false,
+        // 'Access-Control-Allow-Origin': 'http://localhost:3000',
       },
       withCredentials: true,
       crossDomain: true,
@@ -53,6 +55,8 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Credentials': false,
+        // 'Access-Control-Allow-Origin': 'http://localhost:3000',
         Authorization: userInfo && userInfo.accessToken,
       },
       withCredentials: true,
