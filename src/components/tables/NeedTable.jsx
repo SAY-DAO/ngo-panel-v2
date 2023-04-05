@@ -407,8 +407,8 @@ const NeedTable = () => {
   ];
 
   const [needsData, setNeedsData] = useState();
-  const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('updated');
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('isConfirmed');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);

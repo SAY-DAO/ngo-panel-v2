@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import FlagIcon from '@mui/icons-material/Flag';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,6 +29,7 @@ import { LoadingButton } from '@mui/lab';
 import { useAccount, useSigner } from 'wagmi';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import { useTheme } from '@mui/material/styles';
 import {
   PaymentStatusEnum,
   NeedTypeEnum,
@@ -51,6 +52,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const theme = useTheme();
+
   const { data: signer } = useSigner();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -192,12 +195,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
           maxHeight: height ? '1200px' : '320px',
           '&:hover': {
             border: 'ridge',
-            borderColor: (theme) =>
-              height ? theme.palette.primary.dark : theme.palette.secondary.dark,
+            borderColor: () => (height ? theme.palette.primary.dark : theme.palette.secondary.dark),
           },
           border: 'solid',
-          borderColor: (theme) =>
-            height ? theme.palette.primary.dark : theme.palette.secondary.light,
+          borderColor: () => (height ? theme.palette.primary.dark : theme.palette.secondary.light),
           borderWidth: '0.1em',
         }}
       >
@@ -289,8 +290,13 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                   )}
                   {(pageDetails.typeId === RolesEnum.ADMIN ||
                     pageDetails.typeId === RolesEnum.SUPER_ADMIN) && (
-                    <MenuItem onClick={() => navigate(`/need/edit/${need.child.id}/${need.id}`)}>
-                      {t('myPage.taskCard.menu.updateٔNeed')}
+                    <MenuItem>
+                      <RouterLink
+                        style={{ textDecoration: 'none', color: '#e6e5e8' }}
+                        to={`/need/edit/${need.child.id}/${need.id}`}
+                      >
+                        {t('myPage.taskCard.menu.updateٔNeed')}
+                      </RouterLink>
                     </MenuItem>
                   )}
                   {need.ticket ? (
@@ -334,7 +340,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                       textAlign: 'center',
                       backgroundColor:
                         need.ticket.color === Colors.YELLOW
-                          ? (theme) => theme.palette.background.ripple
+                          ? () => theme.palette.background.ripple
                           : '',
                       animation:
                         need.ticket.color === Colors.YELLOW
