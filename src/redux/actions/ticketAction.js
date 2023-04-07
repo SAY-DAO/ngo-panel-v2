@@ -106,10 +106,6 @@ export const addTicket = (values) => async (dispatch, getState) => {
       statuses: values.statusUpdates,
       receipts: values.receipts_,
       payments: values.verifiedPayments,
-      isDone: values.isDone,
-      paid: values.paid,
-      unpayable: values.unpayable,
-      unpayableFrom: values.unpayable_from,
     };
 
     const { data } = await daoApi.post(`/tickets/add`, dataObject, config);

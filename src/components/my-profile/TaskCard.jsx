@@ -48,7 +48,7 @@ import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
 import WalletButton from '../wallet/WalletButton';
 
-const TaskCard = ({ need, setCardSelected, cardSelected }) => {
+const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -187,6 +187,20 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
     }
   }, [signature, pageDetails]);
 
+  let iconUrl;
+  let awakeUrl;
+  if (need.imageUrl && need.imageUrl.startsWith('/')) {
+    iconUrl = `https://api.sayapp.company/${need.imageUrl.slice(1)}`;
+  } else {
+    iconUrl = `https://api.sayapp.company/${need.imageUrl}`;
+  }
+
+  if (need.child && need.child.awakeAvatarUrl && need.child.awakeAvatarUrl.startsWith('/')) {
+    awakeUrl = `https://api.sayapp.company/${need.child.awakeAvatarUrl.slice(1)}`;
+  } else {
+    awakeUrl = `https://api.sayapp.company/${need.child.awakeAvatarUrl}`;
+  }
+
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
       <Card
@@ -211,10 +225,12 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 height: '50px',
                 background:
                   !need.imageUrl.includes('wrong') && need.child.awakeAvatarUrl
-                    ? `url(${need.child.awakeAvatarUrl})`
-                    : `url(${need.imageUrl})`,
+                    ? `url(
+                      ${awakeUrl}
+                    )`
+                    : `url(${iconUrl})`,
                 '&:hover': {
-                  background: `url(${need.imageUrl})`,
+                  background: `url(${iconUrl})`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                 },
@@ -222,7 +238,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 backgroundSize: 'cover',
               }}
             >
-              {need.imageUrl.includes('wrong') && (
+              {iconUrl.includes('wrong') && (
                 <Tooltip title={t('need.tooltip.addIcon')}>
                   <IconButton onClick={() => console.log(true)}>
                     <AddCircleRoundedIcon />
@@ -244,10 +260,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                   fontSize: 12,
                 }}
               >
-                {need.child.firstName} {need.child.lastName}
+                {need.child.firstName_translations.fa} {need.child.lastName_translations.fa}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="200" sx={{ fontSize: 11 }}>
-                {need.child.sayName}
+                {need.child.sayname_translations.fa}
               </Typography>
             </Box>
             <Box
@@ -282,14 +298,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                     horizontal: 'right',
                   }}
                 >
-                  {(pageDetails.typeId === RolesEnum.ADMIN ||
-                    pageDetails.typeId === RolesEnum.SUPER_ADMIN) && (
+                  {(swInfo.typeId === RolesEnum.ADMIN ||
+                    swInfo.typeId === RolesEnum.SUPER_ADMIN) && (
                     <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
                       {t('myPage.taskCard.menu.updateChild')}
                     </MenuItem>
                   )}
-                  {(pageDetails.typeId === RolesEnum.ADMIN ||
-                    pageDetails.typeId === RolesEnum.SUPER_ADMIN) && (
+                  {(swInfo.typeId === RolesEnum.ADMIN ||
+                    swInfo.typeId === RolesEnum.SUPER_ADMIN) && (
                     <MenuItem>
                       <RouterLink
                         style={{ textDecoration: 'none', color: '#e6e5e8' }}
@@ -375,12 +391,12 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                 )}
               </Grid>
             </Grid>
-
+            {/* 
             <Typography color="textSecondary" variant="h6" fontWeight="400">
               {t('myPage.taskCard.paid')}: {need.paid.toLocaleString()}
-            </Typography>
+            </Typography> */}
             <Typography color="textSecondary" variant="h6" fontWeight="400">
-              {t('myPage.taskCard.cost')}: {need.cost.toLocaleString()}
+              {t('myPage.taskCard.cost')}: {need._cost.toLocaleString()}
             </Typography>
             <Grid container>
               {need.affiliateLinkUrl && need.affiliateLinkUrl !== 'null' && (
@@ -543,6 +559,19 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
           </Box>
         </CardActionArea>
         <CardActions>
+          <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+            {!need.isConfirmed && (
+              <LoadingButton
+                disabled={
+                  swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+                  swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+                }
+                onClick={() => handleDialog(need)}
+              >
+                {t('button.confirm')}
+              </LoadingButton>
+            )}
+          </Grid>
           {need.status === ProductStatusEnum.DELIVERED && (
             <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
               <Tooltip
@@ -564,6 +593,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected }) => {
                   <HelpRoundedIcon />
                 </IconButton>
               </Tooltip>
+
               {!isConnected ? (
                 <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
                   {t('button.wallet.connect')}
@@ -613,5 +643,6 @@ export default TaskCard;
 TaskCard.propTypes = {
   need: PropTypes.object,
   setCardSelected: PropTypes.func,
+  handleDialog: PropTypes.func,
   cardSelected: PropTypes.number,
 };

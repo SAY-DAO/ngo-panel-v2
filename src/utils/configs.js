@@ -1,2 +1,2 @@
-export const NOTIFICATION_TIMER = 200;
-export const TIMER = 200;
+export const NOTIFICATION_TIMER = 2000;
+export const TIMER = 2000;

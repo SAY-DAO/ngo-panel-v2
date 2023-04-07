@@ -237,7 +237,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   }, [swInfo, tickets]);
 
   useEffect(() => {
-    if (swInfo) {
+    if (swInfo && anchorNotify) {
       fetchServerNotifications(swInfo.id, tickets);
     }
   }, [anchorNotify, isTicketingOpen]);

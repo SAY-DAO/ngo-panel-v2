@@ -214,7 +214,7 @@ export const userEditProfile =
     }
   };
 
-export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch, getState) => {
+export const fetchMyPage = (userId, typeId, take, limit) => async (dispatch, getState) => {
   try {
     dispatch({ type: MY_PAGE_REQUEST });
     const {
@@ -225,15 +225,12 @@ export const fetchMyPage = (swNewDetails, isUser, skip, take) => async (dispatch
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        'X-SKIP': skip,
         'X-TAKE': take,
+        'X-LIMIT': limit,
       },
     };
 
-    const response = await daoApi.get(
-      `/users/myPage/${swNewDetails.ngoId}/${swNewDetails.id}/${swNewDetails.typeId}?isUser=${isUser}`,
-      config,
-    );
+    const response = await daoApi.get(`/users/myPage/${userId}/${typeId}`, config);
     dispatch({
       type: MY_PAGE_SUCCESS,
       payload: response && response.data,

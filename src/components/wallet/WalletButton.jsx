@@ -1,19 +1,30 @@
 import { LoadingButton } from '@mui/lab';
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import React from 'react';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
-const WalletButton = styled((props) => <LoadingButton {...props} {...props.register} />)(() => ({
-  color: 'white',
-  fontWeight: 'bold',
-  fontSize: '14px',
+const WalletButton = styled((props) => (
+  <LoadingButton {...props} {...props.register} sx={{ display: 'flex !important' }}>
+    <AccountBalanceWalletIcon sx={{ mr: 1 }} />
+    <Typography
+      sx={{
+        fontSize: '12px',
+        fontWeight: 'bold',
+        textDecoration: 'none',
+      }}
+    >
+      {props.children}
+    </Typography>
+  </LoadingButton>
+))(() => ({
+  color: 'black',
   textAlign: 'center',
-  textDecoration: 'none',
-  // backgroundColor: '#ffa12b',
+  backgroundColor: '#fee6e3',
   display: 'block',
   position: 'relative',
-  padding: '8px 20px',
+  padding: '8px 14px',
   WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
-  textShadow: '0px 1px 1px #000',
+  // textShadow: '0px 1px 1px #000',
   filter: 'dropshadow(color=#000, offx=0px, offy=1px)',
   // WebkitBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #915100',
   // MozBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #915100',
@@ -23,7 +34,7 @@ const WalletButton = styled((props) => <LoadingButton {...props} {...props.regis
   // borderRadius: '5px',
   '&:active': {
     top: '5px',
-    // backgroundColor: '#f78900',
+    backgroundColor: '#fee6e3',
     WebkitBoxShadow: 'inset 0 1px 0 #ffe5c4, inset 0 -3px 0 #915100',
     MozBoxShadow: 'inset 0 1px 0 #ffe5c4, inset 0 -3pxpx 0 #915100',
     boxShadow: 'inset 0 1px 0 #ffe5c4, inset 0 -3px 0 #915100',
@@ -42,10 +53,10 @@ const WalletButton = styled((props) => <LoadingButton {...props} {...props.regis
     borderRadius: '5px',
   },
   '&:hover': {
-    // backgroundColor: '#f78900',
-    WebkitBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 5px 0 #915100',
-    MozBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 5px 0 #915100',
-    boxShadow: 'inset 0 1px 0 #ffe5c4, 0 5px 0 #915100',
+    backgroundColor: '#fee6e3',
+    WebkitBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #767372',
+    MozBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #767372',
+    boxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #767372',
   },
 }));
 

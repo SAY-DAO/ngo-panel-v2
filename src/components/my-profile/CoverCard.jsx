@@ -37,7 +37,6 @@ import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
 import { RolesEnum } from '../../utils/types';
 import { persianMonth } from '../../utils/persianToEnglish';
-import ContributionOverview from './ContributionOverview';
 import { fetchMyPage } from '../../redux/actions/userAction';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
@@ -354,7 +353,7 @@ const CoverCard = ({
             opacity: '50%',
           }}
         >
-          <ContributionOverview swNewDetails={swNewDetails} />
+          {/* <ContributionOverview swNewDetails={swNewDetails} /> */}
         </Box>
       </Grid>
       <CardContent

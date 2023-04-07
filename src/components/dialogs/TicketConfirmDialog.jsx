@@ -61,7 +61,7 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
     dispatch(
       addTicket({
         roles: selectedRoles,
-        title: need.name,
+        title: need.name_translations.en,
         flaskUserId: pageDetails.userId,
         userTypeId: pageDetails.typeId,
         flaskNeedId: need.id,
