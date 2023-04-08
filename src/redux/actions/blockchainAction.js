@@ -17,19 +17,25 @@ import {
   WALLET_INFORMATION_FAIL,
 } from '../constants/daoConstants';
 
-export const fetchNonce = () => async (dispatch) => {
+export const fetchNonce = () => async (dispatch, getState) => {
   try {
     dispatch({ type: WALLET_NONCE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+      swDetails: { swInfo },
+    } = getState();
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // 'Access-Control-Allow-Credentials': false,
-        // 'Access-Control-Allow-Origin': 'http://localhost:3000',
+        Authorization: userInfo && userInfo.access_token,
       },
       withCredentials: true,
       crossDomain: true,
     };
-    const response = await daoApi.get(`/wallet/nonce`, config);
+    
+    const response = await daoApi.get(`/wallet/nonce/${swInfo.id}/${swInfo.typeId}`, config);
 
     dispatch({
       type: WALLET_NONCE_SUCCESS,
@@ -55,9 +61,7 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // 'Access-Control-Allow-Credentials': false,
-        // 'Access-Control-Allow-Origin': 'http://localhost:3000',
-        Authorization: userInfo && userInfo.accessToken,
+        Authorization: userInfo && userInfo.access_token,
       },
       withCredentials: true,
     };
@@ -131,7 +135,7 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: userInfo && userInfo.accessToken,
+        Authorization: userInfo && userInfo.access_token,
       },
     };
     const { data } = await publicApi.get(`/public/children`, config);

@@ -91,10 +91,13 @@ const CoverCard = ({
   );
   const { error: errorSignature } = useSelector((state) => state.signature);
 
+
   // fetch nonce for the wallet siwe
   useEffect(() => {
-    dispatch(fetchNonce());
-  }, [errorWalletNonce]);
+    if (swInfo) {
+      dispatch(fetchNonce());
+    }
+  }, [swInfo]);
 
   // toast
   useEffect(() => {
