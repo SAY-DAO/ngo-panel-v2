@@ -119,7 +119,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    const { data } = await daoApi.get(`/needs/flask/preneed`, config);
+    const { data } = await daoApi.get(`/needs/preneeds`, config);
 
     dispatch({
       type: CHILD_EXAMPLE_NEEDS_SUCCESS,
