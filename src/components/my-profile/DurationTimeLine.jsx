@@ -180,7 +180,7 @@ export default function DurationTimeLine({ need }) {
           <TimelineContent fontSize={12}>{t('myPage.taskCard.date.moneyToNgo')}</TimelineContent>
         </TimelineItem>
       )}
-      {theNeed.isDone && (
+      {theNeed.doneAt && (
         <TimelineItem>
           <TimelineOppositeContent color="text.secondary" fontSize={12}>
             {parseInt(moment(theNeed.doneAt).diff(moment(theNeed.confirmDate), 'days'), 10) > 1

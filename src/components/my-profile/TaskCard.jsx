@@ -260,10 +260,11 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   fontSize: 12,
                 }}
               >
-                {need.child.firstName_translations.fa} {need.child.lastName_translations.fa}
+                {need.child.sayname_translations && need.child.firstName_translations.fa}
+                {need.child.sayname_translations && need.child.lastName_translations.fa}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="200" sx={{ fontSize: 11 }}>
-                {need.child.sayname_translations.fa}
+                {need.child.sayname_translations && need.child.sayname_translations.fa}
               </Typography>
             </Box>
             <Box

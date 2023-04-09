@@ -679,12 +679,13 @@
     "allChildren": "تمام کودکان",
     "createdNeeds": "نیازهای اضافه شده",
     "confirmedNeeds": "نیازهای تائید شده",
+    "notConfirmedNeeds": "نیازهای تائید نشده",
     "taskManager": {
       "title": {
         "notPaid": "پرداخت نشده",
         "paid": "پرداخت‌ها",
         "purchased": "خریدها / انتقال داده شده",
-        "done": "انجام شده"
+        "delivered": "انجام شده"
       }
     },
     "taskCard": {

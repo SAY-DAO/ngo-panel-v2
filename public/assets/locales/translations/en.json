@@ -642,12 +642,14 @@
     "allChildren": "All Children",
     "createdNeeds": "Created Needs",
     "confirmedNeeds": "Confirmed Needs",
+    "notConfirmedNeeds": "UnConfirmed Needs",
+
     "taskManager": {
       "title": {
         "notPaid": "Not Paid",
         "paied": "Payment",
         "purchased": "Transferred/Purchased",
-        "done": "Done"
+        "delivered": "Delivered"
       }
     },
     "taskCard": {

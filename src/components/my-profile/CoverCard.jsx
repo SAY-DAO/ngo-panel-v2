@@ -18,7 +18,6 @@ import ChildCareIcon from '@mui/icons-material/ChildCare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
-import SwitchAccessShortcutAddIcon from '@mui/icons-material/SwitchAccessShortcutAdd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useAccount,
@@ -37,7 +36,6 @@ import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
 import { RolesEnum } from '../../utils/types';
 import { persianMonth } from '../../utils/persianToEnglish';
-import { fetchMyPage } from '../../redux/actions/userAction';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
   fetchNonce,
@@ -51,6 +49,7 @@ import { WALLET_INFORMATION_RESET, WALLET_VERIFY_RESET } from '../../redux/const
 const CoverCard = ({
   theUser,
   needCount,
+  childCount,
   signatureCount,
   swInfo,
   swNewDetails,
@@ -62,8 +61,6 @@ const CoverCard = ({
   const [cover, setCover] = useState(null);
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
-  const [skip, setSkip] = useState(10);
-  const [childCount, setChildCount] = useState();
   const [openWallets, setOpenWallets] = useState(false);
   const [values, setValues] = useState();
   const [walletToastOpen, setWalletToastOpen] = useState(false);
@@ -90,7 +87,6 @@ const CoverCard = ({
     (state) => state.walletInformation,
   );
   const { error: errorSignature } = useSelector((state) => state.signature);
-
 
   // fetch nonce for the wallet siwe
   useEffect(() => {
@@ -225,15 +221,6 @@ const CoverCard = ({
     }
   }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
 
-  const handleChildPagination = () => {
-    const isUser = swInfo.id === swNewDetails.id ? 1 : 0; // when 0 displays all children when 1 shows children/needs  created by them
-    const take = 15;
-    setChildCount(childCount + take);
-    setSkip(skip + take);
-    console.log(take);
-    console.log(skip);
-    dispatch(fetchMyPage(swNewDetails, isUser, skip, take));
-  };
 
   const onDisconnect = () => {
     localStorage.removeItem('say-siwe');
@@ -412,22 +399,20 @@ const CoverCard = ({
                   fontWeight="600"
                   sx={{
                     lineHeight: '1.2',
+                    fontSize: 14,
                   }}
                 >
                   {needCount || <CircularProgress size={15} />}
                 </Typography>
                 <Typography
                   color="textSecondary"
-                  variant="h6"
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
+                    fontSize: 12,
                   }}
                 >
-                  {theUser &&
-                  (theUser.typeId === RolesEnum.ADMIN || theUser.typeId === RolesEnum.SUPER_ADMIN)
-                    ? t('myPage.confirmedNeeds')
-                    : t('myPage.createdNeeds')}
+                  {t('myPage.notConfirmedNeeds')}
                 </Typography>
               </Grid>
               <Grid
@@ -446,12 +431,9 @@ const CoverCard = ({
                 >
                   <IconButton
                     aria-label="delete"
-                    // disabled
-                    onClick={handleChildPagination}
                     sx={{ pt: 0 }}
                   >
                     <ChildCareIcon fontSize="medium" />
-                    <SwitchAccessShortcutAddIcon />
                   </IconButton>
                 </Typography>
                 <Typography
@@ -459,6 +441,7 @@ const CoverCard = ({
                   fontWeight="600"
                   sx={{
                     lineHeight: '1.2',
+                    fontSize: 14,
                   }}
                 >
                   {childCount || <CircularProgress size={15} />}
@@ -469,6 +452,7 @@ const CoverCard = ({
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
+                    fontSize: 12,
                   }}
                 >
                   {theUser &&
@@ -500,6 +484,7 @@ const CoverCard = ({
                   fontWeight="600"
                   sx={{
                     lineHeight: '1.2',
+                    fontSize: 14,
                   }}
                 >
                   {signatureCount || <CircularProgress size={15} />}
@@ -510,6 +495,7 @@ const CoverCard = ({
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
+                    fontSize: 12,
                   }}
                 >
                   {t('myPage.signed')}

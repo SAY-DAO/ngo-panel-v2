@@ -24,7 +24,6 @@ import ConfirmNeedDialog from '../../components/dialogs/ConfirmNeedDialog';
 import { getDuplicateChildNeeds } from '../../utils/helpers';
 import { UPDATE_NEED_CONFIRM_RESET } from '../../redux/constants/needConstant';
 
-
 function getModifiedNeeds(updatedTicket, addedTicket, need) {
   let theNeed;
   //  when ticket added
@@ -48,14 +47,19 @@ const MyPage = () => {
   const { t } = useTranslation();
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [cardSelected, setCardSelected] = useState(0);
   const [swNewDetails, setSwNewDetails] = useState({});
   const [modifiedNeeds, setModifiedNeeds] = useState();
   const [openDialog, setDialogOpen] = useState(false);
   const [dialogValues, setDialogValues] = useState();
   const [count, setCount] = useState(0);
-
+  const [totalNeedCount, setTotalNeedCount] = useState({
+    notPaid: 0,
+    paid: 0,
+    purchased: 0,
+    delivered: 0,
+  });
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
@@ -83,9 +87,26 @@ const MyPage = () => {
 
   useEffect(() => {
     if (pageDetails) {
-      setCount(pageDetails.meta.totalItems);
+      setCount(pageDetails.max);
+      setTotalNeedCount({
+        notPaid: pageDetails.meta.notPaid,
+        paid: pageDetails.meta.paid,
+        purchased: pageDetails.meta.purchased,
+        delivered: pageDetails.meta.delivered,
+      });
     }
   }, [pageDetails]);
+
+  useEffect(() => {
+    if (pageDetails) {
+      setTotalNeedCount({
+        notPaid: 0,
+        paid: 0,
+        purchased: 0,
+        delivered: 0,
+      });
+    }
+  }, []);
 
   // [[not paid], [payment], [purchased/delivered Ngo/Ngo Payment], [Done]]
   useEffect(() => {
@@ -194,7 +215,8 @@ const MyPage = () => {
     <PageContainer title="User Profile" description="this is User Profile page">
       <CoverCard
         theUser={swNewDetails}
-        needCount={pageDetails ? pageDetails.needsCount : 0}
+        needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : 0}
+        childCount={pageDetails && pageDetails.children}
         signatureCount={pageDetails ? pageDetails.signaturesCount : 0}
         swInfo={swInfo}
         swNewDetails={swNewDetails}
@@ -217,13 +239,13 @@ const MyPage = () => {
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
                   <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {modifiedNeeds[0].length})
+                    ({totalNeedCount.notPaid})
                   </Typography>
                 </Grid>
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
                   <Typography component="span">{t('myPage.taskManager.title.paid')}</Typography>
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {modifiedNeeds[1].length})
+                    ({totalNeedCount.paid})
                   </Typography>
                 </Grid>
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
@@ -231,13 +253,15 @@ const MyPage = () => {
                     {t('myPage.taskManager.title.purchased')}
                   </Typography>
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {modifiedNeeds[2].length})
+                    ({totalNeedCount.purchased})
                   </Typography>
                 </Grid>
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
-                  <Typography component="span">{t('myPage.taskManager.title.done')}</Typography>
+                  <Typography component="span">
+                    {t('myPage.taskManager.title.delivered')}
+                  </Typography>
                   <Typography component="span" sx={{ fontSize: 12 }}>
-                    ( {modifiedNeeds[3].length})
+                    ({totalNeedCount.delivered})
                   </Typography>
                 </Grid>
                 <Grid sx={{ minWidth: '-webkit-fill-available' }}>
@@ -257,53 +281,49 @@ const MyPage = () => {
                 >
                   <Grid item xs={3}>
                     {modifiedNeeds &&
-                      modifiedNeeds[0]
-                        .map((need) => (
-                          <TaskCard
-                            key={need.id}
-                            need={need}
-                            setCardSelected={setCardSelected}
-                            cardSelected={cardSelected}
-                            swNewDetails={swNewDetails}
-                            handleDialog={handleDialog}
-                          />
-                        ))}
-                  </Grid>
-                  <Grid item xs={3}>
-                    {modifiedNeeds[1]
-                      .map((need) => (
+                      modifiedNeeds[0].map((need) => (
                         <TaskCard
                           key={need.id}
                           need={need}
                           setCardSelected={setCardSelected}
                           cardSelected={cardSelected}
                           swNewDetails={swNewDetails}
+                          handleDialog={handleDialog}
                         />
                       ))}
                   </Grid>
                   <Grid item xs={3}>
-                    {modifiedNeeds[2]
-                      .map((need) => (
-                        <TaskCard
-                          key={need.id}
-                          need={need}
-                          setCardSelected={setCardSelected}
-                          cardSelected={cardSelected}
-                          swNewDetails={swNewDetails}
-                        />
-                      ))}
+                    {modifiedNeeds[1].map((need) => (
+                      <TaskCard
+                        key={need.id}
+                        need={need}
+                        setCardSelected={setCardSelected}
+                        cardSelected={cardSelected}
+                        swNewDetails={swNewDetails}
+                      />
+                    ))}
                   </Grid>
                   <Grid item xs={3}>
-                    {modifiedNeeds[3]
-                      .map((need) => (
-                        <TaskCard
-                          key={need.id}
-                          need={need}
-                          setCardSelected={setCardSelected}
-                          cardSelected={cardSelected}
-                          swNewDetails={swNewDetails}
-                        />
-                      ))}
+                    {modifiedNeeds[2].map((need) => (
+                      <TaskCard
+                        key={need.id}
+                        need={need}
+                        setCardSelected={setCardSelected}
+                        cardSelected={cardSelected}
+                        swNewDetails={swNewDetails}
+                      />
+                    ))}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {modifiedNeeds[3].map((need) => (
+                      <TaskCard
+                        key={need.id}
+                        need={need}
+                        setCardSelected={setCardSelected}
+                        cardSelected={cardSelected}
+                        swNewDetails={swNewDetails}
+                      />
+                    ))}
                   </Grid>
                 </Grid>
               )}
@@ -315,7 +335,7 @@ const MyPage = () => {
                 component="div"
                 count={count}
                 rowsPerPage={rowsPerPage}
-                page={ page}
+                page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
