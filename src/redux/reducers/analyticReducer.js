@@ -14,6 +14,9 @@ import {
   GET_ANALYTICS_ECOSYSTEM_REQUEST,
   GET_ANALYTICS_ECOSYSTEM_SUCCESS,
   GET_ANALYTICS_ECOSYSTEM_FAIL,
+  GET_ANALYTICS_CONTRIBUTION_REQUEST,
+  GET_ANALYTICS_CONTRIBUTION_SUCCESS,
+  GET_ANALYTICS_CONTRIBUTION_FAIL,
 } from '../constants/analyticConstants';
 
 export const AnalyticChildNeedsReducer = (state = {}, action) => {
@@ -61,6 +64,19 @@ export const analyticsEcosystemReducer = (state = {}, action) => {
     case GET_ANALYTICS_ECOSYSTEM_SUCCESS:
       return { loading: false, success: true, ecosystemResult: action.payload };
     case GET_ANALYTICS_ECOSYSTEM_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const analyticsContributionReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_ANALYTICS_CONTRIBUTION_REQUEST:
+      return { loading: true, success: false };
+    case GET_ANALYTICS_CONTRIBUTION_SUCCESS:
+      return { loading: false, success: true, contribution: action.payload };
+    case GET_ANALYTICS_CONTRIBUTION_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

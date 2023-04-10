@@ -3,14 +3,16 @@ import { Typography, Box, Stack, CircularProgress, Tooltip } from '@mui/material
 import { useTheme } from '@mui/material/styles';
 import Chart from 'react-apexcharts';
 import FeatherIcon from 'feather-icons-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DashboardCard from '../base-card/DashboardCard';
 import { RolesEnum } from '../../utils/types';
+import { fetchUserContribution } from '../../redux/actions/analyticAction';
 
 const ContributionOverview = ({ swNewDetails }) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -19,8 +21,18 @@ const ContributionOverview = ({ swNewDetails }) => {
     confirms: [],
     creations: [],
   });
+
   const myPage = useSelector((state) => state.myPage);
-  const { pageDetails, success: successProfile } = myPage;
+  const { pageDetails } = myPage;
+
+  const contributionAnalytics = useSelector((state) => state.contributionAnalytics);
+  const { contribution } = contributionAnalytics;
+
+  useEffect(() => {
+    if (pageDetails) {
+      dispatch(fetchUserContribution());
+    }
+  }, [pageDetails]);
 
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.secondary.main;
@@ -117,25 +129,23 @@ const ContributionOverview = ({ swNewDetails }) => {
   // set graph labels
   useEffect(() => {
     const myList = [];
-    if (pageDetails && pageDetails.timeLine) {
-      const keys = Object.keys(pageDetails.timeLine.inMonth);
+    if (contribution) {
+      const keys = Object.keys(contribution.inMonth);
       // those zero are later than 6 months
       keys.forEach((key) => {
-        if (
-          pageDetails.timeLine.inMonth[key].created > 0 ||
-          pageDetails.timeLine.inMonth[key].confirmed > 0
-        ) {
+        if (contribution.inMonth[key].created > 0 || contribution.inMonth[key].confirmed > 0) {
           myList.push({
             [key]: {
-              created: pageDetails.timeLine.inMonth[key].created,
-              confirmed: pageDetails.timeLine.inMonth[key].confirmed,
+              created: contribution.inMonth[key].created,
+              confirmed: contribution.inMonth[key].confirmed,
             },
           });
         }
       });
       setGraphData(myList);
+      console.log(myList);
     }
-  }, [pageDetails]);
+  }, [contribution]);
 
   const confirms = [];
   const creations = [];
@@ -164,7 +174,6 @@ const ContributionOverview = ({ swNewDetails }) => {
     {
       name: t('myPage.countJobs.titleCreated'),
       data: [...values.creations],
-
     },
   ];
 
@@ -227,7 +236,7 @@ const ContributionOverview = ({ swNewDetails }) => {
             options={optionsContributionOverview}
             series={seriesContributionOverview}
             type="bar"
-            height="100px"
+            height="150px"
             width="320px"
             style={{ direction: 'ltr' }}
           />
@@ -246,25 +255,25 @@ const ContributionOverview = ({ swNewDetails }) => {
                 <strong>{t('myPage.countJobs.titleCreated')}</strong>
               </Typography>
             )}
-            {!successProfile ? (
+            {!contribution ? (
               <CircularProgress size={15} />
             ) : (
               <Typography>
-                {t('myPage.countJobs.count.first')}: {pageDetails.timeLine.summary.inTwoDays}
+                {t('myPage.countJobs.count.first')}: {contribution.summary.inTwoDays}
               </Typography>
             )}
-            {!successProfile ? (
+            {!contribution ? (
               <CircularProgress size={15} />
             ) : (
               <Typography>
-                {t('myPage.countJobs.count.second')}: {pageDetails.timeLine.summary.inWeek}
+                {t('myPage.countJobs.count.second')}: {contribution.summary.inWeek}
               </Typography>
             )}
-            {!successProfile ? (
+            {!contribution ? (
               <CircularProgress size={15} />
             ) : (
               <Typography>
-                {t('myPage.countJobs.count.third')}: {pageDetails.timeLine.summary.inThirtyDays}
+                {t('myPage.countJobs.count.third')}: {contribution.summary.inThirtyDays}
               </Typography>
             )}
           </>

@@ -66,6 +66,7 @@ import {
 import { milestoneReducer } from './milestoneReducer';
 import {
   AnalyticChildNeedsReducer,
+  analyticsContributionReducer,
   analyticsEcosystemReducer,
   analyticsNgosReducer,
 } from './analyticReducer';
@@ -74,6 +75,7 @@ export default combineReducers({
   CustomizerReducer,
   childNeedsAnalytics: AnalyticChildNeedsReducer,
   ngosAnalytics: analyticsNgosReducer,
+  contributionAnalytics: analyticsContributionReducer,
   ecosystemAnalytics: analyticsEcosystemReducer,
   myTickets: ticketListReducer,
   ticketMsgAdd: ticketAddMsgReducer,

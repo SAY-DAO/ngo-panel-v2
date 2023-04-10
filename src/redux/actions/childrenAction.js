@@ -229,7 +229,6 @@ export const AddChild = (values) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    console.log('this');
 
     const formData = new FormData();
     if (values.ngo_id) {

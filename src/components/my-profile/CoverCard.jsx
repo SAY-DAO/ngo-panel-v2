@@ -45,6 +45,7 @@ import {
 import WalletButton from '../wallet/WalletButton';
 import MessageWallet from '../MessageWallet';
 import { WALLET_INFORMATION_RESET, WALLET_VERIFY_RESET } from '../../redux/constants/daoConstants';
+import ContributionOverview from './ContributionOverview';
 
 const CoverCard = ({
   theUser,
@@ -86,6 +87,7 @@ const CoverCard = ({
   const { information, error: errorWalletInformation } = useSelector(
     (state) => state.walletInformation,
   );
+
   const { error: errorSignature } = useSelector((state) => state.signature);
 
   // fetch nonce for the wallet siwe
@@ -221,7 +223,6 @@ const CoverCard = ({
     }
   }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
 
-
   const onDisconnect = () => {
     localStorage.removeItem('say-siwe');
     dispatch({ type: WALLET_INFORMATION_RESET });
@@ -343,7 +344,7 @@ const CoverCard = ({
             opacity: '50%',
           }}
         >
-          {/* <ContributionOverview swNewDetails={swNewDetails} /> */}
+          <ContributionOverview swNewDetails={swNewDetails} />
         </Box>
       </Grid>
       <CardContent
@@ -429,10 +430,7 @@ const CoverCard = ({
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <IconButton
-                    aria-label="delete"
-                    sx={{ pt: 0 }}
-                  >
+                  <IconButton aria-label="delete" sx={{ pt: 0 }}>
                     <ChildCareIcon fontSize="medium" />
                   </IconButton>
                 </Typography>

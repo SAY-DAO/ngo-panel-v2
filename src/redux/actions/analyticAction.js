@@ -14,7 +14,10 @@ import {
   GET_ANALYTICS_NGOS_FAIL,
   GET_ANALYTICS_ECOSYSTEM_REQUEST,
   GET_ANALYTICS_ECOSYSTEM_SUCCESS,
-  GET_ANALYTICS_ECOSYSTEM_FAIL
+  GET_ANALYTICS_ECOSYSTEM_FAIL,
+  GET_ANALYTICS_CONTRIBUTION_REQUEST,
+  GET_ANALYTICS_CONTRIBUTION_SUCCESS,
+  GET_ANALYTICS_CONTRIBUTION_FAIL,
 } from '../constants/analyticConstants';
 
 export const fetchNeedAnalytics = (needType) => async (dispatch) => {
@@ -89,7 +92,6 @@ export const fetchNgosAnalytics = () => async (dispatch) => {
   }
 };
 
-
 export const fetchEcosystemAnalytics = () => async (dispatch) => {
   try {
     dispatch({ type: GET_ANALYTICS_ECOSYSTEM_REQUEST });
@@ -108,3 +110,24 @@ export const fetchEcosystemAnalytics = () => async (dispatch) => {
   }
 };
 
+export const fetchUserContribution = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: GET_ANALYTICS_CONTRIBUTION_REQUEST });
+    const {
+      swDetails: { swInfo },
+    } = getState();
+
+    const { data } = await daoApi.get(`/analytic/contributions/${swInfo.id}/${swInfo.typeId}`);
+
+    dispatch({
+      type: GET_ANALYTICS_CONTRIBUTION_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_ANALYTICS_CONTRIBUTION_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+    });
+  }
+};
