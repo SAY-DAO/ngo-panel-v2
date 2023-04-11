@@ -35,6 +35,7 @@
     "report": {
       "expectedDeliveryToNgo": "Please enter estimated arrival time to NGO.",
       "retailerCode": "Please enter retialer unique code.",
+      "retailerPaid": "Please enter the price.",
       "deliveredToNgo": "Please enter arrival time to NGO.",
       "bankTrackId": "Please enter the bank tracking id."
     },
@@ -160,6 +161,7 @@
     "statusChange": {
       "expectedDeliveryToNgo": "Date of Product arrival",
       "retailerPaid": "Price paid to Retailer",
+      "paid": "Price paid",
       "retailerCode": "Retailer Code",
       "deliveredToNgo": "Date of arrival to NGO",
       "bankTrackId": "Bank Track Id",

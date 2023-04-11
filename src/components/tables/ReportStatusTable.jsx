@@ -46,6 +46,7 @@ import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/blockchainAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
 import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/types';
+import { UPDATE_NEED_STATUS_RESET } from '../../redux/constants/needConstant';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -401,7 +402,7 @@ const ReportStatusTable = () => {
       setStatusDialog(false);
       setToastOpen(true);
     }
-  }, [ successStatusUpdate]);
+  }, [successStatusUpdate]);
 
   // Autocomplete ngo
   useEffect(() => {
@@ -479,7 +480,27 @@ const ReportStatusTable = () => {
         dispatch(fetchReportNeeds(true, swInfo.ngoId, typeId, statusId));
       }
     }
-  }, [ngoId, typeId, statusId, swInfo, successNgoList, successStatusUpdate]);
+  }, [ngoId, typeId, statusId, swInfo, successNgoList]);
+
+  // fetch needs
+  useEffect(() => {
+    if (successStatusUpdate) {
+      // super admin & admin
+      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+        if (ngoId) {
+          dispatch(fetchReportNeeds(true, ngoId, typeId, statusId));
+        } else {
+          dispatch(fetchReportNeeds(true, null, typeId, statusId));
+        }
+      } else if (
+        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+      ) {
+        dispatch(fetchReportNeeds(true, swInfo.ngoId, typeId, statusId));
+      }
+      dispatch({ type: UPDATE_NEED_STATUS_RESET });
+    }
+  }, [successStatusUpdate]);
 
   const handleCloseToast = (event, reason) => {
     if (reason === 'clickaway') {
@@ -1164,6 +1185,5 @@ const ReportStatusTable = () => {
     </PageContainer>
   );
 };
-
 
 export default ReportStatusTable;

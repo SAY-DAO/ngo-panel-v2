@@ -43,7 +43,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const [productDelivered, setProductDelivered] = useState(new Date());
 
   const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
-  const { loading: loadingAStatusUpdate } = needStatusUpdate;
+  const { success: SuccessStatusUpdate, loading: loadingAStatusUpdate } = needStatusUpdate;
 
   const validationSchema = Yup.object().shape({
     expProductToNgo:
@@ -54,6 +54,10 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
       need.type === NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
       Yup.string().required(t('error.report.retailerCode')),
+    retailerPaid:
+      need.type === NeedTypeEnum.PRODUCT &&
+      statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
+      Yup.string().required(t('error.report.retailerPaid')),
     productDeliveredToNgo:
       need.type === NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.DELIVERED_TO_NGO &&
@@ -68,6 +72,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     register,
     control,
     handleSubmit,
+    reset,
     setValue,
     formState: { errors },
   } = useForm({
@@ -76,10 +81,17 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
 
   useEffect(() => {
     if (need) {
-      setValue('retailerPaid', need.cost);
-      setValue('purchasedCost', need.cost);
+      setValue('paid', need.cost);
+      // setValue('purchasedCost', need.cost);
     }
   }, [need]);
+
+  useEffect(() => {
+    if (SuccessStatusUpdate) {
+      setStatusId();
+      reset();
+    }
+  }, [SuccessStatusUpdate]);
 
   // Autocomplete status
   useEffect(() => {
@@ -283,7 +295,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                   <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     {statusId === ProductStatusEnum.PURCHASED_PRODUCT && (
                       <Grid container spacing={2}>
-                        <Grid item lg={12} md={12} xs={12}>
+                        <Grid item lg={6} md={6} xs={12}>
                           <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
                             {t('report.statusChange.expectedDeliveryToNgo')}
                           </CustomFormLabel>
@@ -299,6 +311,24 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                             />
                           </LocalizationProvider>
                         </Grid>
+                        <Grid item lg={6} md={6} xs={12}>
+                          <CustomFormLabel htmlFor="paid">
+                            {t('report.statusChange.paid')}
+                          </CustomFormLabel>
+                          <OutlinedInput
+                            disabled
+                            sx={{ width: '100%', border: 'none' }}
+                            id="paid"
+                            type="number"
+                            fullWidth
+                            control={control}
+                            {...register('paid', { required: true })}
+                            size="small"
+                            endAdornment={
+                              <InputAdornment position="end">{t('currency.toman')}</InputAdornment>
+                            }
+                          />
+                        </Grid>
                         <Grid item lg={6} md={12} xs={12}>
                           <CustomFormLabel htmlFor="retailerPaid">
                             {t('report.statusChange.retailerPaid')}
@@ -312,11 +342,16 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                             size="small"
                             control={control}
                             {...register('retailerPaid', { required: true })}
+                            error={!!errors.retailerPaid}
+                            helperText={
+                              errors && errors.retailerPaid && errors.retailerPaid.message
+                            }
                             endAdornment={
                               <InputAdornment position="end">{t('currency.toman')}</InputAdornment>
                             }
                           />
                         </Grid>
+
                         <Grid item lg={6} md={12} xs={12}>
                           <CustomFormLabel htmlFor="retailerCode">
                             {t('report.statusChange.retailerCode')}
@@ -423,6 +458,13 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
             </LoadingButton>
           </DialogActions>
           <ul>
+            {errors && errors.retailerPaid && (
+              <li>
+                <Typography color="error" variant="span">
+                  {errors && errors.retailerPaid?.message}
+                </Typography>
+              </li>
+            )}
             {errors && errors.retailerCode && (
               <li>
                 <Typography color="error" variant="span">

@@ -71,6 +71,7 @@
     "emptyCart": "سبد خرید شما خالی است",
     "report": {
       "expectedDeliveryToNgo": "انتخاب تاریخ حدودی تحویل ضروری است.",
+      "retailerPaid": "لطفا قیمت را وارد کنید",
       "retailerCode": "لطفا کد سفارش را وارد کنید",
       "deliveredToNgo": "انتخاب تاریخ دریافت ضروری است.",
       "bankTrackId": "شماره پیگیری بانک ضروری است."
@@ -199,6 +200,7 @@
     "statusChange": {
       "expectedDeliveryToNgo": "تاریخ انتظار تحویل کالا به انجمن",
       "retailerPaid": "هزینه پرداخت شده واقعی",
+      "paid": "هزینه پرداخت شده",
       "retailerCode": "شماره سفارش",
       "deliveredToNgo": "تاریخ رسیدن کالا به انجمن",
       "bankTrackId": "کد پیگیری بانک",
