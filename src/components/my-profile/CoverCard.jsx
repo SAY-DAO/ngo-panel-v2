@@ -8,9 +8,9 @@ import {
   CircularProgress,
   Autocomplete,
   TextField,
-  IconButton,
   Avatar,
   Button,
+  Tooltip,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import InterestsIcon from '@mui/icons-material/Interests';
@@ -29,13 +29,14 @@ import {
 } from 'wagmi';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { SiweMessage } from 'siwe';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import spring from '../../resources/images/cover/spring.jpeg';
 import summer from '../../resources/images/cover/summer.jpeg';
 import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
 import { RolesEnum } from '../../utils/types';
-import { persianMonth } from '../../utils/persianToEnglish';
+import { dateConvertor, persianMonth } from '../../utils/persianToEnglish';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
   fetchNonce,
@@ -46,6 +47,7 @@ import WalletButton from '../wallet/WalletButton';
 import MessageWallet from '../MessageWallet';
 import { WALLET_INFORMATION_RESET, WALLET_VERIFY_RESET } from '../../redux/constants/daoConstants';
 import ContributionOverview from './ContributionOverview';
+import { daysDifference } from '../../utils/helpers';
 
 const CoverCard = ({
   theUser,
@@ -55,6 +57,7 @@ const CoverCard = ({
   swInfo,
   swNewDetails,
   setSwNewDetails,
+  arrivals,
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -245,6 +248,8 @@ const CoverCard = ({
     setWalletToastOpen(false);
   };
 
+  const codes = arrivals && arrivals.map((a) => Object.keys(a)[0]);
+  const dateList = [];
   return (
     <Card
       sx={{
@@ -332,6 +337,7 @@ const CoverCard = ({
               />
             </Box>
           )}
+        {/* Contributor graph */}
         <Box
           sx={{
             position: 'absolute',
@@ -349,10 +355,11 @@ const CoverCard = ({
       </Grid>
       <CardContent
         sx={{
-          pt: '24px',
-          pb: '0 !important',
+          pt: '12px',
+          pb: '0.8rem !important',
         }}
       >
+        {/* infos */}
         <Grid container spacing={0}>
           <Grid
             item
@@ -381,9 +388,9 @@ const CoverCard = ({
             >
               <Grid
                 item
-                lg={4}
-                sm={4}
-                xs={4}
+                lg={3}
+                sm={3}
+                xs={3}
                 sx={{
                   textAlign: 'center',
                 }}
@@ -393,7 +400,7 @@ const CoverCard = ({
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <InterestsIcon fontSize="medium" />
+                  <InterestsIcon fontSize="medium" sx={{ mb: 0 }} />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -403,14 +410,15 @@ const CoverCard = ({
                     fontSize: 14,
                   }}
                 >
-                  {needCount || <CircularProgress size={15} />}
+                  {needCount >= 0 ? needCount : <CircularProgress size={15} />}
                 </Typography>
                 <Typography
                   color="textSecondary"
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
-                    fontSize: 12,
+                    fontSize: 10,
+                    mt: 1,
                   }}
                 >
                   {t('myPage.notConfirmedNeeds')}
@@ -418,9 +426,9 @@ const CoverCard = ({
               </Grid>
               <Grid
                 item
-                lg={4}
-                sm={4}
-                xs={4}
+                lg={3}
+                sm={3}
+                xs={3}
                 sx={{
                   textAlign: 'center',
                 }}
@@ -430,9 +438,7 @@ const CoverCard = ({
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <IconButton aria-label="delete" sx={{ pt: 0 }}>
-                    <ChildCareIcon fontSize="medium" />
-                  </IconButton>
+                  <ChildCareIcon fontSize="medium" sx={{ mb: 0 }} />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -450,7 +456,8 @@ const CoverCard = ({
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
-                    fontSize: 12,
+                    fontSize: 10,
+                    mt: 1,
                   }}
                 >
                   {theUser &&
@@ -463,9 +470,9 @@ const CoverCard = ({
               </Grid>
               <Grid
                 item
-                lg={4}
-                sm={4}
-                xs={4}
+                lg={3}
+                sm={3}
+                xs={3}
                 sx={{
                   textAlign: 'center',
                 }}
@@ -475,7 +482,7 @@ const CoverCard = ({
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <HandshakeIcon fontSize="medium" />
+                  <HandshakeIcon fontSize="medium" sx={{ mb: 0 }} />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -485,7 +492,7 @@ const CoverCard = ({
                     fontSize: 14,
                   }}
                 >
-                  {signatureCount || <CircularProgress size={15} />}
+                  {signatureCount >= 0 ? signatureCount : <CircularProgress size={15} />}
                 </Typography>
                 <Typography
                   color="textSecondary"
@@ -493,15 +500,102 @@ const CoverCard = ({
                   fontWeight="400"
                   sx={{
                     lineHeight: '1.2',
-                    fontSize: 12,
+                    fontSize: 10,
+                    mt: 1,
                   }}
                 >
                   {t('myPage.signed')}
                 </Typography>
               </Grid>
+
+              <Grid
+                item
+                lg={3}
+                sm={3}
+                xs={3}
+                sx={{
+                  textAlign: 'center',
+                }}
+              >
+                <Tooltip
+                  title={
+                    <Grid container direction="column">
+                      {arrivals &&
+                        arrivals.map((a) => {
+                          // console.log(codes);
+                          console.log(a);
+                          return codes.map((code) => {
+                            if (code in a) {
+                              return (
+                                <Grid item key={code}>
+                                  <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                                    {a[code].ngoName}:{' '}
+                                  </Typography>
+                                  <Typography sx={{ fontSize: 12 }}>
+                                    {dateConvertor(new Date(a[code].maxDate).toUTCString())}
+                                  </Typography>
+                                  <br />
+                                </Grid>
+                              );
+                            }
+                            return null;
+                          });
+                        })}
+                    </Grid>
+                  }
+                >
+                  <Typography
+                    sx={{
+                      color: (theme) => theme.palette.grey.A200,
+                    }}
+                  >
+                    <DeliveryDiningIcon fontSize="medium" sx={{ mb: 0 }} />
+                  </Typography>
+                </Tooltip>
+
+                <Typography
+                  variant="h4"
+                  fontWeight="600"
+                  sx={{
+                    lineHeight: '1.2',
+                    fontSize: 14,
+                  }}
+                >
+                  {arrivals ? (
+                    arrivals.map((a) => {
+                      codes.map((code) => {
+                        if (code in a) {
+                          dateList.push(a[code].maxDate);
+                        }
+                        return null;
+                      });
+                      return null;
+                    }) &&
+                    (daysDifference(new Date(), new Date(Math.min(...dateList)).toUTCString()) < 0
+                      ? `${Math.round(
+                          daysDifference(new Date(), new Date(Math.max(...dateList)).toUTCString()),
+                        )} ${t('myPage.days')}`
+                      : t('myPage.today'))
+                  ) : (
+                    <CircularProgress size={15} />
+                  )}
+                </Typography>
+                <Typography
+                  color="textSecondary"
+                  variant="h6"
+                  fontWeight="400"
+                  sx={{
+                    lineHeight: '1.2',
+                    fontSize: 10,
+                    mt: 1,
+                  }}
+                >
+                  {t('myPage.ngoArrival')}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
-          {/* about profile */}
+          {/* Profile photo */}
           <Grid
             item
             lg={4}
@@ -626,7 +720,6 @@ const CoverCard = ({
               </Box>
             </Box>
           </Grid>
-          {/* friends following buttons */}
           <Grid
             item
             lg={4}
@@ -658,7 +751,7 @@ const CoverCard = ({
                 },
               }}
             >
-              <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
+              {/* <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
                 <Grid item>
                   <div
                     style={{
@@ -675,7 +768,7 @@ const CoverCard = ({
                     S
                   </div>
                 </Grid>
-              </Grid>
+              </Grid> */}
             </Box>
           </Grid>
         </Grid>
@@ -703,6 +796,7 @@ CoverCard.propTypes = {
   swInfo: PropTypes.object,
   swNewDetails: PropTypes.object,
   setSwNewDetails: PropTypes.func,
+  arrivals: PropTypes.array,
 };
 
 export default CoverCard;

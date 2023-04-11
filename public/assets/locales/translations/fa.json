@@ -264,7 +264,8 @@
       "title": "کودکان"
     },
     "needs": {
-      "title": "نیازها"
+      "title": "نیازها",
+      "arrivals": "ارسال تامین کننده"
     },
     "milestone": {
       "title": "جدول نقاط عطف"
@@ -681,7 +682,10 @@
     "allChildren": "تمام کودکان",
     "createdNeeds": "نیازهای اضافه شده",
     "confirmedNeeds": "نیازهای تائید شده",
-    "notConfirmedNeeds": "نیازهای تائید نشده",
+    "notConfirmedNeeds": "تائید نشده",
+    "today": "امروز",
+    "days": "روز",
+    "ngoArrival": "نزدیکترین ارسال",
     "taskManager": {
       "title": {
         "notPaid": "پرداخت نشده",

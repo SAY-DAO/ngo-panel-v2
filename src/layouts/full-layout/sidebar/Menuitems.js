@@ -8,6 +8,7 @@ import RouteIcon from '@mui/icons-material/Route';
 import React from 'react';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 
 const Menuitems = [
   {
@@ -73,6 +74,12 @@ const Menuitems = [
         title: 'sidebar.add',
         icon: 'edit',
         href: '/need/add',
+        admin: true,
+      },
+      {
+        title: 'sidebar.needs.arrivals',
+        icon:  <DeliveryDiningIcon />,
+        href: '/need/arrivals',
         admin: true,
       },
     ],

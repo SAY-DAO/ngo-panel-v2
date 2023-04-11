@@ -225,7 +225,8 @@
       "title": "Children"
     },
     "needs": {
-      "title": "Needs"
+      "title": "Needs",
+      "arrivals": "Arrivals"
     },
     "milestone": {
       "title": "MileStone"
@@ -645,7 +646,9 @@
     "createdNeeds": "Created Needs",
     "confirmedNeeds": "Confirmed Needs",
     "notConfirmedNeeds": "UnConfirmed Needs",
-
+    "today": "Today",
+    "days": "days",
+    "ngoArrival": "Soonest arrival",
     "taskManager": {
       "title": {
         "notPaid": "Not Paid",

@@ -198,3 +198,10 @@ export function getDuplicateChildNeeds(childNeeds, theNeed) {
     );
   });
 }
+
+export function daysDifference(time1, time2) {
+  const date1 = new Date(time1);
+  const date2 = new Date(time2);
+  // calculate days difference by dividing total milliseconds in a day
+  return (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
+}

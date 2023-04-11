@@ -143,7 +143,6 @@ const ContributionOverview = ({ swNewDetails }) => {
         }
       });
       setGraphData(myList);
-      console.log(myList);
     }
   }, [contribution]);
 

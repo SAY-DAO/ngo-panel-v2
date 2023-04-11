@@ -215,9 +215,10 @@ const MyPage = () => {
     <PageContainer title="User Profile" description="this is User Profile page">
       <CoverCard
         theUser={swNewDetails}
-        needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : 0}
+        needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : -1}
         childCount={pageDetails && pageDetails.children}
-        signatureCount={pageDetails ? pageDetails.signaturesCount : 0}
+        signatureCount={pageDetails ? pageDetails.signatures.length : -1}
+        arrivals={pageDetails && pageDetails.arrivals.arrivals}
         swInfo={swInfo}
         swNewDetails={swNewDetails}
         setSwNewDetails={setSwNewDetails}

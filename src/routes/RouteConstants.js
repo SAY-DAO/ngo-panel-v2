@@ -18,6 +18,7 @@ export const CHILDREN_ADD = '/children/add';
 export const NEED_LIST = '/need/list';
 export const NEED_EDIT = '/need/edit/:childId/:needId';
 export const NEED_ADD = '/need/add';
+export const NEED_ARRIVALS = '/need/arrivals';
 export const REPORTS = '/report/needs/paid';
 export const DAO_HOME = '/dao';
 export const MILESTONE_ADD = '/dao/milestone/add';
