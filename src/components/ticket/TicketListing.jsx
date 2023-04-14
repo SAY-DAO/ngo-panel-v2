@@ -17,6 +17,7 @@ import Scrollbar from '../custom-scroll/Scrollbar';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { TicketSearch, selectTicket } from '../../redux/actions/ticketAction';
 import { colorChoices, Colors } from '../../utils/types';
+import { dateConvertor } from '../../utils/persianToEnglish';
 
 const filterTickets = (tickets, cSearch) => {
   if (tickets)
@@ -106,7 +107,7 @@ const TicketListing = () => {
                     }}
                   />
                   <Typography variant="h5" sx={{ width: '240px' }} noWrap>
-                    {ticket.flaskNeedId} - {ticket.title}
+                    {ticket.flaskNeedId} - {ticket.need.name}
                   </Typography>
                   <Stack
                     direction="row"
@@ -115,11 +116,7 @@ const TicketListing = () => {
                     spacing={2}
                   >
                     <ListItemText
-                      secondary={new Date(ticket.createdAt).toLocaleDateString({
-                        weekday: 'short',
-                        year: 'numeric',
-                        month: 'short',
-                      })}
+                      secondary={(dateConvertor(String(ticket.updatedAt)))}
                     />
                     <Grid>
                       <AvatarGroup max={4}>

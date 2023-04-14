@@ -5,7 +5,7 @@ import PageContainer from '../../components/container/PageContainer';
 import ChildrenTable from '../../components/tables/ChildrenTable';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { fetchChildList } from '../../redux/actions/childrenAction';
-import { RolesEnum } from '../../utils/types';
+import { FlaskUserTypesEnum } from '../../utils/types';
 
 const ChildrenList = () => {
   const dispatch = useDispatch();
@@ -23,11 +23,11 @@ const ChildrenList = () => {
   useEffect(() => {
     if (swInfo) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+      if (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN || swInfo.typeId === FlaskUserTypesEnum.ADMIN) {
         dispatch(fetchChildList());
       } else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         dispatch(fetchSwOrNgoChildList());
       }

@@ -38,14 +38,15 @@ import {
   NeedTypeEnum,
   ProductStatusEnum,
   ServiceStatusEnum,
-  RolesEnum,
+  FlaskUserTypesEnum,
   Colors,
   colorChoices,
+  AnnouncementEnum,
 } from '../../utils/types';
 import ReceiptImage from './ReceiptImage';
 import { signTransaction } from '../../redux/actions/blockchainAction';
 import DurationTimeLine from './DurationTimeLine';
-import { fetchUserTicketList, openTicketing, selectTicket } from '../../redux/actions/ticketAction';
+import { openTicketing, selectTicket } from '../../redux/actions/ticketAction';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
@@ -116,27 +117,17 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     }
   }, [errorTicketAdd]);
 
-  // when confirm get all tickets & select the added one
-  useEffect(() => {
-    if (openConfirm && !isTicketingOpen && addedTicket) {
-      dispatch(selectTicket(addedTicket.id));
-      dispatch(fetchUserTicketList());
-      dispatch(openTicketing(true));
-    }
-  }, [addedTicket]);
-
   // when added open tickets
   useEffect(() => {
     if (openConfirm && !isTicketingOpen && addedTicket) {
-      dispatch(selectTicket(addedTicket.id));
       dispatch(openTicketing(true));
+      dispatch(selectTicket(addedTicket.id));
       setOpenConfirm(false);
     }
   }, [addedTicket]);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
-    dispatch({ type: ADD_TICKET_RESET });
   };
   // when already has a ticket
   const handleOpenTicketing = (ticketId) => {
@@ -194,6 +185,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   }, [signature, pageDetails]);
 
   const handleAnnounceDelivery = () => {
+    dispatch({ type: ADD_TICKET_RESET });
     setOpenDeliveryAnnouncement(true);
   };
 
@@ -295,15 +287,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     horizontal: 'right',
                   }}
                 >
-                  {(swInfo.typeId === RolesEnum.ADMIN ||
-                    swInfo.typeId === RolesEnum.SUPER_ADMIN) && (
+                  {(swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                    swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
                     <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
                       <EditIcon sx={{ ml: 1, mr: 1 }} />
                       {t('myPage.taskCard.menu.updateChild')}
                     </MenuItem>
                   )}
-                  {(swInfo.typeId === RolesEnum.ADMIN ||
-                    swInfo.typeId === RolesEnum.SUPER_ADMIN) && (
+                  {(swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                    swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
                     <MenuItem>
                       <RouterLink
                         style={{ textDecoration: 'none', color: '#e6e5e8' }}
@@ -325,14 +317,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                       {t('myPage.taskCard.menu.addTicket')}
                     </MenuItem>
                   )}
-                  {swInfo.id === need.created_by_id &&
-                    need.type === NeedTypeEnum.PRODUCT &&
-                    need.status === ProductStatusEnum.PURCHASED_PRODUCT && (
-                      <MenuItem onClick={() => handleAnnounceDelivery()}>
-                        <CampaignIcon sx={{ ml: 1, mr: 1 }} />
-                        {t('myPage.taskCard.menu.deliveryTicket')}
-                      </MenuItem>
-                    )}
+                  {((need.ticket && need.ticket.announcement === AnnouncementEnum.ARRIVED_AT_NGO) ||
+                    (swInfo.id === need.created_by_id &&
+                      need.type === NeedTypeEnum.PRODUCT &&
+                      need.status === ProductStatusEnum.PURCHASED_PRODUCT)) && (
+                    <MenuItem onClick={() => handleAnnounceDelivery()}>
+                      <CampaignIcon sx={{ ml: 1, mr: 1 }} />
+                      {t('myPage.taskCard.menu.deliveryTicket')}
+                    </MenuItem>
+                  )}
                 </Menu>
               )}
             </Box>
@@ -360,43 +353,69 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               </Grid>
               <Grid item xs={2}>
                 {need.ticket && (
-                  <Box
-                    sx={{
-                      textAlign: 'center',
-                      backgroundColor:
-                        need.ticket.color === Colors.YELLOW
-                          ? () => theme.palette.background.ripple
-                          : '',
-                      animation:
-                        need.ticket.color === Colors.YELLOW
-                          ? 'ripple 1.4s  infinite ease-in-out'
-                          : '',
-
-                      borderRadius: '50%',
-                      '@keyframes ripple': {
-                        '0%': {
-                          transform: 'scale(.7)',
-                          opacity: 0.7,
-                        },
-                        '100%': {
-                          transform: 'scale(0.8)',
-                          opacity: 1,
-                        },
-                      },
-                      height: '40px',
-                      width: '40px',
-                      paddingTop: '7px',
-                    }}
-                  >
-                    <FlagIcon
+                  <>
+                    <Box
                       sx={{
-                        color:
+                        textAlign: 'center',
+                        backgroundColor:
                           need.ticket.color === Colors.YELLOW
-                            ? colorChoices[1].code
-                            : colorChoices[0].code,
+                            ? () => theme.palette.background.ripple
+                            : '',
+                        animation:
+                          need.ticket.color === Colors.YELLOW
+                            ? 'ripple 1.4s  infinite ease-in-out'
+                            : '',
+
+                        borderRadius: '50%',
+                        '@keyframes ripple': {
+                          '0%': {
+                            transform: 'scale(.7)',
+                            opacity: 0.7,
+                          },
+                          '100%': {
+                            transform: 'scale(0.8)',
+                            opacity: 1,
+                          },
+                        },
+                        height: '40px',
+                        width: '40px',
+                        paddingTop: '7px',
                       }}
-                    />
-                  </Box>
+                    >
+                      <FlagIcon
+                        sx={{
+                          color:
+                            need.ticket.color === Colors.YELLOW
+                              ? colorChoices[1].code
+                              : colorChoices[0].code,
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          textAlign: 'center',
+
+                          borderRadius: '50%',
+                          '@keyframes ripple': {
+                            '0%': {
+                              transform: 'scale(.7)',
+                              opacity: 0.7,
+                            },
+                            '100%': {
+                              transform: 'scale(0.8)',
+                              opacity: 1,
+                            },
+                          },
+                          height: '40px',
+                          width: '40px',
+                          paddingTop: '7px',
+                        }}
+                      >
+                        {need.ticket.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                          <CampaignIcon />
+                        )}
+                      </Box>
+                    </Box>
+                  </>
                 )}
               </Grid>
             </Grid>
@@ -572,8 +591,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
               <LoadingButton
                 disabled={
-                  swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-                  swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+                  swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+                  swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
                 }
                 onClick={() => handleDialog(need)}
               >

@@ -27,7 +27,7 @@ import CustomTextField from '../../../components/forms/custom-elements/CustomTex
 import { logout } from '../../../redux/actions/userAction';
 import { fetchSocialWorkerDetails } from '../../../redux/actions/socialWorkerAction';
 import { SW_DETAILS_RESET, SW_LIST_RESET } from '../../../redux/constants/socialWorkerConstants';
-import { RolesEnum } from '../../../utils/types';
+import { FlaskUserTypesEnum } from '../../../utils/types';
 import {
   CHILDREN_ADD,
   DAO_HOME,
@@ -115,7 +115,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   // do not let non admin user to navigate to the following pages
   useEffect(() => {
-    if (swInfo && swInfo.typeId !== RolesEnum.ADMIN && swInfo.typeId !== RolesEnum.SUPER_ADMIN) {
+    if (
+      swInfo &&
+      swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
+      swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN
+    ) {
       if (
         location.pathname === DAO_HOME ||
         location.pathname === SW_LIST ||
@@ -154,7 +158,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         !successNgoList &&
         !loadingNgoList &&
         swInfo &&
-        (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN)
+        (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+          swInfo.typeId === FlaskUserTypesEnum.ADMIN)
       ) {
         dispatch(fetchNgoList());
       }
@@ -350,7 +355,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         {/* ------------------------------------------- */}
         {/* Search Dropdown */}
         {/* ------------------------------------------- */}
-        <IconButton
+        {/* <IconButton
           aria-label="show search"
           color="inherit"
           aria-controls="search-menu"
@@ -359,7 +364,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           size="large"
         >
           <FeatherIcon icon="search" width="20" height="20" />
-        </IconButton>
+        </IconButton> */}
         {/* <Alert severity="warning">
           <Typography variant="body2">
             <strong>{t('alert.title')} </strong>— {t('alert.body')}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -20,6 +20,7 @@ import { TextField } from '@mui/material';
 import { addTicket } from '../../redux/actions/ticketAction';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import TodayCard from '../TodayCard';
+import { AnnouncementEnum } from '../../utils/types';
 
 export default function TicketDeliveryDialog({
   openDeliveryAnnouncement,
@@ -30,10 +31,19 @@ export default function TicketDeliveryDialog({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const [productExpDelivery, setExpProductDelivery] = useState(new Date());
+  const [arrivalDate, setArrivalDate] = useState(new Date());
+
+  const ticketAdd = useSelector((state) => state.ticketAdd);
+  const { addedTicket } = ticketAdd;
 
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails } = myPage;
+
+  useEffect(() => {
+    if (addedTicket) {
+      setOpenDeliveryAnnouncement(false);
+    }
+  }, [addedTicket]);
 
   const validationSchema = Yup.object().shape({
     deliveredToNgo: Yup.string().required(t('error.report.deliveredToNgo')),
@@ -52,12 +62,12 @@ export default function TicketDeliveryDialog({
   };
 
   const handleArrivaleTimeChange = (newValue) => {
-    setExpProductDelivery(newValue);
+    setArrivalDate(newValue);
   };
   const handleConfirm = () => {
-    console.log(need)
+    console.log(need);
     console.log({
-      roles: ['selectedRoles'],
+      roles: ['AUDITOR'],
       title: need.name_translations.en,
       flaskUserId: pageDetails.userId,
       userTypeId: pageDetails.typeId,
@@ -65,21 +75,21 @@ export default function TicketDeliveryDialog({
       statuses: need.status_updates,
       receipts: need.receipts,
       payments: need.payments,
+      announcement: AnnouncementEnum.ARRIVED_AT_NGO,
+      arrivalDate,
     });
     dispatch(
       addTicket({
-        // roles: ['selectedRoles'],
-        // title: need.name_translations.en,
-        // flaskUserId: pageDetails.userId,
-        // userTypeId: pageDetails.typeId,
-        // flaskNeedId: need.id,
-        // statuses: need.status_updates,
-        // receipts: need.receipts_,
-        // payments: need.payments,
-        // isDone: need.isDone,
-        // paid: need.paid,
-        // unpayable: need.unpayable,
-        // unpayableFrom: need.unpayable_from,
+        roles: ['AUDITOR'],
+        title: need.name_translations.en,
+        flaskUserId: pageDetails.userId,
+        userTypeId: pageDetails.typeId,
+        flaskNeedId: need.id,
+        statuses: need.status_updates,
+        receipts: need.receipts,
+        payments: need.payments,
+        announcement: AnnouncementEnum.ARRIVED_AT_NGO,
+        arrivalDate,
       }),
     );
   };
@@ -104,7 +114,7 @@ export default function TicketDeliveryDialog({
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
                   id="deliveredToNgo"
-                  value={productExpDelivery}
+                  value={arrivalDate}
                   control={control}
                   {...register('deliveredToNgo', { required: true })}
                   onChange={handleArrivaleTimeChange}

@@ -45,7 +45,12 @@ import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
 import { signTransaction } from '../../redux/actions/blockchainAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
-import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/types';
+import {
+  NeedTypeEnum,
+  ProductStatusEnum,
+  FlaskUserTypesEnum,
+  ServiceStatusEnum,
+} from '../../utils/types';
 import { UPDATE_NEED_STATUS_RESET } from '../../redux/constants/needConstant';
 
 function descendingComparator(a, b, orderBy) {
@@ -415,7 +420,8 @@ const ReportStatusTable = () => {
       console.log(swInfo.typeId);
       // super admin & admin
       if (
-        (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) &&
+        (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+          swInfo.typeId === FlaskUserTypesEnum.ADMIN) &&
         successNgoList
       ) {
         const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
@@ -429,8 +435,8 @@ const ReportStatusTable = () => {
       }
       // social worker
       else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         setOptionsNgo([
           {
@@ -450,7 +456,10 @@ const ReportStatusTable = () => {
     if (!openNgo) {
       setOptionsNgo([]);
     } else if (swInfo) {
-      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER || swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
+      if (
+        swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
+      ) {
         setOptionsNgo([
           {
             id: swInfo.ngoId,
@@ -466,7 +475,10 @@ const ReportStatusTable = () => {
     if (swInfo && !loadingAllReportNeeds) {
       if (successNgoList) {
         // super admin & admin
-        if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+        if (
+          swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+          swInfo.typeId === FlaskUserTypesEnum.ADMIN
+        ) {
           if (ngoId) {
             dispatch(fetchReportNeeds(true, ngoId, typeId, statusId));
           } else {
@@ -474,8 +486,8 @@ const ReportStatusTable = () => {
           }
         }
       } else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         dispatch(fetchReportNeeds(true, swInfo.ngoId, typeId, statusId));
       }
@@ -486,15 +498,18 @@ const ReportStatusTable = () => {
   useEffect(() => {
     if (successStatusUpdate) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+      if (
+        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.ADMIN
+      ) {
         if (ngoId) {
           dispatch(fetchReportNeeds(true, ngoId, typeId, statusId));
         } else {
           dispatch(fetchReportNeeds(true, null, typeId, statusId));
         }
       } else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         dispatch(fetchReportNeeds(true, swInfo.ngoId, typeId, statusId));
       }
@@ -1022,7 +1037,8 @@ const ReportStatusTable = () => {
           <Grid item md={3} xs={12}>
             <Autocomplete
               defaultValue={
-                swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN
+                swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+                swInfo.typeId === FlaskUserTypesEnum.ADMIN
                   ? {
                       id: '',
                       name: t('ngo.allNgos'),

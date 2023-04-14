@@ -12,6 +12,7 @@ import {
   Button,
   Tooltip,
   tooltipClasses,
+  useMediaQuery,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import InterestsIcon from '@mui/icons-material/Interests';
@@ -37,7 +38,7 @@ import spring from '../../resources/images/cover/spring.jpeg';
 import summer from '../../resources/images/cover/summer.jpeg';
 import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
-import { RolesEnum } from '../../utils/types';
+import { FlaskUserTypesEnum } from '../../utils/types';
 import { persianMonth } from '../../utils/persianToEnglish';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
@@ -260,6 +261,7 @@ const CoverCard = ({
   };
 
   const dateList = [];
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   return (
     <Card
@@ -276,7 +278,8 @@ const CoverCard = ({
         }}
       >
         {swInfo &&
-          (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) && (
+          (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+            swInfo.typeId === FlaskUserTypesEnum.ADMIN) && (
             <Box
               sx={{
                 position: 'absolute',
@@ -361,7 +364,7 @@ const CoverCard = ({
             opacity: '50%',
           }}
         >
-          <ContributionOverview swNewDetails={swNewDetails} />
+          {lgUp && <ContributionOverview swNewDetails={swNewDetails} />}
         </Box>
       </Grid>
       <CardContent
@@ -472,9 +475,9 @@ const CoverCard = ({
                   }}
                 >
                   {theUser &&
-                  (theUser.typeId === RolesEnum.ADMIN ||
-                    theUser.typeId === RolesEnum.SUPER_ADMIN ||
-                    theUser.typeId === RolesEnum.SUPER_ADMIN)
+                  (theUser.typeId === FlaskUserTypesEnum.ADMIN ||
+                    theUser.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+                    theUser.typeId === FlaskUserTypesEnum.SUPER_ADMIN)
                     ? t('myPage.myChildren')
                     : t('myPage.allChildren')}
                 </Typography>
@@ -528,7 +531,10 @@ const CoverCard = ({
                   textAlign: 'center',
                 }}
               >
-                <CustomWidthTooltip arrow title={arrivals && <NgoArrivalSummery arrivals={arrivals} />}>
+                <CustomWidthTooltip
+                  arrow
+                  title={arrivals && <NgoArrivalSummery arrivals={arrivals} />}
+                >
                   <Typography
                     sx={{
                       color: (theme) => theme.palette.grey.A200,
@@ -561,12 +567,12 @@ const CoverCard = ({
                     (daysDifference(
                       new Date().toUTCString(),
                       new Date(Math.min(...dateList)).toUTCString(),
-                    ) > 0
+                    ) > 1
                       ? `${Math.round(
                           daysDifference(
                             new Date().toUTCString(),
                             new Date(Math.max(...dateList)).toUTCString(),
-                          ) + 0.4,
+                          ),
                         )} ${t('myPage.days')}`
                       : t('myPage.today'))
                   ) : (

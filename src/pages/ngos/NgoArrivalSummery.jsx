@@ -87,7 +87,7 @@ export default function NgoArrivalSummery({ arrivals }) {
                   <TableRow
                     sx={{
                       '&:last-child td, &:last-child th': { border: '1px solid black' },
-                      opacity: daysDifference(new Date(), new Date(a.maxDate)) > 0.5 ? 1 : 0.4,
+                      opacity: daysDifference(new Date(), new Date(a.maxDate)) >= 0 ? 1 : 0.4,
                     }}
                   >
                     <TableCell sx={{ width: '140px', fontSize: 12 }} align="left">

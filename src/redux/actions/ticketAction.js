@@ -46,6 +46,7 @@ export const fetchUserTicketList = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskUserId: userInfo && userInfo.id,
       },
     };
     const { data } = await daoApi.get(`/tickets/all/user/${userInfo.id}`, config);
@@ -69,7 +70,15 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    const { data } = await daoApi.get(`/tickets/ticket/${ticketId}/${userInfo.id}`);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskUserId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/tickets/ticket/${ticketId}/${userInfo.id}`, config);
 
     dispatch({
       type: TICKET_BY_ID_SUCCESS,
@@ -94,6 +103,7 @@ export const addTicket = (values) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskUserId: userInfo && userInfo.id,
       },
     };
 
@@ -106,6 +116,8 @@ export const addTicket = (values) => async (dispatch, getState) => {
       statuses: values.statuses,
       receipts: values.receipts,
       payments: values.payments,
+      announcement: values.announcement,
+      arrivalDate: values.arrivalDate,
     };
 
     const { data } = await daoApi.post(`/tickets/add`, dataObject, config);
@@ -141,7 +153,6 @@ export const updateTicketColor = (socketData) => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: UPDATE_TICKET_COLOR_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),

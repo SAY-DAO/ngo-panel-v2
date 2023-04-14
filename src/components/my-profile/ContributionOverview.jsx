@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DashboardCard from '../base-card/DashboardCard';
-import { RolesEnum } from '../../utils/types';
+import { FlaskUserTypesEnum } from '../../utils/types';
 import { fetchUserContribution } from '../../redux/actions/analyticAction';
 
 const ContributionOverview = ({ swNewDetails }) => {
@@ -244,8 +244,8 @@ const ContributionOverview = ({ swNewDetails }) => {
       <Tooltip
         title={
           <>
-            {swNewDetails.typeId === RolesEnum.ADMIN ||
-            swNewDetails.typeId === RolesEnum.SUPER_ADMIN ? (
+            {swNewDetails.typeId === FlaskUserTypesEnum.ADMIN ||
+            swNewDetails.typeId === FlaskUserTypesEnum.SUPER_ADMIN ? (
               <Typography>
                 <strong>{t('myPage.countJobs.titleConfirmed')}</strong>
               </Typography>

@@ -58,7 +58,7 @@ import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
 import { getAge, getOrganizedNeeds } from '../../utils/helpers';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
-import { RolesEnum } from '../../utils/types';
+import { FlaskUserTypesEnum } from '../../utils/types';
 import ProviderDialog from '../../components/dialogs/ProviderDialog';
 
 const NeedAdd = () => {
@@ -171,11 +171,11 @@ const NeedAdd = () => {
     } else if (!activeChildren && openChildren) {
       if (swInfo) {
         // super admin & admin
-        if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+        if (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN || swInfo.typeId === FlaskUserTypesEnum.ADMIN) {
           dispatch(fetchActiveChildList());
         } else if (
-          swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-          swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+          swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+          swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
         ) {
           dispatch(fetchSwOrNgoChildList());
         }

@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { SidebarWidth } from '../../../resources/global/Theme-variable';
 import Menuitems from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
-import { RolesEnum } from '../../../utils/types';
+import { FlaskUserTypesEnum } from '../../../utils/types';
 
 const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   const { t } = useTranslation();
@@ -47,7 +47,10 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
 
   useEffect(() => {
     if (swInfo) {
-      if (swInfo.typeId === RolesEnum.ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN) {
+      if (
+        swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
+      ) {
         setMyMenuItems(Menuitems);
       } else {
         const adminMenuitems = Menuitems.filter((m) => m.admin === false);
@@ -128,7 +131,8 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                         )}
                       </ListItem>
                       <Collapse in={index === open} timeout="auto" unmountOnExit>
-                        {swInfo === RolesEnum.ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN ? (
+                        {swInfo === FlaskUserTypesEnum.ADMIN ||
+                        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ? (
                           <List component="li" disablePadding>
                             {item.children.map((child) => {
                               return (

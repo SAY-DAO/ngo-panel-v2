@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, MenuItem, Typography, Avatar, Divider, AvatarGroup, Tooltip } from '@mui/material';
 import { PropTypes } from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { getUserSAYRoleString } from '../../../utils/helpers';
+import { getSAYRoleString } from '../../../utils/helpers';
+import { dateConvertor } from '../../../utils/persianToEnglish';
 
 const NotificationDropdown = ({ unReads }) => {
   const { t } = useTranslation();
@@ -22,7 +23,7 @@ const NotificationDropdown = ({ unReads }) => {
                 <AvatarGroup max={2}>
                   {ticket.contributors.map((c) => (
                     <Tooltip
-                      title={`${c.firstName} - ${t(`roles.${getUserSAYRoleString(c.typeId)}`)}`}
+                      title={`${c.firstName} - ${t(`roles.${getSAYRoleString(c.role)}`)}`}
                       key={c.id}
                     >
                       <Avatar
@@ -49,7 +50,7 @@ const NotificationDropdown = ({ unReads }) => {
                       width: '240px',
                     }}
                   >
-                    {ticket.title}
+                    {ticket.need.name}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -63,7 +64,7 @@ const NotificationDropdown = ({ unReads }) => {
                     {ticket.ticket}
                   </Typography>
                   <Typography color="textSecondary" variant="body2">
-                    {ticket.updatedAt}
+                    {dateConvertor(ticket.updatedAt)}
                   </Typography>
                 </Box>
               </Box>

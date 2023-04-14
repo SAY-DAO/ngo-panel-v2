@@ -52,7 +52,7 @@ import {
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { getDuplicateChildNeeds, getOrganizedNeeds } from '../../utils/helpers';
-import { RolesEnum } from '../../utils/types';
+import { FlaskUserTypesEnum } from '../../utils/types';
 import {
   ALL_NEEDS_RESET,
   UPDATE_NEED_CONFIRM_RESET,
@@ -431,7 +431,8 @@ const NeedTable = () => {
   const { swInfo } = swDetails;
   const [ngo, setNgo] = useState(
     swInfo &&
-      (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.SUPER_ADMIN
+      (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+      swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
         ? {
             id: 2,
             name: 'مهر و ماه',
@@ -485,14 +486,17 @@ const NeedTable = () => {
   useEffect(() => {
     if (swInfo && ngo) {
       // super admin & admin
-      if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+      if (
+        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.ADMIN
+      ) {
         console.log('fetchChildrenByNgo');
         dispatch(fetchChildrenByNgo({ ngoId: ngo.id }));
-      } else if (swInfo.typeId === RolesEnum.NGO_SUPERVISOR) {
+      } else if (swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR) {
         // backend will filter all ngo children
         dispatch(fetchSwOrNgoChildList());
         console.log('fetchٔNgoChildList');
-      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+      } else if (swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER) {
         // backend will filter only sw children
         dispatch(fetchSwOrNgoChildList());
         console.log('fetchSwChildList');
@@ -504,9 +508,9 @@ const NeedTable = () => {
   useEffect(() => {
     if (swInfo) {
       if (
-        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
-        swInfo.typeId === RolesEnum.ADMIN ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         if (child && child.id > 0) {
           console.log('fetchChildNeeds');
@@ -516,7 +520,7 @@ const NeedTable = () => {
           dispatch(fetchAllNeeds(ngo.id, take));
         }
       }
-      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+      if (swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER) {
         if (child && child.id > 0) {
           console.log('fetchChildNeeds');
           dispatch(fetchChildNeeds(child.id));
@@ -534,15 +538,15 @@ const NeedTable = () => {
     // one children
     if (swInfo && theNeeds && child && child.id > 0) {
       if (
-        (theNeeds && swInfo.typeId === RolesEnum.SUPER_ADMIN) ||
-        swInfo.typeId === RolesEnum.ADMIN ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        (theNeeds && swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) ||
+        swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         tableNeeds = theNeeds.needs;
         setTheTableNeeds(tableNeeds);
         setTheTableMaxNeeds(theNeeds.total_count);
       }
-      if (theNeeds && swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+      if (theNeeds && swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER) {
         tableNeeds = theNeeds.needs.filter((n) => swInfo.id === n.createdBy);
         console.log('table = the sw child needs');
         setTheTableMaxNeeds(theNeeds.total_count);
@@ -551,9 +555,9 @@ const NeedTable = () => {
       // all children
     } else if (swInfo && needs && child && child.id === 0) {
       if (
-        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
-        swInfo.typeId === RolesEnum.ADMIN ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         tableNeeds = needs.needs;
         console.log('table = all needs');
@@ -561,7 +565,7 @@ const NeedTable = () => {
         setTheTableNeeds(tableNeeds);
       }
     } else if (swInfo && swNeeds) {
-      if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+      if (swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER) {
         tableNeeds = swNeeds;
         console.log('table = swNeeds');
         setTheTableMaxNeeds(swNeeds.length); // TODO: all needs count is needed
@@ -575,9 +579,9 @@ const NeedTable = () => {
     if (swInfo && !open) {
       // admins and Ngo supervisors vs. social workers
       if (
-        swInfo.typeId === RolesEnum.SUPER_ADMIN ||
-        swInfo.typeId === RolesEnum.ADMIN ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         if (successChildNeeds) {
           const needData = getOrganizedNeeds(theNeeds);
@@ -594,7 +598,7 @@ const NeedTable = () => {
           console.log('need data 3');
           setNeedsData(needData);
         }
-      } else if (swInfo.typeId === RolesEnum.SOCIAL_WORKER) {
+      } else if (swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER) {
         if (successChildNeeds) {
           console.log(theNeeds);
           const filteredChildNeeds = theNeeds.needs.filter((n) => swInfo.id === n.createdBy);
@@ -622,15 +626,16 @@ const NeedTable = () => {
     if (active && swInfo) {
       // super admin & admin
       if (
-        (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) &&
+        (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+          swInfo.typeId === FlaskUserTypesEnum.ADMIN) &&
         successNgoList
       ) {
         setOptionsNgo([...ngoList]);
       }
       // social worker
       else if (
-        swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-        swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+        swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
         setOptionsNgo([
           {
@@ -996,8 +1001,8 @@ const NeedTable = () => {
                                 <TableCell>
                                   <Switch
                                     disabled={
-                                      swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
-                                      swInfo.typeId === RolesEnum.NGO_SUPERVISOR
+                                      swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+                                      swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
                                     }
                                     checked={
                                       oneNeed && row.id === oneNeed.id

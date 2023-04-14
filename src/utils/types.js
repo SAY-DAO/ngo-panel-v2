@@ -83,7 +83,8 @@ export const RolesEnumDefine = {
   USER: 'user',
 };
 
-export const RolesEnum = {
+
+export const FlaskUserTypesEnum = {
   NO_ROLE: 0,
   SUPER_ADMIN: 1,
   SOCIAL_WORKER: 2,
@@ -91,8 +92,6 @@ export const RolesEnum = {
   NGO_SUPERVISOR: 4,
   SAY_SUPERVISOR: 5,
   ADMIN: 6,
-  FAMILY: 7,
-  FRIEND: 8,
 };
 
 export const NeedTypeEnum = {
@@ -104,6 +103,10 @@ export const PaymentStatusEnum = {
   NOT_PAID: 0,
   PARTIAL_PAY: 1,
   COMPLETE_PAY: 2,
+};
+
+export const AnnouncementEnum = {
+  ARRIVED_AT_NGO: 1,
 };
 
 export const ProductStatusEnum = {

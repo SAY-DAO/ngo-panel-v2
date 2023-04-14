@@ -39,6 +39,9 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
 
   const [selectedRoles, setSelectedRoles] = useState([]);
 
+  const ticketAdd = useSelector((state) => state.ticketAdd);
+  const { addedTicket } = ticketAdd;
+
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails } = myPage;
 
@@ -84,7 +87,6 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
       typeof value === 'string' ? value.split(',') : value,
     );
   };
-  console.log(selectedRoles);
   return (
     <div>
       <Dialog open={openConfirm} onClose={handleClose} aria-labelledby="draggable-dialog-title">
@@ -148,7 +150,7 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
         <DialogActions>
           <LoadingButton
             disabled={selectedRoles.length <= 0}
-            loading={loading}
+            loading={addedTicket || loading}
             color="primary"
             onClick={() => handleConfirm(selectedRoles)}
           >

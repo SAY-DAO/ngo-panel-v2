@@ -292,7 +292,7 @@ export const updateNgoArrivals =
         },
       };
 
-      const { data } = await daoApi.get(
+      const { data } = await daoApi.patch(
         `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,
         config,
       );

@@ -2,7 +2,7 @@ import {
   NeedTypeEnum,
   PaymentStatusEnum,
   ProductStatusEnum,
-  RolesEnum,
+  FlaskUserTypesEnum,
   SAYPlatformRoles,
   ServiceStatusEnum,
 } from './types';
@@ -66,17 +66,17 @@ export function getCurrentStatusString(need) {
 
 export function convertFlaskToSayRoles(flakUserType) {
   let role;
-  if (flakUserType === RolesEnum.SAY_SUPERVISOR) {
+  if (flakUserType === FlaskUserTypesEnum.SAY_SUPERVISOR) {
     role = SAYPlatformRoles.AUDITOR;
-  } else if (flakUserType === RolesEnum.ADMIN) {
+  } else if (flakUserType === FlaskUserTypesEnum.ADMIN) {
     role = SAYPlatformRoles.AUDITOR;
-  } else if (flakUserType === RolesEnum.SUPER_ADMIN) {
+  } else if (flakUserType === FlaskUserTypesEnum.SUPER_ADMIN) {
     role = SAYPlatformRoles.AUDITOR;
-  } else if (flakUserType === RolesEnum.SOCIAL_WORKER) {
+  } else if (flakUserType === FlaskUserTypesEnum.SOCIAL_WORKER) {
     role = SAYPlatformRoles.SOCIAL_WORKER;
-  } else if (flakUserType === RolesEnum.COORDINATOR) {
+  } else if (flakUserType === FlaskUserTypesEnum.COORDINATOR) {
     role = SAYPlatformRoles.PURCHASER;
-  } else if (flakUserType === RolesEnum.NGO_SUPERVISOR) {
+  } else if (flakUserType === FlaskUserTypesEnum.NGO_SUPERVISOR) {
     role = SAYPlatformRoles.NGO_SUPERVISOR;
   } else if (!flakUserType) {
     role = SAYPlatformRoles.FAMILY;
@@ -125,16 +125,16 @@ export function getSAYRoleString(sayRole) {
 }
 
 export function getUserSAYRoleString(userTypeId) {
-  if (userTypeId === RolesEnum.SOCIAL_WORKER) {
+  if (userTypeId === FlaskUserTypesEnum.SOCIAL_WORKER) {
     return 'socialWorker';
   }
-  if (userTypeId === RolesEnum.NGO_SUPERVISOR) {
+  if (userTypeId === FlaskUserTypesEnum.NGO_SUPERVISOR) {
     return 'ngoSupervisor';
   }
   if (
-    userTypeId === RolesEnum.ADMIN ||
-    userTypeId === RolesEnum.SUPER_ADMIN ||
-    userTypeId === RolesEnum.SAY_SUPERVISOR
+    userTypeId === FlaskUserTypesEnum.ADMIN ||
+    userTypeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+    userTypeId === FlaskUserTypesEnum.SAY_SUPERVISOR
   ) {
     return 'auditor';
   }

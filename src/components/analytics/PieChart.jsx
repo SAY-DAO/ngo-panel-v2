@@ -7,7 +7,7 @@ import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSelector } from 'react-redux';
 import PageContainer from '../container/PageContainer';
-import { PaymentStatusEnum, RolesEnum } from '../../utils/types';
+import { PaymentStatusEnum, FlaskUserTypesEnum } from '../../utils/types';
 
 const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, child }) => {
   const { t } = useTranslation();
@@ -81,7 +81,7 @@ const PieChart = ({ allNeeds, donaNeeds, totalNeeds, maxCount, take, setTake, ch
           <CardContent>
             <Grid container direction="row" alignItems="center" justifyContent="center">
               <Grid item xs={12} md={3}>
-                {swInfo.typeId === RolesEnum.SOCIAL_WORKER && child && child.id > 0 && (
+                {swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER && child && child.id > 0 && (
                   <Tooltip placement="top-end" title={t('need.totalExplain')}>
                     <IconButton>
                       <HelpOutlineIcon fontSize="small" />

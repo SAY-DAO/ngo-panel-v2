@@ -1,5 +1,10 @@
 import { daoApi, publicApi } from '../../apis/sayBase';
-import { NeedTypeEnum, ProductStatusEnum, RolesEnum, ServiceStatusEnum } from '../../utils/types';
+import {
+  NeedTypeEnum,
+  ProductStatusEnum,
+  FlaskUserTypesEnum,
+  ServiceStatusEnum,
+} from '../../utils/types';
 import {
   CHILD_EXAMPLE_NEEDS_FAIL,
   CHILD_EXAMPLE_NEEDS_REQUEST,
@@ -214,7 +219,10 @@ export const fetchSwNeedList = (take) => async (dispatch, getState) => {
 
     let response;
     // super admin & admin
-    if (swInfo.typeId === RolesEnum.SUPER_ADMIN || swInfo.typeId === RolesEnum.ADMIN) {
+    if (
+      swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+      swInfo.typeId === FlaskUserTypesEnum.ADMIN
+    ) {
       response = await publicApi.get('/needs', config);
     } else {
       response = await publicApi.get(`/socialworkers/${swInfo.id}/createdNeeds`, config);

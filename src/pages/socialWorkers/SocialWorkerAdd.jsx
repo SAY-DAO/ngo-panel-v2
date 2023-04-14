@@ -40,7 +40,7 @@ import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import UploadImage from '../../components/UploadImage';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { RolesEnum } from '../../utils/types';
+import { FlaskUserTypesEnum } from '../../utils/types';
 
 const SocialWorkerAdd = () => {
   const dispatch = useDispatch();
@@ -516,7 +516,7 @@ const SocialWorkerAdd = () => {
                       control={control}
                       register={{ ...register('typeId') }}
                     >
-                      <MenuItem value={1}>{RolesEnum.SUPER_ADMIN}</MenuItem>
+                      <MenuItem value={1}>{FlaskUserTypesEnum.SUPER_ADMIN}</MenuItem>
                       <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
                       <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
                       <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
