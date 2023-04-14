@@ -11,6 +11,7 @@ import {
   Avatar,
   Button,
   Tooltip,
+  tooltipClasses,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import InterestsIcon from '@mui/icons-material/Interests';
@@ -30,13 +31,14 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import { SiweMessage } from 'siwe';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import { styled } from '@mui/material/styles';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import spring from '../../resources/images/cover/spring.jpeg';
 import summer from '../../resources/images/cover/summer.jpeg';
 import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
 import { RolesEnum } from '../../utils/types';
-import { dateConvertor, persianMonth } from '../../utils/persianToEnglish';
+import { persianMonth } from '../../utils/persianToEnglish';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
   fetchNonce,
@@ -48,7 +50,15 @@ import MessageWallet from '../MessageWallet';
 import { WALLET_INFORMATION_RESET, WALLET_VERIFY_RESET } from '../../redux/constants/daoConstants';
 import ContributionOverview from './ContributionOverview';
 import { daysDifference } from '../../utils/helpers';
-import TodayCard from '../TodayCard';
+import NgoArrivalSummery from '../../pages/ngos/NgoArrivalSummery';
+
+const CustomWidthTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 800,
+  },
+});
 
 const CoverCard = ({
   theUser,
@@ -250,7 +260,6 @@ const CoverCard = ({
   };
 
   const dateList = [];
-  const list = [];
 
   return (
     <Card
@@ -519,71 +528,7 @@ const CoverCard = ({
                   textAlign: 'center',
                 }}
               >
-                <Tooltip
-                  arrow
-                  title={
-                    <Grid
-                      container
-                      direction="column"
-                      sx={{
-                        p: 1,
-                      }}
-                    >
-                      {arrivals && (
-                        <>
-                          <TodayCard />
-                          {arrivals.map((a) => {
-                            return (
-                              <Grid item key={a.deliveryCode}>
-                                {!list.includes(a.ngoName) && (
-                                  <>
-                                    <Typography
-                                      sx={{
-                                        fontSize: 14,
-                                        fontWeight: 800,
-                                        mb: 1,
-                                        mt: 1,
-                                        textAlign: 'center',
-                                      }}
-                                    >
-                                      {list.push(a.ngoName) && a.ngoName}
-                                    </Typography>
-                                    {arrivals.map((arr) => {
-                                      return (
-                                        <Grid item key={arr.deliveryCode}>
-                                          {a.ngoName === arr.ngoName && (
-                                            <Typography
-                                              sx={{
-                                                fontSize: 12,
-                                                opacity:
-                                                  daysDifference(
-                                                    new Date(),
-                                                    new Date(arr.maxDate),
-                                                  ) +
-                                                    1 >
-                                                  1
-                                                    ? 1
-                                                    : 0.6,
-                                              }}
-                                            >
-                                              {dateConvertor(new Date(arr.maxDate).toUTCString())}
-                                              {arr.deliveryCode}
-                                            </Typography>
-                                          )}
-                                        </Grid>
-                                      );
-                                    })}
-                                    <br />
-                                  </>
-                                )}
-                              </Grid>
-                            );
-                          })}
-                        </>
-                      )}
-                    </Grid>
-                  }
-                >
+                <CustomWidthTooltip arrow title={arrivals && <NgoArrivalSummery arrivals={arrivals} />}>
                   <Typography
                     sx={{
                       color: (theme) => theme.palette.grey.A200,
@@ -591,7 +536,7 @@ const CoverCard = ({
                   >
                     <DeliveryDiningIcon fontSize="medium" sx={{ mb: 0 }} />
                   </Typography>
-                </Tooltip>
+                </CustomWidthTooltip>
 
                 <Typography
                   variant="h4"

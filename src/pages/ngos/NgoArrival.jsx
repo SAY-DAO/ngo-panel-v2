@@ -48,11 +48,11 @@ export default function NgoArrival() {
         <TableHead>
           <TableRow>
             <TableCell>{t('ngo.name')}</TableCell>
-            <TableCell align="left">{t('ngo.orderCode')}</TableCell>
+            <TableCell align="left">{t('ngo.deliveryCode')}</TableCell>
             <TableCell align="left">{t('ngo.deliveryItems')}</TableCell>
             <TableCell align="left">{t('ngo.arrivalDate')}</TableCell>
             <TableCell align="left">{t('button.update')}</TableCell>
-            <TableCell align="left">{t('ngo.deliveryCode')}</TableCell>
+            <TableCell align="left">{t('ngo.arrivalCode')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
