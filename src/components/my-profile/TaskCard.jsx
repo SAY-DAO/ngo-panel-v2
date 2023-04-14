@@ -30,6 +30,9 @@ import { useAccount, useSigner } from 'wagmi';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTheme } from '@mui/material/styles';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
 import {
   PaymentStatusEnum,
   NeedTypeEnum,
@@ -47,6 +50,8 @@ import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constan
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
 import WalletButton from '../wallet/WalletButton';
+import TicketDeliveryDialog from '../dialogs/TicketDeliveryDialog';
+import { prepareUrl } from '../../utils/helpers';
 
 const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const dispatch = useDispatch();
@@ -58,7 +63,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [height, setHeight] = useState(false);
-  const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openDeliveryAnnouncement, setOpenDeliveryAnnouncement] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [openWallets, setOpenWallets] = useState(false);
   const [needSignatures, setNeedSignatures] = useState([]);
@@ -158,9 +164,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
         {
           address,
           flaskNeedId: need.id,
-          statuses: need.statusUpdates,
+          statuses: need.status_updates,
           receipts: need.receipts_,
-          payments: need.verifiedPayments,
+          payments: need.payments,
           isDone: need.isDone,
           paid: need.paid,
           unpayable: need.unpayable,
@@ -187,19 +193,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     }
   }, [signature, pageDetails]);
 
-  let iconUrl;
-  let awakeUrl;
-  if (need.imageUrl && need.imageUrl.startsWith('/')) {
-    iconUrl = `https://api.sayapp.company/${need.imageUrl.slice(1)}`;
-  } else {
-    iconUrl = `https://api.sayapp.company/${need.imageUrl}`;
-  }
-
-  if (need.child && need.child.awakeAvatarUrl && need.child.awakeAvatarUrl.startsWith('/')) {
-    awakeUrl = `https://api.sayapp.company/${need.child.awakeAvatarUrl.slice(1)}`;
-  } else {
-    awakeUrl = `https://api.sayapp.company/${need.child.awakeAvatarUrl}`;
-  }
+  const handleAnnounceDelivery = () => {
+    setOpenDeliveryAnnouncement(true);
+  };
 
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
@@ -226,11 +222,11 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 background:
                   !need.imageUrl.includes('wrong') && need.child.awakeAvatarUrl
                     ? `url(
-                      ${awakeUrl}
+                      ${prepareUrl(need.child.awakeAvatarUrl)}
                     )`
-                    : `url(${iconUrl})`,
+                    : `url(${prepareUrl(need.imageUrl)})`,
                 '&:hover': {
-                  background: `url(${iconUrl})`,
+                  background: `url(${prepareUrl(need.imageUrl)})`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                 },
@@ -238,7 +234,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 backgroundSize: 'cover',
               }}
             >
-              {iconUrl.includes('wrong') && (
+              {need.imageUrl.includes('wrong') && (
                 <Tooltip title={t('need.tooltip.addIcon')}>
                   <IconButton onClick={() => console.log(true)}>
                     <AddCircleRoundedIcon />
@@ -260,8 +256,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   fontSize: 12,
                 }}
               >
-                {need.child.firstName_translations && need.child.firstName_translations.fa}
-                {' '}
+                {need.child.firstName_translations && need.child.firstName_translations.fa}{' '}
                 {need.child.lastName_translations && need.child.lastName_translations.fa}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="200" sx={{ fontSize: 11 }}>
@@ -303,6 +298,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   {(swInfo.typeId === RolesEnum.ADMIN ||
                     swInfo.typeId === RolesEnum.SUPER_ADMIN) && (
                     <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
+                      <EditIcon sx={{ ml: 1, mr: 1 }} />
                       {t('myPage.taskCard.menu.updateChild')}
                     </MenuItem>
                   )}
@@ -313,19 +309,30 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         style={{ textDecoration: 'none', color: '#e6e5e8' }}
                         to={`/need/edit/${need.child.id}/${need.id}`}
                       >
+                        <EditIcon sx={{ ml: 1, mr: 1 }} />
                         {t('myPage.taskCard.menu.updateٔNeed')}
                       </RouterLink>
                     </MenuItem>
                   )}
                   {need.ticket ? (
                     <MenuItem onClick={() => handleOpenTicketing(need.ticket.id)}>
+                      <VisibilityIcon sx={{ ml: 1, mr: 1 }} />
                       {t('myPage.taskCard.menu.readTicket')}
                     </MenuItem>
                   ) : (
                     <MenuItem onClick={() => handleOpenConfirm()}>
+                      <FlagIcon sx={{ ml: 1, mr: 1 }} />
                       {t('myPage.taskCard.menu.addTicket')}
                     </MenuItem>
                   )}
+                  {swInfo.id === need.created_by_id &&
+                    need.type === NeedTypeEnum.PRODUCT &&
+                    need.status === ProductStatusEnum.PURCHASED_PRODUCT && (
+                      <MenuItem onClick={() => handleAnnounceDelivery()}>
+                        <CampaignIcon sx={{ ml: 1, mr: 1 }} />
+                        {t('myPage.taskCard.menu.deliveryTicket')}
+                      </MenuItem>
+                    )}
                 </Menu>
               )}
             </Box>
@@ -348,7 +355,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     mb: 1,
                   }}
                 >
-                  {need.name}
+                  {need.name_translations.fa}
                 </Typography>
               </Grid>
               <Grid item xs={2}>
@@ -427,7 +434,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               {need.receipts_ && need.receipts_[0] ? (
                 <AvatarGroup>
                   {need.receipts_.map((r) => (
-                    <ReceiptImage receipt={r} key={r.id} />
+                    <ReceiptImage receipt={r.receipt[0]} key={r.id} />
                   ))}
                 </AvatarGroup>
               ) : (
@@ -561,8 +568,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           </Box>
         </CardActionArea>
         <CardActions>
-          <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-            {!need.isConfirmed && (
+          {!need.isConfirmed && (
+            <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
               <LoadingButton
                 disabled={
                   swInfo.typeId === RolesEnum.SOCIAL_WORKER ||
@@ -572,8 +579,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               >
                 {t('button.confirm')}
               </LoadingButton>
-            )}
-          </Grid>
+            </Grid>
+          )}
           {need.status === ProductStatusEnum.DELIVERED && (
             <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
               <Tooltip
@@ -618,6 +625,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
         <TicketConfirmDialog
           openConfirm={openConfirm}
           setOpenConfirm={setOpenConfirm}
+          loading={loadingTicketAdd}
+          need={need}
+        />
+      )}
+      {openDeliveryAnnouncement && (
+        <TicketDeliveryDialog
+          openDeliveryAnnouncement={openDeliveryAnnouncement}
+          setOpenDeliveryAnnouncement={setOpenDeliveryAnnouncement}
           loading={loadingTicketAdd}
           need={need}
         />

@@ -3,6 +3,9 @@
     "title": "لطفا در جریان باشید!",
     "body": "در حال به‌روزرسانی بعضی از قابلیت‌ها هستیم و ممکن است پنل تا شنبه دچار اختلال باشد."
   },
+  "placeholder": {
+    "enterArrivalCode": "کد تحویل را وارد کنید ..."
+  },
   "settings": {
     "title": "تنظیمات",
     "themeOption": "انتخاب تم",
@@ -264,8 +267,7 @@
       "title": "کودکان"
     },
     "needs": {
-      "title": "نیازها",
-      "arrivals": "ارسال تامین کننده"
+      "title": "نیازها"
     },
     "milestone": {
       "title": "جدول نقاط عطف"
@@ -273,7 +275,8 @@
     "reports": "گزارش‌ها",
     "adminHeader": "ادمین",
     "ngos": {
-      "title": "انجمن‌ها"
+      "title": "انجمن‌ها",
+      "arrivals": "کد تامین کننده"
     },
     "providers": {
       "title": "تامین کننده‌ها"
@@ -362,6 +365,10 @@
     "country": "کشور",
     "state": "استان",
     "city": "شهر",
+    "deliveryItems": "تعداد کالا",
+    "deliveryCode": "کد تخویل کالا",
+    "orderCode": "کد پیگیری کالا",
+    "arrivalDate": "تاریخ تحویل",
     "currentChildrenCount": "تعداد کودکان فعال",
     "socialWorkerCount": "تعداد مددکارها",
     "currentSocialWorkerCount": "تعداد مددکاران فعال",
@@ -690,7 +697,7 @@
       "title": {
         "notPaid": "پرداخت نشده",
         "paid": "پرداخت‌ها",
-        "purchased": "خریدها / انتقال داده شده",
+        "purchased": "خریدها / پرداخت‌ها به سمن",
         "delivered": "انجام شده"
       }
     },
@@ -720,7 +727,8 @@
         "updateٔNeed": "ویرایش نیاز",
         "addTicket": "اضافه کردن تیکت",
         "readTicket": "خواندن تیکت",
-        "tickets": "تیکت‌ها"
+        "tickets": "تیکت‌ها",
+        "deliveryTicket": "َاعلام رسیدن کالا به سمن"
       }
     }
   },

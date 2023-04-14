@@ -1,4 +1,4 @@
-import { publicApi } from '../../apis/sayBase';
+import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   ADD_NGO_FAIL,
   ADD_NGO_REQUEST,
@@ -6,6 +6,12 @@ import {
   DELETE_NGO_FAIL,
   DELETE_NGO_REQUEST,
   DELETE_NGO_SUCCESS,
+  NGO_ARRIVAL_FAIL,
+  NGO_ARRIVAL_REQUEST,
+  NGO_ARRIVAL_SUCCESS,
+  UPDATE_NGO_ARRIVAL_FAIL,
+  UPDATE_NGO_ARRIVAL_REQUEST,
+  UPDATE_NGO_ARRIVAL_SUCCESS,
   NGO_BY_ID_FAIL,
   NGO_BY_ID_REQUEST,
   NGO_BY_ID_SUCCESS,
@@ -243,3 +249,61 @@ export const deleteNgo = (ngoId) => async (dispatch, getState) => {
     });
   }
 };
+
+export const fetchNgoArrivals = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: NGO_ARRIVAL_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const { data } = await daoApi.get(`/ngo/arrivals/${userInfo.id}`, config);
+    dispatch({
+      type: NGO_ARRIVAL_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: NGO_ARRIVAL_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const updateNgoArrivals =
+  (deliveryCode, arrivalCode) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: UPDATE_NGO_ARRIVAL_REQUEST });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+        },
+      };
+
+      const { data } = await daoApi.get(
+        `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,
+        config,
+      );
+      dispatch({
+        type: UPDATE_NGO_ARRIVAL_SUCCESS,
+        payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: UPDATE_NGO_ARRIVAL_FAIL,
+        payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      });
+    }
+  };

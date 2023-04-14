@@ -235,7 +235,7 @@ export default function ReportImage({ row, statusId }) {
           <Box>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <Grid container>
-                <CustomFormLabel htmlFor="title">{t('report.receipt.code')}</CustomFormLabel>
+                <CustomFormLabel htmlFor="code">{t('report.receipt.code')}</CustomFormLabel>
                 <TextField
                   id="code"
                   variant="outlined"

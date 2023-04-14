@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Tooltip, Avatar, CardMedia, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
+import { prepareUrl } from '../../utils/helpers';
 
 export default function ReceiptImage({ receipt }) {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ export default function ReceiptImage({ receipt }) {
             <Typography variant="subtitle1">
               {receipt.description && receipt.description}
             </Typography>
-            <CardMedia component="img" image={receipt.attachment} alt="large" />
+            <CardMedia component="img" image={prepareUrl(receipt.attachment)} alt="large" />
           </>
         }
         placement="top"
@@ -51,7 +52,7 @@ export default function ReceiptImage({ receipt }) {
               <Avatar
                 alt="receipt"
                 sx={{ width: 20, height: 20, border: '1px solid gray' }}
-                src={receipt.attachment}
+                src={prepareUrl(receipt.attachment)}
               />
             )}
           </>

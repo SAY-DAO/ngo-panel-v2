@@ -29,7 +29,7 @@ import { format } from 'date-fns';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/types';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
-import { dateConvertor } from '../../utils/persianToEnglish';
+import TodayCard from '../TodayCard';
 
 export default function StatusDialog({ need, statusDialog, setStatusDialog, setStatusNeed }) {
   const dispatch = useDispatch();
@@ -208,21 +208,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
           <DialogContent sx={{ p: 0 }}>
             <Grid container direction="row" justifyContent="space-between" alignItems="center">
               <Grid item>
-                <Card elevation={8}>
-                  <Typography sx={{ fontSize: 16 }}>{t('need.today')} </Typography>
-                  <Typography sx={{ fontSize: 12, pl: 1, pr: 1 }} variant="body2">
-                    {dateConvertor(
-                      `${new Date().getFullYear()}-${
-                        new Date().getMonth() + 1
-                      }-${new Date().getDate()}`,
-                    )}
-                  </Typography>
-                  <Typography sx={{ fontSize: 12, pl: 1, pr: 1 }} variant="body2">
-                    {`${new Date().getFullYear()}-${
-                      new Date().getMonth() + 1
-                    }-${new Date().getDate()}`}
-                  </Typography>
-                </Card>
+                <TodayCard />
               </Grid>
               <Grid item>
                 <Card elevation={8}>

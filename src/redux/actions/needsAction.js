@@ -169,7 +169,7 @@ export const fetchChildNeeds =
 export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_ONE_NEED_REQUEST });
-    console.log("needId");
+    console.log('needId');
     console.log(needId);
     const {
       userLogin: { userInfo },
@@ -410,7 +410,9 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-
+    if (!providerId) {
+      throw new Error('Provider id is needed!');
+    }
     const formData = new FormData();
     formData.append('sw_id', swInfo.id);
 

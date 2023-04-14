@@ -1,7 +1,7 @@
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full-layout/loadable/Loadable';
-import NeedArrival from '../pages/needs/NeedArrival';
+import NgoArrival from '../pages/ngos/NgoArrival';
 import {
   CHILDREN_ADD,
   CHILDREN_EDIT,
@@ -11,7 +11,7 @@ import {
   MILESTONE_ADD,
   MILESTONE_LIST,
   NEED_ADD,
-  NEED_ARRIVALS,
+  NGO_ARRIVALS,
   NEED_EDIT,
   NEED_LIST,
   NGO_ADD,
@@ -87,7 +87,7 @@ const Router = [
       { path: NEED_LIST, exact: true, element: <NeedList /> },
       { path: NEED_EDIT, exact: true, element: <NeedEdit /> },
       { path: NEED_ADD, exact: true, element: <NeedAdd /> },
-      { path: NEED_ARRIVALS, exact: true, element: <NeedArrival /> },
+      { path: NGO_ARRIVALS, exact: true, element: <NgoArrival /> },
       { path: REPORTS, exact: true, element: <ReportList /> },
       { path: DAO_HOME, exact: true, element: <DAO /> },
       { path: MILESTONE_ADD, exact: true, element: <DaoMileStoneAdd /> },

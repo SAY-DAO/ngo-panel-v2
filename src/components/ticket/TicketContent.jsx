@@ -20,7 +20,7 @@ import FeatherIcon from 'feather-icons-react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from '../custom-scroll/Scrollbar';
-import { getCurrentStatusString, getSAYRoleString } from '../../utils/helpers';
+import { getCurrentStatusString, getSAYRoleString, prepareUrl } from '../../utils/helpers';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { colorChoices } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
@@ -98,7 +98,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 <Grid item xs={5} md={2}>
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar alt="Icon" src={theTicket.need.imageUrl} />
+                      <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
                     </ListItemAvatar>
                     <ListItemText
                       primary={<Typography variant="h4">{theTicket.title}</Typography>}
@@ -125,7 +125,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                           >
                             <Avatar
                               alt={c.firstName}
-                              src={`https://api.sayapp.company/${c.avatarUrl}`}
+                              src={prepareUrl(c.avatarUrl)}
                               sx={{
                                 backgroundColor: (theme) => theme.palette.grey.A200,
                               }}
@@ -196,9 +196,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                             alt="user"
                             src={
                               theTicket.contributors.find((p) => p.flaskId === h.from) &&
-                              `https://api.sayapp.company/${
-                                theTicket.contributors.find((p) => p.flaskId === h.from).avatarUrl
-                              }`
+                              prepareUrl(
+                                theTicket.contributors.find((p) => p.flaskId === h.from).avatarUrl,
+                              )
                             }
                             sx={{ backgroundColor: (theme) => theme.palette.grey[600] }}
                           />

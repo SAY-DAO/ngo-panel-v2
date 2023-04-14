@@ -179,7 +179,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                         ) : (
                           <List component="li" disablePadding>
                             {item.children
-                              .filter((c) => c.admin)
+                              .filter((c) => !c.admin)
                               .map((child) => {
                                 return (
                                   <ListItem

@@ -48,6 +48,7 @@ import MessageWallet from '../MessageWallet';
 import { WALLET_INFORMATION_RESET, WALLET_VERIFY_RESET } from '../../redux/constants/daoConstants';
 import ContributionOverview from './ContributionOverview';
 import { daysDifference } from '../../utils/helpers';
+import TodayCard from '../TodayCard';
 
 const CoverCard = ({
   theUser,
@@ -248,8 +249,9 @@ const CoverCard = ({
     setWalletToastOpen(false);
   };
 
-  const codes = arrivals && arrivals.map((a) => Object.keys(a)[0]);
   const dateList = [];
+  const list = [];
+
   return (
     <Card
       sx={{
@@ -518,29 +520,67 @@ const CoverCard = ({
                 }}
               >
                 <Tooltip
+                  arrow
                   title={
-                    <Grid container direction="column">
-                      {arrivals &&
-                        arrivals.map((a) => {
-                          // console.log(codes);
-                          console.log(a);
-                          return codes.map((code) => {
-                            if (code in a) {
-                              return (
-                                <Grid item key={code}>
-                                  <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
-                                    {a[code].ngoName}:{' '}
-                                  </Typography>
-                                  <Typography sx={{ fontSize: 12 }}>
-                                    {dateConvertor(new Date(a[code].maxDate).toUTCString())}
-                                  </Typography>
-                                  <br />
-                                </Grid>
-                              );
-                            }
-                            return null;
-                          });
-                        })}
+                    <Grid
+                      container
+                      direction="column"
+                      sx={{
+                        p: 1,
+                      }}
+                    >
+                      {arrivals && (
+                        <>
+                          <TodayCard />
+                          {arrivals.map((a) => {
+                            return (
+                              <Grid item key={a.deliveryCode}>
+                                {!list.includes(a.ngoName) && (
+                                  <>
+                                    <Typography
+                                      sx={{
+                                        fontSize: 14,
+                                        fontWeight: 800,
+                                        mb: 1,
+                                        mt: 1,
+                                        textAlign: 'center',
+                                      }}
+                                    >
+                                      {list.push(a.ngoName) && a.ngoName}
+                                    </Typography>
+                                    {arrivals.map((arr) => {
+                                      return (
+                                        <Grid item key={arr.deliveryCode}>
+                                          {a.ngoName === arr.ngoName && (
+                                            <Typography
+                                              sx={{
+                                                fontSize: 12,
+                                                opacity:
+                                                  daysDifference(
+                                                    new Date(),
+                                                    new Date(arr.maxDate),
+                                                  ) +
+                                                    1 >
+                                                  1
+                                                    ? 1
+                                                    : 0.6,
+                                              }}
+                                            >
+                                              {dateConvertor(new Date(arr.maxDate).toUTCString())}
+                                              {arr.deliveryCode}
+                                            </Typography>
+                                          )}
+                                        </Grid>
+                                      );
+                                    })}
+                                    <br />
+                                  </>
+                                )}
+                              </Grid>
+                            );
+                          })}
+                        </>
+                      )}
                     </Grid>
                   }
                 >
@@ -563,17 +603,25 @@ const CoverCard = ({
                 >
                   {arrivals ? (
                     arrivals.map((a) => {
-                      codes.map((code) => {
-                        if (code in a) {
-                          dateList.push(a[code].maxDate);
-                        }
-                        return null;
-                      });
+                      // const diff = daysDifference(
+                      //   new Date().toUTCString(),
+                      //   new Date(Math.min(...dateList)).toUTCString(),
+                      // );
+                      dateList.push(a.maxDate);
+
                       return null;
                     }) &&
-                    (daysDifference(new Date(), new Date(Math.min(...dateList)).toUTCString()) < 0
+                    // wee add a number like 0.4 tp help round up because delivery dates have not their hours set and it calculates base on 12:00 am
+                    // sice 2.45 will round to 2 days, to avoid this we increase it to somewhere ~ 2.85 to round to 3
+                    (daysDifference(
+                      new Date().toUTCString(),
+                      new Date(Math.min(...dateList)).toUTCString(),
+                    ) > 0
                       ? `${Math.round(
-                          daysDifference(new Date(), new Date(Math.max(...dateList)).toUTCString()),
+                          daysDifference(
+                            new Date().toUTCString(),
+                            new Date(Math.max(...dateList)).toUTCString(),
+                          ) + 0.4,
                         )} ${t('myPage.days')}`
                       : t('myPage.today'))
                   ) : (

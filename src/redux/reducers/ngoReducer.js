@@ -6,6 +6,12 @@ import {
   DELETE_NGO_FAIL,
   DELETE_NGO_REQUEST,
   DELETE_NGO_SUCCESS,
+  NGO_ARRIVAL_FAIL,
+  NGO_ARRIVAL_REQUEST,
+  NGO_ARRIVAL_SUCCESS,
+  UPDATE_NGO_ARRIVAL_FAIL,
+  UPDATE_NGO_ARRIVAL_REQUEST,
+  UPDATE_NGO_ARRIVAL_SUCCESS,
   NGO_BY_ID_FAIL,
   NGO_BY_ID_REQUEST,
   NGO_BY_ID_RESET,
@@ -100,6 +106,25 @@ export const ngoDeleteReducer = (state = { success: false }, action) => {
     case DELETE_NGO_SUCCESS:
       return { loading: false, success: true, deleted: action.payload };
     case DELETE_NGO_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const ngoArrivalReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case NGO_ARRIVAL_REQUEST:
+      return { loading: true };
+    case NGO_ARRIVAL_SUCCESS:
+      return { loading: false, success: true, arrivals: action.payload };
+    case NGO_ARRIVAL_FAIL:
+      return { loading: false, error: action.payload };
+    case UPDATE_NGO_ARRIVAL_REQUEST:
+      return { ...state, loading: true };
+    case UPDATE_NGO_ARRIVAL_SUCCESS:
+      return { ...state, loading: false, success: true, updatedCode: action.payload };
+    case UPDATE_NGO_ARRIVAL_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

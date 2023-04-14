@@ -3,6 +3,9 @@
     "title": "Please be Advised!",
     "body": "Up to End of Day We are working on some feature and you might encounter some mior issues"
   },
+  "placeholder": {
+    "enterArrivalCode": "Please enter arrival code ..."
+  },
   "settings": {
     "title": "Settings",
     "themeOption": "Theme Option",
@@ -159,7 +162,7 @@
   },
   "report": {
     "statusChange": {
-      "expectedDeliveryToNgo": "Date of Product arrival",
+      "expectedDeliveryToNgo": "Expected date of NGO arrival",
       "retailerPaid": "Price paid to Retailer",
       "paid": "Price paid",
       "retailerCode": "Retailer Code",
@@ -225,8 +228,7 @@
       "title": "Children"
     },
     "needs": {
-      "title": "Needs",
-      "arrivals": "Arrivals"
+      "title": "Needs"
     },
     "milestone": {
       "title": "MileStone"
@@ -234,7 +236,9 @@
     "reports": "Reports",
     "adminHeader": "ADMIN",
     "ngos": {
-      "title": "NGOs"
+      "title": "NGOs",
+      "arrivals": "Arrivals Code"
+
     },
     "providers": {
       "title": "Providers"
@@ -323,6 +327,10 @@
     "country": "Country",
     "state": "State",
     "city": "City",
+    "deliveryItems": "Number of Items",
+    "deliveryCode": "Arrival Code",
+    "orderCode": "Order Code",
+    "arrivalDate": "Delivery Arrival Date",
     "currentChildrenCount": "Current Children Count",
     "socialWorkerCount": "SW Count",
     "currentSocialWorkerCount": "Current SW Count",
@@ -682,7 +690,8 @@
         "updateٔNeed": "َEdit Need",
         "addTicket": "َAdd ticket",
         "readTicket": "َRead ticket",
-        "tickets": "َAll tickets"
+        "tickets": "َAll tickets",
+        "deliveryTicket": "َAnnounce Need Arrival"
       }
     }
   },

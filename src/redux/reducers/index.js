@@ -3,6 +3,7 @@ import countryListReducer from './countryReducer';
 import CustomizerReducer from './customizerReducer';
 import {
   ngoAddReducer,
+  ngoArrivalReducer,
   ngoByIdReducer,
   ngoDeleteReducer,
   ngoListReducer,
@@ -122,6 +123,7 @@ export default combineReducers({
   ngoStatusUpdate: ngoUpdateIsActiveReducer,
   ngoById: ngoByIdReducer,
   ngoAll: ngoListReducer,
+  ngoArrivals: ngoArrivalReducer,
   ngoUpdate: ngoUpdateReducer,
   ngoAdd: ngoAddReducer,
   ngoDelete: ngoDeleteReducer,

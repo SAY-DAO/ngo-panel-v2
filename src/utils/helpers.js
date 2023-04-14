@@ -205,3 +205,26 @@ export function daysDifference(time1, time2) {
   // calculate days difference by dividing total milliseconds in a day
   return (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
 }
+
+export function timeDifference(time1, time2) {
+  const diff = time2.getTime() - time1.getTime();
+  let msec = diff;
+  const hh = Math.floor(msec / 1000 / 60 / 60);
+  msec -= hh * 1000 * 60 * 60;
+  const mm = Math.floor(msec / 1000 / 60);
+  msec -= mm * 1000 * 60;
+  const ss = Math.floor(msec / 1000);
+  msec -= ss * 1000;
+  return { hh, mm, ss, diff };
+}
+
+export function prepareUrl(imageUrl) {
+  let url;
+  if (imageUrl && imageUrl.startsWith('/')) {
+    url = `https://api.sayapp.company/${imageUrl.slice(1)}`;
+  } else {
+    url = `https://api.sayapp.company/${imageUrl}`;
+  }
+
+  return url;
+}

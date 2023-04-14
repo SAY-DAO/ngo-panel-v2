@@ -103,9 +103,9 @@ export const addTicket = (values) => async (dispatch, getState) => {
       flaskUserId: values.flaskUserId,
       userTypeId: values.userTypeId,
       flaskNeedId: values.flaskNeedId,
-      statuses: values.statusUpdates,
-      receipts: values.receipts_,
-      payments: values.verifiedPayments,
+      statuses: values.statuses,
+      receipts: values.receipts,
+      payments: values.payments,
     };
 
     const { data } = await daoApi.post(`/tickets/add`, dataObject, config);

@@ -23,6 +23,7 @@ import {
 import ConfirmNeedDialog from '../../components/dialogs/ConfirmNeedDialog';
 import { getDuplicateChildNeeds } from '../../utils/helpers';
 import { UPDATE_NEED_CONFIRM_RESET } from '../../redux/constants/needConstant';
+import { MY_PAGE_RESET } from '../../redux/constants/userConstants';
 
 function getModifiedNeeds(updatedTicket, addedTicket, need) {
   let theNeed;
@@ -83,6 +84,9 @@ const MyPage = () => {
     if (swNewDetails && swNewDetails.id) {
       dispatch(fetchMyPage(swNewDetails.id, swNewDetails.typeId, page, rowsPerPage));
     }
+    return () => {
+      dispatch({ type: MY_PAGE_RESET });
+    };
   }, [swNewDetails, page, rowsPerPage]);
 
   useEffect(() => {
@@ -218,7 +222,7 @@ const MyPage = () => {
         needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : -1}
         childCount={pageDetails && pageDetails.children}
         signatureCount={pageDetails ? pageDetails.signatures.length : -1}
-        arrivals={pageDetails && pageDetails.arrivals.arrivals}
+        arrivals={pageDetails && pageDetails.arrivals}
         swInfo={swInfo}
         swNewDetails={swNewDetails}
         setSwNewDetails={setSwNewDetails}
@@ -238,30 +242,38 @@ const MyPage = () => {
                 sx={{ mt: 1, mb: 1, minWidth: '950px' }}
               >
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
-                  <Typography component="span">{t('myPage.taskManager.title.notPaid')}</Typography>
-                  <Typography component="span" sx={{ fontSize: 12 }}>
+                  <Typography component="span" sx={{ fontSize: 11 }}>
+                    {t('myPage.taskManager.title.notPaid')}
+                  </Typography>
+                  <Typography component="span" sx={{ fontSize: 11 }}>
+                    {' '}
                     ({totalNeedCount.notPaid})
                   </Typography>
                 </Grid>
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
-                  <Typography component="span">{t('myPage.taskManager.title.paid')}</Typography>
-                  <Typography component="span" sx={{ fontSize: 12 }}>
+                  <Typography component="span" sx={{ fontSize: 11 }}>
+                    {t('myPage.taskManager.title.paid')}
+                  </Typography>
+                  <Typography component="span" sx={{ fontSize: 11 }}>
+                    {' '}
                     ({totalNeedCount.paid})
                   </Typography>
                 </Grid>
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
-                  <Typography component="span">
+                  <Typography component="span" sx={{ fontSize: 11 }}>
                     {t('myPage.taskManager.title.purchased')}
                   </Typography>
-                  <Typography component="span" sx={{ fontSize: 12 }}>
+                  <Typography component="span" sx={{ fontSize: 11 }}>
+                    {' '}
                     ({totalNeedCount.purchased})
                   </Typography>
                 </Grid>
                 <Grid item xs={3} sx={{ textAlign: 'center' }}>
-                  <Typography component="span">
+                  <Typography component="span" sx={{ fontSize: 11 }}>
                     {t('myPage.taskManager.title.delivered')}
                   </Typography>
-                  <Typography component="span" sx={{ fontSize: 12 }}>
+                  <Typography component="span" sx={{ fontSize: 11 }}>
+                    {' '}
                     ({totalNeedCount.delivered})
                   </Typography>
                 </Grid>
