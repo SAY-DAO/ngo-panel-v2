@@ -703,6 +703,7 @@ const CoverCard = ({
                                   height: '1.2em',
                                   whiteSpace: 'nowrap',
                                   justifyContent: 'flex-end',
+                                  position: 'relative'
                                 }}
                               >
                                 {ensName

@@ -53,6 +53,8 @@ import WalletDialog from '../dialogs/WalletDialog';
 import WalletButton from '../wallet/WalletButton';
 import TicketDeliveryDialog from '../dialogs/TicketDeliveryDialog';
 import { prepareUrl } from '../../utils/helpers';
+import WaterWaveText from '../WaterWaveText';
+import fetchIpfsMetaData from '../../utils/ipfsHelper';
 
 const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const dispatch = useDispatch();
@@ -70,6 +72,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const [openWallets, setOpenWallets] = useState(false);
   const [needSignatures, setNeedSignatures] = useState([]);
   const [completed, setCompleted] = useState(false);
+  const [ipfsMetaData, setIpfsMetaData] = useState();
   const open = Boolean(anchorEl);
 
   const { address, isConnected } = useAccount();
@@ -189,8 +192,28 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     setOpenDeliveryAnnouncement(true);
   };
 
+  useEffect(() => {
+    if (ipfsMetaData) {
+      console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;');
+      console.log(ipfsMetaData.child.awakeImage);
+    } else if (need.ipfs) {
+      const handleIpfs = async () => {
+        const result = await fetchIpfsMetaData(need.ipfs.needDetailsHash);
+        setIpfsMetaData(result.data);
+      };
+      handleIpfs();
+    }
+  }, [ipfsMetaData]);
+
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
+      {ipfsMetaData && (
+        <img
+          src={`https://cloudflare-ipfs.com/ipfs/${ipfsMetaData.image.split('ipfs://')[1]}`}
+          style={{ maxWidth: '100px' }}
+          alt="/>"
+        />
+      )}
       <Card
         sx={{
           p: 0,
@@ -312,13 +335,17 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                       {t('myPage.taskCard.menu.readTicket')}
                     </MenuItem>
                   ) : (
-                    <MenuItem onClick={() => handleOpenConfirm()}>
-                      <FlagIcon sx={{ ml: 1, mr: 1 }} />
-                      {t('myPage.taskCard.menu.addTicket')}
-                    </MenuItem>
+                    !need.ipfs && (
+                      <MenuItem onClick={() => handleOpenConfirm()}>
+                        <FlagIcon sx={{ ml: 1, mr: 1 }} />
+                        {t('myPage.taskCard.menu.addTicket')}
+                      </MenuItem>
+                    )
                   )}
-                  {((need.ticket && need.ticket.announcement === AnnouncementEnum.ARRIVED_AT_NGO) ||
-                    (swInfo.id === need.created_by_id &&
+                  {(!need.ticket ||
+                    (need.ticket &&
+                      need.ticket.announcement !== AnnouncementEnum.ARRIVED_AT_NGO &&
+                      swInfo.id === need.created_by_id &&
                       need.type === NeedTypeEnum.PRODUCT &&
                       need.status === ProductStatusEnum.PURCHASED_PRODUCT)) && (
                     <MenuItem onClick={() => handleAnnounceDelivery()}>
@@ -352,8 +379,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 </Typography>
               </Grid>
               <Grid item xs={2}>
-                {need.ticket && (
-                  <>
+                <>
+                  {need.ticket && (
                     <Box
                       sx={{
                         textAlign: 'center',
@@ -415,8 +442,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         )}
                       </Box>
                     </Box>
-                  </>
-                )}
+                  )}
+                  {need.ipfs && <WaterWaveText hash={need.ipfs && need.ipfs.needDetailsHash} />}
+                </>
               </Grid>
             </Grid>
             {/* 
