@@ -84,10 +84,11 @@ const baseTheme = {
       purple: purple[200],
       blue: blue[200],
     },
+    extra: { main: '#00cec3', light: '#d7f8f6', dark: '#02b3a9' },
   },
 
   shape: {
-    borderRadius: 5,
+    borderRadius: 2,
   },
   mixins: {
     toolbar: {

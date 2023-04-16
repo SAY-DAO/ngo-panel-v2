@@ -52,7 +52,7 @@ import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
 import WalletButton from '../wallet/WalletButton';
 import TicketDeliveryDialog from '../dialogs/TicketDeliveryDialog';
-import { prepareUrl } from '../../utils/helpers';
+import { prepareUrl, randomIntFromInterval } from '../../utils/helpers';
 import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
 
@@ -194,8 +194,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   useEffect(() => {
     if (ipfsMetaData) {
-      // console.log(';;;;;;;;;;;;;;;;;;;;;;;;;;;;');
-      // console.log(ipfsMetaData.child.awakeImage);
+      console.log(ipfsMetaData.child.awakeImage);
     } else if (need.ipfs) {
       const handleIpfs = async () => {
         const result = await fetchIpfsMetaData(need.ipfs.needDetailsHash);
@@ -217,7 +216,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       <Card
         sx={{
           p: 0,
-          maxHeight: height ? '1200px' : '320px',
+          maxHeight: height ? '1200px' : `${randomIntFromInterval(300, 380)}px`,
           '&:hover': {
             border: 'ridge',
             borderColor: () => (height ? theme.palette.primary.dark : theme.palette.secondary.dark),

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -6,7 +7,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import { Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { PropTypes } from 'prop-types';
@@ -51,11 +52,19 @@ export default function DurationTimeLine({ need }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theIpfs.createdAt}</Typography>}>
-              <TimelineDot variant="outlined" color="primary" />
+              <TimelineDot variant="outlined" sx={{ borderColor: 'transparent', p: 0, m: 1 }}>
+                <Box
+                  sx={{
+                    height: '15px',
+                    width: '15px',
+                    border: (theme) => `2px solid ${theme.palette.extra.dark}`,
+                  }}
+                />
+              </TimelineDot>
             </Tooltip>
             <TimelineConnector />
           </TimelineSeparator>
-          <TimelineContent fontSize={12}>{t('myPage.taskCard.date.childDelivery')}</TimelineContent>
+          <TimelineContent fontSize={12}>{t('myPage.taskCard.date.ipfs')}</TimelineContent>
         </TimelineItem>
       )}
       {theNeed.type === NeedTypeEnum.PRODUCT && theNeed.childDeliveryDate && (

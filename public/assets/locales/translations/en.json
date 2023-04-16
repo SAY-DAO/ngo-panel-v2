@@ -681,6 +681,7 @@
         "paid": "Paid",
         "ngoDelivery": "Delivered to NGO",
         "childDelivery": "Delivered to Child",
+        "ipfs": "Decentralized storage",
         "daysAgo": "days ago",
         "hoursAgo": "hrs ago",
         "days": "days",

@@ -218,6 +218,12 @@ const CoverCard = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (cover) {
+      setSkeleton(false); // cover image skeleton
+    }
+  }, [cover]);
+
   // Autocomplete
   useEffect(() => {
     let active = true;
@@ -373,7 +379,7 @@ const CoverCard = ({
             opacity: '50%',
           }}
         >
-          {lgUp && <ContributionOverview swNewDetails={swNewDetails} setSkeleton={setSkeleton} />}
+          {lgUp && <ContributionOverview swNewDetails={swNewDetails} />}
         </Box>
       </Grid>
       <CardContent
