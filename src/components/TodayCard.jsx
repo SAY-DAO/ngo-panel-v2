@@ -5,15 +5,7 @@ import { dateConvertor } from '../utils/persianToEnglish';
 
 export default function TodayCard() {
   const { t } = useTranslation();
-  console.log(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
-  console.log(
-    new Intl.DateTimeFormat('fa-IR-u-ca-persian', { dateStyle: 'full' }).format(new Date()),
-  );
-  console.log(
-    dateConvertor(
-      `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
-    ),
-  );
+
   return (
     <Card
       elevation={8}
