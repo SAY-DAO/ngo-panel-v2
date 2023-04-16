@@ -137,9 +137,9 @@ const ChildEdit = () => {
       setValue('sex', result.gender === true ? 2 : 1);
       setValue('education', result.education);
       setValue('familyCount', parseInt(result.familyCount, 10));
-      setValue('country', result.country);
-      setValue('state', result.state);
-      setValue('city', result.city);
+      // setValue('country', result.country);
+      // setValue('state', result.state);
+      // setValue('city', result.city);
       setValue('nationality', result.nationality);
       setValue('birthPlace', result.birthPlace);
       setValue('address', result.address);

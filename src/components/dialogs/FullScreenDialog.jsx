@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { forwardRef, useEffect } from 'react';
+import { CircularProgress, Grid } from '@mui/material';
 import Tickets from '../../pages/ticket/Tickets';
 import { fetchUserTicketList, openTicketing } from '../../redux/actions/ticketAction';
 import { socketRefreshNotifications } from '../../utils/socketHelpers';
@@ -19,7 +20,10 @@ export default function FullScreenDialog() {
   const dispatch = useDispatch();
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { isTicketingOpen } = myTickets;
+  const { isTicketingOpen, tickets } = myTickets;
+
+  const ticketById = useSelector((state) => state.ticketById);
+  const { ticket: fetchedTicket } = ticketById;
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -54,7 +58,13 @@ export default function FullScreenDialog() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Tickets />
+        {!tickets || !fetchedTicket ? (
+          <Grid container sx={{ m: 'auto' }}>
+            <CircularProgress sx={{ m: 'auto' }} />
+          </Grid>
+        ) : (
+          <Tickets />
+        )}
       </Dialog>
     </div>
   );
