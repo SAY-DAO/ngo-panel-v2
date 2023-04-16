@@ -22,9 +22,6 @@ export default function FullScreenDialog() {
   const myTickets = useSelector((state) => state.myTickets);
   const { isTicketingOpen, tickets } = myTickets;
 
-  const ticketById = useSelector((state) => state.ticketById);
-  const { ticket: fetchedTicket } = ticketById;
-
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 

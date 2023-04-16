@@ -20,9 +20,14 @@ import FeatherIcon from 'feather-icons-react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from '../custom-scroll/Scrollbar';
-import { getCurrentStatusString, getSAYRoleString, prepareUrl } from '../../utils/helpers';
+import {
+  convertFlaskToSayRoles,
+  getCurrentStatusString,
+  getSAYRoleString,
+  prepareUrl,
+} from '../../utils/helpers';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
-import { colorChoices } from '../../utils/types';
+import { colorChoices, SAYPlatformRoles } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
 import { socketChangeTicketColor } from '../../utils/socketHelpers';
 import DurationTimeLine from '../my-profile/DurationTimeLine';
@@ -140,7 +145,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                   </Grid>
                 )}
                 <Grid item xs={12} md={2} sx={{ textAlign: 'left' }}>
-                  {theTicket.flaskUserId === swInfo.id &&
+                  {convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR &&
                     colorChoices.map((choice) => (
                       <Fab
                         color="primary"
@@ -170,7 +175,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
               </Grid>
             </Box>
             <Divider />
-            {!tickets ? (
+            {!tickets || !theTicket ? (
               <Grid container>
                 <CircularProgress sx={{ textAlign: 'center', m: 'auto' }} />
               </Grid>
