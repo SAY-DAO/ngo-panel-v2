@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { forwardRef, useEffect } from 'react';
-import { CircularProgress, Grid } from '@mui/material';
+import { LinearProgress, Stack } from '@mui/material';
 import Tickets from '../../pages/ticket/Tickets';
 import { fetchUserTicketList, openTicketing } from '../../redux/actions/ticketAction';
 import { socketRefreshNotifications } from '../../utils/socketHelpers';
@@ -59,9 +59,9 @@ export default function FullScreenDialog() {
           </Toolbar>
         </AppBar>
         {!tickets || !fetchedTicket ? (
-          <Grid container sx={{ m: 'auto' }}>
-            <CircularProgress sx={{ m: 'auto' }} />
-          </Grid>
+          <Stack sx={{ m: 'auto', width: '20%', color: 'grey.500' }} spacing={2}>
+            <LinearProgress sx={{ color: (theme) => theme.palette.primary }} />
+          </Stack>
         ) : (
           <Tickets />
         )}

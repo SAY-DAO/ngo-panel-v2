@@ -25,6 +25,7 @@ import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { colorChoices } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
 import { socketChangeTicketColor } from '../../utils/socketHelpers';
+import DurationTimeLine from '../my-profile/DurationTimeLine';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
   const { t } = useTranslation();
@@ -98,7 +99,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 <Grid item xs={6} md={2}>
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
+                      <Tooltip title={<DurationTimeLine need={theTicket.need} />}>
+                        <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
+                      </Tooltip>
                     </ListItemAvatar>
                     <ListItemText
                       primary={<Typography variant="h6">{theTicket.need.name}</Typography>}
