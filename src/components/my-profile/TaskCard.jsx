@@ -216,7 +216,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       <Card
         sx={{
           p: 0,
-          maxHeight: height ? '1200px' : `${randomIntFromInterval(300, 380)}px`,
+          maxHeight: height ? '1200px' : `${randomIntFromInterval(320, 320)}px`,
           '&:hover': {
             border: 'ridge',
             borderColor: () => (height ? theme.palette.primary.dark : theme.palette.secondary.dark),
