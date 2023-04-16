@@ -58,7 +58,7 @@ export default function FullScreenDialog() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        {!tickets || !fetchedTicket ? (
+        {!tickets ? (
           <Stack sx={{ m: 'auto', width: '20%', color: 'grey.500' }} spacing={2}>
             <LinearProgress sx={{ color: (theme) => theme.palette.primary }} />
           </Stack>
