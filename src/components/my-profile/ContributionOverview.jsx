@@ -11,7 +11,7 @@ import DashboardCard from '../base-card/DashboardCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 import { fetchUserContribution } from '../../redux/actions/analyticAction';
 
-const ContributionOverview = ({ swNewDetails }) => {
+const ContributionOverview = ({ swNewDetails, setSkeleton }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -143,6 +143,7 @@ const ContributionOverview = ({ swNewDetails }) => {
         }
       });
       setGraphData(myList);
+      setSkeleton(false); // cover image skeleton
     }
   }, [contribution]);
 
@@ -289,4 +290,5 @@ export default ContributionOverview;
 
 ContributionOverview.propTypes = {
   swNewDetails: PropTypes.object,
+  setSkeleton: PropTypes.func,
 };

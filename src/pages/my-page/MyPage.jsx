@@ -55,6 +55,7 @@ const MyPage = () => {
   const [openDialog, setDialogOpen] = useState(false);
   const [dialogValues, setDialogValues] = useState();
   const [count, setCount] = useState(0);
+  const [skeleton, setSkeleton] = useState(true);
   const [totalNeedCount, setTotalNeedCount] = useState({
     notPaid: 0,
     paid: 0,
@@ -226,7 +227,10 @@ const MyPage = () => {
         swInfo={swInfo}
         swNewDetails={swNewDetails}
         setSwNewDetails={setSwNewDetails}
+        setSkeleton={setSkeleton}
+        skeleton={skeleton}
       />
+
       {!modifiedNeeds ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />

@@ -13,6 +13,7 @@ import {
   Tooltip,
   tooltipClasses,
   useMediaQuery,
+  Skeleton,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import InterestsIcon from '@mui/icons-material/Interests';
@@ -70,6 +71,8 @@ const CoverCard = ({
   swNewDetails,
   setSwNewDetails,
   arrivals,
+  skeleton,
+  setSkeleton,
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -269,7 +272,13 @@ const CoverCard = ({
         padding: '0',
       }}
     >
-      <img srcSet={`${cover} 1x, ${cover} 2x`} alt={cover} width="100%" />
+      <>
+        {skeleton ? (
+          <Skeleton sx={{ height: 306, m: 'auto' }} animation="wave" variant="rectangular" />
+        ) : (
+          <img srcSet={`${cover} 1x, ${cover} 2x`} alt="cover" width="100%" />
+        )}
+      </>
       {information && information.nonce}
       <Grid
         container
@@ -364,7 +373,7 @@ const CoverCard = ({
             opacity: '50%',
           }}
         >
-          {lgUp && <ContributionOverview swNewDetails={swNewDetails} />}
+          {lgUp && <ContributionOverview swNewDetails={swNewDetails} setSkeleton={setSkeleton} />}
         </Box>
       </Grid>
       <CardContent
@@ -703,7 +712,7 @@ const CoverCard = ({
                                   height: '1.2em',
                                   whiteSpace: 'nowrap',
                                   justifyContent: 'flex-end',
-                                  position: 'relative'
+                                  position: 'relative',
                                 }}
                               >
                                 {ensName
@@ -796,6 +805,8 @@ CoverCard.propTypes = {
   swInfo: PropTypes.object,
   swNewDetails: PropTypes.object,
   setSwNewDetails: PropTypes.func,
+  setSkeleton: PropTypes.func,
+  skeleton: PropTypes.bool,
   arrivals: PropTypes.array,
 };
 
