@@ -272,13 +272,13 @@ const CoverCard = ({
         padding: '0',
       }}
     >
-      <>
+      <Grid sx={{ minHeight: 306.8 }}>
         {skeleton ? (
-          <Skeleton sx={{ height: 306, m: 'auto' }} animation="wave" variant="rectangular" />
+          <Skeleton sx={{ height: 306.8, m: 'auto' }} animation="wave" variant="rectangular" />
         ) : (
           <img srcSet={`${cover} 1x, ${cover} 2x`} alt="cover" width="100%" />
         )}
-      </>
+      </Grid>
       {information && information.nonce}
       <Grid
         container
@@ -293,7 +293,7 @@ const CoverCard = ({
               sx={{
                 position: 'absolute',
                 bottom: '220px',
-                right: '15px',
+                left: '15px',
                 minHeight: '60px',
                 backgroundColor: (theme) => theme.palette.background.paper,
                 paddingLeft: '0px',
