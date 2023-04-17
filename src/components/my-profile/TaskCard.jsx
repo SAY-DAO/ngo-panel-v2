@@ -316,7 +316,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                       {t('myPage.taskCard.menu.updateChild')}
                     </MenuItem>
                   )}
-                  {(swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                  {(swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR ||
                     swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
                     <MenuItem>
                       <RouterLink

@@ -789,7 +789,7 @@ const ChildrenTable = ({ childList }) => {
                 </Table>
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[5, 10, 25, 100]}
                 labelRowsPerPage={t('table.rowCount')}
                 component="div"
                 count={childList.length}
