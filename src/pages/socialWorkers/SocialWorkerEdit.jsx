@@ -668,7 +668,7 @@ const SocialWorkerEdit = () => {
                           <DesktopDatePicker
                             id="birthDate"
                             inputFormat="MM/dd/yyyy"
-                            value={birthDate}
+                            // value={birthDate}
                             onChange={handleDateChange}
                             renderInput={(params) => <TextField {...params} />}
                           />
