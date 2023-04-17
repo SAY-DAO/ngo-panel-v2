@@ -32,11 +32,15 @@ import { AnnouncementEnum, colorChoices, SAYPlatformRoles } from '../../utils/ty
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
 import { socketChangeTicketColor } from '../../utils/socketHelpers';
 import DurationTimeLine from '../my-profile/DurationTimeLine';
+import ReportStatusChange from '../report/ReportStatusChange';
+import StatusDialog from '../dialogs/ReportStatusDialog';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
   const { t } = useTranslation();
 
   const [theTicket, setTheTicket] = useState(null);
+  const [statusDialog, setStatusDialog] = useState(false);
+  const [statusNeed, setStatusNeed] = useState();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -120,6 +124,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                     <ListItemText
                       primary={<Typography variant="h4">{t('need.status')}</Typography>}
                       secondary={t(`need.needStatus.${getCurrentStatusString(theTicket.need)}`)}
+                    />
+                    <ReportStatusChange
+                      need={theTicket.need}
+                      setStatusDialog={setStatusDialog}
+                      setStatusNeed={setStatusNeed}
                     />
                   </ListItem>
                 </Grid>
@@ -286,6 +295,14 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                       ),
                     )}
                 </Box>
+                {statusNeed && (
+                  <StatusDialog
+                    need={statusNeed}
+                    statusDialog={statusDialog}
+                    setStatusDialog={setStatusDialog}
+                    setStatusNeed={setStatusNeed}
+                  />
+                )}
               </Scrollbar>
             )}
           </div>

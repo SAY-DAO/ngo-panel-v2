@@ -11,8 +11,8 @@ import { LoadingButton } from '@mui/lab';
 import FormControl from '@mui/material/FormControl';
 import { useDispatch, useSelector } from 'react-redux';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import AdapterJalaali from '@date-io/jalaali';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -111,8 +111,8 @@ export default function TicketDeliveryDialog({
               <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
                 {t('report.statusChange.deliveredToNgo')}
               </CustomFormLabel>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDatePicker
+              <LocalizationProvider dateAdapter={AdapterJalaali} adapterLocale="fa-IR">
+                <DateTimePicker
                   id="deliveredToNgo"
                   value={arrivalDate}
                   control={control}

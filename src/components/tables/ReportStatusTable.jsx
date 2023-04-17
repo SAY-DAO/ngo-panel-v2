@@ -22,7 +22,6 @@ import {
   Collapse,
   Autocomplete,
   TextField,
-  Avatar,
   Snackbar,
   Alert,
   CardMedia,
@@ -30,7 +29,6 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import CircleIcon from '@mui/icons-material/Circle';
 import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -52,6 +50,7 @@ import {
   ServiceStatusEnum,
 } from '../../utils/types';
 import { UPDATE_NEED_STATUS_RESET } from '../../redux/constants/needConstant';
+import ReportStatusChange from '../report/ReportStatusChange';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -543,11 +542,6 @@ const ReportStatusTable = () => {
     setDense(event.target.checked);
   };
 
-  const handleStatusChange = (row) => {
-    setStatusDialog(true);
-    setStatusNeed(row);
-  };
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     needs && (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.needs.length) : 0);
@@ -658,80 +652,11 @@ const ReportStatusTable = () => {
           <TableCell align="center">{row.ngoId}</TableCell>
           <TableCell>{row.created_by_id}</TableCell>
           <TableCell align="center">
-            <Box alignItems="center">
-              <IconButton
-                disabled={
-                  (row.type === NeedTypeEnum.SERVICE &&
-                    row.status === ServiceStatusEnum.DELIVERED) ||
-                  (row.type === NeedTypeEnum.PRODUCT && row.status === ProductStatusEnum.DELIVERED)
-                }
-                aria-label="attachment"
-                size="small"
-                onClick={() => handleStatusChange(row)}
-              >
-                <Avatar
-                  src={
-                    row.status === ProductStatusEnum.COMPLETE_PAY // Complete payment
-                      ? '/images/hand-orange.svg'
-                      : row.status === ProductStatusEnum.PURCHASED_PRODUCT &&
-                        typeId === NeedTypeEnum.PRODUCT // Purchased Product
-                      ? '/images/package-orange.svg'
-                      : (row.status === ProductStatusEnum.DELIVERED_TO_NGO &&
-                          typeId === NeedTypeEnum.PRODUCT) ||
-                        (row.status === ServiceStatusEnum.MONEY_TO_NGO &&
-                          typeId === NeedTypeEnum.SERVICE) // Sent product to NGO
-                      ? '/images/package-orange.svg'
-                      : '/images/child-orange.svg' // Delivered to Child
-                  }
-                  alt="icon"
-                  sx={{
-                    p: 1,
-                    m: 'auto',
-                    border: '1px solid #665a49',
-                    borderRadius: '50px',
-                    height: '40px',
-                    width: '40px',
-                  }}
-                />
-              </IconButton>
-              <Box>
-                <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
-                  {row.status === ProductStatusEnum.COMPLETE_PAY ? (
-                    <>
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
-                    </>
-                  ) : row.status === ProductStatusEnum.PURCHASED_PRODUCT &&
-                    typeId === NeedTypeEnum.PRODUCT ? (
-                    <>
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
-                    </>
-                  ) : (row.status === ProductStatusEnum.DELIVERED_TO_NGO &&
-                      typeId === NeedTypeEnum.PRODUCT) ||
-                    (row.status === ServiceStatusEnum.MONEY_TO_NGO &&
-                      typeId === NeedTypeEnum.SERVICE) ? (
-                    <>
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
-                    </>
-                  ) : (
-                    <>
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                      <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
-                    </>
-                  )}
-                </Stack>
-              </Box>
-            </Box>
+            <ReportStatusChange
+              need={row}
+              setStatusDialog={setStatusDialog}
+              setStatusNeed={setStatusNeed}
+            />
           </TableCell>
           <TableCell>
             <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">

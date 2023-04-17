@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { NeedTypeEnum } from '../../utils/types';
+import { dateConvertor } from '../../utils/persianToEnglish';
 
 export default function DurationTimeLine({ need }) {
   const { t } = useTranslation();
@@ -85,7 +86,7 @@ export default function DurationTimeLine({ need }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{theNeed.childDeliveryDate}</Typography>}
+              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.childDeliveryDate)}</Typography>}
             >
               <TimelineDot variant="outlined" color="secondary" />
             </Tooltip>
@@ -97,7 +98,13 @@ export default function DurationTimeLine({ need }) {
       {theNeed.type === NeedTypeEnum.PRODUCT &&
         (theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate) && (
           <TimelineItem>
-            <TimelineOppositeContent color="text.secondary" fontSize={12}>
+            <TimelineOppositeContent
+              color="text.secondary"
+              fontSize={12}
+              sx={{
+                color: (theme) => !theNeed.ngoDeliveryDate && theme.palette.warning.main,
+              }}
+            >
               {parseInt(
                 moment(theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate).diff(
                   moment(theNeed.purchaseDate),
@@ -117,8 +124,12 @@ export default function DurationTimeLine({ need }) {
             <TimelineSeparator>
               <Tooltip
                 title={
-                  <Typography sx={{ fontSize: 12 }}>
-                    {theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate}
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                    }}
+                  >
+                    {dateConvertor(theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate)}
                   </Typography>
                 }
               >
@@ -126,8 +137,12 @@ export default function DurationTimeLine({ need }) {
               </Tooltip>
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent fontSize={12}>
-              {' '}
+            <TimelineContent
+              fontSize={12}
+              sx={{
+                color: (theme) => !theNeed.ngoDeliveryDate && theme.palette.warning.main,
+              }}
+            >
               {theNeed.ngoDeliveryDate
                 ? t('myPage.taskCard.date.ngoDelivery')
                 : t('myPage.taskCard.date.expNgoDelivery')}
@@ -153,7 +168,7 @@ export default function DurationTimeLine({ need }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{theNeed.childDeliveryDate}</Typography>}
+              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.childDeliveryDate)}</Typography>}
             >
               <TimelineDot variant="outlined" color="secondary" />
             </Tooltip>
@@ -174,7 +189,7 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theNeed.purchaseDate}</Typography>}>
+            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.purchaseDate)}</Typography>}>
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
             <TimelineConnector />
@@ -195,7 +210,7 @@ export default function DurationTimeLine({ need }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{theNeed.ngoDeliveryDate}</Typography>}
+              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.ngoDeliveryDate)}</Typography>}
             >
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
@@ -216,7 +231,7 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theNeed.doneAt}</Typography>}>
+            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>}>
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
             <TimelineConnector />
@@ -236,7 +251,7 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theNeed.confirmDate}</Typography>}>
+            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.confirmDate)}</Typography>}>
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
             <TimelineConnector />
@@ -258,7 +273,7 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theNeed.created}</Typography>}>
+            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.created)}</Typography>}>
               <TimelineDot variant="outlined" color="secondary" />
             </Tooltip>
             <TimelineConnector />
