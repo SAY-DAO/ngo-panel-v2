@@ -94,31 +94,46 @@ export default function DurationTimeLine({ need }) {
           <TimelineContent fontSize={12}>{t('myPage.taskCard.date.childDelivery')}</TimelineContent>
         </TimelineItem>
       )}
-      {theNeed.type === NeedTypeEnum.PRODUCT && theNeed.ngoDeliveryDate && (
-        <TimelineItem>
-          <TimelineOppositeContent color="text.secondary" fontSize={12}>
-            {parseInt(
-              moment(theNeed.ngoDeliveryDate).diff(moment(theNeed.purchaseDate), 'days'),
-              10,
-            ) > 1
-              ? `${moment(theNeed.ngoDeliveryDate).diff(moment(theNeed.purchaseDate), 'days')} ${t(
-                  'myPage.taskCard.date.days',
-                )}`
-              : `${moment(theNeed.ngoDeliveryDate).diff(moment(theNeed.purchaseDate), 'hours')} ${t(
-                  'myPage.taskCard.date.hours',
-                )}`}
-          </TimelineOppositeContent>
-          <TimelineSeparator>
-            <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{theNeed.ngoDeliveryDate}</Typography>}
-            >
-              <TimelineDot variant="outlined" color="primary" />
-            </Tooltip>
-            <TimelineConnector />
-          </TimelineSeparator>
-          <TimelineContent fontSize={12}>{t('myPage.taskCard.date.ngoDelivery')}</TimelineContent>
-        </TimelineItem>
-      )}
+      {theNeed.type === NeedTypeEnum.PRODUCT &&
+        (theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate) && (
+          <TimelineItem>
+            <TimelineOppositeContent color="text.secondary" fontSize={12}>
+              {parseInt(
+                moment(theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate).diff(
+                  moment(theNeed.purchaseDate),
+                  'days',
+                ),
+                10,
+              ) > 1
+                ? `${moment(theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate).diff(
+                    moment(theNeed.purchaseDate),
+                    'days',
+                  )} ${t('myPage.taskCard.date.days')}`
+                : `${moment(theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate).diff(
+                    moment(theNeed.purchaseDate),
+                    'hours',
+                  )} ${t('myPage.taskCard.date.hours')}`}
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+              <Tooltip
+                title={
+                  <Typography sx={{ fontSize: 12 }}>
+                    {theNeed.ngoDeliveryDate || theNeed.expectedDeliveryDate}
+                  </Typography>
+                }
+              >
+                <TimelineDot variant="outlined" color="primary" />
+              </Tooltip>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent fontSize={12}>
+              {' '}
+              {theNeed.ngoDeliveryDate
+                ? t('myPage.taskCard.date.ngoDelivery')
+                : t('myPage.taskCard.date.expNgoDelivery')}
+            </TimelineContent>
+          </TimelineItem>
+        )}
       {theNeed.type === NeedTypeEnum.SERVICE && theNeed.childDeliveryDate && (
         <TimelineItem>
           <TimelineOppositeContent color="text.secondary" fontSize={12}>

@@ -680,6 +680,7 @@
         "confirmed": "Confirmed",
         "paid": "Paid",
         "ngoDelivery": "Delivered to NGO",
+        "expNgoDelivery": "Exp. Delivery to NGO",
         "childDelivery": "Delivered to Child",
         "ipfs": "Decentralized storage",
         "daysAgo": "days ago",
