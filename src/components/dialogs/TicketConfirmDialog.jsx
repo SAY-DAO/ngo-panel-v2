@@ -40,7 +40,7 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
   const [selectedRoles, setSelectedRoles] = useState([]);
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
-  const { addedTicket } = ticketAdd;
+  const { loading: loadingAddTicket } = ticketAdd;
 
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails } = myPage;
@@ -150,7 +150,7 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
         <DialogActions>
           <LoadingButton
             disabled={selectedRoles.length <= 0}
-            loading={addedTicket || loading}
+            loading={loadingAddTicket || loading}
             color="primary"
             onClick={() => handleConfirm(selectedRoles)}
           >

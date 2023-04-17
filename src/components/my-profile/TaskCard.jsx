@@ -346,10 +346,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     need.type === NeedTypeEnum.PRODUCT &&
                     (!need.ticket ||
                       (need.ticket &&
-                        need.ticket.ticketHistory &&
-                        !need.ticket.ticketHistory.find(
-                          (h) => h.announcement === AnnouncementEnum.ARRIVED_AT_NGO,
-                        ))) && (
+                        need.ticket.lastAnnouncement !== AnnouncementEnum.ARRIVED_AT_NGO)) && (
                       <MenuItem onClick={() => handleAnnounceDelivery()}>
                         <CampaignIcon sx={{ ml: 1, mr: 1 }} />
                         {t('myPage.taskCard.menu.deliveryTicket')}
