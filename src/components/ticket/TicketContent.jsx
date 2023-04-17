@@ -19,6 +19,7 @@ import {
 import FeatherIcon from 'feather-icons-react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import Scrollbar from '../custom-scroll/Scrollbar';
 import {
   convertFlaskToSayRoles,
@@ -27,7 +28,7 @@ import {
   prepareUrl,
 } from '../../utils/helpers';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
-import { colorChoices, SAYPlatformRoles } from '../../utils/types';
+import { AnnouncementEnum, colorChoices, SAYPlatformRoles } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
 import { socketChangeTicketColor } from '../../utils/socketHelpers';
 import DurationTimeLine from '../my-profile/DurationTimeLine';
@@ -234,7 +235,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                                   }`,
                               }}
                             >
+                              {h.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                                <CampaignIcon sx={{ mb: 0, mr: 1 }} />
+                              )}
                               {h.message}
+
                               <Typography variant="subtitle2" sx={{ color: 'gray', fontSize: 12 }}>
                                 {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
                                 {dateTimeConvertor(h.createdAt)}
@@ -266,7 +271,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                                   }`,
                               }}
                             >
+                              {h.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                                <CampaignIcon sx={{ mb: 0, mr: 1 }} />
+                              )}
                               {h.message}
+
                               <Typography variant="subtitle2" sx={{ color: 'gray', fontSize: 12 }}>
                                 {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
                                 {dateTimeConvertor(h.createdAt)}
