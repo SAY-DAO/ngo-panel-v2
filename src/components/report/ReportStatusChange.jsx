@@ -1,9 +1,10 @@
 import React from 'react';
 import CircleIcon from '@mui/icons-material/Circle';
-import { Avatar, Box, IconButton, Stack } from '@mui/material';
+import { Avatar, Box, IconButton, Stack, Tooltip } from '@mui/material';
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
-import { convertFlaskToSayRoles } from '../../utils/helpers';
+import { useTranslation } from 'react-i18next';
+import { convertFlaskToSayRoles, getCurrentStatusString } from '../../utils/helpers';
 import {
   NeedTypeEnum,
   ProductStatusEnum,
@@ -12,6 +13,8 @@ import {
 } from '../../utils/types';
 
 export default function ReportStatusChange({ need, setStatusDialog, setStatusNeed }) {
+  const { t } = useTranslation();
+
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
@@ -21,42 +24,44 @@ export default function ReportStatusChange({ need, setStatusDialog, setStatusNee
   };
 
   return (
-    <Box alignItems="center">
-      <IconButton
-        disabled={
-          convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR ||
-          (need.type === NeedTypeEnum.SERVICE && need.status === ServiceStatusEnum.DELIVERED) ||
-          (need.type === NeedTypeEnum.PRODUCT && need.status === ProductStatusEnum.DELIVERED)
-        }
-        aria-label="attachment"
-        size="small"
-        onClick={() => handleStatusChange(need)}
-      >
-        <Avatar
-          src={
-            need.status === ProductStatusEnum.COMPLETE_PAY // Complete payment
-              ? '/images/hand-orange.svg'
-              : need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
-                need.type === NeedTypeEnum.PRODUCT // Purchased Product
-              ? '/images/package-orange.svg'
-              : (need.status === ProductStatusEnum.DELIVERED_TO_NGO &&
-                  need.type === NeedTypeEnum.PRODUCT) ||
-                (need.status === ServiceStatusEnum.MONEY_TO_NGO &&
-                  need.type === NeedTypeEnum.SERVICE) // Sent product to NGO
-              ? '/images/package-orange.svg'
-              : '/images/child-orange.svg' // Delivered to Child
+    <Box alignItems="center" sx={{ textAlign: 'center' }}>
+      <Tooltip title={t(`need.needStatus.${getCurrentStatusString(need)}`)}>
+        <IconButton
+          disabled={
+            convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR ||
+            (need.type === NeedTypeEnum.SERVICE && need.status === ServiceStatusEnum.DELIVERED) ||
+            (need.type === NeedTypeEnum.PRODUCT && need.status === ProductStatusEnum.DELIVERED)
           }
-          alt="icon"
-          sx={{
-            p: 1,
-            m: 'auto',
-            border: '1px solid #665a49',
-            borderRadius: '50px',
-            height: '40px',
-            width: '40px',
-          }}
-        />
-      </IconButton>
+          aria-label="attachment"
+          size="small"
+          onClick={() => handleStatusChange(need)}
+        >
+          <Avatar
+            src={
+              need.status === ProductStatusEnum.COMPLETE_PAY // Complete payment
+                ? '/images/hand-orange.svg'
+                : need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
+                  need.type === NeedTypeEnum.PRODUCT // Purchased Product
+                ? '/images/package-orange.svg'
+                : (need.status === ProductStatusEnum.DELIVERED_TO_NGO &&
+                    need.type === NeedTypeEnum.PRODUCT) ||
+                  (need.status === ServiceStatusEnum.MONEY_TO_NGO &&
+                    need.type === NeedTypeEnum.SERVICE) // Sent product to NGO
+                ? '/images/package-orange.svg'
+                : '/images/child-orange.svg' // Delivered to Child
+            }
+            alt="icon"
+            sx={{
+              p: 1,
+              m: 'auto',
+              border: '1px solid #665a49',
+              borderRadius: '50px',
+              height: '40px',
+              width: '40px',
+            }}
+          />
+        </IconButton>
+      </Tooltip>
       <Box>
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
           {need.status === ProductStatusEnum.COMPLETE_PAY ? (

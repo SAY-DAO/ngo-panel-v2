@@ -15,18 +15,14 @@ import {
   useMediaQuery,
   Fab,
   CircularProgress,
+  Card,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import Scrollbar from '../custom-scroll/Scrollbar';
-import {
-  convertFlaskToSayRoles,
-  getCurrentStatusString,
-  getSAYRoleString,
-  prepareUrl,
-} from '../../utils/helpers';
+import { convertFlaskToSayRoles, getSAYRoleString, prepareUrl } from '../../utils/helpers';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { AnnouncementEnum, colorChoices, SAYPlatformRoles } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
@@ -105,32 +101,32 @@ const TicketContent = ({ toggleTicketSidebar }) => {
               >
                 <FeatherIcon icon="menu" width="18" onClick={toggleTicketSidebar} />
               </Box>
-              <Grid container direction="row" justifyContent="center" alignItems="center">
-                <Grid item xs={6} md={2}>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Tooltip title={<DurationTimeLine need={theTicket.need} />}>
-                        <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
-                      </Tooltip>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={<Typography variant="h6">{theTicket.need.name}</Typography>}
-                      secondary={theTicket.need.child.sayNameTranslations.fa}
-                    />
-                  </ListItem>
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <ListItem>
-                    <ListItemText
-                      primary={<Typography variant="h4">{t('need.status')}</Typography>}
-                      secondary={t(`need.needStatus.${getCurrentStatusString(theTicket.need)}`)}
-                    />
-                    <ReportStatusChange
-                      need={theTicket.need}
-                      setStatusDialog={setStatusDialog}
-                      setStatusNeed={setStatusNeed}
-                    />
-                  </ListItem>
+              <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                <Grid item xs={9} md={4}>
+                  <Card elevation={5} sx={{ p: 0 }}>
+                    <ListItem>
+                      <Grid container justifyContent="space-between">
+                        <Grid item xs={6}>
+                          <ListItemAvatar>
+                            <Tooltip title={<DurationTimeLine need={theTicket.need} />}>
+                              <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
+                            </Tooltip>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={<Typography variant="h6">{theTicket.need.name}</Typography>}
+                            secondary={theTicket.need.child.sayNameTranslations.fa}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <ReportStatusChange
+                            need={theTicket.need}
+                            setStatusDialog={setStatusDialog}
+                            setStatusNeed={setStatusNeed}
+                          />
+                        </Grid>
+                      </Grid>
+                    </ListItem>
+                  </Card>
                 </Grid>
                 {lgUp && (
                   <Grid item lg={5}>
@@ -154,7 +150,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                     </ListItem>
                   </Grid>
                 )}
-                <Grid item xs={12} md={2} sx={{ textAlign: 'left' }}>
+                <Grid item xs sx={{ textAlign: 'right' }}>
                   {convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR &&
                     colorChoices.map((choice) => (
                       <Fab
