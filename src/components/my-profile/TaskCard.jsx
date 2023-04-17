@@ -439,11 +439,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                           paddingTop: '7px',
                         }}
                       >
-                        {(need.ticket.announcement === AnnouncementEnum.ARRIVED_AT_NGO ||
-                          (need.ticket.ticketHistory &&
-                            need.ticket.ticketHistory.find(
-                              (h) => h.announcement === AnnouncementEnum.ARRIVED_AT_NGO,
-                            ))) && <CampaignIcon />}
+                        {need.ticket.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                          <CampaignIcon />
+                        )}
                       </Box>
                     </Box>
                   )}
