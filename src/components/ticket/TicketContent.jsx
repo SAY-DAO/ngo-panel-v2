@@ -66,8 +66,8 @@ const TicketContent = ({ toggleTicketSidebar }) => {
         if (!thisTicket.ticketHistories) {
           theTicket.ticketHistories = [];
         }
-        if (theTicket.ticketHistory && theTicket.ticketHistory[0]) {
-          theTicket.ticketHistory.map((h) => thisTicket.ticketHistories.push(h));
+        if (thisTicket.ticketHistory && thisTicket.ticketHistory[0]) {
+          thisTicket.ticketHistory.map((h) => thisTicket.ticketHistories.push(h));
         }
 
         setTheTicket(thisTicket);
