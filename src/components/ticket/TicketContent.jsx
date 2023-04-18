@@ -80,7 +80,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     if (socketContent && tickets) {
       const modifiedTickets = tickets.map((ticket) =>
         ticket.id === socketContent.content.ticket.id
-          ? { ...ticket, ...ticket.ticketHistories.push(socketContent.content) }
+          ? { ...ticket, ...ticket.ticketHistories && ticket.ticketHistories.push(socketContent.content) }
           : ticket,
       );
       setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
