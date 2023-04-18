@@ -59,7 +59,16 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   // set ticket
   useEffect(() => {
     if (tickets) {
-      setTheTicket(tickets.find((tik) => tik.id === currentTicket));
+      const thisTicket = tickets.find((tik) => tik.id === currentTicket);
+      // db changed it' name in production to ticketHistories / TicketHistoryEntity
+      // we seriliazing the old tickets here
+      if (thisTicket) {
+        if (!thisTicket.ticketHistories) {
+          theTicket.ticketHistories = [];
+        }
+        thisTicket.ticketHistories.push(theTicket.ticketHistory);
+        setTheTicket(thisTicket);
+      }
     }
   }, [currentTicket, addedTicket, tickets]);
 
@@ -79,6 +88,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
   };
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+
   return (
     <WebsocketProvider value={socketHttp}>
       <Box>
