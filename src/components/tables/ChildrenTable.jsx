@@ -372,31 +372,60 @@ const ChildrenTable = ({ childList }) => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [cityIds, setCityIds] = useState([]);
+  const [cities, setCities] = useState({});
 
   const countryList = useSelector((state) => state.countryList);
-  const { success: successCountryList, countries } = countryList;
+  const { countries } = countryList;
 
   // const countryById = useSelector((state) => state.countryById);
   // const { success: successCountry, country } = countryById;
 
-  // const cityById = useSelector((state) => state.cityById);
-  // const { success: successCity, city } = cityById;
+  const cityById = useSelector((state) => state.cityById);
+  const { city } = cityById;
 
   useEffect(() => {
     dispatch(fetchCountryList());
+    setCityIds(childList.map((child) => child.cityId));
   }, []);
 
   useEffect(() => {
-    if (successCountryList) {
-      console.log(countries);
-    }
-  }, [successCountryList]);
-
-  const handleCity = (id) => {
-    if (id) {
+    console.log('Dispatching city');
+    cityIds.forEach((id) => {
       dispatch(fetchCityById(id));
-    }
-  };
+      // if (city) {
+      // setCities({ ...cities, id: city });
+      console.log(city);
+      // }
+    });
+  }, [cityIds]);
+
+  // console.log(cities);
+
+  // useEffect(() => {
+  //   if (!city || city.id !== cityId) {
+  //   console.log('Dispatching city');
+  //   dispatch(fetchCityById(cityId));
+  //   }
+  // }, [cityId]);
+
+  // ***const cityIds = childList.map
+  // const cityList = id -> city
+
+  // cityList[row.cityId]
+
+  // const handleCity = async (id) => {
+  // if (id && id !== cityId) {
+  // if (id) {
+  // setCityId(id);
+  // const x = fetchCityById(id);
+  // console.log(await x(dispatch));
+
+  //   }
+  //   if (city) {
+  //     console.log(city.name);
+  //   }
+  // };
 
   const handleCountry = (id) => {
     if (id) {
@@ -752,7 +781,7 @@ const ChildrenTable = ({ childList }) => {
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {handleCity(row.cityId)}
+                                {/* {handleCity(row.cityId)} */}
                               </Typography>
                             </TableCell>
                             <TableCell>

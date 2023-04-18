@@ -15,6 +15,10 @@ import {
   CITY_BY_ID_SUCCESS,
   CITY_BY_ID_FAIL,
   COUNTRY_BY_ID_REQUEST,
+  CITIES_BY_IDS_REQUEST,
+  CITIES_BY_IDS_SUCCESS,
+  CITIES_BY_IDS_FAIL,
+  CITIES_BY_IDS_RESET,
 } from '../constants/countryConstants';
 
 export const fetchCountryList = () => async (dispatch, getState) => {
@@ -126,14 +130,19 @@ export const fetchCityById = (cityId) => async (dispatch) => {
   try {
     dispatch({ type: CITY_BY_ID_REQUEST });
 
+    // city = localStorage.getItem('city_{123123}')
+    // if !city:
     const config = {
-      id: 'fetch-city-by-id',
+      id: `fetch-city:${cityId}`,
       headers: {
         'Content-type': 'application/json',
       },
     };
 
     const { data } = await cachePublicApi.get(`/cities/${cityId}`, config);
+    // localStorage.setItem('asdadsasd')
+    // city = data
+
     dispatch({
       type: CITY_BY_ID_SUCCESS,
       payload: data,
@@ -145,3 +154,26 @@ export const fetchCityById = (cityId) => async (dispatch) => {
     });
   }
 };
+
+export const fetchCitiesByIds = (cityIds) => async (dispatch) => {
+  try {
+    dispatch({ type: CITIES_BY_IDS_REQUEST });
+
+    cityIds.forEach(async (cityId) => {
+      const data = await getCityById(cityId);
+    });
+  } catch (e) {}
+};
+
+async function getCityById(cityId) {
+  const config = {
+    id: `fetch-city:${cityId}`,
+    headers: {
+      'Content-type': 'application/json',
+    },
+  };
+
+  const { data } = await cachePublicApi.get(`/cities/${cityId}`, config);
+  return data;
+}
+
