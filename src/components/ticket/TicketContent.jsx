@@ -28,7 +28,7 @@ import { AnnouncementEnum, colorChoices, SAYPlatformRoles } from '../../utils/ty
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
 import { socketChangeTicketColor } from '../../utils/socketHelpers';
 import DurationTimeLine from '../my-profile/DurationTimeLine';
-// import ReportStatusChange from '../report/ReportStatusChange';
+import ReportStatusChange from '../report/ReportStatusChange';
 import StatusDialog from '../dialogs/ReportStatusDialog';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
@@ -118,12 +118,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                           />
                         </Grid>
                         <Grid item xs={6}>
-                          {/* <ReportStatusChange
+                          <ReportStatusChange
                             need={theTicket.need}
                             setStatusDialog={setStatusDialog}
                             setStatusNeed={setStatusNeed}
-                          /> */}
-                          
+                          />
                         </Grid>
                       </Grid>
                     </ListItem>
@@ -210,6 +209,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                   }}
                 >
                   {theTicket &&
+                    theTicket.ticketHistories &&
                     theTicket.ticketHistories.map((h) =>
                       h.from !== swInfo.id ? (
                         <Box display="flex" alignItems="start" flexDirection="row" key={h.id}>
