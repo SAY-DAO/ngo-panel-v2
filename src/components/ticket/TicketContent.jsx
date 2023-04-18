@@ -62,16 +62,16 @@ const TicketContent = ({ toggleTicketSidebar }) => {
       const thisTicket = tickets.find((tik) => tik.id === currentTicket);
       // db changed it' name in production to ticketHistories / TicketHistoryEntity
       // we serializing the old tickets here
-      if (thisTicket) {
-        if (!thisTicket.ticketHistories || !thisTicket.ticketHistories[0]) {
-          theTicket.ticketHistories = [];
-        }
-        if (thisTicket.ticketHistory && thisTicket.ticketHistory[0]) {
-          thisTicket.ticketHistory.map((h) => h && thisTicket.ticketHistories.push(h));
-        }
+      // if (thisTicket) {
+      //   if (!thisTicket.ticketHistories || !thisTicket.ticketHistories[0]) {
+      //     theTicket.ticketHistories = [];
+      //   }
+      //   if (thisTicket.ticketHistory && thisTicket.ticketHistory[0]) {
+      //     thisTicket.ticketHistory.map((h) => h && thisTicket.ticketHistories.push(h));
+      //   }
 
         setTheTicket(thisTicket);
-      }
+      // }
     }
   }, [currentTicket, addedTicket, tickets]);
 
