@@ -61,7 +61,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     if (tickets) {
       const thisTicket = tickets.find((tik) => tik.id === currentTicket);
       // db changed it' name in production to ticketHistories / TicketHistoryEntity
-      // we seriliazing the old tickets here
+      // we serializing the old tickets here
       if (thisTicket) {
         if (!thisTicket.ticketHistories) {
           theTicket.ticketHistories = [];
