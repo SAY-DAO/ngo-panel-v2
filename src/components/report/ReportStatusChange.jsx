@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { convertFlaskToSayRoles, getCurrentStatusString } from '../../utils/helpers';
 import {
   NeedTypeEnum,
+  PaymentStatusEnum,
   ProductStatusEnum,
   SAYPlatformRoles,
   ServiceStatusEnum,
@@ -38,7 +39,10 @@ export default function ReportStatusChange({ need, setStatusDialog, setStatusNee
         >
           <Avatar
             src={
-              need.status === ProductStatusEnum.COMPLETE_PAY // Complete payment
+              need.status <= PaymentStatusEnum.NOT_PAID
+                ? ''
+                : need.status === PaymentStatusEnum.COMPLETE_PAY ||
+                  need.status === PaymentStatusEnum.PARTIAL_PAY
                 ? '/images/hand-orange.svg'
                 : need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
                   need.type === NeedTypeEnum.PRODUCT // Purchased Product
@@ -64,7 +68,15 @@ export default function ReportStatusChange({ need, setStatusDialog, setStatusNee
       </Tooltip>
       <Box>
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
-          {need.status === ProductStatusEnum.COMPLETE_PAY ? (
+          {need.status === PaymentStatusEnum.NOT_PAID ? (
+            <>
+              <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+              <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+              <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+              <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
+            </>
+          ) : need.status === PaymentStatusEnum.COMPLETE_PAY ||
+            need.status === PaymentStatusEnum.PARTIAL_PAY ? (
             <>
               <CircleIcon sx={{ color: '#00c292' }} fontSize="small" />
               <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />

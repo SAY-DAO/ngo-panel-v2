@@ -68,7 +68,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     if (socketContent && tickets) {
       const modifiedTickets = tickets.map((ticket) =>
         ticket.id === socketContent.content.ticket.id
-          ? { ...ticket, ...ticket.ticketHistory.push(socketContent.content) }
+          ? { ...ticket, ...ticket.ticketHistories.push(socketContent.content) }
           : ticket,
       );
       setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
@@ -209,7 +209,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                   }}
                 >
                   {theTicket &&
-                    theTicket.ticketHistory.map((h) =>
+                    theTicket.ticketHistories.map((h) =>
                       h.from !== swInfo.id ? (
                         <Box display="flex" alignItems="start" flexDirection="row" key={h.id}>
                           <ListItemAvatar>

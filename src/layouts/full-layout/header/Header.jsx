@@ -184,7 +184,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       dispatch(fetchUserTicketList());
       clearInterval(notificationsInterval);
       socketRefreshNotifications(swInfo);
-      // setInterval(() => socketRefreshNotifications(swInfo), 1000 * NOTIFICATION_TIMER);
     }
     // client-side
     socket.on('connect', () => {
@@ -209,7 +208,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           `onUnReadTickets received! from socket: ${socket.id}...\n`,
         );
 
-        console.log(data);
         for (let i = 0; i < data.newTickets.length; i++) {
           const ticket = allTickets.find((tik) => tik.id === data.newTickets[i].id);
           if (!ticket) {

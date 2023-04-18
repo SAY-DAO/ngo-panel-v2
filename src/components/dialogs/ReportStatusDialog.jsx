@@ -166,7 +166,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const values = {};
-    values.needId = need.id;
+    values.needId = need.flaskId ||need.id;
     if (need.type === NeedTypeEnum.SERVICE) {
       values.typeId = NeedTypeEnum.SERVICE;
       if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
