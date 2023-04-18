@@ -63,7 +63,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
       // db changed it' name in production to ticketHistories / TicketHistoryEntity
       // we serializing the old tickets here
       if (thisTicket) {
-        if (!thisTicket.ticketHistories) {
+        if (!thisTicket.ticketHistories || !thisTicket.ticketHistories[0]) {
           theTicket.ticketHistories = [];
         }
         if (thisTicket.ticketHistory && thisTicket.ticketHistory[0]) {
