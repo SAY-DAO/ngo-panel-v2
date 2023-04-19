@@ -75,7 +75,10 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   // get recently updated need for status change
   useEffect(() => {
-    if ((theTicket && !oneNeed) || (oneNeed && oneNeed.id !== theTicket.need.flaskId)) {
+    if (
+      (theTicket && !oneNeed) ||
+      (theTicket && oneNeed && oneNeed.id !== theTicket.need.flaskId)
+    ) {
       dispatch(fetchChildOneNeed(theTicket.need.flaskId));
     }
   }, [theTicket, theNeed]);
