@@ -70,7 +70,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
       //     thisTicket.ticketHistory.map((h) => h && thisTicket.ticketHistories.push(h));
       //   }
 
-        setTheTicket(thisTicket);
+      setTheTicket(thisTicket);
       // }
     }
   }, [currentTicket, addedTicket, tickets]);
@@ -80,7 +80,10 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     if (socketContent && tickets) {
       const modifiedTickets = tickets.map((ticket) =>
         ticket.id === socketContent.content.ticket.id
-          ? { ...ticket, ...ticket.ticketHistories && ticket.ticketHistories.push(socketContent.content) }
+          ? {
+              ...ticket,
+              ...(ticket.ticketHistories && ticket.ticketHistories.push(socketContent.content)),
+            }
           : ticket,
       );
       setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
@@ -90,7 +93,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const handleTicketUpdate = (choice) => {
     socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
   };
-  
+
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   return (
@@ -292,6 +295,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                               }}
                             >
                               {h.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                                <CampaignIcon sx={{ mb: 0, mr: 1 }} />
+                              )}
+                              {h.announcement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
                                 <CampaignIcon sx={{ mb: 0, mr: 1 }} />
                               )}
                               {h.message}
