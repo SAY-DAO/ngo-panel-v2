@@ -26,6 +26,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
 import { format } from 'date-fns';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import AdapterJalaali from '@date-io/jalaali';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/types';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
@@ -83,6 +85,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (need) {
       setValue('paid', need.cost);
       // setValue('purchasedCost', need.cost);
+      setProductDelivered(need.expected_delivery_date);
     }
   }, [need]);
 
@@ -166,7 +169,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const values = {};
-    values.needId = need.flaskId ||need.id;
+    values.needId = need.flaskId || need.id;
     if (need.type === NeedTypeEnum.SERVICE) {
       values.typeId = NeedTypeEnum.SERVICE;
       if (statusId === ServiceStatusEnum.MONEY_TO_NGO) {
@@ -364,8 +367,8 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <CustomFormLabel htmlFor="product-delivery-to-ngo">
                             {t('report.statusChange.deliveredToNgo')}
                           </CustomFormLabel>
-                          <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DesktopDatePicker
+                          <LocalizationProvider dateAdapter={AdapterJalaali} adapterLocale="fa-IR">
+                            <DateTimePicker
                               id="productDeliveredToNgo"
                               value={productDelivered}
                               control={control}
