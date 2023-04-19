@@ -62,6 +62,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const childOneNeed = useSelector((state) => state.childOneNeed);
   const { oneNeed, loading: loadingOneNeed } = childOneNeed;
 
+  const needStatusUpdate = useSelector((state) => state.needStatusUpdate);
+  const { success: SuccessStatusUpdate } = needStatusUpdate;
+
   // set ticket
   useEffect(() => {
     if (tickets) {
@@ -83,6 +86,13 @@ const TicketContent = ({ toggleTicketSidebar }) => {
       setTheNeed(oneNeed);
     }
   }, [oneNeed, theTicket]);
+
+  useEffect(() => {
+    if (SuccessStatusUpdate) {
+      setStatusDialog(false);
+      setStatusNeed(false);
+    }
+  }, [SuccessStatusUpdate]);
 
   // set ticket when socket msg received
   useEffect(() => {

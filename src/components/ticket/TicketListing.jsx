@@ -18,6 +18,8 @@ import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { TicketSearch, selectTicket } from '../../redux/actions/ticketAction';
 import { colorChoices, Colors } from '../../utils/types';
 import { dateConvertor } from '../../utils/persianToEnglish';
+import { UPDATE_NEED_STATUS_RESET } from '../../redux/constants/needConstant';
+import { UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
 
 const filterTickets = (tickets, cSearch) => {
   if (tickets)
@@ -58,6 +60,12 @@ const TicketListing = () => {
     }
   }, [ticketSearch, socketContent, tickets, updatedTicket]);
 
+  const handleTicketSelect = (ticketId) => {
+    dispatch({ type: UPDATE_NEED_STATUS_RESET });
+    dispatch({ type: UPDATE_TICKET_COLOR_RESET });
+    dispatch(selectTicket(ticketId));
+  };
+
   return (
     <div>
       <Box
@@ -91,7 +99,7 @@ const TicketListing = () => {
                     cursor: 'pointer',
                     backgroundColor: activeTicket === ticket.id ? 'rgba(230,244,255,0.3)' : '',
                   }}
-                  onClick={() => dispatch(selectTicket(ticket.id))}
+                  onClick={() => handleTicketSelect(ticket.id)}
                 >
                   <Box
                     sx={{
@@ -115,9 +123,7 @@ const TicketListing = () => {
                     alignItems="center"
                     spacing={2}
                   >
-                    <ListItemText
-                      secondary={(dateConvertor(String(ticket.updatedAt)))}
-                    />
+                    <ListItemText secondary={dateConvertor(String(ticket.updatedAt))} />
                     <Grid>
                       <AvatarGroup max={4}>
                         {ticket.contributors.map((p) => (
