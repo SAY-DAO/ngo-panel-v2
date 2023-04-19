@@ -22,9 +22,9 @@ import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import TodayCard from '../TodayCard';
 import { AnnouncementEnum } from '../../utils/types';
 
-export default function TicketDeliveryDialog({
-  openDeliveryAnnouncement,
-  setOpenDeliveryAnnouncement,
+export default function TicketAnnouncementDialog({
+  openAnnouncement,
+  setOpenAnnouncement,
   loading,
   need,
 }) {
@@ -41,7 +41,10 @@ export default function TicketDeliveryDialog({
 
   useEffect(() => {
     if (addedTicket) {
-      setOpenDeliveryAnnouncement(false);
+      setOpenAnnouncement({
+        arrival: false,
+        moneyReceived: false,
+      });
     }
   }, [addedTicket]);
 
@@ -58,14 +61,17 @@ export default function TicketDeliveryDialog({
   });
 
   const handleClose = () => {
-    setOpenDeliveryAnnouncement(false);
+    setOpenAnnouncement({
+      arrival: false,
+      moneyReceived: false,
+    });
   };
 
-  const handleArrivaleTimeChange = (newValue) => {
+  const handleArrivalsTimeChange = (newValue) => {
     setArrivalDate(newValue);
   };
+
   const handleConfirm = () => {
-    console.log(need);
     console.log({
       roles: ['AUDITOR'],
       title: need.name_translations.en,
@@ -75,7 +81,9 @@ export default function TicketDeliveryDialog({
       statuses: need.status_updates,
       receipts: need.receipts,
       payments: need.payments,
-      announcement: AnnouncementEnum.ARRIVED_AT_NGO,
+      announcement: openAnnouncement.arrival
+        ? AnnouncementEnum.ARRIVED_AT_NGO
+        : openAnnouncement.moneyReceived && AnnouncementEnum.NGO_RECEIVED_MONEY,
       arrivalDate,
     });
     dispatch(
@@ -88,7 +96,9 @@ export default function TicketDeliveryDialog({
         statuses: need.status_updates,
         receipts: need.receipts,
         payments: need.payments,
-        announcement: AnnouncementEnum.ARRIVED_AT_NGO,
+        announcement: openAnnouncement.arrival
+          ? AnnouncementEnum.ARRIVED_AT_NGO
+          : openAnnouncement.moneyReceived && AnnouncementEnum.NGO_RECEIVED_MONEY,
         arrivalDate,
       }),
     );
@@ -97,7 +107,7 @@ export default function TicketDeliveryDialog({
   return (
     <div>
       <Dialog
-        open={openDeliveryAnnouncement}
+        open={openAnnouncement.arrival || openAnnouncement.moneyReceived}
         onClose={handleClose}
         aria-labelledby="draggable-dialog-title"
       >
@@ -108,16 +118,25 @@ export default function TicketDeliveryDialog({
           <div>
             <TodayCard />
             <FormControl sx={{ m: 1, width: 300 }}>
-              <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
-                {t('report.statusChange.deliveredToNgo')}
-              </CustomFormLabel>
+              {openAnnouncement.arrival ? (
+                <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
+                  {t('report.statusChange.deliveredToNgo')}
+                </CustomFormLabel>
+              ) : (
+                openAnnouncement.moneyReceived && (
+                  <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
+                    {t('report.statusChange.moneyToNgo')}
+                  </CustomFormLabel>
+                )
+              )}
+
               <LocalizationProvider dateAdapter={AdapterJalaali} adapterLocale="fa-IR">
                 <DateTimePicker
                   id="deliveredToNgo"
                   value={arrivalDate}
                   control={control}
                   {...register('deliveredToNgo', { required: true })}
-                  onChange={handleArrivaleTimeChange}
+                  onChange={handleArrivalsTimeChange}
                   renderInput={(params) => <TextField {...params} />}
                   error={!!errors.deliveredToNgo}
                 />
@@ -138,9 +157,9 @@ export default function TicketDeliveryDialog({
     </div>
   );
 }
-TicketDeliveryDialog.propTypes = {
-  setOpenDeliveryAnnouncement: PropTypes.func,
-  openDeliveryAnnouncement: PropTypes.bool,
+TicketAnnouncementDialog.propTypes = {
+  setOpenAnnouncement: PropTypes.func,
+  openAnnouncement: PropTypes.object,
   loading: PropTypes.bool,
   need: PropTypes.object,
 };

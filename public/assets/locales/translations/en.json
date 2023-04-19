@@ -168,6 +168,7 @@
       "retailerCode": "Retailer Code",
       "deliveredToNgo": "Date of arrival to NGO",
       "bankTrackId": "Bank Track Id",
+      "moneyToNgo": "Date of Money received",
       "purchasedCost": "Price paid for service"
     },
     "history": {

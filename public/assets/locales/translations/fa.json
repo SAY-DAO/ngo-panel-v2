@@ -207,6 +207,7 @@
       "retailerCode": "شماره سفارش",
       "deliveredToNgo": "تاریخ رسیدن کالا به انجمن",
       "bankTrackId": "کد پیگیری بانک",
+      "moneyToNgo":  "تاریخ دریافت مبلغ",
       "purchasedCost": "هزینه پرداخت شده واقعی"
     },
     "history": {

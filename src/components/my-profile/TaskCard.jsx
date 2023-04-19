@@ -51,7 +51,7 @@ import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constan
 import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
 import WalletButton from '../wallet/WalletButton';
-import TicketDeliveryDialog from '../dialogs/TicketDeliveryDialog';
+import TicketAnnouncementDialog from '../dialogs/TicketAnnouncementDialog';
 import { prepareUrl, randomIntFromInterval } from '../../utils/helpers';
 import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
@@ -67,7 +67,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [height, setHeight] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [openDeliveryAnnouncement, setOpenDeliveryAnnouncement] = useState(false);
+  const [openAnnouncement, setOpenAnnouncement] = useState({
+    arrival: false,
+    moneyReceived: false,
+  });
   const [toastOpen, setToastOpen] = useState(false);
   const [openWallets, setOpenWallets] = useState(false);
   const [needSignatures, setNeedSignatures] = useState([]);
@@ -187,9 +190,20 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     }
   }, [signature, pageDetails]);
 
-  const handleAnnounceDelivery = () => {
+  const handleAnnouncement = (Announcement) => {
     dispatch({ type: ADD_TICKET_RESET });
-    setOpenDeliveryAnnouncement(true);
+    if (Announcement === AnnouncementEnum.ARRIVED_AT_NGO) {
+      setOpenAnnouncement({
+        arrival: true,
+        moneyReceived: false,
+      });
+    }
+    if (Announcement === AnnouncementEnum.NGO_RECEIVED_MONEY) {
+      setOpenAnnouncement({
+        arrival: false,
+        moneyReceived: true,
+      });
+    }
   };
 
   useEffect(() => {
@@ -342,24 +356,27 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     )
                   )}
                   {swInfo.id === need.created_by_id &&
-                  (!need.ticket ||
-                    (need.ticket &&
-                      need.ticket.lastAnnouncement !== AnnouncementEnum.ARRIVED_AT_NGO)) &&
-                  need.type === NeedTypeEnum.PRODUCT &&
-                  need.status === ProductStatusEnum.PURCHASED_PRODUCT ? (
-                    <MenuItem onClick={() => handleAnnounceDelivery()}>
-                      <CampaignIcon sx={{ ml: 1, mr: 1 }} />
-                      {t('myPage.taskCard.menu.deliveryTicket')}
-                    </MenuItem>
-                  ) : (
-                    need.type === NeedTypeEnum.SERVICE &&
-                    need.status === ServiceStatusEnum.MONEY_TO_NGO && (
-                      <MenuItem onClick={() => handleAnnounceDelivery()}>
+                    (!need.ticket ||
+                      (need.ticket &&
+                        need.ticket.lastAnnouncement !== AnnouncementEnum.ARRIVED_AT_NGO &&
+                        need.ticket.lastAnnouncement !== AnnouncementEnum.NGO_RECEIVED_MONEY)) &&
+                    (need.type === NeedTypeEnum.PRODUCT &&
+                    need.status === ProductStatusEnum.PURCHASED_PRODUCT ? (
+                      <MenuItem onClick={() => handleAnnouncement(AnnouncementEnum.ARRIVED_AT_NGO)}>
                         <CampaignIcon sx={{ ml: 1, mr: 1 }} />
-                        {t('myPage.taskCard.menu.moneyToNgoTicket')}
+                        {t('myPage.taskCard.menu.deliveryTicket')}
                       </MenuItem>
-                    )
-                  )}
+                    ) : (
+                      need.type === NeedTypeEnum.SERVICE &&
+                      need.status === ServiceStatusEnum.MONEY_TO_NGO && (
+                        <MenuItem
+                          onClick={() => handleAnnouncement(AnnouncementEnum.NGO_RECEIVED_MONEY)}
+                        >
+                          <CampaignIcon sx={{ ml: 1, mr: 1 }} />
+                          {t('myPage.taskCard.menu.moneyToNgoTicket')}
+                        </MenuItem>
+                      )
+                    ))}
                 </Menu>
               )}
             </Box>
@@ -445,6 +462,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         }}
                       >
                         {need.ticket.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                          <CampaignIcon />
+                        )}
+                        {need.ticket.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
                           <CampaignIcon />
                         )}
                       </Box>
@@ -683,10 +703,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           need={need}
         />
       )}
-      {openDeliveryAnnouncement && (
-        <TicketDeliveryDialog
-          openDeliveryAnnouncement={openDeliveryAnnouncement}
-          setOpenDeliveryAnnouncement={setOpenDeliveryAnnouncement}
+      {openAnnouncement && (
+        <TicketAnnouncementDialog
+          openAnnouncement={openAnnouncement}
+          setOpenAnnouncement={setOpenAnnouncement}
           loading={loadingTicketAdd}
           need={need}
         />
