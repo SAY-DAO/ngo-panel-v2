@@ -18,7 +18,7 @@ import { dateConvertor } from '../../utils/persianToEnglish';
 export default function DurationTimeLine({ need }) {
   const { t } = useTranslation();
   const { ipfs } = useSelector((state) => state.signature);
-  const theIpfs = need.ipfs || ipfs;
+  const theIpfs = (need && need.ipfs) || ipfs;
 
   // for analytics we get different variables
   const theNeed = need;
@@ -86,7 +86,11 @@ export default function DurationTimeLine({ need }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.childDeliveryDate)}</Typography>}
+              title={
+                <Typography sx={{ fontSize: 12 }}>
+                  {dateConvertor(theNeed.childDeliveryDate)}
+                </Typography>
+              }
             >
               <TimelineDot variant="outlined" color="secondary" />
             </Tooltip>
@@ -168,7 +172,11 @@ export default function DurationTimeLine({ need }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.childDeliveryDate)}</Typography>}
+              title={
+                <Typography sx={{ fontSize: 12 }}>
+                  {dateConvertor(theNeed.childDeliveryDate)}
+                </Typography>
+              }
             >
               <TimelineDot variant="outlined" color="secondary" />
             </Tooltip>
@@ -189,7 +197,11 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.purchaseDate)}</Typography>}>
+            <Tooltip
+              title={
+                <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.purchaseDate)}</Typography>
+              }
+            >
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
             <TimelineConnector />
@@ -210,7 +222,11 @@ export default function DurationTimeLine({ need }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.ngoDeliveryDate)}</Typography>}
+              title={
+                <Typography sx={{ fontSize: 12 }}>
+                  {dateConvertor(theNeed.ngoDeliveryDate)}
+                </Typography>
+              }
             >
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
@@ -231,7 +247,9 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>}>
+            <Tooltip
+              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>}
+            >
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
             <TimelineConnector />
@@ -251,7 +269,11 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.confirmDate)}</Typography>}>
+            <Tooltip
+              title={
+                <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.confirmDate)}</Typography>
+              }
+            >
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
             <TimelineConnector />
@@ -273,7 +295,11 @@ export default function DurationTimeLine({ need }) {
                 )}`}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.created)}</Typography>}>
+            <Tooltip
+              title={
+                <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.created)}</Typography>
+              }
+            >
               <TimelineDot variant="outlined" color="secondary" />
             </Tooltip>
             <TimelineConnector />
