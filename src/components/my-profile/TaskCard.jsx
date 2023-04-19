@@ -341,9 +341,11 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                       </MenuItem>
                     )
                   )}
-                  {need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
+                  {((need.type === NeedTypeEnum.PRODUCT &&
+                    need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
+                    (need.type === NeedTypeEnum.SERVICE &&
+                      need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
                     swInfo.id === need.created_by_id &&
-                    need.type === NeedTypeEnum.PRODUCT &&
                     (!need.ticket ||
                       (need.ticket &&
                         need.ticket.lastAnnouncement !== AnnouncementEnum.ARRIVED_AT_NGO)) && (

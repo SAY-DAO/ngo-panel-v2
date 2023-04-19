@@ -90,6 +90,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const handleTicketUpdate = (choice) => {
     socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
   };
+  
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   return (
