@@ -589,7 +589,20 @@ const CoverCard = ({
                             new Date(Math.max(...dateList)).toUTCString(),
                           ),
                         )} ${t('myPage.days')}`
-                      : t('myPage.today'))
+                      : daysDifference(
+                          new Date().toUTCString(),
+                          new Date(Math.min(...dateList)).toUTCString(),
+                        ) < 1 &&
+                        daysDifference(
+                          new Date().toUTCString(),
+                          new Date(Math.min(...dateList)).toUTCString(),
+                        ) > 0 &&
+                        t('myPage.today')
+                      ? daysDifference(
+                          new Date().toUTCString(),
+                          new Date(Math.min(...dateList)).toUTCString(),
+                        ) < 0
+                      : '-')
                   ) : (
                     <CircularProgress size={15} />
                   )}
