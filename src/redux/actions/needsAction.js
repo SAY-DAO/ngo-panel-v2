@@ -174,8 +174,6 @@ export const fetchChildNeeds =
 export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_ONE_NEED_REQUEST });
-    console.log('needId');
-    console.log(needId);
     const {
       userLogin: { userInfo },
     } = getState();

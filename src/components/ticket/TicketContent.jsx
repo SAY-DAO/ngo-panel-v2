@@ -16,9 +16,10 @@ import {
   Fab,
   CircularProgress,
   Card,
+  LinearProgress,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import Scrollbar from '../custom-scroll/Scrollbar';
@@ -30,14 +31,16 @@ import { socketChangeTicketColor } from '../../utils/socketHelpers';
 import DurationTimeLine from '../my-profile/DurationTimeLine';
 import ReportStatusChange from '../report/ReportStatusChange';
 import StatusDialog from '../dialogs/ReportStatusDialog';
+import { fetchChildOneNeed } from '../../redux/actions/needsAction';
 
 const TicketContent = ({ toggleTicketSidebar }) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const [theTicket, setTheTicket] = useState(null);
   const [statusDialog, setStatusDialog] = useState(false);
   const [statusNeed, setStatusNeed] = useState();
-
+  const [theNeed, setTheNeed] = useState();
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
@@ -48,7 +51,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const { socketContent } = ticketMsgAdd;
 
   const ticketById = useSelector((state) => state.ticketById);
-  const { ticket: fetchedTicket } = ticketById;
+  const { ticket: fetchedTicket, loading: loadingTicket } = ticketById;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { updatedTicket, loading: loadingTicketUpdated } = ticketUpdate;
@@ -56,24 +59,34 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const ticketAdd = useSelector((state) => state.ticketAdd);
   const { addedTicket } = ticketAdd;
 
+  const childOneNeed = useSelector((state) => state.childOneNeed);
+  const { oneNeed, loading: loadingOneNeed } = childOneNeed;
+
   // set ticket
   useEffect(() => {
     if (tickets) {
       const thisTicket = tickets.find((tik) => tik.id === currentTicket);
-      // db changed it' name in production to ticketHistories / TicketHistoryEntity
-      // we serializing the old tickets here
-      // if (thisTicket) {
-      //   if (!thisTicket.ticketHistories || !thisTicket.ticketHistories[0]) {
-      //     theTicket.ticketHistories = [];
-      //   }
-      //   if (thisTicket.ticketHistory && thisTicket.ticketHistory[0]) {
-      //     thisTicket.ticketHistory.map((h) => h && thisTicket.ticketHistories.push(h));
-      //   }
-
       setTheTicket(thisTicket);
-      // }
     }
   }, [currentTicket, addedTicket, tickets]);
+
+  // get recently updated need for status change
+  useEffect(() => {
+    if ((theTicket && !oneNeed) || (oneNeed && oneNeed.id !== theTicket.need.flaskId)) {
+      dispatch(fetchChildOneNeed(theTicket.need.flaskId));
+    }
+  }, [theTicket, theNeed]);
+
+  // set need for status change
+  useEffect(() => {
+    if (theTicket) {
+      console.log('theNeed');
+      console.log(theTicket);
+    }
+    if (theTicket && oneNeed && oneNeed.id === theTicket.need.flaskId) {
+      setTheNeed(oneNeed);
+    }
+  }, [oneNeed, theTicket]);
 
   // set ticket when socket msg received
   useEffect(() => {
@@ -95,7 +108,6 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   };
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
-
   return (
     <WebsocketProvider value={socketHttp}>
       <Box>
@@ -125,7 +137,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                       <Grid container justifyContent="space-between">
                         <Grid item xs={6}>
                           <ListItemAvatar>
-                            <Tooltip title={<DurationTimeLine need={theTicket.need} />}>
+                            <Tooltip title={<DurationTimeLine need={theNeed} />}>
                               <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
                             </Tooltip>
                           </ListItemAvatar>
@@ -134,12 +146,16 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                             secondary={theTicket.need.child.sayNameTranslations.fa}
                           />
                         </Grid>
-                        <Grid item xs={6}>
-                          <ReportStatusChange
-                            need={theTicket.need}
-                            setStatusDialog={setStatusDialog}
-                            setStatusNeed={setStatusNeed}
-                          />
+                        <Grid item xs={6} sx={{ m: 'auto' }}>
+                          {loadingTicket || loadingOneNeed || !theNeed ? (
+                            <LinearProgress size="small" sx={{ width: '30px' }} />
+                          ) : (
+                            <ReportStatusChange
+                              need={theNeed}
+                              setStatusDialog={setStatusDialog}
+                              setStatusNeed={setStatusNeed}
+                            />
+                          )}
                         </Grid>
                       </Grid>
                     </ListItem>
