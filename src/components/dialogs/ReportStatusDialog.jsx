@@ -6,7 +6,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as Yup from 'yup';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import PropTypes from 'prop-types';
 import {
   Autocomplete,
@@ -20,7 +19,6 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
@@ -288,8 +286,8 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
                             {t('report.statusChange.expectedDeliveryToNgo')}
                           </CustomFormLabel>
-                          <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DesktopDatePicker
+                          <LocalizationProvider dateAdapter={AdapterJalaali} adapterLocale="fa-IR">
+                            <DateTimePicker
                               id="expProductToNgo"
                               value={productExpDelivery}
                               control={control}
