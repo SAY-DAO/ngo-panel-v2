@@ -238,7 +238,6 @@
     "ngos": {
       "title": "NGOs",
       "arrivals": "Arrivals Code"
-
     },
     "providers": {
       "title": "Providers"
@@ -694,7 +693,8 @@
         "addTicket": "َAdd ticket",
         "readTicket": "َRead ticket",
         "tickets": "َAll tickets",
-        "deliveryTicket": "َAnnounce Need Arrival"
+        "deliveryTicket": "َAnnounce Need Arrival",
+        "moneyToNgoTicket": "َAnnounce Money Received"
       }
     }
   },

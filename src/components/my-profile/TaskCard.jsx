@@ -341,19 +341,25 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                       </MenuItem>
                     )
                   )}
-                  {((need.type === NeedTypeEnum.PRODUCT &&
-                    need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
-                    (need.type === NeedTypeEnum.SERVICE &&
-                      need.status === ServiceStatusEnum.MONEY_TO_NGO)) &&
-                    swInfo.id === need.created_by_id &&
-                    (!need.ticket ||
-                      (need.ticket &&
-                        need.ticket.lastAnnouncement !== AnnouncementEnum.ARRIVED_AT_NGO)) && (
+                  {swInfo.id === need.created_by_id &&
+                  (!need.ticket ||
+                    (need.ticket &&
+                      need.ticket.lastAnnouncement !== AnnouncementEnum.ARRIVED_AT_NGO)) &&
+                  need.type === NeedTypeEnum.PRODUCT &&
+                  need.status === ProductStatusEnum.PURCHASED_PRODUCT ? (
+                    <MenuItem onClick={() => handleAnnounceDelivery()}>
+                      <CampaignIcon sx={{ ml: 1, mr: 1 }} />
+                      {t('myPage.taskCard.menu.deliveryTicket')}
+                    </MenuItem>
+                  ) : (
+                    need.type === NeedTypeEnum.SERVICE &&
+                    need.status === ServiceStatusEnum.MONEY_TO_NGO && (
                       <MenuItem onClick={() => handleAnnounceDelivery()}>
                         <CampaignIcon sx={{ ml: 1, mr: 1 }} />
-                        {t('myPage.taskCard.menu.deliveryTicket')}
+                        {t('myPage.taskCard.menu.moneyToNgoTicket')}
                       </MenuItem>
-                    )}
+                    )
+                  )}
                 </Menu>
               )}
             </Box>

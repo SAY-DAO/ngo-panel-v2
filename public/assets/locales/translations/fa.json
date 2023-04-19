@@ -731,7 +731,8 @@
         "addTicket": "اضافه کردن تیکت",
         "readTicket": "خواندن تیکت",
         "tickets": "تیکت‌ها",
-        "deliveryTicket": "َاعلام رسیدن کالا به سمن"
+        "deliveryTicket": "َاعلام رسیدن کالا به سمن",
+        "moneyToNgoTicket": "َاعلام دریافت مبلغ"
       }
     }
   },
