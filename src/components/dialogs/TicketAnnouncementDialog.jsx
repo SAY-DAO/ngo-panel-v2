@@ -20,7 +20,7 @@ import { TextField } from '@mui/material';
 import { addTicket } from '../../redux/actions/ticketAction';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import TodayCard from '../TodayCard';
-import { AnnouncementEnum } from '../../utils/types';
+import { AnnouncementEnum, NeedTypeEnum, ProductStatusEnum } from '../../utils/types';
 
 export default function TicketAnnouncementDialog({
   openAnnouncement,
@@ -103,6 +103,16 @@ export default function TicketAnnouncementDialog({
       }),
     );
   };
+
+  useEffect(() => {
+    if (
+      need &&
+      need.type === NeedTypeEnum.PRODUCT &&
+      need.status === ProductStatusEnum.PURCHASED_PRODUCT
+    ) {
+      setArrivalDate(need.expected_delivery_date);
+    }
+  }, [need]);
 
   return (
     <div>
