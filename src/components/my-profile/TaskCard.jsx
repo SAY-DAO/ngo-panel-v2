@@ -344,7 +344,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   {((need.type === NeedTypeEnum.PRODUCT &&
                     need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
                     (need.type === NeedTypeEnum.SERVICE &&
-                      need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
+                      need.status === ServiceStatusEnum.MONEY_TO_NGO)) &&
                     swInfo.id === need.created_by_id &&
                     (!need.ticket ||
                       (need.ticket &&
