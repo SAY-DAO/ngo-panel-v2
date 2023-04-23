@@ -739,7 +739,7 @@ const NeedAdd = () => {
                                 >
                                   {providerList ? (
                                     providerList
-                                      .filter((p) => p.isActive === true)
+                                      // .filter((p) => p.isActive === true)
                                       .map((p) => (
                                         <MenuItem key={p.id} value={p.id}>
                                           <Grid container spacing={2}>

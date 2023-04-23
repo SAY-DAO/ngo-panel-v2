@@ -438,7 +438,7 @@
     "totalExplain": "لطفا مطلع باشید که این عدد تعداد کل نیازها می‌باشد. تعداد نیازهای ساخته شده به وسیله شما می‌تواند کمتر از کل باشد",
     "totalCount": "تمام نیازها",
     "statsRatio": "انجام شده / تمام نیازها",
-    "providerSelect": "لطفا تامیین کننده انتخاب کنید",
+    "providerSelect": "لطفا تامین کننده انتخاب کنید",
     "addProvider": "اضافه کردن تامین کننده",
     "provider": "اسم تامین کننده",
     "providers": {
@@ -519,22 +519,22 @@
     }
   },
   "provider": {
-    "update": "Edit",
-    "titleEdit": "Edit Details",
-    "titleAdd": "Add Details",
-    "country": "Country",
-    "state": "State",
-    "city": "City",
-    "isActive": "Status",
-    "description": "Description",
-    "emailAddress": "Email",
-    "name": "Name",
-    "website": "website",
-    "type": "type",
-    "updated": "Updated",
+    "update": "ویرایش",
+    "titleEdit": "ویرایش جزییات",
+    "titleAdd": "اضافه کردن تامین کننده",
+    "country": "کشور",
+    "state": "استان",
+    "city": "شهر",
+    "isActive": "وضعیت",
+    "description": "توضیحات",
+    "emailAddress": "ایمیل",
+    "name": "اسم تامین کننده",
+    "website": "وبسایت",
+    "type": "نوع",
+    "updated": "به روز شده",
     "button": {
-      "update": "Update",
-      "add": "Add Provider"
+      "update": "به روزرسانی",
+      "add": "اضافه کردن"
     },
     "cities": {
       "one": "Tehran"

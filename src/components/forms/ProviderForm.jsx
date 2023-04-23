@@ -35,6 +35,7 @@ import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/act
 import { addProvider } from '../../redux/actions/providerAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import { ADD_PROVIDER_REST } from '../../redux/constants/providerConstants';
+import { NeedTypeEnum } from '../../utils/types';
 
 export default function ProviderForm() {
   const dispatch = useDispatch();
@@ -240,45 +241,51 @@ export default function ProviderForm() {
                       size="small"
                       control={control}
                       {...register('name')}
-                      placeholder="Provider Name"
+                      placeholder={t('provider.name')}
                       error={!!errors.name}
                     />
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                       {errors && errors.name && errors.name.message}
                     </FormHelperText>
                   </Grid>
-                  <Grid item xs={6}>
-                    <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
-                    <TextField
-                      id="website"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('website')}
-                      error={!!errors.website}
-                      placeholder="https://example.com"
-                    />
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.website && errors.website.message}
-                    </FormHelperText>
-                  </Grid>
-                  <Grid item xs={12} lg={3}>
+
+                  <Grid item xs={6} lg={6}>
                     <CustomFormLabel htmlFor="type">{t('need.type_name')}</CustomFormLabel>
                     <CustomSelect
                       labelId="type-controlled-open-select-label"
                       id="type-controlled-open-select"
+                      size="small"
                       defaultValue={0}
                       control={control}
+                      sx={{ width: '100%' }}
                       register={{ ...register('type') }}
                     >
                       <MenuItem value={0}>{t('need.types.service')}</MenuItem>
                       <MenuItem value={1}>{t('need.types.product')}</MenuItem>
                     </CustomSelect>
                   </Grid>
-
-                  <Grid item xs={3}>
+                  <Grid item xs={12}>
+                    {watch('type') === NeedTypeEnum.PRODUCT && (
+                      <>
+                        <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
+                        <TextField
+                          id="website"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          control={control}
+                          {...register('website')}
+                          error={!!errors.website}
+                          placeholder="https://example.com"
+                        />
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.website && errors.website.message}
+                        </FormHelperText>
+                      </>
+                    )}
+                  </Grid>
+                  <Grid item xs={4}>
                     <CustomFormLabel htmlFor="country">{t('provider.country')}</CustomFormLabel>
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
@@ -300,13 +307,14 @@ export default function ProviderForm() {
                       {errors && errors.country && errors.country.message}
                     </FormHelperText>
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     {states && (
                       <>
                         <CustomFormLabel htmlFor="state">{t('provider.state')}</CustomFormLabel>
                         <CustomSelect
                           labelId="state-controlled-open-select-label"
                           id="state-controlled-open-select"
+                          defaultValue=""
                           value={watch('state') || states[0].id}
                           control={control}
                           register={{ ...register('state') }}
@@ -325,7 +333,7 @@ export default function ProviderForm() {
                       </>
                     )}
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4}>
                     {cities && (
                       <>
                         <CustomFormLabel htmlFor="city">{t('provider.city')}</CustomFormLabel>
