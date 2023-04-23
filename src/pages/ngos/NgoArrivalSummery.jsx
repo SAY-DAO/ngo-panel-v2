@@ -15,6 +15,20 @@ import TodayCard from '../../components/TodayCard';
 
 export default function NgoArrivalSummery({ arrivals }) {
   const list = [];
+  arrivals.sort((a, b) => {
+    const fa = a.ngoName.toLowerCase();
+    const fb = b.ngoName.toLowerCase();
+
+    if (fa > fb) {
+      return -1;
+    }
+    if (fa < fb) {
+      return 1;
+    }
+    return 0;
+  });
+
+
   return (
     <TableContainer component={Paper} sx={{ m: 'auto', width: '650px', textAlign: 'center' }}>
       <TodayCard />

@@ -40,7 +40,7 @@ import summer from '../../resources/images/cover/summer.jpeg';
 import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
 import { FlaskUserTypesEnum } from '../../utils/types';
-import { persianMonth } from '../../utils/persianToEnglish';
+import { persianDay, persianMonth, persianYear } from '../../utils/persianToEnglish';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
   fetchNonce,
@@ -576,34 +576,18 @@ const CoverCard = ({
                     fontSize: 14,
                   }}
                 >
-                  {arrivals ? (
-                    // wee add a number like 0.4 tp help round up because delivery dates have not their hours set and it calculates base on 12:00 am
-                    // sice 2.45 will round to 2 days, to avoid this we increase it to somewhere ~ 2.85 to round to 3
-                    daysDifference(
-                      new Date().toUTCString(),
-                      new Date(Math.min(...dateList)).toUTCString(),
-                    ) > 1 ? (
+                  {dateList && dateList[0] ? (
+                    persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))) ||
+                    persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))) ||
+                    persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))) ? (
                       `${Math.ceil(
                         daysDifference(
                           new Date().toUTCString(),
                           new Date(Math.min(...dateList)).toUTCString(),
                         ),
                       )} ${t('myPage.days')}`
-                    ) : daysDifference(
-                        new Date().toUTCString(),
-                        new Date(Math.min(...dateList)).toUTCString(),
-                      ) < 1 &&
-                      daysDifference(
-                        new Date().toUTCString(),
-                        new Date(Math.min(...dateList)).toUTCString(),
-                      ) > 0 &&
-                      t('myPage.today') ? (
-                      daysDifference(
-                        new Date().toUTCString(),
-                        new Date(Math.min(...dateList)).toUTCString(),
-                      ) < 0
                     ) : (
-                      '-'
+                      t('myPage.today')
                     )
                   ) : (
                     <CircularProgress size={15} />
