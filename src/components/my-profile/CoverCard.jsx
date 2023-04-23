@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import {
   Grid,
@@ -15,7 +16,6 @@ import {
   useMediaQuery,
   Skeleton,
 } from '@mui/material';
-import PropTypes from 'prop-types';
 import InterestsIcon from '@mui/icons-material/Interests';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import HandshakeIcon from '@mui/icons-material/Handshake';
@@ -83,7 +83,7 @@ const CoverCard = ({
   const [openWallets, setOpenWallets] = useState(false);
   const [values, setValues] = useState();
   const [walletToastOpen, setWalletToastOpen] = useState(false);
-
+  const [dateList, setDateList] = useState([]);
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
 
   // wallet
@@ -247,6 +247,16 @@ const CoverCard = ({
     }
   }, [openSocialWorkers, setOpenSocialWorker, swNewDetails]);
 
+  useEffect(() => {
+    if (arrivals) {
+      const myList = [];
+      for (let i = 0; i < arrivals.length; i++) {
+        if (arrivals[i].maxDate >= new Date()) myList.push(arrivals[i].maxDate);
+      }
+      setDateList(myList);
+    }
+  }, [arrivals]);
+
   const onDisconnect = () => {
     localStorage.removeItem('say-siwe');
     dispatch({ type: WALLET_INFORMATION_RESET });
@@ -269,7 +279,6 @@ const CoverCard = ({
     setWalletToastOpen(false);
   };
 
-  const dateList = [];
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   return (
@@ -568,41 +577,34 @@ const CoverCard = ({
                   }}
                 >
                   {arrivals ? (
-                    arrivals.map((a) => {
-                      // const diff = daysDifference(
-                      //   new Date().toUTCString(),
-                      //   new Date(Math.min(...dateList)).toUTCString(),
-                      // );
-                      dateList.push(a.maxDate);
-
-                      return null;
-                    }) &&
                     // wee add a number like 0.4 tp help round up because delivery dates have not their hours set and it calculates base on 12:00 am
                     // sice 2.45 will round to 2 days, to avoid this we increase it to somewhere ~ 2.85 to round to 3
-                    (daysDifference(
+                    daysDifference(
                       new Date().toUTCString(),
                       new Date(Math.min(...dateList)).toUTCString(),
-                    ) > 1
-                      ? `${Math.round(
-                          daysDifference(
-                            new Date().toUTCString(),
-                            new Date(Math.max(...dateList)).toUTCString(),
-                          ),
-                        )} ${t('myPage.days')}`
-                      : daysDifference(
-                          new Date().toUTCString(),
-                          new Date(Math.min(...dateList)).toUTCString(),
-                        ) < 1 &&
+                    ) > 1 ? (
+                      `${Math.round(
                         daysDifference(
                           new Date().toUTCString(),
-                          new Date(Math.min(...dateList)).toUTCString(),
-                        ) > 0 &&
-                        t('myPage.today')
-                      ? daysDifference(
-                          new Date().toUTCString(),
-                          new Date(Math.min(...dateList)).toUTCString(),
-                        ) < 0
-                      : '-')
+                          new Date(Math.max(...dateList)).toUTCString(),
+                        ),
+                      )} ${t('myPage.days')}`
+                    ) : daysDifference(
+                        new Date().toUTCString(),
+                        new Date(Math.min(...dateList)).toUTCString(),
+                      ) < 1 &&
+                      daysDifference(
+                        new Date().toUTCString(),
+                        new Date(Math.min(...dateList)).toUTCString(),
+                      ) > 0 &&
+                      t('myPage.today') ? (
+                      daysDifference(
+                        new Date().toUTCString(),
+                        new Date(Math.min(...dateList)).toUTCString(),
+                      ) < 0
+                    ) : (
+                      '-'
+                    )
                   ) : (
                     <CircularProgress size={15} />
                   )}
@@ -812,21 +814,6 @@ const CoverCard = ({
       )}
     </Card>
   );
-};
-
-CoverCard.propTypes = {
-  childCount: PropTypes.number,
-  needCount: PropTypes.number,
-  signatureCount: PropTypes.number,
-  theUser: PropTypes.object,
-  take: PropTypes.number,
-  setTake: PropTypes.func,
-  swInfo: PropTypes.object,
-  swNewDetails: PropTypes.object,
-  setSwNewDetails: PropTypes.func,
-  setSkeleton: PropTypes.func,
-  skeleton: PropTypes.bool,
-  arrivals: PropTypes.array,
 };
 
 export default CoverCard;
