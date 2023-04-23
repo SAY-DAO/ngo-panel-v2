@@ -95,12 +95,12 @@ const ProviderEdit = () => {
     country: Yup.string().required('Please enter Provider country'),
     state: Yup.string().required('Please enter Provider state'),
     city: Yup.string().required('Please enter Provider city'),
-    website: Yup.string()
-      .matches(
-        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-        'Enter correct url!',
-      )
-      .required('Please enter website'),
+    // website: Yup.string()
+    //   .matches(
+    //     /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+    //     'Enter correct url!',
+    //   )
+    //   .required('Please enter website'),
   });
 
   const {
