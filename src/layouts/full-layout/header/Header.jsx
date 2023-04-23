@@ -317,8 +317,17 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     dispatch(openTicketing(true));
   };
 
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+
   return (
     <AppBar sx={sx} elevation={0} className={customClass}>
+      {!lgUp && (
+        <Alert severity="info">
+          <Typography variant="body2">
+            <strong>{t('alert.title')} </strong>— {t('alert.body2')}
+          </Typography>
+        </Alert>
+      )}
       <Toolbar>
         {mdUp ? <LogoIcon /> : ''}
         <IconButton
@@ -364,11 +373,13 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="search" width="20" height="20" />
         </IconButton> */}
-        <Alert severity="info">
-          <Typography variant="body2">
-            <strong>{t('alert.title')} </strong>— {t('alert.body2')}
-          </Typography>
-        </Alert>
+        {lgUp && (
+          <Alert severity="info">
+            <Typography variant="body2">
+              <strong>{t('alert.title')} </strong>— {t('alert.body2')}
+            </Typography>
+          </Alert>
+        )}
         <Drawer
           anchor="top"
           open={showSearchDrawer}
