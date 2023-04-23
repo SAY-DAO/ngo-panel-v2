@@ -171,7 +171,10 @@ const NeedAdd = () => {
     } else if (!activeChildren && openChildren) {
       if (swInfo) {
         // super admin & admin
-        if (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN || swInfo.typeId === FlaskUserTypesEnum.ADMIN) {
+        if (
+          swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+          swInfo.typeId === FlaskUserTypesEnum.ADMIN
+        ) {
           dispatch(fetchActiveChildList());
         } else if (
           swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
@@ -267,7 +270,7 @@ const NeedAdd = () => {
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
-   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
       AddNeed(
@@ -743,14 +746,18 @@ const NeedAdd = () => {
                                       .map((p) => (
                                         <MenuItem key={p.id} value={p.id}>
                                           <Grid container spacing={2}>
-                                            <Grid item>
+                                            <Grid
+                                              item
+                                              sx={{
+                                                m: 'auto',
+                                              }}
+                                            >
                                               <Avatar
-                                                alt="provider logo"
+                                                alt={p.name}
                                                 src={`${apiDao}/providers/images/${p.logoUrl}`}
                                                 sx={{
-                                                  width: 30,
-                                                  height: 30,
-                                                  display: 'inline-block',
+                                                  width: 25,
+                                                  height: 25,
                                                 }}
                                               />
                                             </Grid>
