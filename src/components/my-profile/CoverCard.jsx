@@ -40,7 +40,7 @@ import summer from '../../resources/images/cover/summer.jpeg';
 import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
 import { FlaskUserTypesEnum } from '../../utils/types';
-import { persianDay, persianMonth, persianYear } from '../../utils/persianToEnglish';
+import { persianDay, persianMonth, persianMonthString, persianYear } from '../../utils/persianToEnglish';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
   fetchNonce,
@@ -203,7 +203,7 @@ const CoverCard = ({
   // seasonal cover
   useEffect(() => {
     const d = new Date();
-    const pm = persianMonth(d);
+    const pm = persianMonthString(d);
     if (pm === 'Farvardin' || pm === 'Ordibehesht' || pm === 'Khordad') {
       setCover(spring);
     }
