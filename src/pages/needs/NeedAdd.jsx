@@ -58,7 +58,7 @@ import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
 import { getAge, getOrganizedNeeds } from '../../utils/helpers';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
-import { FlaskUserTypesEnum } from '../../utils/types';
+import { FlaskUserTypesEnum, NeedTypeEnum } from '../../utils/types';
 import ProviderDialog from '../../components/dialogs/ProviderDialog';
 
 const NeedAdd = () => {
@@ -721,7 +721,7 @@ const NeedAdd = () => {
                           spacing={2}
                           mb={2}
                         >
-                          <Grid item xs={6}>
+                          <Grid item lg={6} xs={12}>
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Tooltip title={t('need.addProvider')}>
                                 <IconButton onClick={() => setOpenProvider(true)}>
@@ -745,9 +745,10 @@ const NeedAdd = () => {
                                       // .filter((p) => p.isActive === true)
                                       .map((p) => (
                                         <MenuItem key={p.id} value={p.id}>
-                                          <Grid container spacing={2}>
+                                          <Grid container>
                                             <Grid
                                               item
+                                              xs={2}
                                               sx={{
                                                 m: 'auto',
                                               }}
@@ -761,10 +762,23 @@ const NeedAdd = () => {
                                                 }}
                                               />
                                             </Grid>
-                                            <Grid item>
+                                            <Grid item xs={4}>
                                               <Typography variant="body1" sx={{ p: 1 }}>
                                                 {p.name}
                                               </Typography>
+                                            </Grid>
+                                            <Grid
+                                              item
+                                              sx={{
+                                                m: 'auto',
+                                                fontSize: 12,
+                                              }}
+                                            >
+                                              (
+                                              {p.type === NeedTypeEnum.PRODUCT
+                                                ? t('need.providers.product')
+                                                : t('need.providers.service')}
+                                              )
                                             </Grid>
                                           </Grid>
                                         </MenuItem>
@@ -784,7 +798,7 @@ const NeedAdd = () => {
                               </FormControl>
                             </Stack>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item lg={6} xs={12}>
                             <CustomFormLabel variant="body2" htmlFor="type">
                               {t('need.type_name')}
                             </CustomFormLabel>
