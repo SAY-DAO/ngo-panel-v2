@@ -583,10 +583,10 @@ const CoverCard = ({
                       new Date().toUTCString(),
                       new Date(Math.min(...dateList)).toUTCString(),
                     ) > 1 ? (
-                      `${Math.round(
+                      `${Math.ceil(
                         daysDifference(
                           new Date().toUTCString(),
-                          new Date(Math.max(...dateList)).toUTCString(),
+                          new Date(Math.min(...dateList)).toUTCString(),
                         ),
                       )} ${t('myPage.days')}`
                     ) : daysDifference(
