@@ -10,7 +10,7 @@ export default function ProviderDialog({ open, setOpen }) {
 
   return (
     <Dialog
-      open={!open}
+      open={open}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
