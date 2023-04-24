@@ -146,9 +146,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                       <Grid container justifyContent="space-between">
                         <Grid item xs={6}>
                           <ListItemAvatar>
-                            <Tooltip title={<DurationTimeLine need={theNeed} />}>
-                              <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
-                            </Tooltip>
+                            {theNeed && (
+                              <Tooltip title={<DurationTimeLine need={theNeed} />}>
+                                <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
+                              </Tooltip>
+                            )}
                           </ListItemAvatar>
                           <ListItemText
                             primary={<Typography variant="h6">{theTicket.need.name}</Typography>}
