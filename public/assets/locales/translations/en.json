@@ -1,7 +1,12 @@
 {
   "alert": {
     "title": "Please be Advised!",
-    "body": "Up to End of Day We are working on some feature and you might encounter some mior issues"
+    "body": "Up to End of Day We are working on some feature and you might encounter some minor issues",
+    "needThreshold": { 
+      "body1": "you can not exceed the Unconfirmed needs threshold count",
+      "threshold": "Threshold",
+      "unconfirmed": "Unconfirmed"
+    }
   },
   "footer": {
     "gateway": "Social Workers Gateway "

@@ -12,6 +12,9 @@ import {
   CHILD_NEEDS_FAIL,
   CHILD_NEEDS_REQUEST,
   CHILD_NEEDS_SUCCESS,
+  UNCONFIRMED_NEEDS_FAIL,
+  UNCONFIRMED_NEEDS_REQUEST,
+  UNCONFIRMED_NEEDS_SUCCESS,
   CHILD_ONE_NEED_REQUEST,
   CHILD_ONE_NEED_SUCCESS,
   CHILD_ONE_NEED_FAIL,
@@ -477,6 +480,35 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_ONE_NEED_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const fetchUnconfirmedCount = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UNCONFIRMED_NEEDS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await daoApi.get(`/needs/unconfirmed/${userInfo.id}`, config);
+
+    dispatch({
+      type: UNCONFIRMED_NEEDS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: UNCONFIRMED_NEEDS_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }

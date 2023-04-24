@@ -43,6 +43,7 @@ import {
   fetchExampleNeeds,
   fetchChildOneNeed,
   fetchChildNeeds,
+  fetchUnconfirmedCount,
 } from '../../redux/actions/needsAction';
 import {
   CHILD_EXAMPLE_NEEDS_RESET,
@@ -60,6 +61,7 @@ import { getAge, getOrganizedNeeds } from '../../utils/helpers';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
 import { FlaskUserTypesEnum, NeedTypeEnum } from '../../utils/types';
 import ProviderDialog from '../../components/dialogs/ProviderDialog';
+import { UNCONFIRMED_NEEDS_THRESHOLD } from '../../utils/configs';
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
@@ -125,10 +127,14 @@ const NeedAdd = () => {
   const swById = useSelector((state) => state.swById);
   const { children } = swById;
 
+  const needUnConfirmCount = useSelector((state) => state.needUnConfirmCount);
+  const { unconfirmed } = needUnConfirmCount;
+
   const isLoadingPreNeed = loadingNeedEx && openPreNeed && optionsPreNeed.length === 0;
 
   useEffect(() => {
     dispatch(fetchProviderList());
+    dispatch(fetchUnconfirmedCount());
     dispatch({ type: ADD_ONE_NEED_RESET });
   }, []);
 
@@ -166,21 +172,23 @@ const NeedAdd = () => {
 
   // child open
   useEffect(() => {
-    if (!openChildren) {
-      setOptionsChildren([]);
-    } else if (!activeChildren && openChildren) {
-      if (swInfo) {
-        // super admin & admin
-        if (
-          swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
-          swInfo.typeId === FlaskUserTypesEnum.ADMIN
-        ) {
-          dispatch(fetchActiveChildList());
-        } else if (
-          swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
-          swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
-        ) {
-          dispatch(fetchSwOrNgoChildList());
+    if (unconfirmed < UNCONFIRMED_NEEDS_THRESHOLD) {
+      if (!openChildren) {
+        setOptionsChildren([]);
+      } else if (!activeChildren && openChildren) {
+        if (swInfo) {
+          // super admin & admin
+          if (
+            swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+            swInfo.typeId === FlaskUserTypesEnum.ADMIN
+          ) {
+            dispatch(fetchActiveChildList());
+          } else if (
+            swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+            swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
+          ) {
+            dispatch(fetchSwOrNgoChildList());
+          }
         }
       }
     }
@@ -329,6 +337,7 @@ const NeedAdd = () => {
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <Autocomplete
+            disabled={!unconfirmed || unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD}
             id="asynchronous-activeChildren"
             sx={{ minWidth: '340px' }}
             open={openChildren}
@@ -386,7 +395,7 @@ const NeedAdd = () => {
         </Grid>
       ) : (
         <>
-          {successChild && childId && (
+          {successChild && childId ? (
             <>
               <Grid container spacing={0}>
                 <Grid item lg={4} md={12} xs={12}>
@@ -1018,6 +1027,47 @@ const NeedAdd = () => {
                 )}
               </Grid>
             </>
+          ) : (
+            unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD && (
+              <Box
+                sx={{
+                  width: 300,
+                  height: 150,
+                  m: 'auto',
+                  mt: 5,
+                  p: 3,
+                  backgroundColor: (theme) => theme.palette.background.paper,
+                }}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="flex-end"
+                >
+                  <Grid item>
+                    <Typography sx={{ display: 'inline-flex', textAlign: 'center', pb: 4 }}>
+                      {t('alert.needThreshold.body1')}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item>
+                    <Typography variant="body1" sx={{ fontSize: 12, p: 1 }}>
+                      {t('alert.needThreshold.threshold')}
+                      {': '}
+                      {UNCONFIRMED_NEEDS_THRESHOLD}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body1" sx={{ fontSize: 12, p: 1 }}>
+                      {t('alert.needThreshold.unconfirmed')}
+                      {': '}
+                      {unconfirmed}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+            )
           )}
         </>
       )}
