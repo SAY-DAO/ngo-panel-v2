@@ -78,7 +78,8 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   useEffect(() => {
     if (
       (theTicket && !oneNeed) ||
-      (theTicket && oneNeed && oneNeed.id !== theTicket.need.flaskId)
+      (theTicket && oneNeed && oneNeed.id !== theTicket.need.flaskId) ||
+      SuccessStatusUpdate
     ) {
       dispatch(fetchChildOneNeed(theTicket.need.flaskId));
     }
