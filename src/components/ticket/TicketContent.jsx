@@ -41,6 +41,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const [statusDialog, setStatusDialog] = useState(false);
   const [statusNeed, setStatusNeed] = useState();
   const [theNeed, setTheNeed] = useState();
+
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
@@ -81,7 +82,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     ) {
       dispatch(fetchChildOneNeed(theTicket.need.flaskId));
     }
-  }, [theTicket, theNeed]);
+  }, [theTicket, theNeed, SuccessStatusUpdate]);
 
   // set need for status change
   useEffect(() => {
