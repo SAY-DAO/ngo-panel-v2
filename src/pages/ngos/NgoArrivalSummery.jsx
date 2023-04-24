@@ -13,7 +13,7 @@ import { dateConvertor } from '../../utils/persianToEnglish';
 import { daysDifference } from '../../utils/helpers';
 import TodayCard from '../../components/TodayCard';
 
-export default function NgoArrivalSummery({ arrivals }) {
+export default function NgoArrivalSummery({ arrivals, dateList }) {
   const list = [];
   arrivals.sort((a, b) => {
     const fa = a.ngoName.toLowerCase();
@@ -27,7 +27,6 @@ export default function NgoArrivalSummery({ arrivals }) {
     }
     return 0;
   });
-
 
   return (
     <TableContainer component={Paper} sx={{ m: 'auto', width: '650px', textAlign: 'center' }}>
@@ -101,7 +100,12 @@ export default function NgoArrivalSummery({ arrivals }) {
                   <TableRow
                     sx={{
                       '&:last-child td, &:last-child th': { border: '1px solid black' },
-                      opacity: daysDifference(new Date(), new Date(a.maxDate)) >= 0 ? 1 : 0.4,
+                      opacity:
+                        daysDifference(new Date().setHours(0, 0, 0, 0), new Date(a.maxDate)) >= 0
+                          ? 1
+                          : 0.4,
+                      backgroundColor: theme => 
+                        Math.min(...dateList) === a.maxDate ? theme.palette.success.dark: 'transparent',
                     }}
                   >
                     <TableCell sx={{ width: '140px', fontSize: 12 }} align="left">
@@ -129,4 +133,5 @@ export default function NgoArrivalSummery({ arrivals }) {
 
 NgoArrivalSummery.propTypes = {
   arrivals: PropTypes.array,
+  dateList: PropTypes.array,
 };

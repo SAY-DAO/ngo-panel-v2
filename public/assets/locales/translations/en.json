@@ -3,6 +3,9 @@
     "title": "Please be Advised!",
     "body": "Up to End of Day We are working on some feature and you might encounter some mior issues"
   },
+  "footer": {
+    "gateway": "Social Workers Gateway "
+  },
   "placeholder": {
     "enterArrivalCode": "Please enter arrival code ..."
   },
@@ -695,7 +698,8 @@
         "readTicket": "َRead ticket",
         "tickets": "َAll tickets",
         "deliveryTicket": "َAnnounce Need Arrival",
-        "moneyToNgoTicket": "َAnnounce Money Received"
+        "moneyToNgoTicket": "َAnnounce Money Received",
+        "more": "More"
       }
     }
   },

@@ -40,7 +40,12 @@ import summer from '../../resources/images/cover/summer.jpeg';
 import autumn from '../../resources/images/cover/autumn.jpeg';
 import winter from '../../resources/images/cover/winter.jpeg';
 import { FlaskUserTypesEnum } from '../../utils/types';
-import { persianDay, persianMonth, persianMonthString, persianYear } from '../../utils/persianToEnglish';
+import {
+  persianDay,
+  persianMonth,
+  persianMonthString,
+  persianYear,
+} from '../../utils/persianToEnglish';
 import WalletDialog from '../dialogs/WalletDialog';
 import {
   fetchNonce,
@@ -251,7 +256,10 @@ const CoverCard = ({
     if (arrivals) {
       const myList = [];
       for (let i = 0; i < arrivals.length; i++) {
-        if (arrivals[i].maxDate >= new Date()) myList.push(arrivals[i].maxDate);
+        if (arrivals[i].maxDate >= new Date().setHours(0, 0, 0, 0)) {
+          // lets change today time to 12:00 am otherwise those with incorrect time will not be pushed
+          myList.push(arrivals[i].maxDate);
+        }
       }
       setDateList(myList);
     }
@@ -280,7 +288,14 @@ const CoverCard = ({
   };
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
-
+  if (dateList[0]) {
+    // console.log(new Date(Math.min(...dateList)));
+    // console.log(persianDay(new Date()));
+    // console.log(persianDay(new Date(Math.min(...dateList))));
+    // console.log(persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))));
+    // console.log(persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))));
+    // console.log(persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))));
+  }
   return (
     <Card
       sx={{
@@ -557,7 +572,7 @@ const CoverCard = ({
               >
                 <CustomWidthTooltip
                   arrow
-                  title={arrivals && <NgoArrivalSummery arrivals={arrivals} />}
+                  title={arrivals && <NgoArrivalSummery dateList={dateList} arrivals={arrivals} />}
                 >
                   <Typography
                     sx={{

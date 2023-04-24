@@ -296,7 +296,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 ml: 'auto',
               }}
             >
-              <Tooltip title="Edit">
+              <Tooltip title={t('myPage.taskCard.menu.more')}>
                 <IconButton
                   aria-expanded={open ? 'true' : undefined}
                   aria-haspopup="true"
