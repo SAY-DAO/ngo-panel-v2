@@ -108,6 +108,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     success: successTicketList,
   } = myTickets;
 
+  const myPage = useSelector((state) => state.myPage);
+  const { pageDetails } = myPage;
+
   useEffect(() => {
     if (swInfo && !successTicketList && !loadingTicketList) {
       dispatch(fetchUserTicketList());
@@ -180,7 +183,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   // socket receiver
   function fetchServerNotifications(swId, allTickets) {
-    if (!allTickets) {
+      if (!allTickets) {
       console.log('First page load!');
       dispatch(fetchUserTicketList());
       clearInterval(notificationsInterval);
@@ -228,7 +231,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   // INTERVAL -fetch socket-server notification
   useEffect(() => {
-    if (swInfo) {
+    if (swInfo && pageDetails) {
       fetchServerNotifications(swInfo.id, tickets);
       notificationsInterval = setInterval(
         () => fetchServerNotifications(swInfo.id, tickets),
@@ -238,7 +241,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     return () => {
       clearInterval(notificationsInterval);
     };
-  }, [swInfo, tickets]);
+  }, [swInfo, tickets, pageDetails]);
 
   useEffect(() => {
     if (swInfo && anchorNotify) {
