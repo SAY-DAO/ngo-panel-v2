@@ -234,15 +234,17 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
         />
       )}
       <Card
+        elevation={8}
         sx={{
           p: 0,
           maxHeight: height ? '1200px' : `${randomIntFromInterval(320, 320)}px`,
           '&:hover': {
             border: 'ridge',
             borderColor: () => (height ? theme.palette.primary.dark : theme.palette.secondary.dark),
+            borderWidth: '0.2em',
           },
           border: 'solid',
-          borderColor: () => (height ? theme.palette.primary.dark : theme.palette.secondary.light),
+          borderColor: () => (height ? theme.palette.primary.dark : theme.palette.text.secondary),
           borderWidth: '0.1em',
         }}
       >
@@ -648,7 +650,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               )}
             {need.type === NeedTypeEnum.PRODUCT ? (
               <img
-                style={{ opacity: !cardSelected ? '20%' : '80%', minHeight: '100px' }}
+                style={{ opacity: !cardSelected ? '30%' : '80%', minHeight: '100px' }}
                 srcSet={`${need.img} 1x, ${need.img} 2x`}
                 alt={need.img}
                 width="100%"
