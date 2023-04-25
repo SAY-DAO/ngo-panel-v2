@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import { LoadingButton } from '@mui/lab';
 import { PropTypes } from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Box, Grid, Link, Tooltip } from '@mui/material';
+import { Box, Card, Grid, Link, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchChildOneNeed, updateNeedConfirm } from '../../redux/actions/needsAction';
@@ -187,7 +187,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
             </ListItem>
             <Divider variant="middle" sx={{ borderColor: '#a36868' }} />
 
-            {dialogValues &&
+            {dialogValues && dialogValues.duplicates && dialogValues.duplicates[0] ? (
               dialogValues.duplicates.map((d) => (
                 <Grid key={d.id}>
                   <ListItem alignItems="flex-start">
@@ -310,7 +310,14 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
 
                   <Divider variant="inset" component="li" />
                 </Grid>
-              ))}
+              ))
+            ) : (
+              <Card>
+                <Typography variant="body2" sx={{ p: 5, textAlign: 'center' }}>
+                  {t('need.noDuplicates')}
+                </Typography>
+              </Card>
+            )}
           </List>
         </DialogContent>
         <DialogActions>

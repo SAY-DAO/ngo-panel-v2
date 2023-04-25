@@ -364,6 +364,7 @@
     }
   },
   "need": {
+    "noDuplicates": "No duplicates :)",
     "tooltip": {
       "addIcon": "add Icon"
     },
