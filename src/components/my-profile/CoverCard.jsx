@@ -313,7 +313,13 @@ const CoverCard = ({
         padding: '0',
       }}
     >
-      <Grid sx={{ height, minHeight: height + 50, transition: '0.4s' }}>
+      <Grid
+        sx={{
+          height: lgUp ? height : 150,
+          minHeight: lgUp ? height + 50 : 100,
+          transition: '0.4s',
+        }}
+      >
         {skeleton ? (
           <Skeleton sx={{ height, m: 'auto' }} animation="wave" variant="rectangular" />
         ) : (
