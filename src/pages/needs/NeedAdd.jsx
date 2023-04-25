@@ -57,9 +57,9 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import LinearNeedStats from '../../components/analytics/LinearNeedStats';
 import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
-import { getAge, getOrganizedNeeds } from '../../utils/helpers';
+import { convertFlaskToSayRoles, getAge, getOrganizedNeeds } from '../../utils/helpers';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
-import { FlaskUserTypesEnum, NeedTypeEnum } from '../../utils/types';
+import { FlaskUserTypesEnum, NeedTypeEnum, SAYPlatformRoles } from '../../utils/types';
 import ProviderDialog from '../../components/dialogs/ProviderDialog';
 import { UNCONFIRMED_NEEDS_THRESHOLD } from '../../utils/configs';
 
@@ -336,57 +336,66 @@ const NeedAdd = () => {
       {/* end breadcrumb */}
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
-          <Autocomplete
-            disabled={!unconfirmed || unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD}
-            id="asynchronous-activeChildren"
-            sx={{ minWidth: '340px' }}
-            open={openChildren}
-            onOpen={() => {
-              setOpenChildren(true);
-            }}
-            onClose={() => {
-              setOpenChildren(false);
-            }}
-            options={optionsChildren}
-            onChange={(e, value) => setChildId(value && value.id)}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) =>
-              `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
-            }
-            loading={loadingSw || isLoadingChildren}
-            renderOption={(props, option) => (
-              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                {option.isConfirmed ? (
-                  <>
-                    <FeatherIcon color="green" icon="check" width="18" />
-                    <Typography variant="body1" sx={{ fontSize: 13 }}>
-                      {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <FeatherIcon color="red" icon="x" width="18" />
-                    <Typography>{`${option.id}  - ${option.firstName} ${option.lastName}`}</Typography>
-                  </>
-                )}
-              </Box>
-            )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t('socialWorker.myChildren')}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {isLoadingChildren ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
+          {swInfo &&
+            (unconfirmed && unconfirmed < UNCONFIRMED_NEEDS_THRESHOLD) &&
+            convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR && (
+              <Autocomplete
+                disabled={
+                  (!unconfirmed || unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD) &&
+                  convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR
+                }
+                id="asynchronous-activeChildren"
+                sx={{ minWidth: '340px' }}
+                open={openChildren}
+                onOpen={() => {
+                  setOpenChildren(true);
                 }}
+                onClose={() => {
+                  setOpenChildren(false);
+                }}
+                options={optionsChildren}
+                onChange={(e, value) => setChildId(value && value.id)}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                getOptionLabel={(option) =>
+                  `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
+                }
+                loading={loadingSw || isLoadingChildren}
+                renderOption={(props, option) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    {option.isConfirmed ? (
+                      <>
+                        <FeatherIcon color="green" icon="check" width="18" />
+                        <Typography variant="body1" sx={{ fontSize: 13 }}>
+                          {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        <FeatherIcon color="red" icon="x" width="18" />
+                        <Typography>{`${option.id}  - ${option.firstName} ${option.lastName}`}</Typography>
+                      </>
+                    )}
+                  </Box>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={t('socialWorker.myChildren')}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {isLoadingChildren ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
               />
             )}
-          />
         </Grid>
       </Grid>
       {loadingChild || loadingActiveChildren ? (

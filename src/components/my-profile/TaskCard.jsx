@@ -42,6 +42,7 @@ import {
   Colors,
   colorChoices,
   AnnouncementEnum,
+  SAYPlatformRoles,
 } from '../../utils/types';
 import ReceiptImage from './ReceiptImage';
 import { signTransaction } from '../../redux/actions/blockchainAction';
@@ -52,7 +53,7 @@ import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
 import WalletButton from '../wallet/WalletButton';
 import TicketAnnouncementDialog from '../dialogs/TicketAnnouncementDialog';
-import { prepareUrl, randomIntFromInterval } from '../../utils/helpers';
+import { convertFlaskToSayRoles, prepareUrl, randomIntFromInterval } from '../../utils/helpers';
 import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
 
@@ -642,19 +643,20 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           </Box>
         </CardActionArea>
         <CardActions>
-          {!need.isConfirmed && (
-            <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-              <LoadingButton
-                disabled={
-                  swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
-                  swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
-                }
-                onClick={() => handleDialog(need)}
-              >
-                {t('button.confirm')}
-              </LoadingButton>
-            </Grid>
-          )}
+          {!need.isConfirmed &&
+            convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR && (
+              <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+                <LoadingButton
+                  disabled={
+                    swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+                    swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
+                  }
+                  onClick={() => handleDialog(need)}
+                >
+                  {t('button.confirm')}
+                </LoadingButton>
+              </Grid>
+            )}
           {need.status === ProductStatusEnum.DELIVERED && (
             <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
               <Tooltip
