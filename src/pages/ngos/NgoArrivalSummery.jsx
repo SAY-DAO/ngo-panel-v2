@@ -29,7 +29,7 @@ export default function NgoArrivalSummery({ arrivals, dateList }) {
   });
 
   return (
-    <TableContainer component={Paper} sx={{ m: 'auto', width: '650px', textAlign: 'center' }}>
+    <TableContainer component={Paper} sx={{ m: 'auto', width: '100%', textAlign: 'center' }}>
       <TodayCard />
       <>
         <Card elevation={2}>
