@@ -60,7 +60,7 @@ import { daysDifference } from '../../utils/helpers';
 import NgoArrivalSummery from '../../pages/ngos/NgoArrivalSummery';
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
+  <Tooltip placement="left" {...props} classes={{ popper: className }} />
 ))({
   [`& .${tooltipClasses.tooltip}`]: {
     maxWidth: 800,
