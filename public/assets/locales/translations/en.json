@@ -2,7 +2,7 @@
   "alert": {
     "title": "Please be Advised!",
     "body": "Up to End of Day We are working on some feature and you might encounter some minor issues",
-    "needThreshold": { 
+    "needThreshold": {
       "body1": "you can not exceed the Unconfirmed needs threshold count",
       "threshold": "Threshold",
       "unconfirmed": "Unconfirmed"
@@ -682,6 +682,19 @@
       "duration": "Duration",
       "noReceipt": "No receipt",
       "provider": "Provider",
+      "tags": {
+        "product": "product",
+        "service": "Service",
+        "notPaid": "Not Paid",
+        "notConfirmed": "Not Confirmed",
+        "partialPay": "Partial Pay",
+        "completePay": "Complete Pay",
+        "delivered": "Delivered",
+        "purchased": "Purchased",
+        "moneyToNgo": "Money to NGO",
+        "unpayable": "Unpayable"
+        
+      },
       "date": {
         "created": "Created at",
         "updated": "Updated at",

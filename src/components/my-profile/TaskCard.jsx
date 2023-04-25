@@ -53,7 +53,12 @@ import TicketConfirmDialog from '../dialogs/TicketConfirmDialog';
 import WalletDialog from '../dialogs/WalletDialog';
 import WalletButton from '../wallet/WalletButton';
 import TicketAnnouncementDialog from '../dialogs/TicketAnnouncementDialog';
-import { convertFlaskToSayRoles, prepareUrl, randomIntFromInterval } from '../../utils/helpers';
+import {
+  convertFlaskToSayRoles,
+  isUnpayable,
+  prepareUrl,
+  randomIntFromInterval,
+} from '../../utils/helpers';
 import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
 
@@ -530,23 +535,27 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             >
               {need.type === NeedTypeEnum.PRODUCT &&
                 need.status < ProductStatusEnum.PURCHASED_PRODUCT &&
-                need.unpayable && (
+                isUnpayable(need) && (
                   <Chip
                     sx={{
+                      zIndex: 10,
+                      opacity: 0.8,
                       color: '#000000',
                       backgroundColor: '#ff0000',
                     }}
-                    label="unpayable"
+                    label={t('myPage.taskCard.tags.unpayable')}
                     size="small"
                   />
                 )}
               {!need.isConfirmed && (
                 <Chip
                   sx={{
+                    zIndex: 10,
+                    opacity: 0.8,
                     color: '#000000',
                     backgroundColor: '#ff0000',
                   }}
-                  label="Not Confirmed"
+                  label={t('myPage.taskCard.tags.notConfirmed')}
                   size="small"
                 />
               )}
@@ -559,14 +568,22 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             >
               <Chip
                 sx={{
+                  zIndex: 10,
+                  opacity: 0.8,
                   color: '#000000',
                   backgroundColor: need.type === NeedTypeEnum.PRODUCT ? '#9d59a8' : '#5888e3',
                 }}
-                label={need.type === NeedTypeEnum.PRODUCT ? 'Product' : 'Service'}
+                label={
+                  need.type === NeedTypeEnum.PRODUCT
+                    ? t('myPage.taskCard.tags.product')
+                    : t('myPage.taskCard.tags.service')
+                }
                 size="small"
               />
               <Chip
                 sx={{
+                  zIndex: 10,
+                  opacity: 0.8,
                   m: 1,
                   color: '#000000',
                   backgroundColor:
@@ -580,10 +597,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 }}
                 label={
                   need.status === PaymentStatusEnum.PARTIAL_PAY
-                    ? 'Partial Pay'
+                    ? t('myPage.taskCard.tags.partialPay')
                     : need.status === PaymentStatusEnum.NOT_PAID
-                    ? 'Not Paid'
-                    : 'Complete Pay'
+                    ? t('myPage.taskCard.tags.notPaid')
+                    : t('myPage.taskCard.tags.completePay')
                 }
                 size="small"
               />
@@ -599,10 +616,12 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               >
                 <Chip
                   sx={{
+                    zIndex: 10,
+                    opacity: 0.8,
                     color: '#000000',
                     backgroundColor: '#1bf500',
                   }}
-                  label="Delivered"
+                  label={t('myPage.taskCard.tags.delivered')}
                   size="small"
                 />
               </ListItem>
@@ -617,6 +636,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 >
                   <Chip
                     sx={{
+                      zIndex: 10,
+                      opacity: 0.8,
                       color: '#000000',
                       backgroundColor: '#ff9800',
                     }}
@@ -627,7 +648,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               )}
             {need.type === NeedTypeEnum.PRODUCT ? (
               <img
-                style={{ opacity: '50%', minHeight: '100px' }}
+                style={{ opacity: !cardSelected ? '20%' : '80%', minHeight: '100px' }}
                 srcSet={`${need.img} 1x, ${need.img} 2x`}
                 alt={need.img}
                 width="100%"

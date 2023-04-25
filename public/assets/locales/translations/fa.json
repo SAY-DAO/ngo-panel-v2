@@ -719,6 +719,19 @@
       "durationEstimate": "پیش‌بینی زمان انجام",
       "duration": "زمان پرداخت تا انجام",
       "provider": "تامین کننده",
+      "tags": {
+        "product": "کالا",
+        "service": "خدمات",
+        "notPaid": "پرداخت نشده",
+        "notConfirmed": "تائید نشده",
+        "partialPay": "نیم پرداخت",
+        "completePay": "پرداخت کامل",
+        "delivered": "تحویل داده شد",
+        "purchased": "خرید شده",
+        "moneyToNgo": "هزینه انتقال داده شد",
+        "unpayable": "غیر قابل پرداخت"
+
+      },
       "noReceipt": "بدون رسید",
       "date": {
         "created": "تاریخ ایجاد",
