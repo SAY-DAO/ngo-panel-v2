@@ -626,6 +626,11 @@ const ReportStatusTable = () => {
           </TableCell>
           <TableCell component="th" scope="row">
             {row.childSayName}
+            <Typography sx={{ fontSize: 12, color: 'gray' }}>
+              {row.childFirstName}
+              {'  '}
+              {row.childLastName}
+            </Typography>
           </TableCell>
           {typeId === NeedTypeEnum.PRODUCT && <TableCell align="center">{row.title}</TableCell>}
           {typeId === NeedTypeEnum.PRODUCT && (
@@ -923,7 +928,9 @@ const ReportStatusTable = () => {
     row: PropTypes.shape({
       id: PropTypes.number,
       child_id: PropTypes.number,
+      childFirstName: PropTypes.string,
       childSayName: PropTypes.string,
+      childLastName: PropTypes.string,
       name: PropTypes.string,
       title: PropTypes.string,
       informations: PropTypes.string,

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -12,6 +11,8 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ChildCareIcon from '@mui/icons-material/ChildCare';
 import { NeedTypeEnum } from '../../utils/types';
 import { dateConvertor } from '../../utils/persianToEnglish';
 
@@ -92,7 +93,13 @@ export default function DurationTimeLine({ need }) {
                 </Typography>
               }
             >
-              <TimelineDot variant="outlined" color="secondary" />
+              <TimelineDot
+                variant="outlined"
+                color="secondary"
+                sx={{ border: 'none', p: 0, mb: 1, mt: 1 }}
+              >
+                <ChildCareIcon color="secondary" sx={{ width: 25, height: 25 }} />
+              </TimelineDot>
             </Tooltip>
             <TimelineConnector />
           </TimelineSeparator>
@@ -300,7 +307,13 @@ export default function DurationTimeLine({ need }) {
                 <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.created)}</Typography>
               }
             >
-              <TimelineDot variant="outlined" color="secondary" />
+              <TimelineDot
+                variant="outlined"
+                color="secondary"
+                sx={{ border: 'none', p: 0, mb: 1, mt: 1 }}
+              >
+                <HomeOutlinedIcon color="secondary" sx={{ width: 25, height: 25 }} />
+              </TimelineDot>
             </Tooltip>
             <TimelineConnector />
           </TimelineSeparator>

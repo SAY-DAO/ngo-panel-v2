@@ -22,7 +22,7 @@ import {
 import FeatherIcon from 'feather-icons-react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import FlagIcon from '@mui/icons-material/Flag';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
@@ -30,7 +30,7 @@ import { useAccount, useSigner } from 'wagmi';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTheme } from '@mui/material/styles';
-import CampaignIcon from '@mui/icons-material/Campaign';
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import {
@@ -351,7 +351,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   ) : (
                     !need.ipfs && (
                       <MenuItem onClick={() => handleOpenConfirm()}>
-                        <FlagIcon sx={{ ml: 1, mr: 1 }} />
+                        <FlagOutlinedIcon sx={{ ml: 1, mr: 1 }} />
                         {t('myPage.taskCard.menu.addTicket')}
                       </MenuItem>
                     )
@@ -364,7 +364,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     (need.type === NeedTypeEnum.PRODUCT &&
                     need.status === ProductStatusEnum.PURCHASED_PRODUCT ? (
                       <MenuItem onClick={() => handleAnnouncement(AnnouncementEnum.ARRIVED_AT_NGO)}>
-                        <CampaignIcon sx={{ ml: 1, mr: 1 }} />
+                        <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
                         {t('myPage.taskCard.menu.deliveryTicket')}
                       </MenuItem>
                     ) : (
@@ -373,7 +373,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         <MenuItem
                           onClick={() => handleAnnouncement(AnnouncementEnum.NGO_RECEIVED_MONEY)}
                         >
-                          <CampaignIcon sx={{ ml: 1, mr: 1 }} />
+                          <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
                           {t('myPage.taskCard.menu.moneyToNgoTicket')}
                         </MenuItem>
                       )
@@ -434,7 +434,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         paddingTop: '7px',
                       }}
                     >
-                      <FlagIcon
+                      <FlagOutlinedIcon
                         sx={{
                           color:
                             need.ticket.color === Colors.YELLOW
@@ -463,10 +463,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         }}
                       >
                         {need.ticket.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO && (
-                          <CampaignIcon />
+                          <CampaignOutlinedIcon />
                         )}
                         {need.ticket.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
-                          <CampaignIcon />
+                          <CampaignOutlinedIcon />
                         )}
                       </Box>
                     </Box>

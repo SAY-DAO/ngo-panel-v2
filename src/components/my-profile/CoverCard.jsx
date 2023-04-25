@@ -16,9 +16,9 @@ import {
   useMediaQuery,
   Skeleton,
 } from '@mui/material';
-import InterestsIcon from '@mui/icons-material/Interests';
+import InterestsOutlinedIcon from '@mui/icons-material/InterestsOutlined';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
-import HandshakeIcon from '@mui/icons-material/Handshake';
+import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +32,7 @@ import {
 } from 'wagmi';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { SiweMessage } from 'siwe';
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import DeliveryDiningOutlinedIcon from '@mui/icons-material/DeliveryDiningOutlined';
 import { styled } from '@mui/material/styles';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import spring from '../../resources/images/cover/spring.jpeg';
@@ -453,7 +453,7 @@ const CoverCard = ({
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <InterestsIcon fontSize="medium" sx={{ mb: 0 }} />
+                  <InterestsOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -535,7 +535,7 @@ const CoverCard = ({
                     color: (theme) => theme.palette.grey.A200,
                   }}
                 >
-                  <HandshakeIcon fontSize="medium" sx={{ mb: 0 }} />
+                  <HandshakeOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
                 </Typography>
                 <Typography
                   variant="h4"
@@ -579,7 +579,7 @@ const CoverCard = ({
                       color: (theme) => theme.palette.grey.A200,
                     }}
                   >
-                    <DeliveryDiningIcon fontSize="medium" sx={{ mb: 0 }} />
+                    <DeliveryDiningOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
                   </Typography>
                 </CustomWidthTooltip>
 
