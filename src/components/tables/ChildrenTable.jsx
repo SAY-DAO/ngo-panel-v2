@@ -34,8 +34,8 @@ import PageContainer from '../container/PageContainer';
 import { ChildExistenceEnum } from '../../utils/types';
 import { getAge } from '../../utils/helpers';
 import {
-  // fetchCountryById,
   fetchCityById,
+  fetchCitiesByIds,
   fetchCountryList,
 } from '../../redux/actions/countryAction';
 
@@ -373,16 +373,16 @@ const ChildrenTable = ({ childList }) => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [cityIds, setCityIds] = useState([]);
-  const [cities, setCities] = useState({});
+  // const [cities, setCities] = useState({});
 
   const countryList = useSelector((state) => state.countryList);
   const { countries } = countryList;
 
-  // const countryById = useSelector((state) => state.countryById);
-  // const { success: successCountry, country } = countryById;
-
   const cityById = useSelector((state) => state.cityById);
   const { city } = cityById;
+
+  const citiesByIds = useSelector((state) => state.citiesByIds);
+  const { success: successCities, theCities } = citiesByIds;
 
   useEffect(() => {
     dispatch(fetchCountryList());
@@ -390,42 +390,18 @@ const ChildrenTable = ({ childList }) => {
   }, []);
 
   useEffect(() => {
-    console.log('Dispatching city');
-    cityIds.forEach((id) => {
-      dispatch(fetchCityById(id));
-      // if (city) {
-      // setCities({ ...cities, id: city });
-      console.log(city);
-      // }
-    });
+    if (cityIds.length !== 0) {
+      dispatch(fetchCitiesByIds(cityIds));
+    }
   }, [cityIds]);
 
-  // console.log(cities);
-
-  // useEffect(() => {
-  //   if (!city || city.id !== cityId) {
-  //   console.log('Dispatching city');
-  //   dispatch(fetchCityById(cityId));
-  //   }
-  // }, [cityId]);
-
-  // ***const cityIds = childList.map
-  // const cityList = id -> city
-
-  // cityList[row.cityId]
-
-  // const handleCity = async (id) => {
-  // if (id && id !== cityId) {
-  // if (id) {
-  // setCityId(id);
-  // const x = fetchCityById(id);
-  // console.log(await x(dispatch));
-
-  //   }
-  //   if (city) {
-  //     console.log(city.name);
-  //   }
-  // };
+  useEffect(() => {
+    if (successCities) {
+      console.log('the cities', theCities);
+    } else if (!successCities) {
+      console.log('Failed to load the children cities');
+    }
+  }, [theCities, successCities]);
 
   const handleCountry = (id) => {
     if (id) {

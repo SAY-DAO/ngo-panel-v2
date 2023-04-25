@@ -17,6 +17,10 @@ import {
   CITY_BY_ID_SUCCESS,
   CITY_BY_ID_FAIL,
   CITY_BY_ID_RESET,
+  CITIES_BY_IDS_REQUEST,
+  CITIES_BY_IDS_SUCCESS,
+  CITIES_BY_IDS_FAIL,
+  CITIES_BY_IDS_RESET,
 } from '../constants/countryConstants';
 
 export function countryListReducer(state = { success: false }, action) {
@@ -70,6 +74,21 @@ export const cityByIdReducer = (state = { success: false }, action) => {
     case CITY_BY_ID_FAIL:
       return { loading: false, error: action.payload };
     case CITY_BY_ID_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const citiesByIdsReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case CITIES_BY_IDS_REQUEST:
+      return { loading: true };
+    case CITIES_BY_IDS_SUCCESS:
+      return { ...state, loading: false, success: true, theCities: action.payload };
+    case CITIES_BY_IDS_FAIL:
+      return { loading: false, error: action.payload };
+    case CITIES_BY_IDS_RESET:
       return {};
     default:
       return state;

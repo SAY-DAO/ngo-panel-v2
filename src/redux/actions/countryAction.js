@@ -18,7 +18,6 @@ import {
   CITIES_BY_IDS_REQUEST,
   CITIES_BY_IDS_SUCCESS,
   CITIES_BY_IDS_FAIL,
-  CITIES_BY_IDS_RESET,
 } from '../constants/countryConstants';
 
 export const fetchCountryList = () => async (dispatch, getState) => {
@@ -155,16 +154,6 @@ export const fetchCityById = (cityId) => async (dispatch) => {
   }
 };
 
-export const fetchCitiesByIds = (cityIds) => async (dispatch) => {
-  try {
-    dispatch({ type: CITIES_BY_IDS_REQUEST });
-
-    cityIds.forEach(async (cityId) => {
-      const data = await getCityById(cityId);
-    });
-  } catch (e) {}
-};
-
 async function getCityById(cityId) {
   const config = {
     id: `fetch-city:${cityId}`,
@@ -177,3 +166,25 @@ async function getCityById(cityId) {
   return data;
 }
 
+export const fetchCitiesByIds = (cityIds) => async (dispatch) => {
+  try {
+    dispatch({ type: CITIES_BY_IDS_REQUEST });
+    const uniqueIds = [...new Set(cityIds)];
+
+    const promises = await Promise.all(
+      uniqueIds.map(async (cityId) => {
+        return getCityById(cityId);
+      }),
+    );
+
+    dispatch({
+      type: CITIES_BY_IDS_SUCCESS,
+      payload: promises,
+    });
+  } catch (e) {
+    dispatch({
+      type: CITIES_BY_IDS_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};

@@ -1,5 +1,10 @@
 import { combineReducers } from 'redux';
-import { countryListReducer, countryByIdReducer, cityByIdReducer } from './countryReducer';
+import {
+  countryListReducer,
+  countryByIdReducer,
+  cityByIdReducer,
+  citiesByIdsReducer,
+} from './countryReducer';
 import CustomizerReducer from './customizerReducer';
 import {
   ngoAddReducer,
@@ -91,6 +96,7 @@ export default combineReducers({
   countryList: countryListReducer,
   countryById: countryByIdReducer,
   cityById: cityByIdReducer,
+  citiesByIds: citiesByIdsReducer,
   myPage: myPageReducer,
   userLogin: userLoginReducer,
   changePassword: userChangePasswordReducer,
