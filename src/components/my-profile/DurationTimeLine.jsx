@@ -304,7 +304,12 @@ export default function DurationTimeLine({ need }) {
           <TimelineSeparator>
             <Tooltip
               title={
-                <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.created)}</Typography>
+                <>
+                  <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.created)}</Typography>
+                  <Typography sx={{ fontSize: 14, textAlign: 'center', fontWeight: 800 }}>
+                    {theNeed.child.ngo.name}
+                  </Typography>
+                </>
               }
             >
               <TimelineDot
