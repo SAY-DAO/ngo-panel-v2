@@ -203,7 +203,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                       <Box display="flex" alignItems="center">
                         <Tooltip
                           title={
-                            isUnpayable(d) === false && !d.doneAt ? (
+                            (isUnpayable(d) === false || !d.unavailable_from) && !d.doneAt ? (
                               <Typography sx={{ fontSize: 12 }}>{t('need.payable')}</Typography>
                             ) : isUnpayable(d) === true && !d.doneAt ? (
                               <Typography sx={{ fontSize: 12 }}>{t('need.unpayable')}</Typography>
@@ -217,7 +217,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                               display: 'inline-block',
                               m: '2px',
                               backgroundColor:
-                                isUnpayable(d) === false && !d.doneAt
+                                (isUnpayable(d) === false || !d.unavailable_from) && !d.doneAt
                                   ? () => theme.palette.success.main
                                   : isUnpayable(d) === true && !d.doneAt
                                   ? () => theme.palette.error.main
