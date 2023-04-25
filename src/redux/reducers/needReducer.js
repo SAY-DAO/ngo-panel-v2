@@ -44,6 +44,10 @@ import {
   UNCONFIRMED_NEEDS_SUCCESS,
   UNCONFIRMED_NEEDS_FAIL,
   UNCONFIRMED_NEEDS_RESET,
+  DUPLICATES_NEEDS_REQUEST,
+  DUPLICATES_NEEDS_SUCCESS,
+  DUPLICATES_NEEDS_FAIL,
+  DUPLICATES_NEEDS_RESET,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -206,6 +210,21 @@ export const unconfirmedReducer = (state = { success: false }, action) => {
     case UNCONFIRMED_NEEDS_FAIL:
       return { loading: false, error: action.payload };
     case UNCONFIRMED_NEEDS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const duplicatesReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case DUPLICATES_NEEDS_REQUEST:
+      return { loading: true };
+    case DUPLICATES_NEEDS_SUCCESS:
+      return { loading: false, success: true, duplicates: action.payload };
+    case DUPLICATES_NEEDS_FAIL:
+      return { loading: false, error: action.payload };
+    case DUPLICATES_NEEDS_RESET:
       return {};
     default:
       return state;

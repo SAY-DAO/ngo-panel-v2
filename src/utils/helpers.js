@@ -6,7 +6,7 @@ import {
   SAYPlatformRoles,
   ServiceStatusEnum,
 } from './types';
-
+import { PRODUCT_UNPAYABLE_PERIOD } from './configs';
 // Age
 export function getAge(DOB) {
   const today = new Date();
@@ -187,18 +187,6 @@ export function getOrganizedNeeds(theNeeds) {
   return needData;
 }
 
-// duplicates need filtering by name property, and unpaid
-export function getDuplicateChildNeeds(childNeeds, theNeed) {
-  return childNeeds.filter((n) => {
-    return (
-      n.name === theNeed.name &&
-      n.child_id === theNeed.child_id &&
-      n.id !== theNeed.id &&
-      n.status < PaymentStatusEnum.COMPLETE_PAY
-    );
-  });
-}
-
 export function daysDifference(time1, time2) {
   const date1 = new Date(time1);
   const date2 = new Date(time2);
@@ -229,6 +217,13 @@ export function prepareUrl(imageUrl) {
   return url;
 }
 
-export function randomIntFromInterval(min, max) { 
-  return Math.floor(Math.random() * (max - min + 1) + min)
+export function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function isUnpayable(need) {
+  return (
+    need.unavailable_from &&
+    timeDifference(new Date(need.unavailable_from),new Date()).hh < PRODUCT_UNPAYABLE_PERIOD
+  );
 }

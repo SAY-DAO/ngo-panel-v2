@@ -16,11 +16,14 @@ import Typography from '@mui/material/Typography';
 import { LoadingButton } from '@mui/lab';
 import { PropTypes } from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Box, Grid, Tooltip } from '@mui/material';
+import { Box, Grid, Link, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchChildOneNeed, updateNeedConfirm } from '../../redux/actions/needsAction';
 import Message from '../Message';
+import DurationTimeLine from '../my-profile/DurationTimeLine';
+import { isUnpayable } from '../../utils/helpers';
+import { dateConvertor } from '../../utils/persianToEnglish';
 
 export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
   const dispatch = useDispatch();
@@ -30,11 +33,10 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
   const needConfirm = useSelector((state) => state.needConfirm);
   const { loading: loadingConfirm, success: successConfirm, error: errorConfirm } = needConfirm;
 
-  
   useEffect(() => {
     if (successConfirm) {
       setOpen(false);
-      dispatch(fetchChildOneNeed(dialogValues.theNeed.id))
+      dispatch(fetchChildOneNeed(dialogValues.theNeed.id));
     }
   }, [successConfirm]);
 
@@ -63,18 +65,28 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
           <List sx={{ width: '100%', minWidth: 30, maxWidth: 360, bgcolor: 'background.paper' }}>
             <ListItem alignItems="flex-start" sx={{ backgroundColor: '#1c1c1c' }}>
               <ListItemAvatar>
-                <Avatar
-                  alt="Need Icon"
-                  src={dialogValues.theNeed.imageUrl && dialogValues.theNeed.imageUrl}
-                  sx={{ mb: 1 }}
-                />
+                {dialogValues && dialogValues.theNeed && (
+                  <Tooltip title={<DurationTimeLine need={dialogValues.theNeed} />}>
+                    <Avatar
+                      alt="Need Icon"
+                      src={`https://api.sayapp.company/${dialogValues.theNeed.imageUrl}`}
+                      sx={{ mb: 1 }}
+                    />
+                  </Tooltip>
+                )}
+
                 <Box display="flex" alignItems="center">
                   <Tooltip
                     title={
-                      dialogValues.theNeed.unpayable === false && !dialogValues.theNeed.isDone ? (
-                        <Typography sx={{ fontSize: 12 }}>{t('need.payable')}</Typography>
-                      ) : dialogValues.theNeed.unpayable === true &&
-                        !dialogValues.theNeed.isDone ? (
+                      isUnpayable(dialogValues.theNeed) === false &&
+                      !dialogValues.theNeed.doneAt ? (
+                        <Typography sx={{ fontSize: 12 }}>
+                          {t('need.payable')}
+                          {' - '}
+                          {dateConvertor(dialogValues.theNeed.unavailable_from)}
+                        </Typography>
+                      ) : isUnpayable(dialogValues.theNeed) === true &&
+                        !dialogValues.theNeed.doneAt ? (
                         <Typography sx={{ fontSize: 12 }}>{t('need.unpayable')}</Typography>
                       ) : (
                         <Typography sx={{ fontSize: 12 }}>{t('need.fullyPaid')}</Typography>
@@ -86,10 +98,11 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                         display: 'inline-block',
                         m: '2px',
                         backgroundColor:
-                          dialogValues.theNeed.unpayable === false && !dialogValues.theNeed.isDone
+                          isUnpayable(dialogValues.theNeed) === false &&
+                          !dialogValues.theNeed.doneAt
                             ? () => theme.palette.success.main
-                            : dialogValues.theNeed.unpayable === true &&
-                              !dialogValues.theNeed.isDone
+                            : isUnpayable(dialogValues.theNeed) === true &&
+                              !dialogValues.theNeed.doneAt
                             ? () => theme.palette.error.main
                             : () => theme.palette.info.main,
                         borderRadius: '100%',
@@ -128,7 +141,14 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                       variant="subtitle1"
                       color="text.primary"
                     >
-                      {dialogValues.theNeed.name}
+                      <Link
+                        href={dialogValues.theNeed.link}
+                        underline="none"
+                        sx={{ pl: 1, pr: 1, fontSize: 12 }}
+                        target="_blank"
+                      >
+                        {dialogValues.theNeed.name_translations.en}
+                      </Link>
                     </Typography>
 
                     <Typography
@@ -140,7 +160,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                       variant="body2"
                       color="primary"
                     >
-                      ID: {dialogValues.theNeed.id}
+                      {t('need.id')}: {dialogValues.theNeed.id}
                     </Typography>
                   </Grid>
                 }
@@ -170,13 +190,20 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                 <Grid key={d.id}>
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                      <Avatar alt="Need Icon" src={d.imageUrl && d.imageUrl} sx={{ mb: 1 }} />
+                      <Tooltip title={<DurationTimeLine need={d} />}>
+                        <Avatar
+                          alt="Need Icon"
+                          src={d.imageUrl && `https://api.sayapp.company/${d.imageUrl}`}
+                          sx={{ mb: 1 }}
+                        />
+                      </Tooltip>
+
                       <Box display="flex" alignItems="center">
                         <Tooltip
                           title={
-                            d.unpayable === false && !d.isDone ? (
+                            isUnpayable(d) === false && !d.doneAt ? (
                               <Typography sx={{ fontSize: 12 }}>{t('need.payable')}</Typography>
-                            ) : d.unpayable === true && !d.isDone ? (
+                            ) : isUnpayable(d) === true && !d.doneAt ? (
                               <Typography sx={{ fontSize: 12 }}>{t('need.unpayable')}</Typography>
                             ) : (
                               <Typography sx={{ fontSize: 12 }}>{t('need.fullyPaid')}</Typography>
@@ -188,9 +215,9 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                               display: 'inline-block',
                               m: '2px',
                               backgroundColor:
-                                d.unpayable === false && !d.isDone
+                                isUnpayable(d) === false && !d.doneAt
                                   ? () => theme.palette.success.main
-                                  : d.unpayable === true && !d.isDone
+                                  : isUnpayable(d) === true && !d.doneAt
                                   ? () => theme.palette.error.main
                                   : () => theme.palette.info.main,
                               borderRadius: '100%',
@@ -231,7 +258,19 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                             variant="subtitle1"
                             color="text.primary"
                           >
-                            {d.name}
+                            <Link
+                              href={d.link}
+                              underline="none"
+                              sx={{
+                                pl: 1,
+                                pr: 1,
+                                fontSize: 12,
+                                color: theme.palette.secondary.dark,
+                              }}
+                              target="_blank"
+                            >
+                              {d.name_translations.en}
+                            </Link>
                           </Typography>
 
                           <Typography
@@ -243,7 +282,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                             variant="body2"
                             color="secondary"
                           >
-                            ID: {d.id}
+                            {t('need.id')}: {d.id}
                           </Typography>
                         </Grid>
                       }
@@ -293,17 +332,17 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
             {t('button.cancel')}
           </Button>
         </DialogActions>
-        <Grid container sx={{ p:1 }}>
-        {errorConfirm && (
-          <Message
-            severity="error"
-            variant="filled"
-            input="confirm"
-            backError={errorConfirm}
-            sx={{ width: '100%'}}
-          />
-        )}
-      </Grid>
+        <Grid container sx={{ p: 1 }}>
+          {errorConfirm && (
+            <Message
+              severity="error"
+              variant="filled"
+              input="confirm"
+              backError={errorConfirm}
+              sx={{ width: '100%' }}
+            />
+          )}
+        </Grid>
       </Dialog>
     </div>
   );

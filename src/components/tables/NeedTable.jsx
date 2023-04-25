@@ -47,11 +47,12 @@ import {
   deleteNeed,
   fetchAllNeeds,
   fetchChildNeeds,
+  fetchDuplicateChildNeeds,
   fetchSwNeedList,
 } from '../../redux/actions/needsAction';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
-import { getDuplicateChildNeeds, getOrganizedNeeds } from '../../utils/helpers';
+import { getOrganizedNeeds } from '../../utils/helpers';
 import { FlaskUserTypesEnum } from '../../utils/types';
 import {
   ALL_NEEDS_RESET,
@@ -418,7 +419,7 @@ const NeedTable = () => {
   const [dialogValues, setDialogValues] = useState();
   const [theTableNeeds, setTheTableNeeds] = useState();
   const [theTableMaxNeeds, setTheTableMaxNeeds] = useState();
-
+  const [selectedNeed, setSelectedNeed] = useState();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
 
@@ -481,6 +482,9 @@ const NeedTable = () => {
 
   const needUpdate = useSelector((state) => state.needUpdate);
   const { success: successUpdateNeed } = needUpdate;
+
+  const childNeedsDuplicates = useSelector((state) => state.childNeedsDuplicates);
+  const { duplicates } = childNeedsDuplicates;
 
   // child open
   useEffect(() => {
@@ -701,6 +705,14 @@ const NeedTable = () => {
     setOpenNgo(true);
   };
 
+  // set duplicates
+  useEffect(() => {
+    if (duplicates && selectedNeed) {
+      setDialogValues({ duplicates, theNeed: selectedNeed });
+      setDialogOpen(true);
+    }
+  }, [selectedNeed, duplicates]);
+
   const onChildOpen = () => {
     dispatch({ type: ALL_NEEDS_RESET });
     setOpen(true);
@@ -785,9 +797,8 @@ const NeedTable = () => {
 
   const handleDialog = (row) => {
     dispatch({ type: UPDATE_NEED_CONFIRM_RESET });
-    const duplicates = getDuplicateChildNeeds(theTableNeeds, row);
-    setDialogValues({ duplicates, theNeed: row });
-    setDialogOpen(true);
+    dispatch(fetchDuplicateChildNeeds(row.child_id, row.id));
+    setSelectedNeed(row);
   };
 
   const handleCloseToast = (event, reason) => {

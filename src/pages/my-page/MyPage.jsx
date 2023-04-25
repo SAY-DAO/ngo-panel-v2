@@ -21,9 +21,9 @@ import {
   ServiceStatusEnum,
 } from '../../utils/types';
 import ConfirmNeedDialog from '../../components/dialogs/ConfirmNeedDialog';
-import { getDuplicateChildNeeds } from '../../utils/helpers';
 import { UPDATE_NEED_CONFIRM_RESET } from '../../redux/constants/needConstant';
 import { MY_PAGE_RESET } from '../../redux/constants/userConstants';
+import { fetchDuplicateChildNeeds } from '../../redux/actions/needsAction';
 
 function getModifiedNeeds(updatedTicket, addedTicket, need) {
   let theNeed;
@@ -56,6 +56,7 @@ const MyPage = () => {
   const [dialogValues, setDialogValues] = useState();
   const [count, setCount] = useState(0);
   const [skeleton, setSkeleton] = useState(true);
+  const [selectedNeed, setSelectedNeed] = useState();
   const [totalNeedCount, setTotalNeedCount] = useState({
     notPaid: 0,
     paid: 0,
@@ -76,6 +77,9 @@ const MyPage = () => {
 
   const myTickets = useSelector((state) => state.myTickets);
   const { tickets } = myTickets;
+
+  const childNeedsDuplicates = useSelector((state) => state.childNeedsDuplicates);
+  const { duplicates } = childNeedsDuplicates;
 
   useEffect(() => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
@@ -200,6 +204,14 @@ const MyPage = () => {
     }
   }, [addedTicket, pageDetails, updatedTicket, tickets]);
 
+  // set duplicates
+  useEffect(() => {
+    if (duplicates && selectedNeed) {
+      setDialogValues({ duplicates, theNeed: selectedNeed });
+      setDialogOpen(true);
+    }
+  }, [selectedNeed, duplicates]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -212,9 +224,8 @@ const MyPage = () => {
 
   const handleDialog = (taskNeed) => {
     dispatch({ type: UPDATE_NEED_CONFIRM_RESET });
-    const duplicates = getDuplicateChildNeeds(modifiedNeeds[0], taskNeed);
-    setDialogValues({ duplicates, theNeed: taskNeed });
-    setDialogOpen(true);
+    dispatch(fetchDuplicateChildNeeds(taskNeed.child_id, taskNeed.id));
+    setSelectedNeed(taskNeed);
   };
 
   return (

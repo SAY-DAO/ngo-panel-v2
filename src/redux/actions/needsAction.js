@@ -15,6 +15,9 @@ import {
   UNCONFIRMED_NEEDS_FAIL,
   UNCONFIRMED_NEEDS_REQUEST,
   UNCONFIRMED_NEEDS_SUCCESS,
+  DUPLICATES_NEEDS_FAIL,
+  DUPLICATES_NEEDS_REQUEST,
+  DUPLICATES_NEEDS_SUCCESS,
   CHILD_ONE_NEED_REQUEST,
   CHILD_ONE_NEED_SUCCESS,
   CHILD_ONE_NEED_FAIL,
@@ -509,6 +512,35 @@ export const fetchUnconfirmedCount = () => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: UNCONFIRMED_NEEDS_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const fetchDuplicateChildNeeds = (childId, needId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DUPLICATES_NEEDS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await daoApi.get(`/needs/duplicates/${childId}/${needId}`, config);
+
+    dispatch({
+      type: DUPLICATES_NEEDS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: DUPLICATES_NEEDS_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
