@@ -306,7 +306,7 @@ const MyPage = () => {
                 <Grid
                   container
                   spacing={0}
-                  sx={{ minWidth: '1000px', maxHeight: '650px', overflowY: 'scroll' }}
+                  sx={{ minWidth: '1000px', maxHeight: '1650px', overflowY: 'scroll' }}
                 >
                   <Grid item xs={3}>
                     {modifiedNeeds &&

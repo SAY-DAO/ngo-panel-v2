@@ -90,7 +90,7 @@ const CoverCard = ({
   const [walletToastOpen, setWalletToastOpen] = useState(false);
   const [dateList, setDateList] = useState([]);
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
-
+  const [height, setHeight] = useState(306.8);
   // wallet
   const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
@@ -288,499 +288,524 @@ const CoverCard = ({
   };
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
-  if (dateList[0]) {
-    // console.log(new Date(Math.min(...dateList)));
-    // console.log(persianDay(new Date()));
-    // console.log(persianDay(new Date(Math.min(...dateList))));
-    // console.log(persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))));
-    // console.log(persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))));
-    // console.log(persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))));
-  }
+
+  const scrollFunction = () => {
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+      setHeight(120);
+    } else {
+      setHeight(306.8);
+    }
+  };
+  useEffect(() => {
+    if (document.getElementById('coverImage')) {
+      scrollFunction();
+    }
+    return () => {
+      window.removeEventListener('scroll', scrollFunction);
+    };
+  }, [window.onscroll]);
+
+  window.addEventListener('scroll', scrollFunction);
+  console.log(height);
   return (
     <Card
       sx={{
         padding: '0',
       }}
     >
-      <Grid sx={{ minHeight: 306.8 }}>
+      <Grid sx={{ height, minHeight: height + 50, transition: '0.4s' }}>
         {skeleton ? (
-          <Skeleton sx={{ height: 306.8, m: 'auto' }} animation="wave" variant="rectangular" />
+          <Skeleton sx={{ height, m: 'auto' }} animation="wave" variant="rectangular" />
         ) : (
-          <img srcSet={`${cover} 1x, ${cover} 2x`} alt="cover" width="100%" />
+          <img
+            id="coverImage"
+            style={{ transition: '0.4s', opacity: height < 300 && 0.3 }}
+            srcSet={`${cover} 1x, ${cover} 2x`}
+            alt="cover"
+            width="100%"
+          />
         )}
       </Grid>
       {information && information.nonce}
-      <Grid
-        container
-        sx={{
-          position: 'relative',
+      <div
+        style={{
+          display: height < 250 && 'none',
+          transition: '0.8s',
         }}
       >
-        {swInfo &&
-          (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
-            swInfo.typeId === FlaskUserTypesEnum.ADMIN) && (
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '220px',
-                left: '15px',
-                minHeight: '60px',
-                backgroundColor: (theme) => theme.palette.background.paper,
-                paddingLeft: '0px',
-                paddingRight: '0px',
-                borderRadius: 1,
-              }}
-            >
-              <Autocomplete
-                sx={{
-                  minWidth: '210px',
-                  mt: 2,
-                }}
-                size="small"
-                value={swNewDetails}
-                id="asynchronous-social-worker"
-                open={openSocialWorkers}
-                onOpen={() => {
-                  setOpenSocialWorker(true);
-                }}
-                onClose={() => {
-                  setOpenSocialWorker(false);
-                }}
-                options={optionsSocialWorkers}
-                onChange={(e, value) => setSwNewDetails(value && value)}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                getOptionLabel={(option) =>
-                  `${option.id}. ${option.typeName} - ${option.firstName} ${option.lastName}`
-                }
-                loading={isLoadingSw}
-                renderOption={(props, option) => (
-                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    {option.isActive ? (
-                      <>
-                        <FeatherIcon color="green" icon="check" width="18" />
-                        <Typography>
-                          {`${option.id}.  ${option.firstName} ${option.lastName}`}
-                        </Typography>
-                      </>
-                    ) : (
-                      <>
-                        <FeatherIcon color="red" icon="x" width="18" />
-                        <Typography>
-                          {`${option.id}.  ${option.firstName} ${option.lastName}`}
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('myPage.viewAs')}
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {isLoadingSw ? <CircularProgress color="inherit" size={20} /> : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </Box>
-          )}
-        {/* Contributor graph */}
-        <Box
+        <Grid
+          container
           sx={{
-            position: 'absolute',
-            bottom: '0px',
-            right: '0px',
-            color: 'white',
-            paddingLeft: '0px',
-            paddingRight: '0px',
-            borderRadius: 1,
-            opacity: '50%',
+            position: 'relative',
           }}
         >
-          {lgUp && <ContributionOverview swNewDetails={swNewDetails} />}
-        </Box>
-      </Grid>
-      <CardContent
-        sx={{
-          pt: '12px',
-          pb: '0.8rem !important',
-        }}
-      >
-        {/* infos */}
-        <Grid container spacing={0}>
-          <Grid
-            item
-            lg={4}
-            sm={12}
-            xs={12}
+          {swInfo &&
+            (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+              swInfo.typeId === FlaskUserTypesEnum.ADMIN) && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: '220px',
+                  left: '15px',
+                  minHeight: '60px',
+                  backgroundColor: (theme) => theme.palette.background.paper,
+                  paddingLeft: '0px',
+                  paddingRight: '0px',
+                  borderRadius: 1,
+                }}
+              >
+                <Autocomplete
+                  sx={{
+                    minWidth: '210px',
+                    mt: 2,
+                  }}
+                  size="small"
+                  value={swNewDetails}
+                  id="asynchronous-social-worker"
+                  open={openSocialWorkers}
+                  onOpen={() => {
+                    setOpenSocialWorker(true);
+                  }}
+                  onClose={() => {
+                    setOpenSocialWorker(false);
+                  }}
+                  options={optionsSocialWorkers}
+                  onChange={(e, value) => setSwNewDetails(value && value)}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  getOptionLabel={(option) =>
+                    `${option.id}. ${option.typeName} - ${option.firstName} ${option.lastName}`
+                  }
+                  loading={isLoadingSw}
+                  renderOption={(props, option) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      {option.isActive ? (
+                        <>
+                          <FeatherIcon color="green" icon="check" width="18" />
+                          <Typography>
+                            {`${option.id}.  ${option.firstName} ${option.lastName}`}
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          <FeatherIcon color="red" icon="x" width="18" />
+                          <Typography>
+                            {`${option.id}.  ${option.firstName} ${option.lastName}`}
+                          </Typography>
+                        </>
+                      )}
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t('myPage.viewAs')}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {isLoadingSw ? <CircularProgress color="inherit" size={20} /> : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </Box>
+            )}
+          {/* Contributor graph */}
+          <Box
             sx={{
-              order: {
-                xs: '2',
-                sm: '2',
-                lg: '1',
-              },
+              position: 'absolute',
+              bottom: '0px',
+              right: '0px',
+              color: 'white',
+              paddingLeft: '0px',
+              paddingRight: '0px',
+              borderRadius: 1,
+              opacity: '50%',
             }}
           >
+            {lgUp && <ContributionOverview swNewDetails={swNewDetails} />}
+          </Box>
+        </Grid>
+        <CardContent
+          sx={{
+            pt: '12px',
+            pb: '0.8rem !important',
+          }}
+        >
+          {/* infos */}
+          <Grid container spacing={0}>
             <Grid
-              container
-              spacing={0}
+              item
+              lg={4}
+              sm={12}
+              xs={12}
               sx={{
-                mt: {
-                  xs: 1,
-                },
-                mb: {
-                  xs: 1,
+                order: {
+                  xs: '2',
+                  sm: '2',
+                  lg: '1',
                 },
               }}
             >
               <Grid
-                item
-                lg={3}
-                sm={3}
-                xs={3}
+                container
+                spacing={0}
                 sx={{
-                  textAlign: 'center',
+                  mt: {
+                    xs: 1,
+                  },
+                  mb: {
+                    xs: 1,
+                  },
                 }}
               >
-                <Typography
+                <Grid
+                  item
+                  lg={3}
+                  sm={3}
+                  xs={3}
                   sx={{
-                    color: (theme) => theme.palette.grey.A200,
+                    textAlign: 'center',
                   }}
-                >
-                  <InterestsOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
-                </Typography>
-                <Typography
-                  variant="h4"
-                  fontWeight="600"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 14,
-                  }}
-                >
-                  {needCount >= 0 ? needCount : <CircularProgress size={15} />}
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  fontWeight="400"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 10,
-                    mt: 1,
-                  }}
-                >
-                  {t('myPage.notConfirmedNeeds')}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                lg={3}
-                sm={3}
-                xs={3}
-                sx={{
-                  textAlign: 'center',
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: (theme) => theme.palette.grey.A200,
-                  }}
-                >
-                  <ChildCareIcon fontSize="medium" sx={{ mb: 0 }} />
-                </Typography>
-                <Typography
-                  variant="h4"
-                  fontWeight="600"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 14,
-                  }}
-                >
-                  {childCount || <CircularProgress size={15} />}
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  variant="h6"
-                  fontWeight="400"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 10,
-                    mt: 1,
-                  }}
-                >
-                  {theUser &&
-                  (theUser.typeId === FlaskUserTypesEnum.ADMIN ||
-                    theUser.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
-                    theUser.typeId === FlaskUserTypesEnum.SUPER_ADMIN)
-                    ? t('myPage.myChildren')
-                    : t('myPage.allChildren')}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                lg={3}
-                sm={3}
-                xs={3}
-                sx={{
-                  textAlign: 'center',
-                }}
-              >
-                <Typography
-                  sx={{
-                    color: (theme) => theme.palette.grey.A200,
-                  }}
-                >
-                  <HandshakeOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
-                </Typography>
-                <Typography
-                  variant="h4"
-                  fontWeight="600"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 14,
-                  }}
-                >
-                  {signatureCount >= 0 ? signatureCount : <CircularProgress size={15} />}
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  variant="h6"
-                  fontWeight="400"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 10,
-                    mt: 1,
-                  }}
-                >
-                  {t('myPage.signed')}
-                </Typography>
-              </Grid>
-
-              <Grid
-                item
-                lg={3}
-                sm={3}
-                xs={3}
-                sx={{
-                  textAlign: 'center',
-                }}
-              >
-                <CustomWidthTooltip
-                  arrow
-                  title={arrivals && <NgoArrivalSummery dateList={dateList} arrivals={arrivals} />}
                 >
                   <Typography
                     sx={{
                       color: (theme) => theme.palette.grey.A200,
                     }}
                   >
-                    <DeliveryDiningOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
+                    <InterestsOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
                   </Typography>
-                </CustomWidthTooltip>
-
-                <Typography
-                  variant="h4"
-                  fontWeight="600"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 14,
-                  }}
-                >
-                  {dateList && dateList[0] ? (
-                    persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))) ||
-                    persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))) ||
-                    persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))) ? (
-                      `${Math.ceil(
-                        daysDifference(
-                          new Date().toUTCString(),
-                          new Date(Math.min(...dateList)).toUTCString(),
-                        ),
-                      )} ${t('myPage.days')}`
-                    ) : (
-                      t('myPage.today')
-                    )
-                  ) : (
-                    <CircularProgress size={15} />
-                  )}
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  variant="h6"
-                  fontWeight="400"
-                  sx={{
-                    lineHeight: '1.2',
-                    fontSize: 10,
-                    mt: 1,
-                  }}
-                >
-                  {t('myPage.ngoArrival')}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          {/* Profile photo */}
-          <Grid
-            item
-            lg={4}
-            sm={12}
-            xs={12}
-            sx={{
-              order: {
-                xs: '1',
-                sm: '1',
-                lg: '2',
-              },
-            }}
-          >
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                mt: '-90px',
-              }}
-            >
-              <Box>
-                <Box
-                  sx={{
-                    backgroundImage: 'linear-gradient(#50b2fc,#f44c66)',
-                    backgroundPosition: 'center',
-                    backgroundSize: 'cover',
-                    borderRadius: '50%',
-                    border: (theme) =>
-                      `${theme.palette.mode === 'dark' ? '3px solid #3c414c' : '3px solid #fff'}`,
-                    width: '100px',
-                    height: '100px',
-                    overflow: 'hidden',
-                    margin: '0 auto',
-                  }}
-                >
-                  <Box
+                  <Typography
+                    variant="h4"
+                    fontWeight="600"
                     sx={{
-                      display: 'block',
-                      backgroundImage: `url(${theUser.avatarUrl})`,
-                      backgroundPosition: 'center',
-                      backgroundSize: 'cover',
-                      backgroundColor: 'linear-gradient(#50b2fc,#f44c66)',
-                      width: '100%',
-                      height: '100%',
-                      margin: 'auto',
+                      lineHeight: '1.2',
+                      fontSize: 14,
                     }}
-                  />
-                </Box>
-                <Box
+                  >
+                    {needCount >= 0 ? needCount : <CircularProgress size={15} />}
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    fontWeight="400"
+                    sx={{
+                      lineHeight: '1.2',
+                      fontSize: 10,
+                      mt: 1,
+                    }}
+                  >
+                    {t('myPage.notConfirmedNeeds')}
+                  </Typography>
+                </Grid>
+                <Grid
+                  item
+                  lg={3}
+                  sm={3}
+                  xs={3}
                   sx={{
-                    mt: '5px',
-                    display: 'block',
+                    textAlign: 'center',
                   }}
                 >
                   <Typography
-                    fontWeight="500"
                     sx={{
-                      fontSize: '20px',
-                      textAlign: 'center',
+                      color: (theme) => theme.palette.grey.A200,
                     }}
                   >
-                    {/* {!theUser.firstName ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : (
-                      `${theUser && theUser.firstName} ${theUser && theUser.lastName}`
-                    )} */}
+                    <ChildCareIcon fontSize="medium" sx={{ mb: 0 }} />
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    fontWeight="600"
+                    sx={{
+                      lineHeight: '1.2',
+                      fontSize: 14,
+                    }}
+                  >
+                    {childCount || <CircularProgress size={15} />}
                   </Typography>
                   <Typography
                     color="textSecondary"
                     variant="h6"
                     fontWeight="400"
                     sx={{
-                      textAlign: 'center',
+                      lineHeight: '1.2',
+                      fontSize: 10,
+                      mt: 1,
                     }}
                   >
-                    {/* {!theUser ? <CircularProgress color="inherit" size={20} /> : theUser.typeName} */}
+                    {theUser &&
+                    (theUser.typeId === FlaskUserTypesEnum.ADMIN ||
+                      theUser.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+                      theUser.typeId === FlaskUserTypesEnum.SUPER_ADMIN)
+                      ? t('myPage.myChildren')
+                      : t('myPage.allChildren')}
                   </Typography>
-                  <Grid container direction="column" sx={{ mt: 0 }}>
-                    <Grid item sx={{ mb: 1 }}>
-                      {!isConnected ? (
-                        <WalletButton fullWidth variant="outlined" onClick={handleWalletButton}>
-                          {t('button.wallet.connect')}
-                        </WalletButton>
+                </Grid>
+                <Grid
+                  item
+                  lg={3}
+                  sm={3}
+                  xs={3}
+                  sx={{
+                    textAlign: 'center',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: (theme) => theme.palette.grey.A200,
+                    }}
+                  >
+                    <HandshakeOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    fontWeight="600"
+                    sx={{
+                      lineHeight: '1.2',
+                      fontSize: 14,
+                    }}
+                  >
+                    {signatureCount >= 0 ? signatureCount : <CircularProgress size={15} />}
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    variant="h6"
+                    fontWeight="400"
+                    sx={{
+                      lineHeight: '1.2',
+                      fontSize: 10,
+                      mt: 1,
+                    }}
+                  >
+                    {t('myPage.signed')}
+                  </Typography>
+                </Grid>
+
+                <Grid
+                  item
+                  lg={3}
+                  sm={3}
+                  xs={3}
+                  sx={{
+                    textAlign: 'center',
+                  }}
+                >
+                  <CustomWidthTooltip
+                    arrow
+                    title={
+                      arrivals && <NgoArrivalSummery dateList={dateList} arrivals={arrivals} />
+                    }
+                  >
+                    <Typography
+                      sx={{
+                        color: (theme) => theme.palette.grey.A200,
+                      }}
+                    >
+                      <DeliveryDiningOutlinedIcon fontSize="medium" sx={{ mb: 0 }} />
+                    </Typography>
+                  </CustomWidthTooltip>
+
+                  <Typography
+                    variant="h4"
+                    fontWeight="600"
+                    sx={{
+                      lineHeight: '1.2',
+                      fontSize: 14,
+                    }}
+                  >
+                    {dateList && dateList[0] ? (
+                      persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))) ||
+                      persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))) ||
+                      persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))) ? (
+                        `${Math.ceil(
+                          daysDifference(
+                            new Date().toUTCString(),
+                            new Date(Math.min(...dateList)).toUTCString(),
+                          ),
+                        )} ${t('myPage.days')}`
                       ) : (
-                        <Grid container justifyContent="flex-end" alignItems="center">
-                          <Grid item>
-                            <Button
-                              onClick={onDisconnect}
-                              startIcon={
-                                <Avatar
-                                  alt="ENS Avatar"
-                                  src={ensAvatar}
-                                  sx={{ width: 30, height: 30 }}
-                                />
-                              }
-                              endIcon={<LogoutIcon />}
-                            >
-                              <Typography
-                                sx={{
-                                  textAlign: 'center',
-                                  maxWidth: '400px',
-                                  textOverflow: 'ellipsis',
-                                  overflow: 'hidden',
-                                  width: '160px',
-                                  height: '1.2em',
-                                  whiteSpace: 'nowrap',
-                                  justifyContent: 'flex-end',
-                                  position: 'relative',
-                                }}
-                              >
-                                {ensName
-                                  ? `${ensName} (${address.slice(0, 5)}...${address.slice(-4)})`
-                                  : `${address.slice(0, 5)}...${address.slice(-4)}`}
-                              </Typography>
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      )}
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid
-            item
-            lg={4}
-            sm={12}
-            xs={12}
-            display="flex"
-            alignItems="center"
-            sx={{
-              justifyContent: {
-                sm: 'center',
-                lg: 'flex-end',
-              },
-              mt: { sm: 2, lg: 0 },
-              ml: { sm: 4, lg: 0 },
-              order: { xs: '3', sm: '3', lg: '3' },
-            }}
-          >
-            <Box
+                        t('myPage.today')
+                      )
+                    ) : (
+                      <CircularProgress size={15} />
+                    )}
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    variant="h6"
+                    fontWeight="400"
+                    sx={{
+                      lineHeight: '1.2',
+                      fontSize: 10,
+                      mt: 1,
+                    }}
+                  >
+                    {t('myPage.ngoArrival')}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            {/* Profile photo */}
+            <Grid
+              item
+              lg={4}
+              sm={12}
+              xs={12}
               sx={{
-                display: {
-                  sm: 'flex',
-                  lg: 'flex',
-                  xs: 'block',
-                },
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                textAlign: {
-                  xs: 'center',
+                order: {
+                  xs: '1',
+                  sm: '1',
+                  lg: '2',
                 },
               }}
             >
-              {/* <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                sx={{
+                  mt: '-90px',
+                }}
+              >
+                <Box>
+                  <Box
+                    sx={{
+                      backgroundImage: 'linear-gradient(#50b2fc,#f44c66)',
+                      backgroundPosition: 'center',
+                      backgroundSize: 'cover',
+                      borderRadius: '50%',
+                      border: (theme) =>
+                        `${theme.palette.mode === 'dark' ? '3px solid #3c414c' : '3px solid #fff'}`,
+                      width: '100px',
+                      height: '100px',
+                      overflow: 'hidden',
+                      margin: '0 auto',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'block',
+                        backgroundImage: `url(${theUser.avatarUrl})`,
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                        backgroundColor: 'linear-gradient(#50b2fc,#f44c66)',
+                        width: '100%',
+                        height: '100%',
+                        margin: 'auto',
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      mt: '5px',
+                      display: 'block',
+                    }}
+                  >
+                    <Typography
+                      fontWeight="500"
+                      sx={{
+                        fontSize: '20px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {/* {!theUser.firstName ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : (
+                      `${theUser && theUser.firstName} ${theUser && theUser.lastName}`
+                    )} */}
+                    </Typography>
+                    <Typography
+                      color="textSecondary"
+                      variant="h6"
+                      fontWeight="400"
+                      sx={{
+                        textAlign: 'center',
+                      }}
+                    >
+                      {/* {!theUser ? <CircularProgress color="inherit" size={20} /> : theUser.typeName} */}
+                    </Typography>
+                    <Grid container direction="column" sx={{ mt: 0 }}>
+                      <Grid item sx={{ mb: 1 }}>
+                        {!isConnected ? (
+                          <WalletButton fullWidth variant="outlined" onClick={handleWalletButton}>
+                            {t('button.wallet.connect')}
+                          </WalletButton>
+                        ) : (
+                          <Grid container justifyContent="flex-end" alignItems="center">
+                            <Grid item>
+                              <Button
+                                onClick={onDisconnect}
+                                startIcon={
+                                  <Avatar
+                                    alt="ENS Avatar"
+                                    src={ensAvatar}
+                                    sx={{ width: 30, height: 30 }}
+                                  />
+                                }
+                                endIcon={<LogoutIcon />}
+                              >
+                                <Typography
+                                  sx={{
+                                    textAlign: 'center',
+                                    maxWidth: '400px',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    width: '160px',
+                                    height: '1.2em',
+                                    whiteSpace: 'nowrap',
+                                    justifyContent: 'flex-end',
+                                    position: 'relative',
+                                  }}
+                                >
+                                  {ensName
+                                    ? `${ensName} (${address.slice(0, 5)}...${address.slice(-4)})`
+                                    : `${address.slice(0, 5)}...${address.slice(-4)}`}
+                                </Typography>
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid
+              item
+              lg={4}
+              sm={12}
+              xs={12}
+              display="flex"
+              alignItems="center"
+              sx={{
+                justifyContent: {
+                  sm: 'center',
+                  lg: 'flex-end',
+                },
+                mt: { sm: 2, lg: 0 },
+                ml: { sm: 4, lg: 0 },
+                order: { xs: '3', sm: '3', lg: '3' },
+              }}
+            >
+              <Box
+                sx={{
+                  display: {
+                    sm: 'flex',
+                    lg: 'flex',
+                    xs: 'block',
+                  },
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  textAlign: {
+                    xs: 'center',
+                  },
+                }}
+              >
+                {/* <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
                 <Grid item>
                   <div
                     style={{
@@ -798,10 +823,12 @@ const CoverCard = ({
                   </div>
                 </Grid>
               </Grid> */}
-            </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </CardContent>
+        </CardContent>
+      </div>
+
       <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
       {(errorVerify || errorWalletInformation || errorSignature || errorSignIn) && (
         <MessageWallet
