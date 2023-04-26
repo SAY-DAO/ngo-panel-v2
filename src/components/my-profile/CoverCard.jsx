@@ -295,6 +295,12 @@ const CoverCard = ({
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   // scroll
+  useEffect(() => {
+    if (loadingPageDetails) {
+      window.scrollTo(0, 0);
+    }
+  }, [loadingPageDetails]);
+
   const scrollFunction = () => {
     if (
       !loadingPageDetails &&

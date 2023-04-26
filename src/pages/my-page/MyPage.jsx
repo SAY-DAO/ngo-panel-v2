@@ -212,6 +212,13 @@ const MyPage = () => {
     }
   }, [selectedNeed, duplicates]);
 
+  // scroll
+  useEffect(() => {
+    if (loadingPageDetails) {
+      window.scrollTo(0, 0);
+    }
+  }, [loadingPageDetails]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

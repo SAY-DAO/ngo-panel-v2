@@ -399,7 +399,16 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           >
             <Grid container>
               <Grid item xs={10}>
-                <Tooltip arrow title={`${need.informations} - ${need.details}`} placement="right">
+                <Tooltip
+                  arrow
+                  title={
+                    <Typography>
+                      {need.informations && `${need.informations}`}
+                      {need.details && `${need.details}`}
+                    </Typography>
+                  }
+                  placement="right"
+                >
                   <Typography
                     color="textSecondary"
                     variant="h5"
