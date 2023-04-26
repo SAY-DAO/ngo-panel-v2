@@ -562,6 +562,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           <Box sx={{ position: 'relative' }}>
             <ListItem
               sx={{
+                mt: '40px',
                 position: 'absolute',
               }}
             >

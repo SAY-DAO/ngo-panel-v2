@@ -337,7 +337,8 @@ const NeedAdd = () => {
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           {swInfo &&
-            (unconfirmed && unconfirmed < UNCONFIRMED_NEEDS_THRESHOLD) &&
+            unconfirmed &&
+            unconfirmed < UNCONFIRMED_NEEDS_THRESHOLD &&
             convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR && (
               <Autocomplete
                 disabled={
