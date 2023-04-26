@@ -221,6 +221,7 @@ const MyPage = () => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    setModifiedNeeds([[], [], [], []]);
   };
 
   const handleChangeRowsPerPage = (event) => {

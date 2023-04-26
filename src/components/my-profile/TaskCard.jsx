@@ -72,7 +72,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { data: signer } = useSigner();
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [height, setHeight] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openAnnouncement, setOpenAnnouncement] = useState({
     arrival: false,
@@ -102,6 +102,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const needConfirm = useSelector((state) => state.needConfirm);
   const { loading: loadingConfirm, success: successConfirm, error: errorConfirm } = needConfirm;
 
+  const childNeedsDuplicates = useSelector((state) => state.childNeedsDuplicates);
+  const { loading: loadingDuplicates } = childNeedsDuplicates;
+
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
 
   const handleClick = (event) => {
@@ -120,11 +123,16 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   // set height on click
   useEffect(() => {
     if (cardSelected === need.id) {
-      setHeight(true);
+      setIsSelected(true);
     } else {
-      setHeight(false);
+      setIsSelected(false);
     }
   }, [cardSelected]);
+
+  // after page changes reset the clicked card
+  useEffect(() => {
+    if (pageDetails) setCardSelected(0);
+  }, [pageDetails]);
 
   // toast
   useEffect(() => {
@@ -241,14 +249,16 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
         elevation={8}
         sx={{
           p: 0,
-          maxHeight: height ? '1200px' : `${randomIntFromInterval(320, 320)}px`,
+          maxHeight: isSelected ? '1400px' : `${randomIntFromInterval(320, 320)}px`,
           '&:hover': {
             border: 'ridge',
-            borderColor: () => (height ? theme.palette.primary.dark : theme.palette.secondary.dark),
+            borderColor: () =>
+              isSelected ? theme.palette.primary.dark : theme.palette.secondary.dark,
             borderWidth: '0.2em',
           },
           border: 'solid',
-          borderColor: () => (height ? theme.palette.primary.dark : theme.palette.text.secondary),
+          borderColor: () =>
+            isSelected ? theme.palette.primary.dark : theme.palette.text.secondary,
           borderWidth: '0.1em',
         }}
       >
@@ -692,7 +702,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR && (
               <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
                 <LoadingButton
-                  loading={loadingConfirm}
+                  loading={loadingConfirm || loadingDuplicates}
                   disabled={
                     swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
                     swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
