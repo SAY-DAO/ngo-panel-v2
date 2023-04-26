@@ -595,7 +595,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             </ListItem>
             <ListItem
               sx={{
-                mt: (need.unpayable || !need.isConfirmed) && '30px',
                 position: 'absolute',
               }}
             >
