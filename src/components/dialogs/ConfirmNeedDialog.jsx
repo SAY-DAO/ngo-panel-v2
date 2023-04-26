@@ -62,7 +62,7 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
           {t('need.needDialogue.confirm.dialogTitle')}
         </DialogTitle>
         <DialogContent>
-          <List sx={{ width: '100%', minWidth: 30, maxWidth: 360, bgcolor: 'background.paper' }}>
+          <List sx={{ width: '100%', minWidth: 300, maxWidth: 400, bgcolor: 'background.paper' }}>
             <ListItem alignItems="flex-start" sx={{ backgroundColor: '#1c1c1c' }}>
               <ListItemAvatar>
                 {dialogValues && dialogValues.theNeed && (
@@ -156,13 +156,22 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                     <Typography
                       sx={{
                         display: 'inline-block',
-                        fontSize: 12,
+                        fontSize: 10,
                       }}
                       component="span"
                       variant="body2"
                       color="primary"
                     >
                       {t('need.id')}: {dialogValues.theNeed.id}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        display: 'inline-block',
+                        fontSize: 10,
+                      }}
+                      variant="body2"
+                    >
+                      {t('need.id')}: {dialogValues.theNeed.child_id}
                     </Typography>
                   </Grid>
                 }
@@ -278,13 +287,21 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                           <Typography
                             sx={{
                               display: 'inline-block',
-                              fontSize: 12,
+                              fontSize: 10,
                             }}
-                            component="span"
                             variant="body2"
                             color="secondary"
                           >
                             {t('need.id')}: {d.id}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              display: 'inline-block',
+                              fontSize: 10,
+                            }}
+                            variant="body2"
+                          >
+                            {t('need.id')}: {d.child_id}
                           </Typography>
                         </Grid>
                       }
@@ -299,9 +316,6 @@ export default function ConfirmNeedDialog({ open, setOpen, dialogValues }) {
                             color="text.primary"
                           >
                             {d.title}
-                          </Typography>
-                          <Typography sx={{ display: 'block' }} component="span">
-                            {d.childSayName}
                           </Typography>
                         </>
                       }
