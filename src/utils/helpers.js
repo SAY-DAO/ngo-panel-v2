@@ -5,6 +5,7 @@ import {
   FlaskUserTypesEnum,
   SAYPlatformRoles,
   ServiceStatusEnum,
+  NeedCategoryEnum,
 } from './types';
 import { PRODUCT_UNPAYABLE_PERIOD } from './configs';
 // Age
@@ -224,6 +225,25 @@ export function randomIntFromInterval(min, max) {
 export function isUnpayable(need) {
   return (
     need.unavailable_from &&
-    timeDifference(new Date(need.unavailable_from),new Date()).hh < PRODUCT_UNPAYABLE_PERIOD
+    timeDifference(new Date(need.unavailable_from), new Date()).hh < PRODUCT_UNPAYABLE_PERIOD
   );
+}
+
+export function getCategoryString(categoryId, isUrgent) {
+  if (isUrgent) {
+    return 'childData.needCategory.urgent';
+  }
+  if (categoryId === NeedCategoryEnum.GROWTH) {
+    return 'childData.needCategory.growth';
+  }
+  if (categoryId === NeedCategoryEnum.HEALTH) {
+    return 'childData.needCategory.health';
+  }
+  if (categoryId === NeedCategoryEnum.JOY) {
+    return 'childData.needCategory.joy';
+  }
+  if (categoryId === NeedCategoryEnum.SURROUNDING) {
+    return 'childData.needCategory.surroundings';
+  }
+  return 'N/A';
 }

@@ -37,12 +37,7 @@ export const EducationEnum = {
   thirteenGrade: 13,
 };
 
-export const NeedCategoryEnum = {
-  GROWTH: 0,
-  JOY: 1,
-  HEALTH: 2,
-  SURROUNDING: 3,
-};
+
 
 // 0:homeless | 1:Resident| 2:Care centers
 export const HousingStatusEnum = {
@@ -131,4 +126,12 @@ export const ChildExistenceEnum = {
   ALIVE_PRESENT: 1,
   ALIVE_GONE: 2,
   TEMP_GONE: 3,
+};
+
+
+export const NeedCategoryEnum = {
+  GROWTH: 0,
+  JOY: 1,
+  HEALTH: 2,
+  SURROUNDING: 3,
 };

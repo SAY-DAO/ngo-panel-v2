@@ -56,6 +56,7 @@ import WalletButton from '../wallet/WalletButton';
 import TicketAnnouncementDialog from '../dialogs/TicketAnnouncementDialog';
 import {
   convertFlaskToSayRoles,
+  getCategoryString,
   isUnpayable,
   prepareUrl,
   randomIntFromInterval,
@@ -413,15 +414,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           >
             <Grid container>
               <Grid item xs={10}>
-                <Typography
-                  color="textSecondary"
-                  variant="h5"
-                  component="span"
-                  fontWeight="600"
-                  sx={{
-                    mb: 1,
-                  }}
-                >
+                <Typography color="textSecondary" variant="h5" component="span" fontWeight="600">
                   {need.name_translations.fa}
                 </Typography>
                 {(need.informations || need.details) && (
@@ -436,12 +429,13 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     }
                     placement="left"
                   >
-                    <IconButton>
+                    <IconButton sx={{ pt: 0, pb: 0 }}>
                       <HelpOutlineOutlinedIcon />
                     </IconButton>
                   </Tooltip>
                 )}
               </Grid>
+
               <Grid item xs={2}>
                 <>
                   {need.ticket && (
@@ -514,6 +508,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 </>
               </Grid>
             </Grid>
+            <Typography
+              sx={{
+                mb: 1,
+                fontSize: 10,
+                opacity: 0.7,
+              }}
+            >
+              ( {t(getCategoryString(need.category, need.isUrgent))} )
+            </Typography>
             {/* 
             <Typography color="textSecondary" variant="h6" fontWeight="400">
               {t('myPage.taskCard.paid')}: {need.paid.toLocaleString()}
