@@ -183,7 +183,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   // socket receiver
   function fetchServerNotifications(swId, allTickets) {
-      if (!allTickets) {
+    if (!allTickets) {
       console.log('First page load!');
       dispatch(fetchUserTicketList());
       clearInterval(notificationsInterval);
@@ -262,7 +262,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     return () => {
       clearInterval(refreshInterval);
     };
-  }, [swInfo]);
+  }, [swInfo, pageDetails]);
 
   // Shut off socket
   useEffect(() => {
