@@ -113,6 +113,9 @@ const CoverCard = ({
     (state) => state.walletInformation,
   );
 
+  const myPage = useSelector((state) => state.myPage);
+  const { loading: loadingPageDetails } = myPage;
+
   const { error: errorSignature } = useSelector((state) => state.signature);
 
   // fetch nonce for the wallet siwe
@@ -291,13 +294,18 @@ const CoverCard = ({
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
+  // scroll
   const scrollFunction = () => {
-    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+    if (
+      !loadingPageDetails &&
+      (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50)
+    ) {
       setHeight(120);
     } else {
       setHeight(306.8);
     }
   };
+
   useEffect(() => {
     if (document.getElementById('coverImage')) {
       scrollFunction();
@@ -308,7 +316,6 @@ const CoverCard = ({
   }, [window.onscroll]);
 
   window.addEventListener('scroll', scrollFunction);
-  console.log(height);
   return (
     <Card
       sx={{

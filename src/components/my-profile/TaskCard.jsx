@@ -399,7 +399,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           >
             <Grid container>
               <Grid item xs={10}>
-                <Tooltip arrow title={need.informations} placement="right">
+                <Tooltip arrow title={`${need.informations} - ${need.details}`} placement="right">
                   <Typography
                     color="textSecondary"
                     variant="h5"

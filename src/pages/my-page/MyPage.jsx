@@ -67,7 +67,7 @@ const MyPage = () => {
   const { swInfo } = swDetails;
 
   const myPage = useSelector((state) => state.myPage);
-  const { pageDetails, loading: loadingProfile } = myPage;
+  const { pageDetails, loading: loadingPageDetails } = myPage;
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
   const { addedTicket } = ticketAdd;
@@ -298,7 +298,7 @@ const MyPage = () => {
                 </Grid>
               </Grid>
 
-              {loadingProfile ? (
+              {loadingPageDetails ? (
                 <Grid sx={{ textAlign: 'center' }}>
                   <CircularProgress />
                 </Grid>
