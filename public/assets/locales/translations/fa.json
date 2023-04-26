@@ -33,6 +33,9 @@
     "remember": "مرا به خاطر بسپار",
     "forgotPassword": "فراموشی رمز عبور؟"
   },
+  "success":{
+    "confirmed":"تائید شد!"
+  },
   "error": {
     "wallet": {
       "0": "مشکلی پیش آمد!.",

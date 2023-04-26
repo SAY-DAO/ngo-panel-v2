@@ -99,6 +99,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const myTickets = useSelector((state) => state.myTickets);
   const { isTicketingOpen } = myTickets;
 
+  const needConfirm = useSelector((state) => state.needConfirm);
+  const { loading: loadingConfirm, success: successConfirm, error: errorConfirm } = needConfirm;
+
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
 
   const handleClick = (event) => {
@@ -125,10 +128,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   // toast
   useEffect(() => {
-    if (errorTicketAdd) {
+    if (errorTicketAdd || successConfirm || errorConfirm) {
       setToastOpen(true);
     }
-  }, [errorTicketAdd]);
+  }, [errorTicketAdd, successConfirm, errorConfirm]);
 
   // when added open tickets
   useEffect(() => {
@@ -689,6 +692,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR && (
               <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
                 <LoadingButton
+                  loading={loadingConfirm}
                   disabled={
                     swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
                     swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
@@ -762,10 +766,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           <Alert
             onClose={handleCloseToast}
             variant="filled"
-            severity="error"
+            severity={errorTicketAdd ? 'error' : successConfirm && 'success'}
             sx={{ width: '100%' }}
           >
-            {errorTicketAdd && errorTicketAdd.data.message}
+            {errorTicketAdd
+              ? errorTicketAdd.data.message
+              : errorConfirm && errorConfirm.data.message
+              ? successConfirm
+              : t('success.confirmed')}
           </Alert>
         </Snackbar>
       </Stack>

@@ -32,6 +32,9 @@
     "remember": "Remeber this Device",
     "forgotPassword": "Forgot Password ?"
   },
+  "success":{
+    "confirmed":"Confirmed!"
+  },
   "error": {
     "nestDown": "Nest server is not running",
     "allRequired": "Please fill in all the required fields",
