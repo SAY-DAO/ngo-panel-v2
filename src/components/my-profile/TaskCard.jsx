@@ -310,7 +310,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 {need.child.firstName_translations && need.child.firstName_translations.fa}{' '}
                 {need.child.lastName_translations && need.child.lastName_translations.fa}
               </Typography>
-              <Typography color="textSecondary" variant="h6" fontWeight="200" sx={{ fontSize: 11 }}>
+              <Typography color="textSecondary" variant="h6" fontWeight="300" sx={{ fontSize: 11 }}>
                 {need.child.sayname_translations && need.child.sayname_translations.fa}
               </Typography>
             </Box>
@@ -420,7 +420,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 {(need.informations || need.details) && (
                   <Tooltip
                     arrow
-                    sx={{ opacity: 0.5 }}
                     title={
                       <Typography>
                         {need.informations && `${need.informations}`}
@@ -429,7 +428,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     }
                     placement="left"
                   >
-                    <IconButton sx={{ pt: 0, pb: 0 }}>
+                    <IconButton component="div" sx={{ pt: 0, pb: 0, opacity: 0.8 }}>
                       <HelpOutlineOutlinedIcon />
                     </IconButton>
                   </Tooltip>
@@ -512,8 +511,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               sx={{
                 mb: 1,
                 fontSize: 10,
-                opacity: 0.7,
-              }}
+                opacity: 0.8,
+              }}fontWeight="300"
+              
             >
               ( {t(getCategoryString(need.category, need.isUrgent))} )
             </Typography>

@@ -336,67 +336,63 @@ const NeedAdd = () => {
       {/* end breadcrumb */}
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
-          {swInfo &&
-            unconfirmed &&
-            unconfirmed < UNCONFIRMED_NEEDS_THRESHOLD &&
-            convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR && (
-              <Autocomplete
-                disabled={
-                  (!unconfirmed || unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD) &&
-                  convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR
-                }
-                id="asynchronous-activeChildren"
-                sx={{ minWidth: '340px' }}
-                open={openChildren}
-                onOpen={() => {
-                  setOpenChildren(true);
-                }}
-                onClose={() => {
-                  setOpenChildren(false);
-                }}
-                options={optionsChildren}
-                onChange={(e, value) => setChildId(value && value.id)}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                getOptionLabel={(option) =>
-                  `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
-                }
-                loading={loadingSw || isLoadingChildren}
-                renderOption={(props, option) => (
-                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    {option.isConfirmed ? (
+          {((swInfo && unconfirmed != null && unconfirmed < UNCONFIRMED_NEEDS_THRESHOLD) ||
+            (swInfo && convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR)) && (
+            <Autocomplete
+              disabled={
+                (!unconfirmed || unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD) &&
+                convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR
+              }
+              id="asynchronous-activeChildren"
+              sx={{ minWidth: '340px' }}
+              open={openChildren}
+              onOpen={() => {
+                setOpenChildren(true);
+              }}
+              onClose={() => {
+                setOpenChildren(false);
+              }}
+              options={optionsChildren}
+              onChange={(e, value) => setChildId(value && value.id)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) =>
+                `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
+              }
+              loading={loadingSw || isLoadingChildren}
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                  {option.isConfirmed ? (
+                    <>
+                      <FeatherIcon color="green" icon="check" width="18" />
+                      <Typography variant="body1" sx={{ fontSize: 13 }}>
+                        {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      <FeatherIcon color="red" icon="x" width="18" />
+                      <Typography>{`${option.id}  - ${option.firstName} ${option.lastName}`}</Typography>
+                    </>
+                  )}
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('socialWorker.myChildren')}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
                       <>
-                        <FeatherIcon color="green" icon="check" width="18" />
-                        <Typography variant="body1" sx={{ fontSize: 13 }}>
-                          {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
-                        </Typography>
+                        {isLoadingChildren ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
                       </>
-                    ) : (
-                      <>
-                        <FeatherIcon color="red" icon="x" width="18" />
-                        <Typography>{`${option.id}  - ${option.firstName} ${option.lastName}`}</Typography>
-                      </>
-                    )}
-                  </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('socialWorker.myChildren')}
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {isLoadingChildren ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            )}
+                    ),
+                  }}
+                />
+              )}
+            />
+          )}
         </Grid>
       </Grid>
       {loadingChild || loadingActiveChildren ? (
