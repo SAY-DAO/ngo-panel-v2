@@ -15,6 +15,8 @@ import {
   tooltipClasses,
   useMediaQuery,
   Skeleton,
+  LinearProgress,
+  Stack,
 } from '@mui/material';
 import InterestsOutlinedIcon from '@mui/icons-material/InterestsOutlined';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
@@ -90,7 +92,7 @@ const CoverCard = ({
   const [openWallets, setOpenWallets] = useState(false);
   const [values, setValues] = useState();
   const [walletToastOpen, setWalletToastOpen] = useState(false);
-  const [dateList, setDateList] = useState([]);
+  const [dateList, setDateList] = useState();
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
   const [height, setHeight] = useState(306.8);
   // wallet
@@ -507,7 +509,13 @@ const CoverCard = ({
                       fontSize: 14,
                     }}
                   >
-                    {needCount >= 0 ? needCount : <CircularProgress size={15} />}
+                    {needCount >= 0 ? (
+                      needCount
+                    ) : (
+                      <Stack sx={{ m: 'auto', width: '20%', color: 'grey.500' }} spacing={2}>
+                        <LinearProgress sx={{ color: (theme) => theme.palette.primary }} />
+                      </Stack>
+                    )}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -545,7 +553,13 @@ const CoverCard = ({
                       fontSize: 14,
                     }}
                   >
-                    {childCount || <CircularProgress size={15} />}
+                    {childCount >= 0 ? (
+                      childCount
+                    ) : (
+                      <Stack sx={{ m: 'auto', width: '20%', color: 'grey.500' }} spacing={2}>
+                        <LinearProgress sx={{ color: (theme) => theme.palette.primary }} />
+                      </Stack>
+                    )}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -589,7 +603,13 @@ const CoverCard = ({
                       fontSize: 14,
                     }}
                   >
-                    {signatureCount >= 0 ? signatureCount : <CircularProgress size={15} />}
+                    {signatureCount >= 0 ? (
+                      signatureCount
+                    ) : (
+                      <Stack sx={{ m: 'auto', width: '20%', color: 'grey.500' }} spacing={2}>
+                        <LinearProgress sx={{ color: (theme) => theme.palette.primary }} />
+                      </Stack>
+                    )}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -617,7 +637,7 @@ const CoverCard = ({
                   <CustomWidthTooltip
                     arrow
                     title={
-                      arrivals && <NgoArrivalSummery dateList={dateList} arrivals={arrivals} />
+                      arrivals >= <NgoArrivalSummery dateList={dateList} arrivals={arrivals} />
                     }
                   >
                     <Typography
@@ -650,8 +670,12 @@ const CoverCard = ({
                       ) : (
                         t('myPage.today')
                       )
+                    ) : dateList && !dateList[0] ? (
+                      0
                     ) : (
-                      <CircularProgress size={15} />
+                      <Stack sx={{ m: 'auto', width: '20%', color: 'grey.500' }} spacing={2}>
+                        <LinearProgress sx={{ color: (theme) => theme.palette.primary }} />
+                      </Stack>
                     )}
                   </Typography>
                   <Typography
