@@ -122,6 +122,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (
       swInfo &&
       swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
+      swInfo.typeId !== FlaskUserTypesEnum.NGO_SUPERVISOR &&
       swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN
     ) {
       if (
@@ -135,7 +136,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       ) {
         navigate(PROFILE_VIEW);
       }
-      console.log(location.pathname);
     }
   }, [swInfo, location]);
 

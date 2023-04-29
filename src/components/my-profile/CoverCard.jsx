@@ -636,9 +636,7 @@ const CoverCard = ({
                 >
                   <CustomWidthTooltip
                     arrow
-                    title={
-                      arrivals >= <NgoArrivalSummery dateList={dateList} arrivals={arrivals} />
-                    }
+                    title={<NgoArrivalSummery dateList={dateList} arrivals={arrivals} />}
                   >
                     <Typography
                       sx={{
@@ -668,7 +666,7 @@ const CoverCard = ({
                           ),
                         )} ${t('myPage.days')}`
                       ) : (
-                        t('myPage.today')
+                        new Date() > new Date(Math.min(...dateList)) && t('myPage.today')
                       )
                     ) : dateList && !dateList[0] ? (
                       0

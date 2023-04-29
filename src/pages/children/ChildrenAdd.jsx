@@ -43,7 +43,7 @@ import { AddChild } from '../../redux/actions/childrenAction';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import { EducationEnum, HousingStatusEnum } from '../../utils/types';
+import { EducationEnum, FlaskUserTypesEnum, HousingStatusEnum } from '../../utils/types';
 import { getAge } from '../../utils/helpers';
 
 const ChildAdd = () => {
@@ -81,7 +81,7 @@ const ChildAdd = () => {
 
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
-  const isLoadingNgo = openNgo && optionsNgo.length === 0;
+  const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
 
   const childAdd = useSelector((state) => state.childAdd);
   const { success: successAddChild, error: errorAddChild, loading: loadingAddChild } = childAdd;
@@ -94,6 +94,9 @@ const ChildAdd = () => {
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const validationSchema = Yup.object().shape({
     housingStatus: Yup.string().required('Please enter your address'),
@@ -149,26 +152,66 @@ const ChildAdd = () => {
     }
   }, [watch('state'), countries, states]);
 
+  // ngo open
+  // useEffect(() => {
+  //   if (!openNgo) {
+  //     setOptionsNgo([]);
+  //   } else if (swInfo) {
+  //     if (
+  //       swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+  //       swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
+  //     ) {
+  //       setOptionsNgo([
+  //         {
+  //           id: swInfo.ngoId,
+  //           name: swInfo.ngoName,
+  //         },
+  //       ]);
+  //     }
+  //   }
+  // }, [openNgo]);
+
   // Autocomplete ngo
   useEffect(() => {
     let active = true;
-    if (!isLoadingNgo) {
+    if (!loadingNgo) {
       return undefined;
     }
-    if (active && successNgoList) {
-      setOptionsNgo([...ngoList]);
+
+    if (active && swInfo) {
+      console.log(swInfo.typeId);
+      // super admin & admin
+      if (
+        (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+          swInfo.typeId === FlaskUserTypesEnum.ADMIN) &&
+        successNgoList
+      ) {
+        const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
+        setOptionsNgo([
+          {
+            id: '',
+            name: t('ngo.allNgos'),
+          },
+          ...activeNgoList,
+        ]);
+      }
+      // social worker
+      else if (
+        swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+        swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
+      ) {
+        setOptionsNgo([
+          {
+            id: swInfo.ngoId,
+            name: swInfo.ngoName,
+          },
+        ]);
+      }
     }
     return () => {
       active = false;
     };
-  }, [isLoadingNgo, successNgoList]);
-
-  // ngo open
-  useEffect(() => {
-    if (!openNgo) {
-      setOptionsNgo([]);
-    }
-  }, [openNgo]);
+  }, [loadingNgo, successNgoList, swInfo]);
 
   // Autocomplete Social worker
   useEffect(() => {
@@ -183,16 +226,27 @@ const ChildAdd = () => {
     return () => {
       active = false;
     };
-  }, [ngoId, successSwAll]);
+  }, [ngoId, successSwAll, open]);
 
   // social worker open
   useEffect(() => {
     if (!open || openNgo) {
       setOptions([]);
+      console.log(ngoId);
     } else if (ngoId && (open || !openNgo)) {
+      console.log('successSwAll');
       dispatch(fetchSocialWorkersList());
     }
   }, [open, openNgo, ngoId]);
+
+  // fetch needs
+  useEffect(() => {
+    if (swInfo && !loadingNgo) {
+      if (successNgoList) {
+        dispatch(fetchSocialWorkersList());
+      }
+    }
+  }, [ngoId, open, openNgo, ngoId, swInfo, successNgoList]);
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -274,14 +328,13 @@ const ChildAdd = () => {
   const onVoiceChange = (e) => {
     if (e.target.files[0]) {
       setUploadVoice(URL.createObjectURL(e.target.files[0]));
-      console.log(e.target.files);
       console.log(e.target.files[0]);
       console.log(URL.createObjectURL(e.target.files[0]));
     }
   };
 
   const handleRemoveAvatar = () => {
-    console.log('uploadVoice');
+    console.log('removed not implemented...');
   };
 
   const handleChangeEducation = (event) => {
@@ -298,38 +351,51 @@ const ChildAdd = () => {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
       <Grid container spacing={2} justifyContent="center">
-        <Grid item>
-          <Autocomplete
-            id="asynchronous-ngo"
-            sx={{ width: 300 }}
-            open={openNgo}
-            onOpen={() => {
-              setOpenNgo(true);
-            }}
-            onClose={() => {
-              setOpenNgo(false);
-            }}
-            onChange={(e, value) => setNgoId(value && value.id)}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) => `${option.id} - ${option.name}`}
-            options={optionsNgo}
-            loading={isLoadingNgo}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t('ngo.title')}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {isLoadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-              />
-            )}
-          />
+        <Grid item md={3} xs={12}>
+          {swInfo && (
+            <Autocomplete
+              defaultValue={
+                swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+                swInfo.typeId === FlaskUserTypesEnum.ADMIN
+                  ? {
+                      id: '',
+                      name: t('ngo.allNgos'),
+                    }
+                  : {
+                      id: swInfo.ngoId,
+                      name: swInfo.ngoName,
+                    }
+              }
+              id="asynchronous-ngo"
+              open={openNgo}
+              onOpen={() => {
+                setOpenNgo(true);
+              }}
+              onClose={() => {
+                setOpenNgo(false);
+              }}
+              onChange={(e, value) => setNgoId(value && value.id)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) => `${option.id} - ${option.name}`}
+              options={optionsNgo}
+              loading={loadingNgo}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('ngo.title')}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+          )}
         </Grid>
         <Grid item>
           <Autocomplete
