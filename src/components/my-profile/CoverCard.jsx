@@ -67,7 +67,7 @@ const CustomWidthTooltip = styled(({ className, ...props }) => (
   [`& .${tooltipClasses.tooltip}`]: {
     maxWidth: 800,
     overflow: 'scroll',
-    height: '100vh',
+    height: window.innerWidth < 800 && '80vh',
   },
 });
 
