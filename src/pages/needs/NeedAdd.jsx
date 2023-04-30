@@ -90,6 +90,7 @@ const NeedAdd = () => {
   const [openChildren, setOpenChildren] = useState(false);
   const [optionsChildren, setOptionsChildren] = useState([]);
   const isLoadingChildren = openChildren && optionsChildren.length === 0;
+
   const [childId, setChildId] = useState();
 
   const [finalImageFile, setFinalImageFile] = useState();
@@ -203,7 +204,6 @@ const NeedAdd = () => {
 
   // preNeed open
   useEffect(() => {
-    console.log(openPreNeed);
     if (!openPreNeed) {
       setOptionsPreNeed([]);
       dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
@@ -340,7 +340,7 @@ const NeedAdd = () => {
             (swInfo && convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR)) && (
             <Autocomplete
               disabled={
-                (!unconfirmed || unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD) &&
+                (unconfirmed === null || unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD) &&
                 convertFlaskToSayRoles(swInfo.typeId) !== SAYPlatformRoles.AUDITOR
               }
               id="asynchronous-activeChildren"
@@ -358,7 +358,7 @@ const NeedAdd = () => {
               getOptionLabel={(option) =>
                 `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
               }
-              loading={loadingSw || isLoadingChildren}
+              loading={loadingSw || !children}
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                   {option.isConfirmed ? (

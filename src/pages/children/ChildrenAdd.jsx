@@ -395,56 +395,58 @@ const ChildAdd = () => {
           )}
         </Grid>
         <Grid item>
-          <Autocomplete
-            id="asynchronous-social-worker"
-            sx={{ width: 300 }}
-            open={open}
-            onOpen={() => {
-              setOpen(true);
-            }}
-            onClose={() => {
-              setOpen(false);
-            }}
-            onChange={(e, value) => setSwId(value && value.id)}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) =>
-              option.isActive
-                ? `${option.id} - ${option.firstName}`
-                : `${option.id} - ${option.firstName}`
-            }
-            renderOption={(props, option) => (
-              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                {option.isActive ? (
-                  <>
-                    <FeatherIcon color="green" icon="check" width="18" />
-                    <Typography>{`${option.id} - ${option.firstName}`}</Typography>
-                  </>
-                ) : (
-                  <>
-                    <FeatherIcon color="red" icon="x" width="18" />
-                    <Typography>{`${option.id} - ${option.firstName} `}</Typography>
-                  </>
-                )}
-              </Box>
-            )}
-            options={options || []}
-            loading={loadingSwAll}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t('socialWorker.title')}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
+          {ngoId && (
+            <Autocomplete
+              id="asynchronous-social-worker"
+              sx={{ width: 300 }}
+              open={open}
+              onOpen={() => {
+                setOpen(true);
+              }}
+              onClose={() => {
+                setOpen(false);
+              }}
+              onChange={(e, value) => setSwId(value && value.id)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) =>
+                option.isActive
+                  ? `${option.id} - ${option.firstName}`
+                  : `${option.id} - ${option.firstName}`
+              }
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                  {option.isActive ? (
                     <>
-                      {loadingSwAll ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
+                      <FeatherIcon color="green" icon="check" width="18" />
+                      <Typography>{`${option.id} - ${option.firstName}`}</Typography>
                     </>
-                  ),
-                }}
-              />
-            )}
-          />
+                  ) : (
+                    <>
+                      <FeatherIcon color="red" icon="x" width="18" />
+                      <Typography>{`${option.id} - ${option.firstName} `}</Typography>
+                    </>
+                  )}
+                </Box>
+              )}
+              options={options || []}
+              loading={loadingSwAll}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('socialWorker.title')}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loadingSwAll ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
+                />
+              )}
+            />
+          )}
         </Grid>
       </Grid>
 
