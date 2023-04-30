@@ -669,7 +669,7 @@ const CoverCard = ({
                         new Date() > new Date(Math.min(...dateList)) && t('myPage.today')
                       )
                     ) : dateList && !dateList[0] ? (
-                      0
+                      '-'
                     ) : (
                       <Stack sx={{ m: 'auto', width: '20%', color: 'grey.500' }} spacing={2}>
                         <LinearProgress sx={{ color: (theme) => theme.palette.primary }} />
