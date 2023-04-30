@@ -179,7 +179,6 @@ const ChildAdd = () => {
     }
 
     if (active && swInfo) {
-      console.log(swInfo.typeId);
       // super admin & admin
       if (
         (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
@@ -219,8 +218,8 @@ const ChildAdd = () => {
     if (active && successSwAll) {
       // sort social worker
       const filtered = swList.filter((s) => s.ngoId === ngoId);
-      const sortedSocialWorkers = filtered.sort((a, b) => Number(b.isActive) - Number(a.isActive));
 
+      const sortedSocialWorkers = filtered.sort((a, b) => Number(b.isActive) - Number(a.isActive));
       setOptions([...sortedSocialWorkers]);
     }
     return () => {
@@ -232,9 +231,7 @@ const ChildAdd = () => {
   useEffect(() => {
     if (!open || openNgo) {
       setOptions([]);
-      console.log(ngoId);
     } else if (ngoId && (open || !openNgo)) {
-      console.log('successSwAll');
       dispatch(fetchSocialWorkersList());
     }
   }, [open, openNgo, ngoId]);
@@ -354,18 +351,18 @@ const ChildAdd = () => {
         <Grid item md={3} xs={12}>
           {swInfo && (
             <Autocomplete
-              defaultValue={
-                swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
-                swInfo.typeId === FlaskUserTypesEnum.ADMIN
-                  ? {
-                      id: '',
-                      name: t('ngo.allNgos'),
-                    }
-                  : {
-                      id: swInfo.ngoId,
-                      name: swInfo.ngoName,
-                    }
-              }
+              // defaultValue={
+              //   swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+              //   swInfo.typeId === FlaskUserTypesEnum.ADMIN
+              //     ? {
+              //         id: '',
+              //         name: t('ngo.allNgos'),
+              //       }
+              //     : {
+              //         id: swInfo.ngoId,
+              //         name: swInfo.ngoName,
+              //       }
+              // }
               id="asynchronous-ngo"
               open={openNgo}
               onOpen={() => {
@@ -430,7 +427,7 @@ const ChildAdd = () => {
                 )}
               </Box>
             )}
-            options={successNgoList && ngoId ? options : []}
+            options={options || []}
             loading={loadingSwAll}
             renderInput={(params) => (
               <TextField
