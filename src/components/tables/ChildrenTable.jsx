@@ -373,7 +373,7 @@ const ChildrenTable = ({ childList }) => {
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [cityIds, setCityIds] = useState([]);
-  // const [cities, setCities] = useState({});
+  const [cities, setCities] = useState([]);
 
   const countryList = useSelector((state) => state.countryList);
   const { countries } = countryList;
@@ -397,11 +397,16 @@ const ChildrenTable = ({ childList }) => {
 
   useEffect(() => {
     if (successCities) {
-      console.log('the cities', theCities);
+      setCities(theCities);
     } else if (!successCities) {
       console.log('Failed to load the children cities');
     }
   }, [theCities, successCities]);
+
+  const handleCity = (id) => {
+    const theCity = cities.find((c) => c.id === id);
+    return theCity ? theCity.name : '';
+  };
 
   const handleCountry = (id) => {
     if (id) {
@@ -757,7 +762,7 @@ const ChildrenTable = ({ childList }) => {
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {/* {handleCity(row.cityId)} */}
+                                {handleCity(row.cityId)}
                               </Typography>
                             </TableCell>
                             <TableCell>
