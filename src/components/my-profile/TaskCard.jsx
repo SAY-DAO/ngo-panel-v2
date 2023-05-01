@@ -354,7 +354,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     </MenuItem>
                   )}
                   {(swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-                    swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
+                    swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+                    swInfo.id === need.created_by_id) && (
                     <MenuItem>
                       <RouterLink
                         style={{ textDecoration: 'none', color: '#e6e5e8' }}
@@ -512,8 +513,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 mb: 1,
                 fontSize: 10,
                 opacity: 0.8,
-              }}fontWeight="300"
-              
+              }}
+              fontWeight="300"
             >
               ( {t(getCategoryString(need.category, need.isUrgent))} )
             </Typography>
