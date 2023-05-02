@@ -34,7 +34,7 @@ import PageContainer from '../container/PageContainer';
 import { ChildExistenceEnum } from '../../utils/types';
 import { getAge } from '../../utils/helpers';
 import {
-  fetchCityById,
+  // fetchCityById,
   fetchCitiesByIds,
   fetchCountryList,
 } from '../../redux/actions/countryAction';
@@ -378,11 +378,11 @@ const ChildrenTable = ({ childList }) => {
   const countryList = useSelector((state) => state.countryList);
   const { countries } = countryList;
 
-  const cityById = useSelector((state) => state.cityById);
-  const { city } = cityById;
+  // const cityById = useSelector((state) => state.cityById);
+  // const { city } = cityById;
 
   const citiesByIds = useSelector((state) => state.citiesByIds);
-  const { success: successCities, theCities } = citiesByIds;
+  const { loading: loadingCities, success: successCities, theCities } = citiesByIds;
 
   useEffect(() => {
     dispatch(fetchCountryList());
@@ -396,12 +396,14 @@ const ChildrenTable = ({ childList }) => {
   }, [cityIds]);
 
   useEffect(() => {
-    if (successCities) {
-      setCities(theCities);
-    } else if (!successCities) {
-      console.log('Failed to load the children cities');
+    if (!loadingCities && loadingCities !== undefined) {
+      if (successCities) {
+        setCities(theCities);
+      } else if (!successCities) {
+        console.log('Failed to load the children cities');
+      }
     }
-  }, [theCities, successCities]);
+  }, [loadingCities, theCities, successCities]);
 
   const handleCity = (id) => {
     const theCity = cities.find((c) => c.id === id);
