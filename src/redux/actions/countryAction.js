@@ -129,8 +129,6 @@ export const fetchCityById = (cityId) => async (dispatch) => {
   try {
     dispatch({ type: CITY_BY_ID_REQUEST });
 
-    // city = localStorage.getItem('city_{123123}')
-    // if !city:
     const config = {
       id: `fetch-city:${cityId}`,
       headers: {
@@ -139,8 +137,6 @@ export const fetchCityById = (cityId) => async (dispatch) => {
     };
 
     const { data } = await cachePublicApi.get(`/cities/${cityId}`, config);
-    // localStorage.setItem('asdadsasd')
-    // city = data
 
     dispatch({
       type: CITY_BY_ID_SUCCESS,
