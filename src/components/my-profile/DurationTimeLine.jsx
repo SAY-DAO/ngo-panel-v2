@@ -10,16 +10,26 @@ import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { PropTypes } from 'prop-types';
-import { useSelector } from 'react-redux';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
+import { useSelector } from 'react-redux';
 import { NeedTypeEnum } from '../../utils/types';
 import { dateConvertor } from '../../utils/persianToEnglish';
 
-export default function DurationTimeLine({ need }) {
+export default function DurationTimeLine({ need, signature }) {
   const { t } = useTranslation();
+
   const { ipfs } = useSelector((state) => state.signature);
+
   const theIpfs = (need && need.ipfs) || ipfs;
+  const initialSignature =
+    (need &&
+      need.signatures &&
+      need.signatures.find((s) => s.flaskUserId === need.created_by_id)) ||
+    (signature &&
+      signature.flaskNeedId === need.id &&
+      signature.flaskUserId === need.created_by_id &&
+      signature);
 
   // for analytics we get different variables
   const theNeed = need;
@@ -35,7 +45,6 @@ export default function DurationTimeLine({ need }) {
   if (theNeed.ngo_delivery_date) {
     theNeed.ngoDeliveryDate = need.ngo_delivery_date;
   }
-
   return (
     <Timeline position="alternate" sx={{ pt: 4, pl: 0, pr: 0 }}>
       {theIpfs && (
@@ -59,7 +68,106 @@ export default function DurationTimeLine({ need }) {
                   sx={{
                     height: '15px',
                     width: '15px',
-                    border: (theme) => `2px solid ${theme.palette.extra.dark}`,
+                    border: (theme) => `2px solid ${theme.palette.secondary.main}`,
+                    backgroundColor: (theme) => theme.palette.secondary.main,
+                  }}
+                />
+              </TimelineDot>
+            </Tooltip>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent fontSize={12}>{t('myPage.taskCard.date.minted')}</TimelineContent>
+        </TimelineItem>
+      )}
+
+      {theIpfs && (
+        <TimelineItem>
+          <TimelineOppositeContent color="text.secondary" fontSize={12}>
+            {parseInt(
+              moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'days'),
+              10,
+            ) > 1
+              ? `${moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'days')} ${t(
+                  'myPage.taskCard.date.days',
+                )}`
+              : `${moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'hours')} ${t(
+                  'myPage.taskCard.date.hours',
+                )}`}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theIpfs.createdAt}</Typography>}>
+              <TimelineDot variant="outlined" sx={{ borderColor: 'transparent', p: 0, m: 1 }}>
+                <Box
+                  sx={{
+                    height: '15px',
+                    width: '15px',
+                    border: (theme) => `2px solid ${theme.palette.collections.c8.color2}`,
+                  }}
+                />
+              </TimelineDot>
+            </Tooltip>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent fontSize={12}>
+            {t('myPage.taskCard.date.familySignature')}
+          </TimelineContent>
+        </TimelineItem>
+      )}
+      {theIpfs && (
+        <TimelineItem>
+          <TimelineOppositeContent color="text.secondary" fontSize={12}>
+            {parseInt(
+              moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'days'),
+              10,
+            ) > 1
+              ? `${moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'days')} ${t(
+                  'myPage.taskCard.date.days',
+                )}`
+              : `${moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'hours')} ${t(
+                  'myPage.taskCard.date.hours',
+                )}`}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theIpfs.createdAt}</Typography>}>
+              <TimelineDot variant="outlined" sx={{ borderColor: 'transparent', p: 0, m: 1 }}>
+                <Box
+                  sx={{
+                    height: '15px',
+                    width: '15px',
+                    border: (theme) => `2px solid ${theme.palette.collections.c8.color3}`,
+                  }}
+                />
+              </TimelineDot>
+            </Tooltip>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent fontSize={12}>
+            {t('myPage.taskCard.date.purchaserSignature')}
+          </TimelineContent>
+        </TimelineItem>
+      )}
+      {theIpfs && (
+        <TimelineItem>
+          <TimelineOppositeContent color="text.secondary" fontSize={12}>
+            {parseInt(
+              moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'days'),
+              10,
+            ) > 1
+              ? `${moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'days')} ${t(
+                  'myPage.taskCard.date.days',
+                )}`
+              : `${moment(theIpfs.createdAt).diff(moment(theNeed.childDeliveryDate), 'hours')} ${t(
+                  'myPage.taskCard.date.hours',
+                )}`}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <Tooltip title={<Typography sx={{ fontSize: 12 }}>{theIpfs.createdAt}</Typography>}>
+              <TimelineDot variant="outlined" sx={{ borderColor: 'transparent', p: 0, m: 1 }}>
+                <Box
+                  sx={{
+                    height: '15px',
+                    width: '15px',
+                    border: (theme) => `2px solid ${theme.palette.collections.c8.color4}`,
                   }}
                 />
               </TimelineDot>
@@ -67,6 +175,43 @@ export default function DurationTimeLine({ need }) {
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent fontSize={12}>{t('myPage.taskCard.date.ipfs')}</TimelineContent>
+        </TimelineItem>
+      )}
+      {initialSignature && (
+        <TimelineItem>
+          <TimelineOppositeContent color="text.secondary" fontSize={12}>
+            {parseInt(
+              moment(initialSignature.createdAt).diff(moment(theNeed.childDeliveryDate), 'days'),
+              10,
+            ) > 1
+              ? `${moment(initialSignature.createdAt).diff(
+                  moment(theNeed.childDeliveryDate),
+                  'days',
+                )} ${t('myPage.taskCard.date.days')}`
+              : `${moment(initialSignature.createdAt).diff(
+                  moment(theNeed.childDeliveryDate),
+                  'hours',
+                )} ${t('myPage.taskCard.date.hours')}`}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <Tooltip
+              title={<Typography sx={{ fontSize: 12 }}>{initialSignature.createdAt}</Typography>}
+            >
+              <TimelineDot variant="outlined" sx={{ borderColor: 'transparent', p: 0, m: 1 }}>
+                <Box
+                  sx={{
+                    height: '15px',
+                    width: '15px',
+                    border: (theme) => `2px solid ${theme.palette.primary.main}`,
+                  }}
+                />
+              </TimelineDot>
+            </Tooltip>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent fontSize={12}>
+            {t('myPage.taskCard.date.initialSignature')}
+          </TimelineContent>
         </TimelineItem>
       )}
       {theNeed.type === NeedTypeEnum.PRODUCT && theNeed.childDeliveryDate && (
@@ -360,4 +505,5 @@ export default function DurationTimeLine({ need }) {
 
 DurationTimeLine.propTypes = {
   need: PropTypes.object,
+  signature: PropTypes.object,
 };

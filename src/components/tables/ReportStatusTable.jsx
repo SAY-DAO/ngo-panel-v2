@@ -33,7 +33,6 @@ import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { LoadingButton } from '@mui/lab';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
@@ -41,7 +40,6 @@ import { fetchReportNeeds } from '../../redux/actions/needsAction';
 import { dateConvertor, numberConvertor } from '../../utils/persianToEnglish';
 import { fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportImage from '../report/ReportImage';
-import { signTransaction } from '../../redux/actions/blockchainAction';
 import StatusDialog from '../dialogs/ReportStatusDialog';
 import {
   NeedTypeEnum,
@@ -567,9 +565,9 @@ const ReportStatusTable = () => {
     //   }
     // }, [statusDialog, row, needs]);
 
-    const signReport = () => {
-      dispatch(signTransaction(row));
-    };
+    // const signReport = () => {
+    //   dispatch(signTransaction(row));
+    // };
 
     return (
       <>
@@ -896,7 +894,7 @@ const ReportStatusTable = () => {
                         {t('need.needStatus.signature')}
                       </TableCell>
                       <TableCell component="th" scope="row" />
-                      <TableCell component="th" scope="row">
+                      {/* <TableCell component="th" scope="row">
                         <LoadingButton
                           // loading={loadingOneNeed}
                           onClick={() => signReport()}
@@ -912,7 +910,7 @@ const ReportStatusTable = () => {
                             ? t('need.needStatus.pending')
                             : t('need.needStatus.sign')}
                         </LoadingButton>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   </TableBody>
                 </Table>

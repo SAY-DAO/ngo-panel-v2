@@ -707,7 +707,11 @@
         "ngoDelivery": "Delivered to NGO",
         "expNgoDelivery": "Exp. Delivery to NGO",
         "childDelivery": "Delivered to Child",
+        "initialSignature": "Social Worker Signature",
         "ipfs": "Decentralized storage",
+        "purchaserSignature": "Purchaser Signature",
+        "familySignature": "Family Signature",
+        "minted": "Mined",
         "daysAgo": "days ago",
         "hoursAgo": "hrs ago",
         "days": "days",
@@ -721,7 +725,9 @@
         "tickets": "َAll tickets",
         "deliveryTicket": "َAnnounce Need Arrival",
         "moneyToNgoTicket": "َAnnounce Money Received",
-        "more": "More"
+        "more": "More",
+        "ipfs": "IPFS"
+
       }
     }
   },

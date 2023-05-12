@@ -72,20 +72,6 @@ export default function TicketAnnouncementDialog({
   };
 
   const handleConfirm = () => {
-    console.log({
-      roles: ['AUDITOR'],
-      title: need.name_translations.en,
-      flaskUserId: pageDetails.userId,
-      userTypeId: pageDetails.typeId,
-      flaskNeedId: need.id,
-      statuses: need.status_updates,
-      receipts: need.receipts,
-      payments: need.payments,
-      announcement: openAnnouncement.arrival
-        ? AnnouncementEnum.ARRIVED_AT_NGO
-        : openAnnouncement.moneyReceived && AnnouncementEnum.NGO_RECEIVED_MONEY,
-      arrivalDate,
-    });
     dispatch(
       addTicket({
         roles: ['AUDITOR'],
@@ -94,7 +80,7 @@ export default function TicketAnnouncementDialog({
         userTypeId: pageDetails.typeId,
         flaskNeedId: need.id,
         statuses: need.status_updates,
-        receipts: need.receipts,
+        receipts: need.receipts_,
         payments: need.payments,
         announcement: openAnnouncement.arrival
           ? AnnouncementEnum.ARRIVED_AT_NGO

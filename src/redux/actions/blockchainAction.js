@@ -34,7 +34,7 @@ export const fetchNonce = () => async (dispatch, getState) => {
       withCredentials: true,
       crossDomain: true,
     };
-    
+
     const response = await daoApi.get(`/wallet/nonce/${swInfo.id}/${swInfo.typeId}`, config);
 
     dispatch({
@@ -56,6 +56,7 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
 
     const {
       userLogin: { userInfo },
+      swDetails: { swInfo },
     } = getState();
 
     const config = {
@@ -67,7 +68,7 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
     };
 
     const { data } = await daoApi.post(
-      `/wallet/verify/${userInfo.id}`,
+      `/wallet/verify/${swInfo.id}/${swInfo.typeId}`,
       {
         message,
         signature,
@@ -153,13 +154,9 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
   }
 };
 
-export const signTransaction = (values, signer) => async (dispatch, getState) => {
+export const signTransaction = (values, signer) => async (dispatch) => {
   try {
     dispatch({ type: SIGNATURE_REQUEST });
-
-    const {
-      swDetails: { swInfo },
-    } = getState();
 
     const config = {
       headers: {
@@ -169,21 +166,14 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
     };
 
     const request = {
-      flaskUserId: swInfo.id,
-      userTypeId: swInfo.typeId,
       flaskNeedId: values.flaskNeedId,
       signerAddress: values.address,
-      statuses: values.statusUpdates,
-      receipts: values.receipts_,
-      payments: values.verifiedPayments,
-      // extra
-      isDone: values.isDone,
-      paid: values.paid,
-      unpayable: values.unpayable,
-      unpayableFrom: values.unpayableFrom,
+      statuses: values.statuses,
+      receipts: values.receipts,
+      payments: values.payments,
     };
 
-    const result1 = await daoApi.post(`/wallet/sw/generate`, request, config);
+    const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
 
     const transaction = result1.data;
     const signatureHash = await signer._signTypedData(
@@ -193,13 +183,18 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
     );
 
     const request2 = {
-      flaskUserId: swInfo.id,
       flaskNeedId: values.flaskNeedId,
-      role: transaction.sayRole,
+      statuses: values.statuses,
+      receipts: values.receipts,
+      payments: values.payments,
+      sayRole: transaction.sayRole,
     };
-    const result2 = await daoApi.post(`/wallet/create/${signatureHash}`, request2, config);
+    const result2 = await daoApi.post(
+      `/wallet/signature/create/${signatureHash}`,
+      request2,
+      config,
+    );
     const { ipfs, signature } = result2.data;
-    console.log(ipfs, signature);
     dispatch({
       type: SIGNATURE_SUCCESS,
       payload: { transaction, ipfs, signature },

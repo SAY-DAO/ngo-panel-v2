@@ -34,6 +34,7 @@ import { useTheme } from '@mui/material/styles';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
+import DatasetLinkedOutlinedIcon from '@mui/icons-material/DatasetLinkedOutlined';
 import {
   PaymentStatusEnum,
   NeedTypeEnum,
@@ -80,6 +81,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     moneyReceived: false,
   });
   const [toastOpen, setToastOpen] = useState(false);
+  const [thisCardSignature, setThisCardSignature] = useState();
   const [openWallets, setOpenWallets] = useState(false);
   const [needSignatures, setNeedSignatures] = useState([]);
   const [completed, setCompleted] = useState(false);
@@ -111,6 +113,12 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    if (signature && signature.flaskNeedId === need.id) {
+      setThisCardSignature(signature);
+    }
+  }, [signature]);
 
   const handleCardClick = () => {
     if (cardSelected === need.id) {
@@ -175,6 +183,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   };
 
   const handleSignature = () => {
+    console.log(need);
     dispatch(
       signTransaction(
         {
@@ -183,25 +192,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           statuses: need.status_updates,
           receipts: need.receipts_,
           payments: need.payments,
-          isDone: need.isDone,
-          paid: need.paid,
-          unpayable: need.unpayable,
-          unpayableFrom: need.unpayable_from,
         },
         signer,
       ),
     );
   };
 
-  const theIpfs = ipfs && ipfs.need.flaskId === need.id && ipfs;
-
   useEffect(() => {
     if (pageDetails && !completed) {
-      setNeedSignatures(
-        pageDetails.signatures.filter(
-          (s) => s.flaskNeedId === need.id && s.flaskUserId === swInfo.id,
-        ),
-      );
+      setNeedSignatures(need.signatures);
       setCompleted(true); // to only do this block once
     }
     if (signature && signature.flaskNeedId === need.id) {
@@ -237,15 +236,49 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     }
   }, [ipfsMetaData]);
 
+  const iconImage = ipfsMetaData
+    ? `${process.env.REACT_APP_IPFS_GATEWAY_1}/${ipfsMetaData.image.split('ipfs://')[1]}`
+    : prepareUrl(need.imageUrl);
+
+  const awakeImage = !ipfsMetaData
+    ? prepareUrl(need.child.awakeAvatarUrl)
+    : `${process.env.REACT_APP_IPFS_GATEWAY_1}/${
+        ipfsMetaData.child.awakeImage.split('ipfs://')[1]
+      }`;
+  const firstName = !ipfsMetaData
+    ? need.child.firstName_translations && need.child.firstName_translations.fa
+    : '-';
+
+  const lastName = !ipfsMetaData
+    ? need.child.lastName_translations && need.child.lastName_translations.fa
+    : '-';
+
+  const sayName = !ipfsMetaData
+    ? need.child.sayname_translations && need.child.sayname_translations.fa
+    : ipfsMetaData.child.name.fa;
+
+  const name = !ipfsMetaData
+    ? need.name_translations && need.name_translations.fa
+    : ipfsMetaData.properties.needDetails.titles.fa;
+
+  const informations = !ipfsMetaData
+    ? need.informations && need.informations
+    : ipfsMetaData.properties.needDetails.information;
+
+  const details = !ipfsMetaData
+    ? need.details && need.details
+    : ipfsMetaData.properties.needDetails.socialWorkerNotes;
+
+  const theIpfs = ipfs && ipfs.need.flaskId === need.id && ipfs;
+  console.log(theIpfs);
+  const category = getCategoryString(need.category, need.isUrgent);
+  const cost = need._cost.toLocaleString();
+  const affiliateLinkUrl = need.affiliateLinkUrl && need.affiliateLinkUrl;
+  const link = need.link && need.link;
+  const receipts = need.receipts_ && need.receipts_;
+  const retailerImage = need.img;
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
-      {ipfsMetaData && (
-        <img
-          src={`https://cloudflare-ipfs.com/ipfs/${ipfsMetaData.image.split('ipfs://')[1]}`}
-          style={{ maxWidth: '100px' }}
-          alt="/>"
-        />
-      )}
       <Card
         elevation={8}
         sx={{
@@ -259,8 +292,12 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           },
           border: 'solid',
           borderColor: () =>
-            isSelected ? theme.palette.primary.dark : theme.palette.text.secondary,
-          borderWidth: '0.1em',
+            needSignatures && needSignatures[0]
+              ? theme.palette.warning.main
+              : isSelected
+              ? theme.palette.primary.dark
+              : theme.palette.text.secondary,
+          borderWidth: needSignatures && needSignatures[0] ? '0.2em' : '0.1em',
         }}
       >
         <CardContent>
@@ -273,11 +310,11 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 background:
                   !need.imageUrl.includes('wrong') && need.child.awakeAvatarUrl
                     ? `url(
-                      ${prepareUrl(need.child.awakeAvatarUrl)}
+                      ${awakeImage}
                     )`
-                    : `url(${prepareUrl(need.imageUrl)})`,
+                    : `url(${iconImage})`,
                 '&:hover': {
-                  background: `url(${prepareUrl(need.imageUrl)})`,
+                  background: `url(${iconImage})`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                 },
@@ -287,7 +324,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             >
               {need.imageUrl.includes('wrong') && (
                 <Tooltip title={t('need.tooltip.addIcon')}>
-                  <IconButton onClick={() => console.log(true)}>
+                  <IconButton>
                     <AddCircleRoundedIcon />
                   </IconButton>
                 </Tooltip>
@@ -307,11 +344,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   fontSize: 12,
                 }}
               >
-                {need.child.firstName_translations && need.child.firstName_translations.fa}{' '}
-                {need.child.lastName_translations && need.child.lastName_translations.fa}
+                {firstName} {lastName}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="300" sx={{ fontSize: 11 }}>
-                {need.child.sayname_translations && need.child.sayname_translations.fa}
+                {sayName}
               </Typography>
             </Box>
             <Box
@@ -353,19 +389,20 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                       {t('myPage.taskCard.menu.updateChild')}
                     </MenuItem>
                   )}
-                  {(swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-                    swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
-                    swInfo.id === need.created_by_id) && (
-                    <MenuItem>
-                      <RouterLink
-                        style={{ textDecoration: 'none', color: '#e6e5e8' }}
-                        to={`/need/edit/${need.child.id}/${need.id}`}
-                      >
+                  {!need.ipfs &&
+                    (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                      swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+                      swInfo.id === need.created_by_id) && (
+                      <MenuItem>
                         <EditIcon sx={{ ml: 1, mr: 1 }} />
-                        {t('myPage.taskCard.menu.updateٔNeed')}
-                      </RouterLink>
-                    </MenuItem>
-                  )}
+                        <RouterLink
+                          style={{ textDecoration: 'none', color: '#e6e5e8' }}
+                          to={`/need/edit/${need.child.id}/${need.id}`}
+                        >
+                          {t('myPage.taskCard.menu.updateٔNeed')}
+                        </RouterLink>
+                      </MenuItem>
+                    )}
                   {need.ticket ? (
                     <MenuItem onClick={() => handleOpenTicketing(need.ticket.id)}>
                       <VisibilityIcon sx={{ ml: 1, mr: 1 }} />
@@ -401,6 +438,17 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         </MenuItem>
                       )
                     ))}
+                  {need && need.ipfs && need.ipfs.needDetailsHash && (
+                    <MenuItem>
+                      <DatasetLinkedOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                      <RouterLink
+                        style={{ textDecoration: 'none', color: '#e6e5e8' }}
+                        to={`${process.env.REACT_APP_IPFS_GATEWAY_2}/${need.ipfs.needDetailsHash}/metadata.json`}
+                      >
+                        {t('myPage.taskCard.menu.ipfs')}
+                      </RouterLink>
+                    </MenuItem>
+                  )}
                 </Menu>
               )}
             </Box>
@@ -416,15 +464,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             <Grid container>
               <Grid item xs={10}>
                 <Typography color="textSecondary" variant="h5" component="span" fontWeight="600">
-                  {need.name_translations.fa}
+                  {name}
                 </Typography>
-                {(need.informations || need.details) && (
+                {(informations || details) && (
                   <Tooltip
                     arrow
                     title={
                       <Typography>
-                        {need.informations && `${need.informations}`}
-                        {need.details && `${need.details}`}
+                        {informations}
+                        {details}
                       </Typography>
                     }
                     placement="left"
@@ -516,21 +564,21 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               }}
               fontWeight="300"
             >
-              ( {t(getCategoryString(need.category, need.isUrgent))} )
+              ( {t(category)} )
             </Typography>
             {/* 
             <Typography color="textSecondary" variant="h6" fontWeight="400">
               {t('myPage.taskCard.paid')}: {need.paid.toLocaleString()}
             </Typography> */}
             <Typography color="textSecondary" variant="h6" fontWeight="400">
-              {t('myPage.taskCard.cost')}: {need._cost.toLocaleString()}
+              {t('myPage.taskCard.cost')}: {cost}
             </Typography>
             <Grid container>
-              {need.affiliateLinkUrl && need.affiliateLinkUrl !== 'null' && (
+              {affiliateLinkUrl !== 'null' && (
                 <Typography color="textSecondary" variant="span" fontWeight="400">
                   {t('myPage.taskCard.provider')}:
                   <Link
-                    href={need.affiliateLinkUrl}
+                    href={affiliateLinkUrl}
                     sx={{ pl: 1, pr: 1 }}
                     underline="none"
                     target="_blank"
@@ -539,19 +587,19 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   </Link>
                 </Typography>
               )}
-              {need.link && (
+              {link && (
                 <Typography color="textSecondary" variant="span" fontWeight="400" sx={{ pb: 1 }}>
                   {t('myPage.taskCard.provider')}:
-                  <Link href={need.link} underline="none" sx={{ pl: 1, pr: 1 }} target="_blank">
+                  <Link href={link} underline="none" sx={{ pl: 1, pr: 1 }} target="_blank">
                     Link
                   </Link>
                 </Typography>
               )}
             </Grid>
             <Grid>
-              {need.receipts_ && need.receipts_[0] ? (
+              {receipts && receipts[0] ? (
                 <AvatarGroup>
-                  {need.receipts_.map((r) => (
+                  {receipts.map((r) => (
                     <ReceiptImage receipt={r.receipt[0]} key={r.id} />
                   ))}
                 </AvatarGroup>
@@ -685,7 +733,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             {need.type === NeedTypeEnum.PRODUCT ? (
               <img
                 style={{ opacity: !cardSelected ? '30%' : '80%', minHeight: '100px' }}
-                srcSet={`${need.img} 1x, ${need.img} 2x`}
+                srcSet={`${retailerImage} 1x, ${retailerImage} 2x`}
                 alt={need.img}
                 width="100%"
               />
@@ -696,7 +744,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             {/* dates */}
             <Grid container sx={{ p: 0 }}>
               <Grid item xs={12}>
-                <DurationTimeLine need={need} />
+                <DurationTimeLine need={need} signature={thisCardSignature} />
               </Grid>
             </Grid>
           </Box>
@@ -739,20 +787,18 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 </IconButton>
               </Tooltip>
 
-              {!isConnected ? (
-                <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
-                  {t('button.wallet.connect')}
-                </WalletButton>
-              ) : needSignatures && needSignatures[0] ? (
-                needSignatures.map((s) => <Typography key={s.id}>{s.hash}</Typography>)
-              ) : (
-                isConnected &&
-                (!theIpfs || (ipfs && ipfs.need && ipfs.need.flaskId !== need.id)) && (
-                  <LoadingButton loading={loadingSignature} onClick={handleSignature}>
-                    {t('button.wallet.sign')}
-                  </LoadingButton>
-                )
-              )}
+              {(!needSignatures[0] || !needSignatures.find((s) => s.flaskUserId === swInfo.id)) &&
+                (!isConnected ? (
+                  <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
+                    {t('button.wallet.connect')}
+                  </WalletButton>
+                ) : (
+                  isConnected && (
+                    <LoadingButton loading={loadingSignature} onClick={handleSignature}>
+                      {t('button.wallet.sign')}
+                    </LoadingButton>
+                  )
+                ))}
             </Grid>
           )}
         </CardActions>

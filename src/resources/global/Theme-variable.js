@@ -85,8 +85,81 @@ const baseTheme = {
       blue: blue[200],
     },
     extra: { main: '#00cec3', light: '#d7f8f6', dark: '#02b3a9' },
+    collections: {
+      c1: {
+        color1: '#FF6D60',
+        color2: '#F7D060',
+        color3: '#F3E99F',
+        color4: '#98D8AA',
+      },
+      c2: {
+        color1: '#7AA874',
+        color2: '#F7DB6A',
+        color3: '#EBB02D',
+        color4: '#D864A9',
+      },
+      c3: {
+        color1: '#00235B',
+        color2: '#E21818',
+        color3: '#FFDD83',
+        color4: '#98DFD6',
+      },
+      c4: {
+        color1: '#F7C8E0',
+        color2: '#DFFFD8',
+        color3: '#B4E4FF',
+        color4: '#95BDFF',
+      },
+      c5: {
+        color1: '#453C67',
+        color2: '#6D67E4',
+        color3: '#46C2CB',
+        color4: '#F2F7A1',
+      },
+      c6: {
+        color1: '#EA047E',
+        color2: '#FF6D28',
+        color3: '#FCE700',
+        color4: '#00F5FF',
+      },
+      c7: {
+        color1: '#781C68',
+        color2: '#319DA0',
+        color3: '#FFD39A',
+        color4: '#FFF5E1',
+      },
+      c8: {
+        color1: '#53BF9D',
+        color2: '#F94C66',
+        color3: '#BD4291',
+        color4: '#FFC54D',
+      },
+      c9: {
+        color1: '#37E2D5',
+        color2: '#590696',
+        color3: '#C70A80',
+        color4: '#FBCB0A',
+      },
+      c10: {
+        color1: '#FFD36E',
+        color2: '#FFF56D',
+        color3: '#99FFCD',
+        color4: '#9FB4FF',
+      },
+      c11: {
+        color1: '#544179',
+        color2: '#6166B3',
+        color3: '#32C1CD',
+        color4: '#17D7A0',
+      },
+      c12: {
+        color1: '#B983FF',
+        color2: '#94B3FD',
+        color3: '#94DAFF',
+        color4: '#99FEFF',
+      },
+    },
   },
-
   shape: {
     borderRadius: 2,
   },
