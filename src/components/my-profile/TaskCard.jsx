@@ -183,7 +183,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   };
 
   const handleSignature = () => {
-    console.log(need);
     dispatch(
       signTransaction(
         {

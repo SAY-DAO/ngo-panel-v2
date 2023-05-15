@@ -174,7 +174,6 @@ export const signTransaction = (values, signer) => async (dispatch) => {
     };
 
     const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
-
     const transaction = result1.data;
     const signatureHash = await signer._signTypedData(
       transaction.domain,

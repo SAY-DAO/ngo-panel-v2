@@ -111,9 +111,7 @@ const CoverCard = ({
 
   const { verifiedNonce, error: errorVerify } = useSelector((state) => state.walletVerify);
 
-  const { information, error: errorWalletInformation } = useSelector(
-    (state) => state.walletInformation,
-  );
+  const { error: errorWalletInformation } = useSelector((state) => state.walletInformation);
 
   const myPage = useSelector((state) => state.myPage);
   const { loading: loadingPageDetails } = myPage;
@@ -349,7 +347,6 @@ const CoverCard = ({
           />
         )}
       </Grid>
-      {information && information.nonce}
       <div
         style={{
           display: height < 250 && 'none',
