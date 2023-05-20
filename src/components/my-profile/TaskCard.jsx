@@ -27,7 +27,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTheme } from '@mui/material/styles';
@@ -71,8 +71,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { data: signer } = useSigner();
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -89,6 +87,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const open = Boolean(anchorEl);
 
   const { address, isConnected } = useAccount();
+  const { data: walletClient } = useWalletClient();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -192,7 +191,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
           receipts: need.receipts_,
           payments: need.payments,
         },
-        signer,
+        walletClient,
       ),
     );
   };
