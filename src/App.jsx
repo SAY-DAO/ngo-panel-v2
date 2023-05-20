@@ -30,7 +30,7 @@ const App = () => {
   };
 
   return (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig config={wagmiClient}>
       <ThemeProvider theme={theme}>
         <RTL direction={customizer.activeDir}>
           <CssBaseline />
