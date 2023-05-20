@@ -194,16 +194,20 @@ export const updateChild = (values) => async (dispatch, getState) => {
     const formData = new FormData();
 
     if (values.country) {
-      formData.set('country', values.country);
+      formData.append('country', values.country);
     }
     if (values.city) {
-      formData.set('city', values.city);
+      formData.append('city', values.city);
     }
     if (values.nationality) {
-      formData.set('nationality', values.nationality);
+      formData.append('nationality', values.nationality);
     }
 
-    const { data } = await publicApi.patch(`/child/update/childId=${values.childId}`, formData, config);
+    const { data } = await publicApi.patch(
+      `/child/update/childId=${values.childId}`,
+      formData,
+      config,
+    );
     dispatch({
       type: UPDATE_CHILD_SUCCESS,
       payload: data,
@@ -231,76 +235,46 @@ export const AddChild = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
-    if (values.ngo_id) {
-      formData.set('ngo_id', values.ngo_id);
-    }
-    if (values.sw_id) {
-      formData.set('sw_id', values.sw_id);
-    }
-    if (values.awakeAvatarUrl) {
-      formData.set('awakeAvatarUrl', values.awakeAvatarUrl);
-    }
-    if (values.sleptAvatarUrl) {
-      formData.set('sleptAvatarUrl', values.sleptAvatarUrl);
-    }
-    if (values.voiceUrl) {
-      formData.set('voiceUrl', values.voiceUrl);
-    }
-    if (values.firstName) {
-      formData.set('firstName_translations', values.firstName);
-    }
-    if (values.lastName) {
-      formData.set('lastName_translations', values.lastName);
-    }
-    if (values.sayName) {
-      formData.set('sayname_translations', values.sayName);
-    }
-    if (values.bio_translations) {
-      formData.set('bio_translations', values.bio_translations);
-    }
-    if (values.bio_summary_translations) {
-      formData.set('bio_summary_translations', values.bio_summary_translations);
-    }
-    if (values.phoneNumber) {
-      formData.set('phoneNumber', values.phoneNumber);
-    }
-    if (values.nationality) {
-      formData.set('birthPlace', values.nationality);
-    }
-    if (values.country) {
-      formData.set('country', values.country);
-    }
-    if (values.city) {
-      formData.set('city', values.city);
-    }
-    if (values.education) {
-      formData.set('education', values.education);
-    }
-    if (values.birthPlace) {
-      formData.set('birthPlace', values.birthPlace);
-    }
-    if (values.birthDate) {
-      formData.set('birthDate', values.birthDate);
-    }
-    if (values.sex) {
-      formData.set('gender', values.sex);
-    }
+    formData.append('ngo_id', values.id_ngo);
+    formData.append('sw_id', values.id_social_worker);
+    formData.append('awakeAvatarUrl', values.awakeAvatarUrl);
+    formData.append('sleptAvatarUrl', values.sleptAvatarUrl);
+    formData.append('voiceUrl', values.voiceUrl);
+    formData.append('gender', values.gender);
+    formData.append('cityId', values.cityId);
+    formData.append('phoneNumber', values.phoneNumber);
+    formData.append('birthDate', values.birthDate);
+    // Start values.translation fields
+    formData.append('sayname_translations', values.sayname_translations);
+    formData.append('bio_translations', values.bio_translations);
+    formData.append('bio_summary_translations', values.bio_summary_translations);
+    formData.append('firstName_translations', values.firstName_translations);
+    formData.append('lastName_translations', values.lastName_translations);
+
     if (values.address) {
-      formData.set('address', values.address);
-    }
-    if (values.familyCount) {
-      formData.set('familyCount', values.familyCount);
+      formData.append('address', values.address);
     }
     // if (values.education || values.school_type) {
-    //   formData.set(
+    //   formData.append(
     //     'education',
     //     values.education === '-2' ? `-${values.school_type}2` : values.school_type + values.education,
     //   ); // because "int-2" cannot be stored. temporarily solution!
     // }
-    if (values.housingStatus) {
-      formData.set('housingStatus', values.housingStatus);
+    if (values.birthPlaceId) {
+      formData.append('birthPlaceId', values.birthPlaceId);
     }
-
+    if (values.familyCount) {
+      formData.append('familyCount', values.familyCount);
+    }
+    if (values.education || values.school_type) {
+      formData.append(
+        'education',
+        values.education === '-2' ? `-${values.school_type}2` : values.school_type + values.education,
+      ); // because "int-2" cannot be stored. temporarily solution!
+    }
+    if (values.housingStatus) {
+      formData.append('housingStatus', values.housingStatus);
+    }
     console.log(values);
 
     const { data } = await publicApi.post(`/child/add/`, formData, config);

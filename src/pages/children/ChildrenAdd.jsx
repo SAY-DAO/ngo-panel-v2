@@ -251,37 +251,12 @@ const ChildAdd = () => {
     await sleep(300);
     dispatch(
       AddChild({
-        sw_id: swId,
         ngo_id: ngoId,
-        awakeAvatarUrl: finalAvatarFile,
-        sleptAvatarUrl: finalSleptAvatarFile,
-        voiceUrl: uploadVoice,
-        sayName: JSON.stringify({
+        id_social_worker: swId,
+        sayname_translations: JSON.stringify({
           en: data.sayname_translations_en,
           fa: data.sayname_translations_fa,
         }),
-        firstName: JSON.stringify({
-          en: data.firstName_translations_en,
-          fa: data.firstName_translations_fa,
-        }),
-        lastName: JSON.stringify({
-          en: data.lastName_translations_en,
-          fa: data.lastName_translations_fa,
-        }),
-        address: data.address,
-        // country: parseInt(data.country, 10),
-        country: 98,
-        // state: parseInt(data.state, 10),  no state in flask server
-        // city: parseInt(data.city, 10),
-        city: 1,
-        birthDate,
-        nationality: data.birthPlace,
-        education: parseInt(education, 10),
-        sex: sex !== 1, // true:male | false:female
-        school_type: data.school_type,
-        phoneNumber: data.phoneNumber,
-        familyCount: parseInt(data.familyCount, 10),
-        housingStatus: parseInt(data.housingStatus, 10),
         bio_translations: JSON.stringify({
           en: data.bio_translations_en,
           fa: data.bio_translations_fa,
@@ -290,6 +265,32 @@ const ChildAdd = () => {
           en: data.bio_summary_translations_en,
           fa: data.bio_summary_translations_fa,
         }),
+        gender: sex !== 1, // true:male | false:female
+        cityId: 1,
+        phoneNumber: data.phoneNumber,
+        birthDate,
+        awakeAvatarUrl: finalAvatarFile,
+        sleptAvatarUrl: finalSleptAvatarFile,
+        voiceUrl: uploadVoice,
+        birthPlaceId: data.birthPlace,
+        address: data.address,
+        familyCount: parseInt(data.familyCount, 10),
+        education: parseInt(education, 10),
+        school_type: data.school_type,
+        housingStatus: parseInt(data.housingStatus, 10),
+        firstName_translations: JSON.stringify({
+          en: data.firstName_translations_en,
+          fa: data.firstName_translations_fa,
+        }),
+        lastName_translations: JSON.stringify({
+          en: data.lastName_translations_en,
+          fa: data.lastName_translations_fa,
+        }),
+        // country: parseInt(data.country, 10),
+        country: 98,
+        // state: parseInt(data.state, 10),  no state in flask server
+        // city: parseInt(data.city, 10),
+   
       }),
     );
   };

@@ -484,47 +484,22 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               </Grid>
 
               <Grid item xs={2}>
-                <>
-                  {need.ticket && (
-                    <Box
-                      sx={{
-                        textAlign: 'center',
-                        backgroundColor:
-                          need.ticket.color === Colors.YELLOW
-                            ? () => theme.palette.background.ripple
-                            : '',
-                        animation:
-                          need.ticket.color === Colors.YELLOW
-                            ? 'ripple 1.4s  infinite ease-in-out'
-                            : '',
-
-                        borderRadius: '50%',
-                        '@keyframes ripple': {
-                          '0%': {
-                            transform: 'scale(.7)',
-                            opacity: 0.7,
-                          },
-                          '100%': {
-                            transform: 'scale(0.8)',
-                            opacity: 1,
-                          },
-                        },
-                        height: '40px',
-                        width: '40px',
-                        paddingTop: '7px',
-                      }}
-                    >
-                      <FlagOutlinedIcon
-                        sx={{
-                          color:
-                            need.ticket.color === Colors.YELLOW
-                              ? colorChoices[1].code
-                              : colorChoices[0].code,
-                        }}
-                      />
+                {need.ticket && (
+                  <>
+                    {/* ticketHistory has one item in it due to announcement */}
+                    {((need.ticket.lastAnnouncement && need.ticket.ticketHistories[1]) ||
+                      (!need.ticket.lastAnnouncement && !need.ticket.ticketHistories[0])) && (
                       <Box
                         sx={{
                           textAlign: 'center',
+                          backgroundColor:
+                            need.ticket.color === Colors.YELLOW
+                              ? () => theme.palette.background.ripple
+                              : '',
+                          animation:
+                            need.ticket.color === Colors.YELLOW
+                              ? 'ripple 1.4s  infinite ease-in-out'
+                              : '',
 
                           borderRadius: '50%',
                           '@keyframes ripple': {
@@ -542,17 +517,46 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                           paddingTop: '7px',
                         }}
                       >
-                        {need.ticket.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO && (
-                          <CampaignOutlinedIcon />
-                        )}
-                        {need.ticket.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
-                          <CampaignOutlinedIcon />
-                        )}
+                        <FlagOutlinedIcon
+                          sx={{
+                            color:
+                              need.ticket.color === Colors.YELLOW
+                                ? colorChoices[1].code
+                                : colorChoices[0].code,
+                          }}
+                        />
                       </Box>
+                    )}
+                    <Box
+                      sx={{
+                        textAlign: 'center',
+
+                        borderRadius: '50%',
+                        '@keyframes ripple': {
+                          '0%': {
+                            transform: 'scale(.7)',
+                            opacity: 0.7,
+                          },
+                          '100%': {
+                            transform: 'scale(0.8)',
+                            opacity: 1,
+                          },
+                        },
+                        height: '40px',
+                        width: '40px',
+                        paddingTop: '7px',
+                      }}
+                    >
+                      {need.ticket.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                        <CampaignOutlinedIcon />
+                      )}
+                      {need.ticket.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
+                        <CampaignOutlinedIcon />
+                      )}
                     </Box>
-                  )}
-                  {need.ipfs && <WaterWaveText hash={need.ipfs && need.ipfs.needDetailsHash} />}
-                </>
+                  </>
+                )}
+                {need.ipfs && <WaterWaveText hash={need.ipfs && need.ipfs.needDetailsHash} />}
               </Grid>
             </Grid>
             <Typography
