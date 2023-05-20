@@ -30,14 +30,21 @@ function getModifiedNeeds(updatedTicket, addedTicket, need) {
   //  when ticket added
   if (!updatedTicket && need.id === addedTicket.need.flaskId) {
     theNeed = need;
-    theNeed.ticket = addedTicket;
+    theNeed.tickets = [...theNeed.tickets, addedTicket];
+    if (theNeed.tickets) {
+      console.log(theNeed);
+    }
     return theNeed;
   }
 
   //  when ticket color changed from TicketContent
   if (updatedTicket && need.id === parseInt(updatedTicket.needFlaskId, 10)) {
     theNeed = need;
-    theNeed.ticket.color = parseInt(updatedTicket.color, 10);
+    theNeed.tickets.map((t) => {
+      // eslint-disable-next-line no-param-reassign
+      t.color = parseInt(updatedTicket.color, 10);
+      return t;
+    });
     return theNeed;
   }
   return need;

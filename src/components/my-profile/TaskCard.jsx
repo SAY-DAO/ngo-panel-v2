@@ -402,8 +402,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         </RouterLink>
                       </MenuItem>
                     )}
-                  {need.ticket ? (
-                    <MenuItem onClick={() => handleOpenTicketing(need.ticket.id)}>
+                  {need.tickets && need.tickets[0] ? (
+                    <MenuItem onClick={() => handleOpenTicketing(need.tickets[0].id)}>
                       <VisibilityIcon sx={{ ml: 1, mr: 1 }} />
                       {t('myPage.taskCard.menu.readTicket')}
                     </MenuItem>
@@ -416,27 +416,32 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     )
                   )}
                   {swInfo.id === need.created_by_id &&
-                    (!need.ticket ||
-                      (need.ticket &&
-                        need.ticket.lastAnnouncement !== AnnouncementEnum.ARRIVED_AT_NGO &&
-                        need.ticket.lastAnnouncement !== AnnouncementEnum.NGO_RECEIVED_MONEY)) &&
-                    (need.type === NeedTypeEnum.PRODUCT &&
-                    need.status === ProductStatusEnum.PURCHASED_PRODUCT ? (
+                    need.type === NeedTypeEnum.PRODUCT &&
+                    need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
+                    (!need.tickets[0] ||
+                      !need.tickets.find(
+                        (item) => item.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO,
+                      )) && (
                       <MenuItem onClick={() => handleAnnouncement(AnnouncementEnum.ARRIVED_AT_NGO)}>
                         <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
                         {t('myPage.taskCard.menu.deliveryTicket')}
                       </MenuItem>
-                    ) : (
-                      need.type === NeedTypeEnum.SERVICE &&
-                      need.status === ServiceStatusEnum.MONEY_TO_NGO && (
-                        <MenuItem
-                          onClick={() => handleAnnouncement(AnnouncementEnum.NGO_RECEIVED_MONEY)}
-                        >
-                          <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
-                          {t('myPage.taskCard.menu.moneyToNgoTicket')}
-                        </MenuItem>
-                      )
-                    ))}
+                    )}
+                  {swInfo.id === need.created_by_id &&
+                    need.type === NeedTypeEnum.SERVICE &&
+                    need.status === ServiceStatusEnum.MONEY_TO_NGO &&
+                    (!need.tickets[0] ||
+                      need.tickets.find(
+                        (item2) => item2.lastAnnouncement !== AnnouncementEnum.NGO_RECEIVED_MONEY,
+                      )) && (
+                      <MenuItem
+                        onClick={() => handleAnnouncement(AnnouncementEnum.NGO_RECEIVED_MONEY)}
+                      >
+                        <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                        {t('myPage.taskCard.menu.moneyToNgoTicket')}
+                      </MenuItem>
+                    )}
+
                   {need && need.ipfs && need.ipfs.needDetailsHash && (
                     <MenuItem>
                       <DatasetLinkedOutlinedIcon sx={{ ml: 1, mr: 1 }} />
@@ -484,20 +489,20 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
               </Grid>
 
               <Grid item xs={2}>
-                {need.ticket && (
+                {need.tickets[0] && (
                   <>
                     {/* ticketHistory has one item in it due to announcement */}
-                    {((need.ticket.lastAnnouncement && need.ticket.ticketHistories[1]) ||
-                      (!need.ticket.lastAnnouncement && !need.ticket.ticketHistories[0])) && (
+                    {((need.tickets[0].lastAnnouncement && need.tickets[0].ticketHistories[1]) ||
+                      !need.tickets[0].lastAnnouncement) && (
                       <Box
                         sx={{
                           textAlign: 'center',
                           backgroundColor:
-                            need.ticket.color === Colors.YELLOW
+                            need.tickets[0].color === Colors.YELLOW
                               ? () => theme.palette.background.ripple
                               : '',
                           animation:
-                            need.ticket.color === Colors.YELLOW
+                            need.tickets[0].color === Colors.YELLOW
                               ? 'ripple 1.4s  infinite ease-in-out'
                               : '',
 
@@ -520,7 +525,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         <FlagOutlinedIcon
                           sx={{
                             color:
-                              need.ticket.color === Colors.YELLOW
+                              need.tickets[0].color === Colors.YELLOW
                                 ? colorChoices[1].code
                                 : colorChoices[0].code,
                           }}
@@ -547,12 +552,12 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         paddingTop: '7px',
                       }}
                     >
-                      {need.ticket.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO && (
-                        <CampaignOutlinedIcon />
-                      )}
-                      {need.ticket.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
-                        <CampaignOutlinedIcon />
-                      )}
+                      {need.tickets.find(
+                        (item) => item.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO,
+                      ) && <CampaignOutlinedIcon />}
+                      {need.tickets.find(
+                        (item2) => item2.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY,
+                      ) && <CampaignOutlinedIcon />}
                     </Box>
                   </>
                 )}
