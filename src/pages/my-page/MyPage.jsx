@@ -265,7 +265,7 @@ const MyPage = () => {
       ) : (
         <>
           <Grid container spacing={0}>
-            <Card sx={{ width: '100%', overflowX: 'scroll', minHeight: '500px' }}>
+            <Card sx={{ width: '100%', overflowX: 'scroll', minHeight: '700px' }}>
               <Grid
                 container
                 justifyContent="center"
