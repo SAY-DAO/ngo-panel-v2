@@ -18,7 +18,7 @@ const initialState = {
 const store = createStore(
   reducers,
   initialState,
-  env === 'development' && composeWithDevTools(applyMiddleware(thunk)),
+  env === 'development' ? composeWithDevTools(applyMiddleware(thunk)) : applyMiddleware(thunk),
 );
 
 export default store;
