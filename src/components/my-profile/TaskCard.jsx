@@ -320,7 +320,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 backgroundSize: 'cover',
               }}
             >
-              {need.imageUrl.includes('wrong') && (
+              {!need.imageUrl && need.imageUrl.includes('wrong') && (
                 <Tooltip title={t('need.tooltip.addIcon')}>
                   <IconButton>
                     <AddCircleRoundedIcon />
