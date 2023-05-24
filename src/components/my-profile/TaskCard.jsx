@@ -15,9 +15,6 @@ import {
   AvatarGroup,
   CardActions,
   CardActionArea,
-  Stack,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
@@ -78,7 +75,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     arrival: false,
     moneyReceived: false,
   });
-  const [toastOpen, setToastOpen] = useState(false);
   const [thisCardSignature, setThisCardSignature] = useState();
   const [openWallets, setOpenWallets] = useState(false);
   const [needSignatures, setNeedSignatures] = useState([]);
@@ -96,13 +92,13 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { pageDetails } = myPage;
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
-  const { addedTicket, loading: loadingTicketAdd, error: errorTicketAdd } = ticketAdd;
+  const { addedTicket, loading: loadingTicketAdd } = ticketAdd;
 
   const myTickets = useSelector((state) => state.myTickets);
   const { isTicketingOpen } = myTickets;
 
   const needConfirm = useSelector((state) => state.needConfirm);
-  const { loading: loadingConfirm, success: successConfirm, error: errorConfirm } = needConfirm;
+  const { loading: loadingConfirm } = needConfirm;
 
   const childNeedsDuplicates = useSelector((state) => state.childNeedsDuplicates);
   const { loading: loadingDuplicates } = childNeedsDuplicates;
@@ -142,13 +138,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     if (pageDetails) setCardSelected(0);
   }, [pageDetails]);
 
-  // toast
-  useEffect(() => {
-    if (errorTicketAdd || successConfirm || errorConfirm) {
-      setToastOpen(true);
-    }
-  }, [errorTicketAdd, successConfirm, errorConfirm]);
-
   // when added open tickets
   useEffect(() => {
     if (openConfirm && !isTicketingOpen && addedTicket) {
@@ -167,14 +156,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     dispatch(openTicketing(true));
     setOpenConfirm(false);
     dispatch(selectTicket(ticketId));
-  };
-
-  // close toast
-  const handleCloseToast = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setToastOpen(false);
   };
 
   const handleClose = () => {
@@ -827,23 +808,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
         />
       )}
       <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
-
-      <Stack spacing={2} sx={{ width: '100%' }}>
-        <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
-          <Alert
-            onClose={handleCloseToast}
-            variant="filled"
-            severity={errorTicketAdd ? 'error' : successConfirm && 'success'}
-            sx={{ width: '100%' }}
-          >
-            {errorTicketAdd
-              ? errorTicketAdd.data.message
-              : errorConfirm && errorConfirm.data.message
-              ? successConfirm
-              : t('success.confirmed')}
-          </Alert>
-        </Snackbar>
-      </Stack>
     </Box>
   );
 };

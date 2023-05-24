@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Card,
   CircularProgress,
   Divider,
   Grid,
+  Snackbar,
   Stack,
   TablePagination,
   Typography,
@@ -54,6 +56,7 @@ const MyPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const [toastOpen, setToastOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [cardSelected, setCardSelected] = useState(0);
@@ -77,7 +80,10 @@ const MyPage = () => {
   const { pageDetails, loading: loadingPageDetails } = myPage;
 
   const ticketAdd = useSelector((state) => state.ticketAdd);
-  const { addedTicket } = ticketAdd;
+  const { addedTicket, error: errorTicketAdd } = ticketAdd;
+
+  const needConfirm = useSelector((state) => state.needConfirm);
+  const { success: successConfirm, error: errorConfirm } = needConfirm;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { updatedTicket } = ticketUpdate;
@@ -225,6 +231,21 @@ const MyPage = () => {
       window.scrollTo(0, 0);
     }
   }, [loadingPageDetails]);
+
+  // toast
+  useEffect(() => {
+    if (errorTicketAdd || successConfirm || errorConfirm) {
+      setToastOpen(true);
+    }
+  }, [errorTicketAdd, successConfirm, errorConfirm]);
+
+  // close toast
+  const handleCloseToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setToastOpen(false);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -394,6 +415,22 @@ const MyPage = () => {
           )}
         </>
       )}
+      <Stack spacing={2} sx={{ width: '100%' }}>
+        <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
+          <Alert
+            onClose={handleCloseToast}
+            variant="filled"
+            severity={errorTicketAdd ? 'error' : successConfirm && 'success'}
+            sx={{ width: '100%' }}
+          >
+            {errorTicketAdd
+              ? errorTicketAdd.data.message
+              : errorConfirm && errorConfirm.data.message
+              ? successConfirm
+              : t('success.confirmed')}
+          </Alert>
+        </Snackbar>
+      </Stack>
     </PageContainer>
   );
 };
