@@ -301,13 +301,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 backgroundSize: 'cover',
               }}
             >
-              {!need.imageUrl && need.imageUrl.includes('wrong') && (
-                <Tooltip title={t('need.tooltip.addIcon')}>
-                  <IconButton>
-                    <AddCircleRoundedIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
+              {!need.imageUrl ||
+                (need.imageUrl.includes('wrong') && (
+                  <Tooltip title={t('need.tooltip.addIcon')}>
+                    <IconButton>
+                      <AddCircleRoundedIcon />
+                    </IconButton>
+                  </Tooltip>
+                ))}
             </Box>
 
             <Box
