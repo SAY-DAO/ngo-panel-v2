@@ -306,7 +306,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 width: '50px',
                 height: '50px',
                 background:
-                  !need.imageUrl.includes('wrong') && need.child.awakeAvatarUrl
+                  need.imageUrl && !need.imageUrl.includes('wrong') && need.child.awakeAvatarUrl
                     ? `url(
                       ${awakeImage}
                     )`
