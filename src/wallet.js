@@ -1,31 +1,21 @@
-import { createConfig, configureChains, mainnet } from 'wagmi';
+import { createConfig, configureChains, mainnet, sepolia } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, http, createWalletClient, custom } from 'viem';
 
 // Two popular providers are Alchemy (alchemy.com) and Infura (infura.io)
-export const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet],
+export const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [mainnet, sepolia],
   [alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_KEY }), publicProvider()],
 );
 
 // Set up client
-export const wagmiClient = createConfig({
+export const config = createConfig({
   autoConnect: true,
-  publicClient: createPublicClient({
-    chain: mainnet,
-    transport: http(),
-  }),
   connectors: [
     new MetaMaskConnector({ chains }),
-    // new CoinbaseWalletConnector({
-    //   chains,
-    //   options: {
-    //     appName: 'wagmi',
-    //   },
-    // }),
     new WalletConnectConnector({
       chains,
       options: {
@@ -33,6 +23,14 @@ export const wagmiClient = createConfig({
       },
     }),
   ],
-  provider,
-  webSocketProvider,
+  publicClient: createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  }),
+  webSocketPublicClient,
+});
+
+export const client = createWalletClient({
+  chain: mainnet,
+  transport: custom(window.ethereum),
 });

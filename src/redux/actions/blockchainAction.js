@@ -175,11 +175,15 @@ export const signTransaction = (values, signer) => async (dispatch) => {
 
     const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
     const transaction = result1.data;
-    const signatureHash = await signer._signTypedData(
-      transaction.domain,
-      transaction.types,
-      transaction.SocialWorkerVoucher,
-    );
+    console.log('signer');
+    console.log(transaction);
+    console.log('signer');
+    const signatureHash = await signer.signTypedData({
+      domain: transaction.domain,
+      types: transaction.types,
+      primaryType: 'title',
+      message: transaction.message,
+    });
 
     const request2 = {
       flaskNeedId: values.flaskNeedId,

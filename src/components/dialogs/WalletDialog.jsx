@@ -106,7 +106,6 @@ function TheDialog(props) {
       <Grid container spacing={2}>
         <Grid item>
           <Button
-            disabled
             variant="outlined"
             size="small"
             onClick={() => window.open('https://docs.saydao.org', 'learn...')}

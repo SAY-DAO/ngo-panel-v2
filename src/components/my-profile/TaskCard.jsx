@@ -74,6 +74,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const [openAnnouncement, setOpenAnnouncement] = useState({
     arrival: false,
     moneyReceived: false,
+
   });
   const [thisCardSignature, setThisCardSignature] = useState();
   const [openWallets, setOpenWallets] = useState(false);
@@ -163,6 +164,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   };
 
   const handleSignature = () => {
+    console.log('address');
+    console.log(walletClient);
+    console.log('address');
     dispatch(
       signTransaction(
         {

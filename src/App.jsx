@@ -8,7 +8,7 @@ import swDev from './swDev';
 import Router from './routes/Router';
 import ThemeSettings from './layouts/full-layout/customizer/ThemeSettings';
 import RTL from './layouts/full-layout/customizer/RTL';
-import { wagmiClient } from './wallet';
+import { config } from './wallet';
 
 const App = () => {
   const routing = useRoutes(Router);
@@ -30,7 +30,7 @@ const App = () => {
   };
 
   return (
-    <WagmiConfig config={wagmiClient}>
+    <WagmiConfig config={config}>
       <ThemeProvider theme={theme}>
         <RTL direction={customizer.activeDir}>
           <CssBaseline />
