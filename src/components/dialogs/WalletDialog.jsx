@@ -108,7 +108,7 @@ function TheDialog(props) {
           <Button
             variant="outlined"
             size="small"
-            onClick={() => window.open('https://docs.saydao.org', 'learn...')}
+            onClick={() => window.open('https://docs.saydao.org/guide/wallet.html', 'learn...')}
             sx={{ maxWidth: 10, borderRadius: 10, pl: 5, pr: 5 }}
           >
             {t('button.wallet.learn')}
