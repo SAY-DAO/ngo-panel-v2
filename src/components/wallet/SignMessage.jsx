@@ -1,4 +1,4 @@
-import React, {  useRef } from 'react';
+import React, { useRef } from 'react';
 import { useSignMessage } from 'wagmi';
 import { verifyMessage } from 'ethers/lib/utils';
 import { LoadingButton } from '@mui/lab';
@@ -12,7 +12,6 @@ export default function SignMessage() {
       recoveredAddress.current = address;
     },
   });
-
 
   return (
     <form

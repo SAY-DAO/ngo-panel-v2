@@ -61,6 +61,7 @@ import {
 } from '../../utils/helpers';
 import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
+import signatureIcon from '../../resources/images/signature.svg';
 
 const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const dispatch = useDispatch();
@@ -74,7 +75,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const [openAnnouncement, setOpenAnnouncement] = useState({
     arrival: false,
     moneyReceived: false,
-
   });
   const [thisCardSignature, setThisCardSignature] = useState();
   const [openWallets, setOpenWallets] = useState(false);
@@ -163,10 +163,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     setAnchorEl(null);
   };
 
-  const handleSignature = () => {
-    console.log('address');
-    console.log(walletClient);
-    console.log('address');
+  const handleSignature = async () => {
+
     dispatch(
       signTransaction(
         {
@@ -472,10 +470,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 )}
               </Grid>
 
-              <Grid item xs={2}>
+              <Grid item xs={2} sx={{ maxHeight: '25px' }}>
                 {need.tickets[0] && (
                   <>
-                    {/* ticketHistory has one item in it due to announcement */}
+                    {/* flag Icon- ticketHistory has one item in it due to announcement */}
                     {((need.tickets[0].lastAnnouncement && need.tickets[0].ticketHistories[1]) ||
                       !need.tickets[0].lastAnnouncement) && (
                       <Box
@@ -516,6 +514,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         />
                       </Box>
                     )}
+                    {/* Announcement Icon */}
                     <Box
                       sx={{
                         textAlign: 'center',
@@ -545,6 +544,36 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     </Box>
                   </>
                 )}
+                <Box
+                  sx={{
+                    textAlign: 'center',
+
+                    borderRadius: '50%',
+                    '@keyframes ripple': {
+                      '0%': {
+                        transform: 'scale(.7)',
+                        opacity: 0.7,
+                      },
+                      '100%': {
+                        transform: 'scale(0.8)',
+                        opacity: 1,
+                      },
+                    },
+                    height: '40px',
+                    width: '40px',
+                    paddingTop: '7px',
+                  }}
+                >
+                  {need.signatures &&
+                    need.signatures.find((s) => s.flaskUserId === need.created_by_id) && (
+                      <img
+                        style={{ minHeight: '10px' }}
+                        srcSet={`${signatureIcon} 1x, ${signatureIcon} 2x`}
+                        alt={need.img}
+                        width="100%"
+                      />
+                    )}
+                </Box>
                 {need.ipfs && <WaterWaveText hash={need.ipfs && need.ipfs.needDetailsHash} />}
               </Grid>
             </Grid>

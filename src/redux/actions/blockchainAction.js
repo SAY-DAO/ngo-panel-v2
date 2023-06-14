@@ -4,7 +4,6 @@ import {
   FAMILY_NETWORK_SUCCESS,
   FAMILY_NETWORK_FAIL,
   SIGNATURE_REQUEST,
-  SIGNATURE_SUCCESS,
   SIGNATURE_FAIL,
   WALLET_NONCE_REQUEST,
   WALLET_NONCE_SUCCESS,
@@ -15,6 +14,7 @@ import {
   WALLET_INFORMATION_REQUEST,
   WALLET_INFORMATION_SUCCESS,
   WALLET_INFORMATION_FAIL,
+  SIGNATURE_SUCCESS,
 } from '../constants/daoConstants';
 
 export const fetchNonce = () => async (dispatch, getState) => {
@@ -175,16 +175,20 @@ export const signTransaction = (values, signer) => async (dispatch) => {
 
     const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
     const transaction = result1.data;
-    console.log('signer');
-    console.log(transaction);
-    console.log('signer');
+
+    // The named list of all type definitions
+    const types = {
+      ...transaction.types,
+    };
     const signatureHash = await signer.signTypedData({
       domain: transaction.domain,
-      types: transaction.types,
-      primaryType: 'title',
-      message: transaction.message,
+      types,
+      primaryType: 'Voucher',
+      message: {
+        ...transaction.message,
+      },
     });
-
+    console.log(signatureHash);
     const request2 = {
       flaskNeedId: values.flaskNeedId,
       statuses: values.statuses,

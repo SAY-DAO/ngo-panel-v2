@@ -94,6 +94,8 @@ const MyPage = () => {
   const childNeedsDuplicates = useSelector((state) => state.childNeedsDuplicates);
   const { duplicates } = childNeedsDuplicates;
 
+  const { signature } = useSelector((state) => state.signature);
+
   useEffect(() => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
   }, [swInfo]);
@@ -213,9 +215,22 @@ const MyPage = () => {
           });
         }
       }
+      console.log('signature1');
+      console.log(signature);
+      if (signature) {
+        let theNeed;
+        organizedNeeds[3] = modifiedNeeds[3].map((need) => {
+          theNeed = need;
+          if (signature && theNeed.id === signature.flaskNeedId) {
+            theNeed.signatures = [...theNeed.signatures, signature];
+            console.log(signature);
+          }
+          return theNeed;
+        });
+      }
       setModifiedNeeds(organizedNeeds);
     }
-  }, [addedTicket, pageDetails, updatedTicket, tickets]);
+  }, [addedTicket, pageDetails, updatedTicket, tickets, signature]);
 
   // set duplicates
   useEffect(() => {
@@ -270,7 +285,9 @@ const MyPage = () => {
         theUser={swNewDetails}
         needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : -1}
         childCount={pageDetails && pageDetails.children}
-        signatureCount={pageDetails ? pageDetails.signatures.length : -1}
+        signatureCount={
+          modifiedNeeds ? modifiedNeeds[3].filter((n) => n.signatures.length > 0).length : -1
+        }
         arrivals={pageDetails && pageDetails.arrivals}
         swInfo={swInfo}
         swNewDetails={swNewDetails}
