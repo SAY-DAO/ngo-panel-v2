@@ -209,12 +209,7 @@ export const signTransaction = (values, signer) => async (dispatch) => {
       ...transaction.types,
     };
     const signatureHash = await signer.signTypedData({
-      domain: {
-        chainId: transaction.domain.chainId,
-        name: transaction.domain.name,
-        verifyingContract: transaction.domain.verifyingContract,
-        version: transaction.domain.version,
-      },
+      domain: transaction.domain,
       types,
       primaryType: 'Voucher',
       message: {
