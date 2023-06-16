@@ -115,6 +115,9 @@ const ProfileDropdown = () => {
             </ListItemIcon>
             <Box>{t('profile.settings.changePass')}</Box>
           </MenuItem>
+          <MenuItem onClick={() => window.open(`https://docs.saydao.org`)} sx={{ mt: 4 }}>
+            <Box sx={{ m: 'auto' }}>{t('profile.settings.docs')}</Box>
+          </MenuItem>
         </MenuList>
       </Card>
     </Box>

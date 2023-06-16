@@ -635,7 +635,9 @@
       "settings": "Account Settings",
       "logIn": "Log in",
       "logOut": "Log out",
-      "changePass": "Change password"
+      "changePass": "Change password",
+      "docs": "Documents"
+
     },
     "message": {
       "more": "See All Messages",
