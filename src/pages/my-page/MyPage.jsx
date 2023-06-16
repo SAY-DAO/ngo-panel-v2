@@ -221,15 +221,13 @@ const MyPage = () => {
           });
         }
       }
-      console.log('signature1');
-      console.log(signature);
+
       if (signature) {
         let theNeed;
         organizedNeeds[3] = modifiedNeeds[3].map((need) => {
           theNeed = need;
           if (signature && theNeed.id === signature.flaskNeedId) {
             theNeed.signatures = [...theNeed.signatures, signature];
-            console.log(signature);
           }
           return theNeed;
         });
