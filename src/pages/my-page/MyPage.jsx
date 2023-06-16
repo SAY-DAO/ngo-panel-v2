@@ -26,6 +26,7 @@ import ConfirmNeedDialog from '../../components/dialogs/ConfirmNeedDialog';
 import { UPDATE_NEED_CONFIRM_RESET } from '../../redux/constants/needConstant';
 import { MY_PAGE_RESET } from '../../redux/constants/userConstants';
 import { fetchDuplicateChildNeeds } from '../../redux/actions/needsAction';
+import { fetchUserSignatures } from '../../redux/actions/blockchainAction';
 
 function getModifiedNeeds(updatedTicket, addedTicket, need) {
   let theNeed;
@@ -95,10 +96,15 @@ const MyPage = () => {
   const { duplicates } = childNeedsDuplicates;
 
   const { signature } = useSelector((state) => state.signature);
+  const { userSignatures } = useSelector((state) => state.signatures);
 
   useEffect(() => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
   }, [swInfo]);
+
+  useEffect(() => {
+    if (swInfo) dispatch(fetchUserSignatures());
+  }, [swInfo, signature]);
 
   useEffect(() => {
     if (swNewDetails && swNewDetails.id) {
@@ -285,9 +291,7 @@ const MyPage = () => {
         theUser={swNewDetails}
         needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : -1}
         childCount={pageDetails && pageDetails.children}
-        signatureCount={
-          modifiedNeeds ? modifiedNeeds[3].filter((n) => n.signatures.length > 0).length : -1
-        }
+        signatureCount={userSignatures && userSignatures.length}
         arrivals={pageDetails && pageDetails.arrivals}
         swInfo={swInfo}
         swNewDetails={swNewDetails}

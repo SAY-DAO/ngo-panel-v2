@@ -5,6 +5,7 @@ import {
   FAMILY_NETWORK_FAIL,
   SIGNATURE_REQUEST,
   SIGNATURE_FAIL,
+  SIGNATURE_SUCCESS,
   WALLET_NONCE_REQUEST,
   WALLET_NONCE_SUCCESS,
   WALLET_NONCE_FAIL,
@@ -14,13 +15,14 @@ import {
   WALLET_INFORMATION_REQUEST,
   WALLET_INFORMATION_SUCCESS,
   WALLET_INFORMATION_FAIL,
-  SIGNATURE_SUCCESS,
+  USER_SIGNATURES_REQUEST,
+  USER_SIGNATURES_SUCCESS,
+  USER_SIGNATURES_FAIL,
 } from '../constants/daoConstants';
 
 export const fetchNonce = () => async (dispatch, getState) => {
   try {
     dispatch({ type: WALLET_NONCE_REQUEST });
-
     const {
       userLogin: { userInfo },
       swDetails: { swInfo },
@@ -34,9 +36,7 @@ export const fetchNonce = () => async (dispatch, getState) => {
       withCredentials: true,
       crossDomain: true,
     };
-
     const response = await daoApi.get(`/wallet/nonce/${swInfo.id}/${swInfo.typeId}`, config);
-
     dispatch({
       type: WALLET_NONCE_SUCCESS,
       payload: response.data,
@@ -154,6 +154,34 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
   }
 };
 
+export const fetchUserSignatures = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_SIGNATURES_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await daoApi.get(`/wallet/signatures/${userInfo.id}`, config);
+
+    dispatch({
+      type: USER_SIGNATURES_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: USER_SIGNATURES_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
 export const signTransaction = (values, signer) => async (dispatch) => {
   try {
     dispatch({ type: SIGNATURE_REQUEST });
@@ -188,7 +216,7 @@ export const signTransaction = (values, signer) => async (dispatch) => {
         ...transaction.message,
       },
     });
-    console.log(signatureHash);
+
     const request2 = {
       flaskNeedId: values.flaskNeedId,
       statuses: values.statuses,

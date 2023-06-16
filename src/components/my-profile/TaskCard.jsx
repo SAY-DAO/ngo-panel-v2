@@ -106,6 +106,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
 
+  // const { userSignatures } = useSelector((state) => state.signatures);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -115,6 +117,16 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       setThisCardSignature(signature);
     }
   }, [signature]);
+
+  useEffect(() => {
+    if (pageDetails && !completed) {
+      setNeedSignatures(need.signatures);
+      setCompleted(true); // to only do this block once<too
+    }
+    if (signature && signature.flaskNeedId === need.id) {
+      setNeedSignatures([...needSignatures, signature]);
+    }
+  }, [signature, pageDetails]);
 
   const handleCardClick = () => {
     if (cardSelected === need.id) {
@@ -164,7 +176,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   };
 
   const handleSignature = async () => {
-
     dispatch(
       signTransaction(
         {
@@ -178,16 +189,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       ),
     );
   };
-
-  useEffect(() => {
-    if (pageDetails && !completed) {
-      setNeedSignatures(need.signatures);
-      setCompleted(true); // to only do this block once
-    }
-    if (signature && signature.flaskNeedId === need.id) {
-      setNeedSignatures([...needSignatures, signature]);
-    }
-  }, [signature, pageDetails]);
 
   const handleAnnouncement = (Announcement) => {
     dispatch({ type: ADD_TICKET_RESET });
@@ -251,13 +252,18 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     : ipfsMetaData.properties.needDetails.socialWorkerNotes;
 
   const theIpfs = ipfs && ipfs.need.flaskId === need.id && ipfs;
-  console.log(theIpfs);
+  console.log(theIpfs && theIpfs);
   const category = getCategoryString(need.category, need.isUrgent);
   const cost = need._cost.toLocaleString();
   const affiliateLinkUrl = need.affiliateLinkUrl && need.affiliateLinkUrl;
   const link = need.link && need.link;
   const receipts = need.receipts_ && need.receipts_;
   const retailerImage = need.img;
+
+  const swSignature =
+    needSignatures && needSignatures.find((s) => s.flaskUserId === need.created_by_id);
+  const auditorSignature =
+    needSignatures && needSignatures.find((s) => s.flaskUserId === need.confirmUser);
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
       <Card
@@ -448,7 +454,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
             }}
           >
             <Grid container>
-              <Grid item xs={10}>
+              <Grid item xs={9}>
                 <Typography color="textSecondary" variant="h5" component="span" fontWeight="600">
                   {name}
                 </Typography>
@@ -470,7 +476,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 )}
               </Grid>
 
-              <Grid item xs={2} sx={{ maxHeight: '25px' }}>
+              <Grid item xs={3} sx={{ maxHeight: '40px' }}>
                 {need.tickets[0] && (
                   <>
                     {/* flag Icon- ticketHistory has one item in it due to announcement */}
@@ -544,35 +550,41 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     </Box>
                   </>
                 )}
+                {/* Signature Icon */}
                 <Box
                   sx={{
                     textAlign: 'center',
-
-                    borderRadius: '50%',
-                    '@keyframes ripple': {
-                      '0%': {
-                        transform: 'scale(.7)',
-                        opacity: 0.7,
-                      },
-                      '100%': {
-                        transform: 'scale(0.8)',
-                        opacity: 1,
-                      },
-                    },
                     height: '40px',
                     width: '40px',
-                    paddingTop: '7px',
                   }}
                 >
-                  {need.signatures &&
-                    need.signatures.find((s) => s.flaskUserId === need.created_by_id) && (
+                  {needSignatures && needSignatures[0] && (
+                    <Tooltip
+                      arrow
+                      title={
+                        <>
+                          <Typography sx={{ fontSize: 12 }}>
+                            {` ${t('roles.socialWorker')}:
+                            ${swSignature && swSignature.user && swSignature.user.firstName}`}
+                          </Typography>
+                          <Typography sx={{ fontSize: 12 }}>
+                            {auditorSignature &&
+                              `${t('roles.auditor')}:
+                            ${auditorSignature.user && auditorSignature.user.firstName}`}
+                          </Typography>
+                        </>
+                      }
+                      placement="right-end"
+                      sx={{ width: '100%' }}
+                    >
                       <img
                         style={{ minHeight: '10px' }}
                         srcSet={`${signatureIcon} 1x, ${signatureIcon} 2x`}
                         alt={need.img}
                         width="100%"
                       />
-                    )}
+                    </Tooltip>
+                  )}
                 </Box>
                 {need.ipfs && <WaterWaveText hash={need.ipfs && need.ipfs.needDetailsHash} />}
               </Grid>

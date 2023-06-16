@@ -17,6 +17,9 @@ import {
   WALLET_INFORMATION_FAIL,
   WALLET_VERIFY_RESET,
   WALLET_INFORMATION_RESET,
+  USER_SIGNATURES_REQUEST,
+  USER_SIGNATURES_SUCCESS,
+  USER_SIGNATURES_FAIL,
 } from '../constants/daoConstants';
 
 export const walletNonceReducer = (state = {}, action) => {
@@ -90,6 +93,23 @@ export const signatureReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case SIGNATURE_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const userSignaturesReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_SIGNATURES_REQUEST:
+      return { loading: true, success: false };
+    case USER_SIGNATURES_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        userSignatures: action.payload,
+      };
+    case USER_SIGNATURES_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

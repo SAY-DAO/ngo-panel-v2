@@ -47,6 +47,7 @@ import {
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
 import {
   signatureReducer,
+  userSignaturesReducer,
   WalletInformationReducer,
   walletNonceReducer,
   walletVerifyReducer,
@@ -130,6 +131,7 @@ export default combineReducers({
   receiptDelete: receiptDeleteReducer,
   receiptAdd: receiptAddReducer,
   signature: signatureReducer,
+  signatures: userSignaturesReducer,
   providerStatusUpdate: providerUpdateIsActiveReducer,
   providerById: providerByIdReducer,
   providerAll: providerListReducer,
