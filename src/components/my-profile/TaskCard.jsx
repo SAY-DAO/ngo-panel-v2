@@ -227,13 +227,13 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     : `${process.env.REACT_APP_IPFS_GATEWAY_1}/${
         ipfsMetaData.child.awakeImage.split('ipfs://')[1]
       }`;
-  // const firstName = !ipfsMetaData
-  //   ? need.child.firstName_translations && need.child.firstName_translations.fa
-  //   : '-';
+  const firstName = !ipfsMetaData
+    ? need.child.firstName_translations && need.child.firstName_translations.fa
+    : '-';
 
-  // const lastName = !ipfsMetaData
-  //   ? need.child.lastName_translations && need.child.lastName_translations.fa
-  //   : '-';
+  const lastName = !ipfsMetaData
+    ? need.child.lastName_translations && need.child.lastName_translations.fa
+    : '-';
 
   const sayName = !ipfsMetaData
     ? need.child.sayname_translations && need.child.sayname_translations.fa
@@ -331,11 +331,10 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   fontSize: 12,
                 }}
               >
-                {/* {firstName} {lastName} */}
-                {sayName}
+                {firstName} {lastName}
               </Typography>
               <Typography color="textSecondary" variant="h6" fontWeight="300" sx={{ fontSize: 11 }}>
-                {/* {sayName} */}
+                {sayName}
               </Typography>
             </Box>
             <Box
