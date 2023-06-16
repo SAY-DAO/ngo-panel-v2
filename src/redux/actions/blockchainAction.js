@@ -203,7 +203,7 @@ export const signTransaction = (values, signer) => async (dispatch) => {
 
     const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
     const transaction = result1.data;
-
+    console.log(transaction);
     // The named list of all type definitions
     const types = {
       ...transaction.types,
