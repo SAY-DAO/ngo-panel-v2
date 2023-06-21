@@ -287,7 +287,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
-      {(!deletedId || !deleted) && (
+      {(deletedId != need.id || !deleted) && (
         <Card
           elevation={8}
           sx={{
