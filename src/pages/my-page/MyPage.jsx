@@ -232,6 +232,7 @@ const MyPage = () => {
           return theNeed;
         });
       }
+     
       setModifiedNeeds(organizedNeeds);
     }
   }, [addedTicket, pageDetails, updatedTicket, tickets, signature]);

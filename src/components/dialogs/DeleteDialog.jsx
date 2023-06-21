@@ -7,7 +7,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { DialogTitle } from '@mui/material';
 import { deleteReceipt } from '../../redux/actions/reportAction';
+import { deleteNeed } from '../../redux/actions/needsAction';
 
 export default function DeleteDialog({ open, setOpen, dialogValues }) {
   const dispatch = useDispatch();
@@ -18,30 +20,44 @@ export default function DeleteDialog({ open, setOpen, dialogValues }) {
   };
 
   const handleDelete = () => {
-    dispatch(deleteReceipt(dialogValues.needId, dialogValues.receiptId));
+    if (dialogValues.type === 'deleteReceipt') {
+      dispatch(deleteReceipt(dialogValues.needId, dialogValues.receiptId));
+    }
+    if (dialogValues.type === 'deleteNeed') {
+      dispatch(deleteNeed(dialogValues.needId));
+    }
     setOpen(false);
   };
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {t('report.deleteModal.confirm')}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}> {t('button.cancel')}</Button>
-          <Button onClick={handleDelete} autoFocus>
-            {t('button.confirm')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {dialogValues && (
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle>
+            {dialogValues.type === 'deleteNeed'
+              ? t('deleteModal.need.title')
+              : t('deleteModal.receipt.title')}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {dialogValues.type === 'deleteNeed'
+                ? t('deleteModal.need.content')
+                : t('deleteModal.receipt.content')}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}> {t('button.cancel')}</Button>
+            <Button onClick={handleDelete} autoFocus>
+              {t('button.confirm')}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 }

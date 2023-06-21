@@ -105,7 +105,7 @@ export default function ReportImage({ row, statusId }) {
     setDialogValues({
       needId,
       receiptId,
-      type: 'delete',
+      type: 'deleteReceipt',
     });
   };
 

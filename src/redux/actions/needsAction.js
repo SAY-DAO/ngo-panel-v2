@@ -284,6 +284,7 @@ export const deleteNeed = (needId) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
+
     const { data } = await publicApi.patch(`/need/delete/needId=${needId}`, {}, config);
 
     dispatch({

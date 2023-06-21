@@ -58,9 +58,27 @@ const components = {
           boxShadow: 'none',
         },
       },
+      customDeletePrimary: ({ theme }) => ({
+        color: theme.palette.danger.main,
+        border: `0.1rem solid ${theme.palette.danger.main}`,
+        textTransform: 'none',
+        boxShadow: 'none',
+        fontSize: '15px',
+        borderRadius: '15px',
+        '&:hover': {
+          boxShadow: 'none',
+          color: theme.palette.danger.light,
+          border: `0.1rem solid ${theme.palette.danger.light}`,
+          backgroundColor: theme.palette.danger.main,
+        },
+      }),
     },
   },
-
+  MuiLoadingButton: {
+    styleOverrides: {
+      root: {},
+    },
+  },
   MuiListItem: {
     styleOverrides: {
       root: {
