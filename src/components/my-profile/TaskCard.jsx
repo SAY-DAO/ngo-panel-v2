@@ -72,7 +72,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   const [dialogValues, setDialogValues] = useState();
   const [openDelete, setOpenDelete] = useState(false);
-
+  const [deletedId, setDeletedId] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -279,10 +279,15 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const auditorSignature =
     needSignatures && needSignatures.find((s) => s.flaskUserId === need.confirmUser);
 
-  const deletedNeedId = deleted && deleted.id === need.id && need.id;
+  useEffect(() => {
+    if (deleted && deleted.id === need.id) {
+      setDeletedId(deleted.id);
+    }
+  }, [deleted]);
+
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
-      {(!deletedNeedId || !deleted) && (
+      {(!deletedId || !deleted) && (
         <Card
           elevation={8}
           sx={{
