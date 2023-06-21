@@ -278,9 +278,11 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     needSignatures && needSignatures.find((s) => s.flaskUserId === need.created_by_id);
   const auditorSignature =
     needSignatures && needSignatures.find((s) => s.flaskUserId === need.confirmUser);
+
+  const deletedNeedId = deleted && deleted.id === need.id && need.id;
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
-      {((deleted && deleted.id !== need.id) || !deleted) && (
+      {(deletedNeedId || !deleted) && (
         <Card
           elevation={8}
           sx={{
