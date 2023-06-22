@@ -636,7 +636,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 {t('myPage.taskCard.cost')}: {cost}
               </Typography>
               <Grid container>
-                {affiliateLinkUrl !== 'null' && (
+                {affiliateLinkUrl.length > 5 && (
                   <Typography color="textSecondary" variant="span" fontWeight="400">
                     {t('myPage.taskCard.provider')}:
                     <Link
