@@ -636,19 +636,21 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 {t('myPage.taskCard.cost')}: {cost}
               </Typography>
               <Grid container>
-                {typeof affiliateLinkUrl === 'string' && affiliateLinkUrl.length > 5 && (
-                  <Typography color="textSecondary" variant="span" fontWeight="400">
-                    {t('myPage.taskCard.provider')}:
-                    <Link
-                      href={affiliateLinkUrl}
-                      sx={{ pl: 1, pr: 1 }}
-                      underline="none"
-                      target="_blank"
-                    >
-                      Affiliate
-                    </Link>
-                  </Typography>
-                )}
+                {typeof affiliateLinkUrl === 'string' &&
+                  affiliateLinkUrl.length > 5 &&
+                  !affiliateLinkUrl.includes('false') && (
+                    <Typography color="textSecondary" variant="span" fontWeight="400">
+                      {t('myPage.taskCard.provider')}:
+                      <Link
+                        href={affiliateLinkUrl}
+                        sx={{ pl: 1, pr: 1 }}
+                        underline="none"
+                        target="_blank"
+                      >
+                        Affiliate
+                      </Link>
+                    </Typography>
+                  )}
                 {link && (
                   <Typography color="textSecondary" variant="span" fontWeight="400" sx={{ pb: 1 }}>
                     {t('myPage.taskCard.provider')}:
