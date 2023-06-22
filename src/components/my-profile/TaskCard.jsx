@@ -487,7 +487,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                   <Typography color="textSecondary" variant="h5" component="span" fontWeight="600">
                     {name}
                   </Typography>
-                  {(informations || details) && (
+                  {((informations && typeof informations === 'string' && informations.length > 2) ||
+                    (details && typeof details === 'string' && details.length > 2)) && (
                     <Tooltip
                       arrow
                       title={
