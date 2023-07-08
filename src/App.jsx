@@ -4,7 +4,6 @@ import { Avatar, CssBaseline, ThemeProvider } from '@mui/material';
 import { useSelector } from 'react-redux';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { WagmiConfig } from 'wagmi';
-import swDev from './swDev';
 import Router from './routes/Router';
 import ThemeSettings from './layouts/full-layout/customizer/ThemeSettings';
 import RTL from './layouts/full-layout/customizer/RTL';
@@ -40,5 +39,4 @@ const App = () => {
     </WagmiConfig>
   );
 };
-swDev();
 export default App;
