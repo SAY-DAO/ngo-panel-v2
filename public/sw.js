@@ -1,13 +1,17 @@
 const staticCacheName = 'SAY-Panel-v2.0.0';
-const urlsToCache = [];
+const urlsToCache = [
+  'https://dkstatics-public.digikala.com/digikala-products/94e9e05ed8a1b48dc44a1925d2d54e2d5a72577b_1629817189.jpg?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90'
+];
 
 const self = this;
 
 // install Service Worker and save cache to Application - Cache
 self.addEventListener('install', (event) => {
   console.log('Attempting to install service worker and cache static assets');
+  
   event.waitUntil(
     caches.open(staticCacheName).then((cache) => {
+  
       console.log('Opened cache');
       cache.addAll(urlsToCache);
     }),
