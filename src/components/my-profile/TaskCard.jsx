@@ -234,7 +234,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   const iconImage = ipfsMetaData
     ? `${process.env.REACT_APP_IPFS_GATEWAY_1}/${ipfsMetaData.image.split('ipfs://')[1]}`
-    : prepareUrl(need.imageUrl);
+    : need.imageUrl && prepareUrl(need.imageUrl);
 
   const awakeImage = !ipfsMetaData
     ? prepareUrl(need.child.awakeAvatarUrl)
@@ -266,7 +266,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     : ipfsMetaData.properties.needDetails.socialWorkerNotes;
 
   const theIpfs = ipfs && ipfs.need.flaskId === need.id && ipfs;
-  console.log(theIpfs && theIpfs);
+  console.log(theIpfs || '');
   const category = getCategoryString(need.category, need.isUrgent);
   const cost = need._cost.toLocaleString();
   const affiliateLinkUrl = need.affiliateLinkUrl && need.affiliateLinkUrl;
