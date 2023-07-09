@@ -796,7 +796,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     />
                   </ListItem>
                 )}
-              {need.type === NeedTypeEnum.PRODUCT ? (
+              {need.type === NeedTypeEnum.PRODUCT && need.img ? (
                 <img
                   style={{ opacity: !cardSelected ? '30%' : '80%', minHeight: '100px' }}
                   srcSet={`${retailerImage} 1x, ${retailerImage} 2x`}

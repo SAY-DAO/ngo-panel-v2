@@ -93,7 +93,7 @@ self.addEventListener('activate', (event) => {
 
 // fetch
 self.addEventListener('fetch', (event) => {
-  console.log('Fetch event for ', event.request.url);
+  console.log('Service Worker: Fetching ', event.request.url);
   event.respondWith(
     caches
       .match(event.request)
