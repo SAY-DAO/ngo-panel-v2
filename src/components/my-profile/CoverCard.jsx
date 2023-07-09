@@ -337,14 +337,16 @@ const CoverCard = ({
       >
         {skeleton ? (
           <Skeleton sx={{ height, m: 'auto' }} animation="wave" variant="rectangular" />
-        ) : cover &&(
-          <img
-            id="coverImage"
-            style={{ transition: '0.4s', opacity: height < 300 && 0.3 }}
-            srcSet={`${cover} 1x, ${cover} 2x`}
-            alt="cover"
-            width="100%"
-          />
+        ) : (
+          cover && (
+            <img
+              id="coverImage"
+              style={{ transition: '0.4s', opacity: height < 300 && 0.3 }}
+              srcSet={`${cover} 1x, ${cover} 2x`}
+              alt="cover"
+              width="100%"
+            />
+          )
         )}
       </Grid>
       <div
