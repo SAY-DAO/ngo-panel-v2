@@ -9,11 +9,11 @@ const LogoIcon = () => {
   const customizer = useSelector((state) => state.CustomizerReducer);
   return (
     <Box sx={{ width: '250px' }}>
-      <Link underline="none" to="/">
-        {customizer.activeMode === 'dark' ? (
+      <Link underline="none" to="https://say.company">
+        {customizer.activeMode === 'dark' && LogoDark ? (
           <img alt="dark logo" src={LogoDark} width={80} />
         ) : (
-          <img alt="light logo" src={LogoLight} width={80} />
+          LogoLight && <img alt="light logo" src={LogoLight} width={80} />
         )}
       </Link>
     </Box>
