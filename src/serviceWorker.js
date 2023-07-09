@@ -33,7 +33,7 @@ export function register(config) {
     // }
 
     window.addEventListener('load', () => {
-      const swUrl = `./serviceworker.js`;
+      const swUrl = `./sw.js`;
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
@@ -67,14 +67,6 @@ function registerValidSW(swUrl, config) {
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
-              // At this point, the updated precached content has been fetched,
-              // but the previous service worker will still serve the older
-              // content until all client tabs are closed.
-              console.log(
-                'New content is available and will be used when all ' +
-                  'tabs for this page are closed. See https://bit.ly/CRA-PWA.',
-              );
-
               // Execute callback
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
