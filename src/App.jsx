@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import { Avatar, CssBaseline, ThemeProvider } from '@mui/material';
+import {  CssBaseline, ThemeProvider } from '@mui/material';
 import { useSelector } from 'react-redux';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { WagmiConfig } from 'wagmi';
@@ -13,20 +13,19 @@ const App = () => {
   const routing = useRoutes(Router);
   const theme = ThemeSettings();
   const customizer = useSelector((state) => state.CustomizerReducer);
-  const { swInfo } = useSelector((state) => state.swDetails);
+  // const { swInfo } = useSelector((state) => state.swDetails);
 
-  // eslint-disable-next-line no-unused-vars, react/prop-types
-  const CustomAvatar = ({ address, ensImage, size }) => {
-    return ensImage ? (
-      <img src={ensImage} width={size} height={size} style={{ borderRadius: 999 }} alt="icon" />
-    ) : (
-      <Avatar
-        alt={swInfo.firstName}
-        src={swInfo.avatarUrl}
-        sx={{ width: 56, height: 56, backgroundColor: 'gray' }}
-      />
-    );
-  };
+  // const CustomAvatar = ({ address, ensImage, size }) => {
+  //   return ensImage ? (
+  //     <img src={ensImage} width={size} height={size} style={{ borderRadius: 999 }} alt="icon" />
+  //   ) : (
+  //     <Avatar
+  //       alt={swInfo.firstName}
+  //       src={swInfo.avatarUrl}
+  //       sx={{ width: 56, height: 56, backgroundColor: 'gray' }}
+  //     />
+  //   );
+  // };
 
   return (
     <WagmiConfig config={config}>
