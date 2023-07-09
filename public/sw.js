@@ -1,5 +1,6 @@
 const staticCacheName = 'SAY-GateWay-v2.0';
 const urlsToCache = [
+  '/',
   'static/js/vendors-node_modules_tslib_tslib_es6_js.chunk.js',
   'static/js/vendors-node_modules_stablelib_random_lib_random_js.chunk.js',
   'manifest.json',
