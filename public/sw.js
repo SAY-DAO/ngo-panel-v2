@@ -43,6 +43,7 @@ const urlsToCache = [
   // 'static/js/src_layouts_full-layout_FullLayout_js.chunk.js',
   // 'static/js/src_redux_actions_needsAction_js.chunk.js',
   // 'static/js/src_pages_my-page_MyPage_jsx.chunk.js',
+  '/',
   'static/js/main.3bf525be.js',
   'static/css/main.b423f4ae.css',
   'static/js/6271.e961a0cf.chunk.js',
