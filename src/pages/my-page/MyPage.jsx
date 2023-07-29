@@ -435,18 +435,20 @@ const MyPage = () => {
       )}
       <Stack spacing={2} sx={{ width: '100%' }}>
         <Snackbar open={toastOpen} autoHideDuration={6000} onClose={handleCloseToast}>
-          <Alert
-            onClose={handleCloseToast}
-            variant="filled"
-            severity={errorTicketAdd ? 'error' : successConfirm && 'success'}
-            sx={{ width: '100%' }}
-          >
-            {errorTicketAdd
-              ? errorTicketAdd.data.message
-              : errorConfirm && errorConfirm.data.message
-              ? successConfirm
-              : t('success.confirmed')}
-          </Alert>
+          {(errorTicketAdd || errorConfirm || successConfirm) && (
+            <Alert
+              onClose={handleCloseToast}
+              variant="filled"
+              severity={errorTicketAdd ? 'error' : successConfirm && 'success'}
+              sx={{ width: '100%' }}
+            >
+              {errorTicketAdd
+                ? errorTicketAdd.data.message
+                : errorConfirm && errorConfirm.data.message
+                ? successConfirm
+                : t('success.confirmed')}
+            </Alert>
+          )}
         </Snackbar>
       </Stack>
     </PageContainer>
