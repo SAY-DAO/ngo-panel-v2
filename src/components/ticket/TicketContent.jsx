@@ -86,6 +86,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   // set need for status change
   useEffect(() => {
+    setTheNeed();
     if (theTicket && oneNeed && oneNeed.id === theTicket.need.flaskId) {
       setTheNeed(oneNeed);
     }
