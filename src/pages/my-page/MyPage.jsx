@@ -57,6 +57,7 @@ const MyPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const [height, setHeight] = useState(306.8); // cover scrolling
   const [toastOpen, setToastOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -232,7 +233,7 @@ const MyPage = () => {
           return theNeed;
         });
       }
-     
+
       setModifiedNeeds(organizedNeeds);
     }
   }, [addedTicket, pageDetails, updatedTicket, tickets, signature]);
@@ -287,12 +288,13 @@ const MyPage = () => {
   return (
     <PageContainer title="User Profile" description="this is User Profile page">
       <CoverCard
+        height={height}
+        setHeight={setHeight}
         theUser={swNewDetails}
         needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : -1}
         childCount={pageDetails && pageDetails.children}
         signatureCount={userSignatures && userSignatures.length}
         arrivals={pageDetails && pageDetails.arrivals}
-        swInfo={swInfo}
         swNewDetails={swNewDetails}
         setSwNewDetails={setSwNewDetails}
         setSkeleton={setSkeleton}
@@ -318,7 +320,6 @@ const MyPage = () => {
                     {t('myPage.taskManager.title.notPaid')}
                   </Typography>
                   <Typography component="span" sx={{ fontSize: 11 }}>
-                    {' '}
                     ({totalNeedCount.notPaid})
                   </Typography>
                 </Grid>
@@ -327,7 +328,6 @@ const MyPage = () => {
                     {t('myPage.taskManager.title.paid')}
                   </Typography>
                   <Typography component="span" sx={{ fontSize: 11 }}>
-                    {' '}
                     ({totalNeedCount.paid})
                   </Typography>
                 </Grid>
@@ -336,7 +336,6 @@ const MyPage = () => {
                     {t('myPage.taskManager.title.purchased')}
                   </Typography>
                   <Typography component="span" sx={{ fontSize: 11 }}>
-                    {' '}
                     ({totalNeedCount.purchased})
                   </Typography>
                 </Grid>
@@ -345,7 +344,6 @@ const MyPage = () => {
                     {t('myPage.taskManager.title.delivered')}
                   </Typography>
                   <Typography component="span" sx={{ fontSize: 11 }}>
-                    {' '}
                     ({totalNeedCount.delivered})
                   </Typography>
                 </Grid>

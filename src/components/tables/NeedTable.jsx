@@ -1183,7 +1183,7 @@ const NeedTable = () => {
                                     variant="body1"
                                     fontWeight="400"
                                   >
-                                    {`${row.isUrgent}`}
+                                    {row.isUrgent}
                                   </Typography>
                                 </TableCell>
                                 <TableCell>

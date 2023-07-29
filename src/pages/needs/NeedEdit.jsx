@@ -412,7 +412,7 @@ const NeedEdit = () => {
                                   onChange={handleUrgentChange}
                                 />
                               }
-                              label={`${t('need.isUrgent')}`}
+                              label={t('need.isUrgent')}
                             />
                           </Grid>
                         </Grid>
@@ -545,7 +545,7 @@ const NeedEdit = () => {
                                   onChange={handleAffChange}
                                 />
                               }
-                              label={`${t('need.affiliateLinkUrl')}`}
+                              label={t('need.affiliateLinkUrl')}
                             />
                           </Grid>
                         </Grid>

@@ -72,11 +72,12 @@ const CustomWidthTooltip = styled(({ className, ...props }) => (
 });
 
 const CoverCard = ({
+  height,
+  setHeight,
   theUser,
   needCount,
   childCount,
   signatureCount,
-  swInfo,
   swNewDetails,
   setSwNewDetails,
   arrivals,
@@ -94,7 +95,6 @@ const CoverCard = ({
   const [walletToastOpen, setWalletToastOpen] = useState(false);
   const [dateList, setDateList] = useState();
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
-  const [height, setHeight] = useState(306.8);
   // wallet
   const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
@@ -103,6 +103,9 @@ const CoverCard = ({
   const { data: ensName } = useEnsName({ address });
   const { disconnect } = useDisconnect();
 
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+  
   const swAll = useSelector((state) => state.swAll);
   const { swList, success: successSwAll } = swAll;
 
@@ -301,6 +304,7 @@ const CoverCard = ({
     }
   }, [loadingPageDetails]);
 
+  // scroll
   const scrollFunction = () => {
     if (
       !loadingPageDetails &&
@@ -312,6 +316,7 @@ const CoverCard = ({
     }
   };
 
+  // scroll
   useEffect(() => {
     if (document.getElementById('coverImage')) {
       scrollFunction();

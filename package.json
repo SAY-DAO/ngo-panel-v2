@@ -23,6 +23,7 @@
     "axios": "^0.21.1",
     "axios-mock-adapter": "^1.18.1",
     "babel-eslint": "^10.1.0",
+    "cron": "^2.4.0",
     "date-fns": "^2.21.3",
     "ethers": "^5",
     "feather-icons-react": "^0.4.3",

@@ -134,7 +134,7 @@ const NgoTreeview = () => {
                 <>
                   <Typography>Child Id: {child.id}</Typography>
                   <Typography>Child: {child.sayname_translations.en}</Typography>
-                  <Typography>Child: {`${child.isConfirmed}`}</Typography>
+                  <Typography>Child: {child.isConfirmed}</Typography>
                   <br />
                   <Typography>Child All Needs: {needs.all}</Typography>
                   <Typography>Confirmed: {needs.confirmed}</Typography>

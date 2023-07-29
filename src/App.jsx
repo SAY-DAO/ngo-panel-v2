@@ -8,13 +8,18 @@ import Router from './routes/Router';
 import ThemeSettings from './layouts/full-layout/customizer/ThemeSettings';
 import RTL from './layouts/full-layout/customizer/RTL';
 import { config } from './wallet';
+import DeleteOldNeeds from './utils/schedule'
 
 const App = () => {
   const routing = useRoutes(Router);
   const theme = ThemeSettings();
   const customizer = useSelector((state) => state.CustomizerReducer);
-  // const { swInfo } = useSelector((state) => state.swDetails);
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  DeleteOldNeeds(userInfo)
+  // const { swInfo } = useSelector((state) => state.swDetails);
   // const CustomAvatar = ({ address, ensImage, size }) => {
   //   return ensImage ? (
   //     <img src={ensImage} width={size} height={size} style={{ borderRadius: 999 }} alt="icon" />
