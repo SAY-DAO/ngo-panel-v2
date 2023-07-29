@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import Scrollbar from '../custom-scroll/Scrollbar';
-import { convertFlaskToSayRoles, getSAYRoleString, prepareUrl } from '../../utils/helpers';
+import { convertFlaskToSayRoles, getUserSAYRoleString, prepareUrl } from '../../utils/helpers';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
 import { AnnouncementEnum, colorChoices, SAYPlatformRoles } from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
@@ -179,7 +179,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                       <AvatarGroup max={4}>
                         {theTicket.contributors.map((c) => (
                           <Tooltip
-                            title={`${c.firstName} - ${t(`roles.${getSAYRoleString(c.role)}`)}`}
+                            title={`${c.firstName} - ${t(`roles.${getUserSAYRoleString(c.role)}`)}`}
                             key={c.id}
                           >
                             <Avatar

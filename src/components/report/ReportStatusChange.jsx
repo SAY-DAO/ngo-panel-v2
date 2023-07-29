@@ -68,7 +68,7 @@ export default function ReportStatusChange({ need, setStatusDialog, setStatusNee
           </IconButton>
           <Box>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
-              {need.status === PaymentStatusEnum.NOT_PAID ? (
+              {need.status === PaymentStatusEnum.NOT_PAID || need.isDeleted !== true ? (
                 <>
                   <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
                   <CircleIcon sx={{ color: '#a3a3a3' }} fontSize="small" />
