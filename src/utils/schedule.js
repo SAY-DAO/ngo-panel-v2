@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-syntax */
-/* eslint-disable no-unused-vars */
 import { CronJob } from 'cron';
 import { CronExpression } from './corns';
 import { daoApi, publicApi } from '../apis/sayBase';
