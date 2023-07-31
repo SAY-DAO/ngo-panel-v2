@@ -327,26 +327,6 @@ const CoverCard = ({
   }, [window.onscroll]);
 
   window.addEventListener('scroll', scrollFunction);
-  console.log(dateList);
-  console.log('dateList');
-  if (dateList) {
-    console.log(
-      Math.ceil(
-        daysDifference(new Date().toUTCString(), new Date(Math.min(...dateList)).toUTCString()),
-      ),
-    );
-    console.log(
-      persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))) ||
-        persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))) ||
-        persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))),
-    );
-    console.log(
-      Number(persianDay(new Date())) !== Number(persianDay(new Date(Math.min(...dateList)))),
-    );
-
-    console.log(persianDay(new Date()));
-    console.log(persianDay(new Date(Math.min(...dateList))));
-  }
 
   return (
     <Card
