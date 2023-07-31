@@ -105,7 +105,7 @@ const CoverCard = ({
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
-  
+
   const swAll = useSelector((state) => state.swAll);
   const { swList, success: successSwAll } = swAll;
 
@@ -328,8 +328,12 @@ const CoverCard = ({
 
   window.addEventListener('scroll', scrollFunction);
   console.log(dateList);
-  console.log("dateList");
-  console.log(arrivals);
+  console.log('dateList');
+  console.log(
+    persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))) ||
+      persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))) ||
+      persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))),
+  );
   return (
     <Card
       sx={{
