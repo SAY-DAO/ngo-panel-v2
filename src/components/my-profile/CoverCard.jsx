@@ -340,11 +340,12 @@ const CoverCard = ({
         persianMonth(new Date()) !== persianMonth(new Date(Math.min(...dateList))) ||
         persianYear(new Date()) !== persianYear(new Date(Math.min(...dateList))),
     );
-    console.log(persianDay(new Date()) !== persianDay(new Date(Math.min(...dateList))));
+    console.log(
+      Number(persianDay(new Date())) !== Number(persianDay(new Date(Math.min(...dateList)))),
+    );
 
     console.log(persianDay(new Date()));
     console.log(persianDay(new Date(Math.min(...dateList))));
-
   }
 
   return (
