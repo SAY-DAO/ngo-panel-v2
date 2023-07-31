@@ -327,6 +327,9 @@ const CoverCard = ({
   }, [window.onscroll]);
 
   window.addEventListener('scroll', scrollFunction);
+  console.log(dateList);
+  console.log("dateList");
+  console.log(arrivals);
   return (
     <Card
       sx={{
