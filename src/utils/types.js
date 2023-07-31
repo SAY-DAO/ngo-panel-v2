@@ -1,3 +1,12 @@
+export const VirtualFamilyRole = {
+  FATHER: 0,
+  MOTHER: 1,
+  AMOO: 2,
+  KHALEH: 3,
+  DAEI: 4,
+  AMME: 5,
+};
+
 export const Colors = {
   WHITE: 0,
   BLUE: 1,
@@ -36,8 +45,6 @@ export const EducationEnum = {
   twelveGrade: 12,
   thirteenGrade: 13,
 };
-
-
 
 // 0:homeless | 1:Resident| 2:Care centers
 export const HousingStatusEnum = {
@@ -127,7 +134,6 @@ export const ChildExistenceEnum = {
   ALIVE_GONE: 2,
   TEMP_GONE: 3,
 };
-
 
 export const NeedCategoryEnum = {
   GROWTH: 0,

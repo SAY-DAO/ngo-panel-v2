@@ -14,6 +14,8 @@ import { daysDifference } from '../../utils/helpers';
 import TodayCard from '../../components/TodayCard';
 
 export default function NgoArrivalSummery({ arrivals, dateList }) {
+  console.log(dateList);
+  console.log(arrivals);
   const list = [];
   if (arrivals) {
     arrivals.sort((a, b) => {

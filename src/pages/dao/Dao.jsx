@@ -5,6 +5,8 @@ import AnalyticNeedTimeLine from '../../components/dao/ChartOne/AnalyticNeedTime
 import AnalyticChildrenNeeds from '../../components/dao/ChartTwo/AnalyticChildrenNeeds';
 import AnalyticChildSummary from '../../components/dao/ChartTwo/AnalyticChildSummary';
 import NgoTreeview from '../../components/dao/ChartTwo/NgoTreeview';
+import AnalyticFamily from '../../components/dao/ChartOne/AnalyticFamily';
+import AnalyticFamily2 from '../../components/dao/ChartOne/AnalyticFamily2';
 
 const Dao = () => {
   return (
@@ -23,6 +25,12 @@ const Dao = () => {
         </Grid>
         <Grid item xs={12}>
           <NgoTreeview />
+        </Grid>
+        <Grid item xs={12}>
+          <AnalyticFamily />
+        </Grid>
+        <Grid item xs={12}>
+          <AnalyticFamily2 />
         </Grid>
       </PageContainer>
     </>

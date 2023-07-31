@@ -15,6 +15,9 @@ import {
   GET_ANALYTICS_ECOSYSTEM_REQUEST,
   GET_ANALYTICS_ECOSYSTEM_SUCCESS,
   GET_ANALYTICS_ECOSYSTEM_FAIL,
+  GET_FAMILY_ANALYTICS_REQUEST,
+  GET_FAMILY_ANALYTICS_SUCCESS,
+  GET_FAMILY_ANALYTICS_FAIL,
   GET_ANALYTICS_CONTRIBUTION_REQUEST,
   GET_ANALYTICS_CONTRIBUTION_SUCCESS,
   GET_ANALYTICS_CONTRIBUTION_FAIL,
@@ -126,6 +129,24 @@ export const fetchUserContribution = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: GET_ANALYTICS_CONTRIBUTION_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+    });
+  }
+};
+
+export const fetchFamilyAnalytic = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_FAMILY_ANALYTICS_REQUEST });
+    const { data } = await daoApi.get(`/analytic/family/roles/all`);
+
+    dispatch({
+      type: GET_FAMILY_ANALYTICS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_FAMILY_ANALYTICS_FAIL,
       payload:
         e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });

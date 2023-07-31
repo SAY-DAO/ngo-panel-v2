@@ -72,11 +72,13 @@ import {
   AnalyticChildNeedsReducer,
   analyticsContributionReducer,
   analyticsEcosystemReducer,
+  analyticsFamilyReducer,
   analyticsNgosReducer,
 } from './analyticReducer';
 
 export default combineReducers({
   CustomizerReducer,
+  familyAnalyitics:analyticsFamilyReducer,
   childNeedsAnalytics: AnalyticChildNeedsReducer,
   ngosAnalytics: analyticsNgosReducer,
   contributionAnalytics: analyticsContributionReducer,

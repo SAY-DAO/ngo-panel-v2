@@ -231,63 +231,65 @@ const AnalyticChildrenNeeds = () => {
           </Box>
         </Grid>
         <Grid container item xs={12}>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Complete Pay: {localResults && localResults.meanCompletePayPerChild}
             </Typography>
           </Grid>
 
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Not Paid: {localResults && localResults.meanConfirmedNotPaidPerChild}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>Confirmed: {localResults && localResults.meanConfirmedPerChild}</Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Delivered Child: {localResults && localResults.meanDeliveredChildPerChild}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Delivered Ngo: {localResults && localResults.meanDeliveredNgoPerChild}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Family Members: {localResults && localResults.meanFamilyMembers}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Money to NGO: {localResults && localResults.meanMoneyToNgoPerChild}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Needs Per Child {localResults && localResults.meanNeedsPerChild}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               Partial Pays: {localResults && localResults.meanPartialPayPerChild}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>Purchased: {localResults && localResults.meanPurchasedPerChild}</Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>
               UnConfirmed: {localResults && localResults.meanUnConfirmedPerChild}
             </Typography>
           </Grid>
-          <Grid xs={2}>
+          <Grid item xs={2}>
             <Typography>Total Families: {localResults && localResults.totalFamilies}</Typography>
           </Grid>
-          <Grid xs={2}>
-            <Typography>TotalFamily Member: {localResults && localResults.totalFamilyMembers}</Typography>
+          <Grid item xs={2}>
+            <Typography>
+              TotalFamily Member: {localResults && localResults.totalFamilyMembers}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

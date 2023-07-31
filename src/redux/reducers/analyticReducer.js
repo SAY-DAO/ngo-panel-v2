@@ -14,6 +14,9 @@ import {
   GET_ANALYTICS_ECOSYSTEM_REQUEST,
   GET_ANALYTICS_ECOSYSTEM_SUCCESS,
   GET_ANALYTICS_ECOSYSTEM_FAIL,
+  GET_FAMILY_ANALYTICS_REQUEST,
+  GET_FAMILY_ANALYTICS_SUCCESS,
+  GET_FAMILY_ANALYTICS_FAIL,
   GET_ANALYTICS_CONTRIBUTION_REQUEST,
   GET_ANALYTICS_CONTRIBUTION_SUCCESS,
   GET_ANALYTICS_CONTRIBUTION_FAIL,
@@ -77,6 +80,20 @@ export const analyticsContributionReducer = (state = {}, action) => {
     case GET_ANALYTICS_CONTRIBUTION_SUCCESS:
       return { loading: false, success: true, contribution: action.payload };
     case GET_ANALYTICS_CONTRIBUTION_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+
+export const analyticsFamilyReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_FAMILY_ANALYTICS_REQUEST:
+      return { loading: true, success: false };
+    case GET_FAMILY_ANALYTICS_SUCCESS:
+      return { loading: false, success: true, roles: action.payload };
+    case GET_FAMILY_ANALYTICS_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

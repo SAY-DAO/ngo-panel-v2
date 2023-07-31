@@ -8,6 +8,20 @@ import {
   NeedCategoryEnum,
 } from './types';
 import { PRODUCT_UNPAYABLE_PERIOD } from './configs';
+
+export function median(values) {
+  if (values.length === 0) throw new Error('No inputs');
+  values.sort((a, b) => {
+    return a - b;
+  });
+
+  const half = Math.floor(values.length / 2);
+
+  if (values.length % 2) return values[half];
+
+  return (values[half - 1] + values[half]) / 2.0;
+}
+
 // Age
 export function getAge(DOB) {
   const today = new Date();
