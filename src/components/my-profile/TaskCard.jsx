@@ -24,7 +24,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { useAccount, useWalletClient } from 'wagmi';
+import { useAccount, useConnect, useWalletClient } from 'wagmi';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTheme } from '@mui/material/styles';
@@ -89,6 +89,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const { isLoading, pendingConnector } = useConnect();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -109,6 +110,8 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { loading: loadingDuplicates } = childNeedsDuplicates;
 
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
+
+  const {  information } = useSelector((state) => state.walletInformation);
 
   const childOneNeed = useSelector((state) => state.childOneNeed);
   const { deleted } = childOneNeed;
@@ -265,7 +268,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     ? need.details && need.details
     : ipfsMetaData.properties.needDetails.socialWorkerNotes;
 
-  const theIpfs = ipfs && ipfs.need.flaskId === need.id && ipfs;
+  const theIpfs = ipfs && ipfs.need && ipfs.need.flaskId === need.id && ipfs;
   console.log(theIpfs || '');
   const category = getCategoryString(need.category, need.isUrgent);
   const cost = need._cost.toLocaleString();
@@ -873,7 +876,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     </WalletButton>
                   ) : (
                     isConnected && (
-                      <WalletButton loading={loadingSignature} onClick={handleSignature}>
+                      <WalletButton
+                        fullWidth
+                        signbutton="true"
+                        loading={
+                          loadingSignature || !information || isLoading || pendingConnector
+                        }
+                        onClick={handleSignature}
+                      >
                         {t('button.wallet.sign')}
                       </WalletButton>
                     )

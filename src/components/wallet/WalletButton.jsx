@@ -16,7 +16,7 @@ const WalletButton = styled((props) => (
       {props.children}
     </Typography>
   </LoadingButton>
-))(() => ({
+))((props) => ({
   color: 'black',
   textAlign: 'center',
   // backgroundColor: '#fee6e3',
@@ -27,7 +27,9 @@ const WalletButton = styled((props) => (
   // textShadow: '0px 1px 1px #000',
   filter: 'dropshadow(color=#000, offx=0px, offy=1px)',
   animation: '1.5s ease infinite alternate running shimmer',
-  background: 'linear-gradient(20deg, #FFE27D 90%, #64E3FF 55%, #9192FF 100%)',
+  background: `linear-gradient(20deg, #FFE27D ${
+    !props.signbutton === true ? 90 : 0
+  }%, #64E3FF 55%, #9192FF 100%)`,
   // WebkitBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #915100',
   // MozBoxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #915100',
   // boxShadow: 'inset 0 1px 0 #ffe5c4, 0 10px 0 #915100',

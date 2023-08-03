@@ -150,9 +150,11 @@ const MyPage = () => {
         (updatedTicket && updatedTicket.needStatus === PaymentStatusEnum.NOT_PAID) ||
         (addedTicket && addedTicket.need.status === PaymentStatusEnum.NOT_PAID)
       ) {
-        organizedNeeds[0] = modifiedNeeds[0].map((need) => {
-          return getModifiedNeeds(updatedTicket, addedTicket, need);
-        });
+        organizedNeeds[0] =
+          modifiedNeeds &&
+          modifiedNeeds[0].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
         // 1 index /  Payment Received
       } else if (
         (updatedTicket &&
@@ -162,9 +164,11 @@ const MyPage = () => {
           (addedTicket.need.status === PaymentStatusEnum.PARTIAL_PAY ||
             addedTicket.need.status === PaymentStatusEnum.COMPLETE_PAY))
       ) {
-        organizedNeeds[1] = modifiedNeeds[1].map((need) => {
-          return getModifiedNeeds(updatedTicket, addedTicket, need);
-        });
+        organizedNeeds[1] =
+          modifiedNeeds &&
+          modifiedNeeds[1].map((need) => {
+            return getModifiedNeeds(updatedTicket, addedTicket, need);
+          });
       }
       // -------------------------SERVICE-----------------------------
       if (
@@ -176,18 +180,22 @@ const MyPage = () => {
           (updatedTicket && updatedTicket.needStatus === ServiceStatusEnum.MONEY_TO_NGO) ||
           (addedTicket && addedTicket.need.status === ServiceStatusEnum.MONEY_TO_NGO)
         ) {
-          organizedNeeds[2] = modifiedNeeds[2].map((need) => {
-            return getModifiedNeeds(updatedTicket, addedTicket, need);
-          });
+          organizedNeeds[2] =
+            modifiedNeeds &&
+            modifiedNeeds[2].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
         }
         // 3 index /  Delivered to child
         if (
           (updatedTicket && updatedTicket.needStatus === ServiceStatusEnum.DELIVERED) ||
           (addedTicket && addedTicket.need.status === ServiceStatusEnum.DELIVERED)
         ) {
-          organizedNeeds[3] = modifiedNeeds[3].map((need) => {
-            return getModifiedNeeds(updatedTicket, addedTicket, need);
-          });
+          organizedNeeds[3] =
+            modifiedNeeds &&
+            modifiedNeeds[3].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
         }
         // -------------------------PRODUCT----------------------------
       } else if (
@@ -199,18 +207,22 @@ const MyPage = () => {
           (updatedTicket && updatedTicket.needStatus === ProductStatusEnum.PURCHASED_PRODUCT) ||
           (addedTicket && addedTicket.need.status === ProductStatusEnum.PURCHASED_PRODUCT)
         ) {
-          organizedNeeds[2] = modifiedNeeds[2].map((need) => {
-            return getModifiedNeeds(updatedTicket, addedTicket, need);
-          });
+          organizedNeeds[2] =
+            modifiedNeeds &&
+            modifiedNeeds[2].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
         }
         // 2 index / Delivered to Ngo
         if (
           (updatedTicket && updatedTicket.needStatus === ProductStatusEnum.DELIVERED_TO_NGO) ||
           (addedTicket && addedTicket.need.status === ProductStatusEnum.DELIVERED_TO_NGO)
         ) {
-          organizedNeeds[2] = modifiedNeeds[2].map((need) => {
-            return getModifiedNeeds(updatedTicket, addedTicket, need);
-          });
+          organizedNeeds[2] =
+            modifiedNeeds &&
+            modifiedNeeds[2].map((need) => {
+              return getModifiedNeeds(updatedTicket, addedTicket, need);
+            });
         }
         // 3 index / Delivered to child
         if (

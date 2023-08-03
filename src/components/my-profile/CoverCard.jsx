@@ -87,6 +87,7 @@ const CoverCard = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const [signatureError, setSetsignatureError] = useState('');
   const [cover, setCover] = useState(null);
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
@@ -144,6 +145,7 @@ const CoverCard = ({
     }
   }, [verifiedNonce]);
 
+  // siwe
   useEffect(() => {
     if (!errorSignIn && isConnected && nonceData && nonceData.nonce) {
       setOpenWallets(false);
@@ -165,29 +167,36 @@ const CoverCard = ({
         chainId,
         nonce: nonceData.nonce,
       });
-
       const myAsync = async () => {
-        const preparedMessage = message.prepareMessage();
+        try {
+          const preparedMessage = message.prepareMessage();
+          const result = await signMessageAsync({
+            message: preparedMessage,
+          });
 
-        const result = await signMessageAsync({
-          message: preparedMessage,
-          onSuccess(data) {
-            console.log('Success', data);
-          },
-        });
+          localStorage.setItem(
+            'say-siwe',
+            JSON.stringify({
+              'siwe-signature': result,
+              nonce: nonceData.nonce,
+            }),
+          );
 
-        localStorage.setItem(
-          'say-siwe',
-          JSON.stringify({
-            'siwe-signature': result,
-            nonce: nonceData.nonce,
-          }),
-        );
-
-        setValues({
-          signature: result,
-          message,
-        });
+          setValues({
+            signature: result,
+            message,
+          });
+        } catch (e) {
+          console.log({
+            message: e.details,
+            code: e.code,
+          });
+          setSetsignatureError({
+            message: e.details,
+            code: e.code,
+          });
+          fetchNonce();
+        }
       };
       myAsync();
     }
@@ -878,9 +887,15 @@ const CoverCard = ({
       </div>
 
       <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
-      {(errorVerify || errorWalletInformation || errorSignature || errorSignIn) && (
+      {(signatureError ||
+        errorVerify ||
+        errorWalletInformation ||
+        errorSignature ||
+        errorSignIn) && (
         <MessageWallet
-          walletError={errorVerify || errorWalletInformation || errorSignature || errorSignIn}
+          walletError={
+            signatureError || errorVerify || errorWalletInformation || errorSignature || errorSignIn
+          }
           walletToastOpen={walletToastOpen}
           handleCloseWalletToast={handleCloseWalletToast}
           severity={errorSignIn || errorSignature ? 'warning' : 'error'}

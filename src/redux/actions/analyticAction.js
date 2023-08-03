@@ -138,7 +138,7 @@ export const fetchUserContribution = () => async (dispatch, getState) => {
 export const fetchFamilyAnalytic = () => async (dispatch) => {
   try {
     dispatch({ type: GET_FAMILY_ANALYTICS_REQUEST });
-    const { data } = await daoApi.get(`/analytic/family/roles/all`);
+    const { data } = await daoApi.get(`/analytic/family/roles/scattered`);
 
     dispatch({
       type: GET_FAMILY_ANALYTICS_SUCCESS,

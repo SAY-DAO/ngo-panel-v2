@@ -2,45 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import { Typography } from '@mui/material';
 import { fetchFamilyAnalytic } from '../../../redux/actions/analyticAction';
-import { VirtualFamilyRole } from '../../../utils/types';
-
-function sortByDate(items) {
-  return items.sort((first, second) => {
-    if (moment(first.child_delivery_date).isSame(second.child_delivery_date)) {
-      return -1; // If they have the same date, return the first item
-    }
-    if (moment(first.child_delivery_date).isBefore(second.child_delivery_date)) {
-      return -1; // If the first date is earlier, return the first item
-    }
-    return 1; // The second date is earlier, so it goes first;
-  });
-}
-function generateDayWiseTimeSeries(data, vRole) {
-  const series = [];
-  let y = 0;
-  if (data) {
-    const sorted = sortByDate(data);
-    sorted.forEach((n) => {
-      y++;
-      // we might have two payments for a need, we get the father one
-      const usersInThisRole = n.participants.filter((u) => u.flaskFamilyRole === vRole);
-      usersInThisRole.forEach((partic) => {
-        // get the payment of the participant
-        const payment = n.payments.find((p) => p.id_user === partic.id_user);
-
-        if (payment) {
-          const x = n.child_delivery_date;
-          series.push({ date: new Date(x).getTime(), counter: y });
-        }
-      });
-    });
-  }
-  const final = series.map((d) => [d.date, d.counter]);
-  return final;
-}
 
 export default function AnalyticFamily() {
   const dispatch = useDispatch();
@@ -50,36 +13,42 @@ export default function AnalyticFamily() {
   const { roles } = familyAnalyitics;
 
   useEffect(() => {
-    if (roles) {
+    if (roles && roles.scattered) {
+      console.log(roles.scattered.father);
+      console.log(roles.scattered.mother);
+      console.log(roles.scattered.amoo);
+      console.log(roles.scattered.khaleh);
+      console.log(roles.scattered.daie);
+      console.log(roles.scattered.amme);
       setOptions({
         series: [
           {
             name: 'Father',
-            data: generateDayWiseTimeSeries(roles.fatherData, VirtualFamilyRole.FATHER),
+            data: roles.scattered.father,
           },
           {
             name: 'Mother',
-            data: generateDayWiseTimeSeries(roles.motherData, VirtualFamilyRole.MOTHER),
+            data: roles.scattered.mother,
           },
           {
             name: 'Amoo',
-            data: generateDayWiseTimeSeries(roles.amooData, VirtualFamilyRole.AMOO),
+            data: roles.scattered.amoo,
           },
           {
             name: 'Khaleh',
-            data: generateDayWiseTimeSeries(roles.khalehData, VirtualFamilyRole.KHALEH),
+            data: roles.scattered.khaleh,
           },
           {
             name: 'Daie',
-            data: generateDayWiseTimeSeries(roles.daieData, VirtualFamilyRole.DAEI),
+            data: roles.scattered.daie,
           },
           {
             name: 'Amme',
-            data: generateDayWiseTimeSeries(roles.ammeData, VirtualFamilyRole.AMME),
+            data: roles.scattered.amme,
           },
         ],
         chart: {
-        //   height: 750,
+          // height: 750,
           type: 'scatter',
           zoom: {
             type: 'xy',
@@ -91,18 +60,18 @@ export default function AnalyticFamily() {
         grid: {
           xaxis: {
             lines: {
-              show: true,
+              // show: true,
             },
           },
           yaxis: {
             lines: {
-              show: true,
+              // show: true,
             },
           },
         },
         xaxis: {
-          type: 'datetime',
-          //   max: 7000,
+          // max: 5,
+          // type: 'datetime',
         },
         yaxis: {},
       });
@@ -110,13 +79,15 @@ export default function AnalyticFamily() {
   }, [roles]);
 
   useEffect(() => {
-    dispatch(fetchFamilyAnalytic());
+    if (!roles) {
+      dispatch(fetchFamilyAnalytic());
+    }
   }, []);
 
   return (
     <div id="chart">
       <Typography sx={{ mt: 5, textAlign: 'center' }}>
-        Counting Delivered per Role every day
+        Sum of Delivered per Role (e.g: 2 Amo had delivered 29 needs each)
       </Typography>
       {options && (
         <ReactApexChart options={options} series={options.series} type="scatter" height={350} />
