@@ -17,15 +17,22 @@ import {
   UPDATE_PROVIDER_SUCCESS,
 } from '../constants/providerConstants';
 
-export const fetchProviderById = (id) => async (dispatch) => {
+export const fetchProviderById = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: PROVIDER_BY_ID_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const { data } = await daoApi.get(`/providers/${id}`, config);
 
     dispatch({
@@ -40,15 +47,22 @@ export const fetchProviderById = (id) => async (dispatch) => {
   }
 };
 
-export const fetchProviderList = () => async (dispatch) => {
+export const fetchProviderList = () => async (dispatch, getState) => {
   try {
     dispatch({ type: PROVIDER_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const { data } = await daoApi.get(`/providers/all`, config);
 
     dispatch({
@@ -63,15 +77,22 @@ export const fetchProviderList = () => async (dispatch) => {
   }
 };
 
-export const updateProvider = (values) => async (dispatch) => {
+export const updateProvider = (values) => async (dispatch, getState) => {
   try {
     dispatch({ type: UPDATE_PROVIDER_REQUEST });
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
     const config = {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const formData = new FormData();
 
     if (values.name) {
@@ -113,16 +134,23 @@ export const updateProvider = (values) => async (dispatch) => {
   }
 };
 
-export const addProvider = (values) => async (dispatch) => {
+export const addProvider = (values) => async (dispatch,getState) => {
   try {
     dispatch({ type: ADD_PROVIDER_REQUEST });
     console.log(values);
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
     const config = {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const formData = new FormData();
     if (values.name) {
       formData.append('name', values.name);
@@ -165,31 +193,21 @@ export const addProvider = (values) => async (dispatch) => {
 };
 
 // export const deleteProvider = (providerId) => async (dispatch, getState) => {
-export const deleteProvider = (providerId) => async (dispatch) => {
+export const deleteProvider = (providerId) => async (dispatch,getState) => {
   try {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
-    // const {
-    //   userLogin: { userInfo },
-    // } = getState();
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
-    // const config = {
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'authorizationToken',
-    //     data: {},
-    //   },
-    // };
-
-    // const configs = {headers: {
-    //     "Origin": 'https://panel.saydao.org',
-    //     'Access-Control-Allow-Headers': '*',
-    //     'Access-Control-Allow-Origin': 'https://s.nest.saydao.org',
-    //     'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
-    //     Authorization: userInfo && userInfo.access_token,
-    //     'Content-Type': 'application/json',
-    //   },
-    // }
-    const { data } = await daoApi.delete(`/providers/${providerId}`);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+    const { data } = await daoApi.delete(`/providers/${providerId}`,config);
 
     // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
     // const { data } = await daoApi.delete(`/providers/${providerId}`, { config });

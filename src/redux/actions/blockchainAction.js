@@ -32,6 +32,7 @@ export const fetchNonce = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
       withCredentials: true,
       crossDomain: true,
@@ -63,6 +64,7 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
       withCredentials: true,
     };
@@ -97,15 +99,23 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
   }
 };
 
-export const fetchWalletInformation = () => async (dispatch) => {
+export const fetchWalletInformation = () => async (dispatch, getState) => {
   try {
     dispatch({ type: WALLET_INFORMATION_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
       withCredentials: true,
     };
+
     const { data } = await daoApi.get(`/wallet/personal_information`, config);
 
     dispatch({
@@ -137,8 +147,10 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const { data } = await publicApi.get(`/public/children`, config);
 
     dispatch({
@@ -165,8 +177,10 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const { data } = await daoApi.get(`/wallet/signatures/${userInfo.id}`, config);
 
     dispatch({
@@ -182,17 +196,23 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
   }
 };
 
-export const signTransaction = (values, signer) => async (dispatch) => {
+export const signTransaction = (values, signer) => async (dispatch, getState) => {
   try {
     dispatch({ type: SIGNATURE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
       withCredentials: true,
     };
-
+    
     const request = {
       flaskNeedId: values.flaskNeedId,
       signerAddress: values.address,

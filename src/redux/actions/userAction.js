@@ -221,10 +221,12 @@ export const fetchMyPage = (userId, typeId, take, limit) => async (dispatch, get
       userLogin: { userInfo },
     } = getState();
 
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
         'X-TAKE': take,
         'X-LIMIT': limit,
       },

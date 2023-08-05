@@ -23,10 +23,22 @@ import {
   GET_ANALYTICS_CONTRIBUTION_FAIL,
 } from '../constants/analyticConstants';
 
-export const fetchNeedAnalytics = (needType) => async (dispatch) => {
+export const fetchNeedAnalytics = (needType) => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ANALYTICS_NEED_REQUEST });
-    const { data } = await daoApi.get(`/analytic/needs/${needType}`);
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/analytic/needs/${needType}`, config);
 
     dispatch({
       type: GET_ANALYTICS_NEED_SUCCESS,
@@ -41,10 +53,22 @@ export const fetchNeedAnalytics = (needType) => async (dispatch) => {
   }
 };
 
-export const fetchChildrenAnalytics = () => async (dispatch) => {
+export const fetchChildrenAnalytics = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ANALYTICS_CHILDREN_REQUEST });
-    const { data } = await daoApi.get(`/analytic/children`);
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/analytic/children`, config);
 
     dispatch({
       type: GET_ANALYTICS_CHILDREN_SUCCESS,
@@ -59,10 +83,22 @@ export const fetchChildrenAnalytics = () => async (dispatch) => {
   }
 };
 
-export const fetchChildAnalytics = (childId) => async (dispatch) => {
+export const fetchChildAnalytics = (childId) => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ANALYTICS_CHILD_REQUEST });
-    const { data } = await daoApi.get(`/analytic/child/needs/${childId}`);
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/analytic/child/needs/${childId}`, config);
 
     dispatch({
       type: GET_ANALYTICS_CHILD_SUCCESS,
@@ -77,10 +113,22 @@ export const fetchChildAnalytics = (childId) => async (dispatch) => {
   }
 };
 
-export const fetchNgosAnalytics = () => async (dispatch) => {
+export const fetchNgosAnalytics = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ANALYTICS_NGOS_REQUEST });
-    const { data } = await daoApi.get(`/analytic/ngos`);
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/analytic/ngos`, config);
 
     dispatch({
       type: GET_ANALYTICS_NGOS_SUCCESS,
@@ -95,10 +143,22 @@ export const fetchNgosAnalytics = () => async (dispatch) => {
   }
 };
 
-export const fetchEcosystemAnalytics = () => async (dispatch) => {
+export const fetchEcosystemAnalytics = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ANALYTICS_ECOSYSTEM_REQUEST });
-    const { data } = await daoApi.get(`/analytic/ecosystem`);
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/analytic/ecosystem`, config);
 
     dispatch({
       type: GET_ANALYTICS_ECOSYSTEM_SUCCESS,
@@ -116,11 +176,24 @@ export const fetchEcosystemAnalytics = () => async (dispatch) => {
 export const fetchUserContribution = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ANALYTICS_CONTRIBUTION_REQUEST });
+
     const {
       swDetails: { swInfo },
+      userLogin: { userInfo },
     } = getState();
 
-    const { data } = await daoApi.get(`/analytic/contributions/${swInfo.id}/${swInfo.typeId}`);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(
+      `/analytic/contributions/${swInfo.id}/${swInfo.typeId}`,
+      config,
+    );
 
     dispatch({
       type: GET_ANALYTICS_CONTRIBUTION_SUCCESS,
@@ -135,10 +208,23 @@ export const fetchUserContribution = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchFamilyAnalytic = () => async (dispatch) => {
+export const fetchFamilyAnalytic = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_FAMILY_ANALYTICS_REQUEST });
-    const { data } = await daoApi.get(`/analytic/family/roles/scattered`);
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/analytic/family/roles/scattered`, config);
 
     dispatch({
       type: GET_FAMILY_ANALYTICS_SUCCESS,

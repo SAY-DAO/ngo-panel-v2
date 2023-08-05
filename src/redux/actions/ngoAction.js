@@ -261,8 +261,10 @@ export const fetchNgoArrivals = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
 
     const { data } = await daoApi.get(`/ngo/arrivals/${userInfo.id}`, config);
     dispatch({
@@ -284,14 +286,15 @@ export const updateNgoArrivals =
       const {
         userLogin: { userInfo },
       } = getState();
-
+  
       const config = {
         headers: {
           'Content-Type': 'application/json',
           Authorization: userInfo && userInfo.access_token,
+          flaskSwId: userInfo && userInfo.id,
         },
       };
-
+  
       const { data } = await daoApi.patch(
         `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,
         config,

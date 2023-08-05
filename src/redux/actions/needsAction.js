@@ -120,6 +120,7 @@ export const fetchReportNeeds = (isDone, ngoId, type, status) => async (dispatch
 export const fetchExampleNeeds = () => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_EXAMPLE_NEEDS_REQUEST });
+
     const {
       userLogin: { userInfo },
     } = getState();
@@ -128,8 +129,10 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const { data } = await daoApi.get(`/needs/preneeds`, config);
 
     dispatch({
@@ -468,13 +471,16 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
 
     const { data } = await publicApi.post(`/need/`, formData, config);
 
+
     // create relation between nest provider and flask need
     const config2 = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const request = { flaskNeedId: data.id, nestProviderId: providerId };
     await daoApi.post(`/providers/join`, request, config2);
     dispatch({
@@ -501,8 +507,10 @@ export const fetchUnconfirmedCount = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const { data } = await daoApi.get(`/needs/unconfirmed/${userInfo.id}`, config);
 
     dispatch({
@@ -530,8 +538,10 @@ export const fetchDuplicateChildNeeds = (childId, needId) => async (dispatch, ge
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
       },
     };
+
     const { data } = await daoApi.get(`/needs/duplicates/${childId}/${needId}`, config);
 
     dispatch({
