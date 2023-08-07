@@ -42,6 +42,7 @@ export default function ProviderForm() {
   const location = useLocation();
   const { t } = useTranslation();
 
+  const [typeWatcher, setTypeWatcher] = useState();
   const [finalImageProviderFile, setFinalImageProviderFile] = useState();
   const [openProviderImageDialog, setOpenImageProviderDialog] = useState(false);
   const [uploadProviderImage, setUploadProviderImage] = useState(
@@ -63,12 +64,14 @@ export default function ProviderForm() {
     country: Yup.string().required('Please enter Provider country'),
     state: Yup.string().required('Please enter Provider state'),
     city: Yup.string().required('Please enter Provider city'),
-    // website: Yup.string()
-    //   .matches(
-    //     /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-    //     'Enter correct url!',
-    //   )
-    //   .required('Please enter website'),
+    website:
+      Number(typeWatcher) === NeedTypeEnum.PRODUCT &&
+      Yup.string()
+        .matches(
+          /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+          'Enter correct url!',
+        )
+        .required('Please enter website'),
   });
 
   const {
@@ -80,6 +83,11 @@ export default function ProviderForm() {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  // for validation
+  useEffect(() => {
+    setTypeWatcher(watch('type'));
+  }, [watch('type')]);
 
   // state
   useEffect(() => {
@@ -266,25 +274,23 @@ export default function ProviderForm() {
                       <MenuItem value={1}>{t('need.types.product')}</MenuItem>
                     </CustomSelect>
                   </Grid>
-                  {watch('type') === NeedTypeEnum.PRODUCT && (
-                    <Grid item xs={12}>
-                      <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
-                      <TextField
-                        id="website"
-                        variant="outlined"
-                        fullWidth
-                        size="small"
-                        sx={{ mb: 1 }}
-                        control={control}
-                        {...register('website')}
-                        error={!!errors.website}
-                        placeholder="https://example.com"
-                      />
-                      <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                        {errors && errors.website && errors.website.message}
-                      </FormHelperText>
-                    </Grid>
-                  )}
+                  <Grid item xs={12}>
+                    <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
+                    <TextField
+                      id="website"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      sx={{ mb: 1 }}
+                      control={control}
+                      {...register('website')}
+                      error={!!errors.website}
+                      placeholder="https://example.com"
+                    />
+                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                      {errors && errors.website && errors.website.message}
+                    </FormHelperText>
+                  </Grid>
 
                   <Grid item xs={4}>
                     <CustomFormLabel htmlFor="country">{t('provider.country')}</CustomFormLabel>
