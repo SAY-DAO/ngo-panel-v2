@@ -35,6 +35,7 @@ import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/act
 import { addProvider } from '../../redux/actions/providerAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import { ADD_PROVIDER_REST } from '../../redux/constants/providerConstants';
+import { NeedTypeEnum } from '../../utils/types';
 
 export default function ProviderForm() {
   const dispatch = useDispatch();
@@ -43,7 +44,9 @@ export default function ProviderForm() {
 
   const [finalImageProviderFile, setFinalImageProviderFile] = useState();
   const [openProviderImageDialog, setOpenImageProviderDialog] = useState(false);
-  const [uploadProviderImage, setUploadProviderImage] = useState(location.state && location.state.newImage);
+  const [uploadProviderImage, setUploadProviderImage] = useState(
+    location.state && location.state.newImage,
+  );
 
   const providerAdd = useSelector((state) => state.providerAdd);
   const {
@@ -254,7 +257,7 @@ export default function ProviderForm() {
                       labelId="type-controlled-open-select-label"
                       id="type-controlled-open-select"
                       size="small"
-                      defaultValue={1}
+                      defaultValue={0}
                       control={control}
                       sx={{ width: '100%' }}
                       register={{ ...register('type') }}
@@ -263,23 +266,26 @@ export default function ProviderForm() {
                       <MenuItem value={1}>{t('need.types.product')}</MenuItem>
                     </CustomSelect>
                   </Grid>
-                  <Grid item xs={12}>
-                    <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
-                    <TextField
-                      id="website"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('website')}
-                      error={!!errors.website}
-                      placeholder="https://example.com"
-                    />
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.website && errors.website.message}
-                    </FormHelperText>
-                  </Grid>
+                  {watch('type') === NeedTypeEnum.PRODUCT && (
+                    <Grid item xs={12}>
+                      <CustomFormLabel htmlFor="Website">{t('provider.website')}</CustomFormLabel>
+                      <TextField
+                        id="website"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        sx={{ mb: 1 }}
+                        control={control}
+                        {...register('website')}
+                        error={!!errors.website}
+                        placeholder="https://example.com"
+                      />
+                      <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                        {errors && errors.website && errors.website.message}
+                      </FormHelperText>
+                    </Grid>
+                  )}
+
                   <Grid item xs={4}>
                     <CustomFormLabel htmlFor="country">{t('provider.country')}</CustomFormLabel>
                     <CustomSelect
