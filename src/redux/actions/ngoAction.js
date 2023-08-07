@@ -294,9 +294,9 @@ export const updateNgoArrivals =
           flaskSwId: userInfo && userInfo.id,
         },
       };
-  
+  console.log(config);
       const { data } = await daoApi.patch(
-        `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,
+        `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,{},
         config,
       );
       dispatch({

@@ -356,7 +356,9 @@ const NeedAdd = () => {
               onChange={(e, value) => setChildId(value && value.id)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) =>
-                `${option.id} - ${option.sayName} - ${option.firstName} ${option.lastName}`
+                `${option.id} - ${option.sayname_translations.fa} - ${option.firstName_translations.fa
+                } ${option.lastName_translations.fa
+                }`
               }
               loading={loadingSw || !children}
               renderOption={(props, option) => (
@@ -365,7 +367,7 @@ const NeedAdd = () => {
                     <>
                       <FeatherIcon color="green" icon="check" width="18" />
                       <Typography variant="body1" sx={{ fontSize: 13 }}>
-                        {`${option.id} - ${option.firstName} ${option.lastName}- (${option.sayName}) `}
+                        {`${option.id} - ${option.firstName_translations.fa} ${option.lastName_translations.fa}- (${option.sayname_translations.fa}) `}
                       </Typography>
                     </>
                   ) : (

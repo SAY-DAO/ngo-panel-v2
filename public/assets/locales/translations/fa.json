@@ -392,7 +392,7 @@
     "city": "شهر",
     "deliveryItems": "تعداد کالا",
     "deliveryCode": "کد پیگیری کالا",
-    "arrivalCode": "کد تخویل کالا",
+    "arrivalCode": "کد تحویل کالا",
     "orderCode": "کد پیگیری کالا",
     "arrivalDate": "تاریخ تحویل",
     "currentChildrenCount": "تعداد کودکان فعال",

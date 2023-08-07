@@ -1,4 +1,4 @@
-import { publicApi } from '../../apis/sayBase';
+import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   ADD_CHILD_FAIL,
   ADD_CHILD_REQUEST,
@@ -62,9 +62,11 @@ export const fetchActiveChildList = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id, // nest server needs this for auth
       },
     };
-    const { data } = await publicApi.get(`/child/actives`, config);
+    // const { data } = await publicApi.get(`/child/actives`, config);
+    const { data } = await daoApi.get(`/children/all/actives`, config);
 
     dispatch({
       type: CHILD_ACTIVE_LIST_SUCCESS,
