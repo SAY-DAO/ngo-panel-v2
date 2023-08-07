@@ -92,7 +92,7 @@ export default function ProviderForm() {
   // state
   useEffect(() => {
     if (countries && watch('country')) {
-      dispatch(fetchStateList(watch('country')));
+      dispatch(fetchStateList(watch('country') || 103));
     }
   }, [watch('country'), countries]);
 
@@ -251,7 +251,7 @@ export default function ProviderForm() {
                       size="small"
                       control={control}
                       {...register('name')}
-                      placeholder={t('provider.name')}
+                      placeholder={t('provider.providerExample')}
                       error={!!errors.name}
                     />
                     <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
@@ -297,7 +297,9 @@ export default function ProviderForm() {
                     <CustomSelect
                       labelId="country-controlled-open-select-label"
                       id="country-controlled-open-select"
-                      value={watch('country') || (countries && countries[0].id)}
+                      value={
+                        watch('country') || (countries && countries.find((c) => c.id === 103).id)
+                      }
                       control={control}
                       register={{ ...register('country') }}
                       sx={{ width: '100%' }}
@@ -315,13 +317,12 @@ export default function ProviderForm() {
                     </FormHelperText>
                   </Grid>
                   <Grid item xs={4}>
-                    {states && (
+                    {countries && states && (
                       <>
                         <CustomFormLabel htmlFor="state">{t('provider.state')}</CustomFormLabel>
                         <CustomSelect
                           labelId="state-controlled-open-select-label"
                           id="state-controlled-open-select"
-                          defaultValue=""
                           value={watch('state') || states[0].id}
                           control={control}
                           register={{ ...register('state') }}

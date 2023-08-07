@@ -553,6 +553,7 @@
     "description": "توضیحات",
     "emailAddress": "ایمیل",
     "name": "اسم تامین کننده",
+    "providerExample": "نام موسسه، آموزشگاه، باشگاه، ...",
     "website": "وبسایت",
     "type": "نوع",
     "updated": "به روز شده",
