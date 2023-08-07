@@ -41,9 +41,9 @@ export default function ProviderForm() {
   const location = useLocation();
   const { t } = useTranslation();
 
-  const [finalImageFile, setFinalImageFile] = useState();
-  const [openImageDialog, setOpenImageDialog] = useState(false);
-  const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
+  const [finalImageProviderFile, setFinalImageProviderFile] = useState();
+  const [openProviderImageDialog, setOpenImageProviderDialog] = useState(false);
+  const [uploadProviderImage, setUploadProviderImage] = useState(location.state && location.state.newImage);
 
   const providerAdd = useSelector((state) => state.providerAdd);
   const {
@@ -104,7 +104,7 @@ export default function ProviderForm() {
   }, [successCountryList]);
 
   const onSubmit = async (data) => {
-    console.log(finalImageFile);
+    console.log(finalImageProviderFile);
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
 
@@ -117,29 +117,29 @@ export default function ProviderForm() {
         state: data.state,
         city: data.city,
         description: data.description,
-        logoFile: finalImageFile,
+        logoFile: finalImageProviderFile,
       }),
     );
   };
 
   const handleImageClose = () => {
-    setOpenImageDialog(false);
+    setOpenImageProviderDialog(false);
   };
 
   // dialog image
   const handleImageClickOpen = () => {
-    setOpenImageDialog(true);
+    setOpenImageProviderDialog(true);
   };
 
   const onImageChange = (e) => {
     if (e.target.files[0]) {
-      setUploadImage(e.target.files[0]);
+      setUploadProviderImage(e.target.files[0]);
       handleImageClickOpen();
     }
   };
 
   const handleRemoveImage = () => {
-    setFinalImageFile();
+    setFinalImageProviderFile();
   };
 
   return (
@@ -185,23 +185,23 @@ export default function ProviderForm() {
                       alt="provider logo"
                       sx={{ width: 110, height: 110 }}
                       src={
-                        finalImageFile
-                          ? URL.createObjectURL(finalImageFile) // image preview
+                        finalImageProviderFile
+                          ? URL.createObjectURL(finalImageProviderFile) // image preview
                           : null
                       }
                     />
-                    <label htmlFor="upload-image">
+                    <label htmlFor="upload-image-provider">
                       <input
                         accept="image/*"
-                        id="upload-image"
+                        id="upload-image-provider"
                         type="file"
                         style={{ display: 'none' }}
                         onChange={onImageChange}
                       />
 
                       <IconButton
-                        name="upload-image"
-                        id="upload-image"
+                        name="upload-image-provider"
+                        id="upload-image-provider"
                         color="primary"
                         component="div"
                         sx={{
@@ -402,7 +402,7 @@ export default function ProviderForm() {
       )}
       {/* Provider Image */}
       <Dialog
-        open={openImageDialog}
+        open={openProviderImageDialog}
         onClose={handleImageClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -410,9 +410,9 @@ export default function ProviderForm() {
         <DialogContent>
           <Box>
             <UploadImage
-              uploadImage={uploadImage}
+              uploadImage={uploadProviderImage}
               handleImageClose={handleImageClose}
-              setFinalImageFile={setFinalImageFile}
+              setFinalImageFile={setFinalImageProviderFile}
             />
           </Box>
         </DialogContent>

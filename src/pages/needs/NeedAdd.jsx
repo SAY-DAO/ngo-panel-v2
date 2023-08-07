@@ -133,11 +133,18 @@ const NeedAdd = () => {
 
   const isLoadingPreNeed = loadingNeedEx && openPreNeed && optionsPreNeed.length === 0;
 
+  const providerAdd = useSelector((state) => state.providerAdd);
+  const { success: successAddProvider } = providerAdd;
+
   useEffect(() => {
     dispatch(fetchProviderList());
     dispatch(fetchUnconfirmedCount());
     dispatch({ type: ADD_ONE_NEED_RESET });
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchProviderList());
+  }, [successAddProvider]);
 
   // one need
   useEffect(() => {
@@ -356,9 +363,7 @@ const NeedAdd = () => {
               onChange={(e, value) => setChildId(value && value.id)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) =>
-                `${option.id} - ${option.sayname_translations.fa} - ${option.firstName_translations.fa
-                } ${option.lastName_translations.fa
-                }`
+                `${option.id} - ${option.sayname_translations.fa} - ${option.firstName_translations.fa} ${option.lastName_translations.fa}`
               }
               loading={loadingSw || !children}
               renderOption={(props, option) => (
@@ -735,10 +740,10 @@ const NeedAdd = () => {
                           direction="row"
                           justifyContent="center"
                           alignItems="flex-end"
-                          spacing={2}
+                          spacing={4}
                           mb={2}
                         >
-                          <Grid item lg={6} xs={12}>
+                          <Grid item lg={8} xs={12}>
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Tooltip title={t('need.addProvider')}>
                                 <IconButton onClick={() => setOpenProvider(true)}>
@@ -815,7 +820,7 @@ const NeedAdd = () => {
                               </FormControl>
                             </Stack>
                           </Grid>
-                          <Grid item lg={6} xs={12}>
+                          <Grid item lg={4} xs={12}>
                             <CustomFormLabel variant="body2" htmlFor="type">
                               {t('need.type_name')}
                             </CustomFormLabel>
@@ -874,7 +879,7 @@ const NeedAdd = () => {
                           </>
                         )}
                       </Card>
-                      <Card sx={{ p: 4 }} elevation={5}>
+                      <Card sx={{ p: 2 }} elevation={5}>
                         <CustomFormLabel htmlFor="doing_duration">
                           {t('need.doing_duration')}
                         </CustomFormLabel>
