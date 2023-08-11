@@ -1,11 +1,10 @@
-/* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 import { fetchFamilyAnalytic } from '../../../redux/actions/analyticAction';
 
-export default function AnalyticFamily() {
+export default function AnalyticFamilyDelivered() {
   const dispatch = useDispatch();
   const [options, setOptions] = useState();
 
@@ -14,12 +13,6 @@ export default function AnalyticFamily() {
 
   useEffect(() => {
     if (roles && roles.scattered) {
-      console.log(roles.scattered.father);
-      console.log(roles.scattered.mother);
-      console.log(roles.scattered.amoo);
-      console.log(roles.scattered.khaleh);
-      console.log(roles.scattered.daie);
-      console.log(roles.scattered.amme);
       setOptions({
         series: [
           {

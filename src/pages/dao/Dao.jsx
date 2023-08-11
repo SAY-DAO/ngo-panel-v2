@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Grid } from '@mui/material';
 import PageContainer from '../../components/container/PageContainer';
@@ -5,7 +6,10 @@ import AnalyticNeedTimeLine from '../../components/dao/ChartOne/AnalyticNeedTime
 import AnalyticChildrenNeeds from '../../components/dao/ChartTwo/AnalyticChildrenNeeds';
 import AnalyticChildSummary from '../../components/dao/ChartTwo/AnalyticChildSummary';
 import NgoTreeview from '../../components/dao/ChartTwo/NgoTreeview';
-import AnalyticFamily from '../../components/dao/ChartOne/AnalyticFamily';
+import AnalyticFamilyDelivered from '../../components/dao/ChartOne/AnalyticFamilyDelivered';
+import AnalyticChildFamily from '../../components/dao/ChartTwo/AnalyticChildFamily';
+import AnalyticChildFamilyInOneMonth from '../../components/dao/ChartTwo/AnalyticChildFamilyInOneMonth';
+import AnalyticChildFamilyInThreeMonths from '../../components/dao/ChartTwo/AnalyticChildFamilyInThreeMonths';
 
 const Dao = () => {
   return (
@@ -20,13 +24,22 @@ const Dao = () => {
           <AnalyticChildrenNeeds />
         </Grid>
         <Grid item xs={12}>
+          <AnalyticChildFamily />
+        </Grid>
+        <Grid item xs={12}>
+          <AnalyticChildFamilyInOneMonth />
+        </Grid>
+        <Grid item xs={12}>
+          <AnalyticChildFamilyInThreeMonths />
+        </Grid>
+        <Grid item xs={12}>
           <AnalyticNeedTimeLine />
         </Grid>
         <Grid item xs={12}>
           <NgoTreeview />
         </Grid>
         <Grid item xs={12}>
-          <AnalyticFamily />
+          <AnalyticFamilyDelivered />
         </Grid>
       </PageContainer>
     </>

@@ -3,12 +3,15 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { createPublicClient, http} from 'viem';
+import { createPublicClient, http } from 'viem';
 
 // Two popular providers are Alchemy (alchemy.com) and Infura (infura.io)
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, sepolia],
-  [alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_KEY }), publicProvider()],
+  [
+    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_KEY, stallTimeout: 600000 }),
+    publicProvider(),
+  ],
 );
 
 // Set up client
@@ -24,8 +27,9 @@ export const config = createConfig({
     }),
   ],
   publicClient: createPublicClient({
-    chain: mainnet,
+    chain: sepolia,
     transport: http(),
   }),
+
   webSocketPublicClient,
 });

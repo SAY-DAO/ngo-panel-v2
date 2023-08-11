@@ -115,6 +115,8 @@ const CoverCard = ({
 
   const { verifiedNonce, error: errorVerify } = useSelector((state) => state.walletVerify);
 
+  const { information } = useSelector((state) => state.walletInformation);
+
   const { error: errorWalletInformation } = useSelector((state) => state.walletInformation);
 
   const myPage = useSelector((state) => state.myPage);
@@ -128,6 +130,13 @@ const CoverCard = ({
       dispatch(fetchNonce());
     }
   }, [swInfo]);
+
+    // fetch Wallet Information 
+    useEffect(() => {
+      if (nonceData && !information)  {
+        dispatch(fetchWalletInformation());
+      }
+    }, [nonceData ,information]);
 
   // toast
   useEffect(() => {
@@ -195,7 +204,7 @@ const CoverCard = ({
             message: e.details,
             code: e.code,
           });
-          fetchNonce();
+          dispatch(fetchNonce());
         }
       };
       myAsync();

@@ -1,48 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Box, Grid, Stack, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Chart from 'react-apexcharts';
 import FeatherIcon from 'feather-icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import DashboardCard from '../../base-card/DashboardCard';
-import { fetchEcosystemAnalytics } from '../../../redux/actions/analyticAction';
+import { fetchChildrenEcosystemAnalytics } from '../../../redux/actions/analyticAction';
 
 const AnalyticChildrenNeeds = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
 
-  const [localResults, setLocalResults] = useState(JSON.parse(localStorage.getItem('ecosystem')));
-
   const { blue } = theme.palette.charts;
   const { purple } = theme.palette.charts;
-  const { red } = theme.palette.charts;
   const { yellow } = theme.palette.charts;
-  const { green } = theme.palette.charts;
+  const { cyan } = theme.palette.charts;
   const { darkRed } = theme.palette.charts;
+  const { green } = theme.palette.charts;
 
   const ecosystemAnalytics = useSelector((state) => state.ecosystemAnalytics);
-  const { ecosystemResult } = ecosystemAnalytics;
+  const { ecosystemChildrenResult } = ecosystemAnalytics;
 
   useEffect(() => {
-    console.log(
-      localResults && Math.max(...localResults.childrenList.map((c) => c.childNeedsStats.all)),
-    );
-
-    if (!localResults) {
-      dispatch(fetchEcosystemAnalytics());
+    if (!ecosystemChildrenResult) {
+      dispatch(fetchChildrenEcosystemAnalytics());
     }
   }, []);
 
-  useEffect(() => {
-    if (ecosystemResult) {
-      setLocalResults(localStorage.setItem('ecosystem', JSON.stringify(ecosystemResult)));
-    }
-  }, [ecosystemResult]);
-
-  const options = {
+  const options = ecosystemChildrenResult && {
     chart: {
       type: 'bar',
-      height: 400,
+      height: 600,
       stacked: true,
       toolbar: {
         show: false,
@@ -59,11 +47,11 @@ const AnalyticChildrenNeeds = () => {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '75%',
-        borderRadius: 2,
+        columnWidth: '55%',
+        borderRadius: 1,
       },
     },
-    colors: [darkRed, yellow, green, red, purple, blue, blue, blue, purple, red],
+    colors: [yellow, blue, cyan, darkRed, purple, green],
     fill: {
       type: 'solid',
       opacity: 1,
@@ -79,8 +67,7 @@ const AnalyticChildrenNeeds = () => {
     },
     xaxis: {
       type: 'category',
-      categories:
-        localResults && localResults.childrenList.map((c) => c.child.sayname_translations.en),
+      categories: ecosystemChildrenResult.childrenList.map((c) => c.child.sayname_translations.en),
       axisBorder: {
         show: false,
       },
@@ -100,11 +87,11 @@ const AnalyticChildrenNeeds = () => {
     },
     yaxis: {
       show: true,
-      min: localResults && Math.min(...localResults.childrenList.map((c) => c.childNeedsStats.all)),
-      max:
-        localResults &&
-        Math.max(...localResults.childrenList.map((c) => c.childNeedsStats.all)) + 10,
-      tickAmount: 4,
+      // min: ecosystemChildrenResult && Math.min(...ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.allCount)),
+      // max:
+      //   ecosystemChildrenResult &&
+      //   Math.max(...ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.allCount)) + 10,
+      // tickAmount: 20,
     },
 
     tooltip: {
@@ -113,52 +100,65 @@ const AnalyticChildrenNeeds = () => {
   };
 
   const series = [
-    // {
-    //   name: 'All',
-    //   data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.all),
-    // },
-    {
-      name: 'CompletePay',
-      data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.completePay),
-    },
-    // {
-    //   name: 'Confirmed',
-    //   data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.confirmed),
-    // },
     {
       name: 'ConfirmedNotPaid',
       data:
-        localResults && localResults.childrenList.map((c) => c.childNeedsStats.confirmedNotPaid),
-    },
-    {
-      name: 'DeliveredChild',
-      data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.deliveredChild),
-    },
-    {
-      name: 'DeliveredNgo',
-      data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.deliveredNgo),
-    },
-    {
-      name: 'MoneyToNgo',
-      data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.moneyToNgo),
-    },
-    {
-      name: 'PartialPay',
-      data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.partialPay),
-    },
-    {
-      name: 'Purchased',
-      data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.purchased),
+        ecosystemChildrenResult &&
+        ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.confirmedNotPaidCount),
     },
     {
       name: 'UnConfirmed',
-      data: localResults && localResults.childrenList.map((c) => c.childNeedsStats.unConfirmed),
+      data:
+        ecosystemChildrenResult &&
+        ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.unConfirmedCount),
     },
+
+    {
+      name: 'PartialPay',
+      data:
+        ecosystemChildrenResult &&
+        ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.partialPayCount),
+    },
+    {
+      name: 'MoneyToNgo',
+      data:
+        ecosystemChildrenResult &&
+        ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.moneyToNgoCount),
+    },
+    {
+      name: 'Purchased',
+      data:
+        ecosystemChildrenResult &&
+        ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.purchasedCount),
+    },
+    {
+      name: 'DeliveredChild / 10',
+      data:
+        ecosystemChildrenResult &&
+        ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.deliveredChildCount / 10),
+    },
+
+    // {
+    //   name: 'DeliveredNgo',
+    //   data: ecosystemChildrenResult && ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.deliveredNgoCount),
+    // },
+    // {
+    //   name: 'All',
+    //   data: ecosystemChildrenResult && ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.allCount),
+    // },
+    // {
+    //   name: 'CompletePay',
+    //   data: ecosystemChildrenResult && ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.completePayCount),
+    // },
+    // {
+    //   name: 'Confirmed',
+    //   data: ecosystemChildrenResult && ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.confirmedCount),
+    // },
   ];
 
   return (
     <DashboardCard
-      title="Products Performance"
+      title="Ecosystem Analysis"
       subtitle="Latest new products"
       customdisplay="block"
       action={
@@ -168,42 +168,126 @@ const AnalyticChildrenNeeds = () => {
             display="flex"
             alignItems="center"
             sx={{
-              color: () => theme.palette.secondary.main,
-            }}
-          >
-            <Typography
-              sx={{
-                color: 'secondary.main',
-                '& svg': {
-                  fill: () => theme.palette.secondary.main,
-                },
-                mr: '5px',
-              }}
-            >
-              <FeatherIcon icon="circle" width="10" height="10" />
-            </Typography>
-            All
-          </Typography>
-          <Typography
-            variant="h6"
-            display="flex"
-            alignItems="center"
-            sx={{
-              color: () => theme.palette.warning.main,
+              color: green,
             }}
           >
             <Typography
               sx={{
                 color: 'warning.main',
                 '& svg': {
-                  fill: () => theme.palette.warning.main,
+                  fill: () => green,
                 },
                 mr: '5px',
               }}
             >
               <FeatherIcon icon="circle" width="10" height="10" />
             </Typography>
-            Complete Pay
+            Delivered /10
+          </Typography>
+          <Typography
+            variant="h6"
+            display="flex"
+            alignItems="center"
+            sx={{
+              color: purple,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'warning.main',
+                '& svg': {
+                  fill: () => purple,
+                },
+                mr: '5px',
+              }}
+            >
+              <FeatherIcon icon="circle" width="10" height="10" />
+            </Typography>
+            Purchased
+          </Typography>
+          <Typography
+            variant="h6"
+            display="flex"
+            alignItems="center"
+            sx={{
+              color: darkRed,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'warning.main',
+                '& svg': {
+                  fill: () => darkRed,
+                },
+                mr: '5px',
+              }}
+            >
+              <FeatherIcon icon="circle" width="10" height="10" />
+            </Typography>
+            Money to NGO
+          </Typography>
+          <Typography
+            variant="h6"
+            display="flex"
+            alignItems="center"
+            sx={{
+              color: cyan,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'warning.main',
+                '& svg': {
+                  fill: () => cyan,
+                },
+                mr: '5px',
+              }}
+            >
+              <FeatherIcon icon="circle" width="10" height="10" />
+            </Typography>
+            Partial Pay
+          </Typography>
+          <Typography
+            variant="h6"
+            display="flex"
+            alignItems="center"
+            sx={{
+              color: blue,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'warning.main',
+                '& svg': {
+                  fill: () => blue,
+                },
+                mr: '5px',
+              }}
+            >
+              <FeatherIcon icon="circle" width="10" height="10" />
+            </Typography>
+            Unconfirmed
+          </Typography>
+          <Typography
+            variant="h6"
+            display="flex"
+            alignItems="center"
+            sx={{
+              color: yellow,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'warning.main',
+                '& svg': {
+                  fill: () => yellow,
+                },
+                mr: '5px',
+              }}
+            >
+              <FeatherIcon icon="circle" width="10" height="10" />
+            </Typography>
+            Confirmed not Paid
           </Typography>
         </Stack>
       }
@@ -217,7 +301,7 @@ const AnalyticChildrenNeeds = () => {
       >
         <Grid item xs={12}>
           <Box>
-            {!localResults ? (
+            {!ecosystemChildrenResult ? (
               <CircularProgress />
             ) : (
               <Chart
@@ -233,62 +317,75 @@ const AnalyticChildrenNeeds = () => {
         <Grid container item xs={12}>
           <Grid item xs={2}>
             <Typography>
-              Complete Pay: {localResults && localResults.meanCompletePayPerChild}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={2}>
-            <Typography>
-              Not Paid: {localResults && localResults.meanConfirmedNotPaidPerChild}
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography>Confirmed: {localResults && localResults.meanConfirmedPerChild}</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography>
-              Delivered Child: {localResults && localResults.meanDeliveredChildPerChild}
+              Complete Pay:
+              {ecosystemChildrenResult && ecosystemChildrenResult.meanCompletePayPerChild}
             </Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>
-              Delivered Ngo: {localResults && localResults.meanDeliveredNgoPerChild}
+              Not Paid:
+              {ecosystemChildrenResult && ecosystemChildrenResult.meanConfirmedNotPaidPerChild}
             </Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>
-              Family Members: {localResults && localResults.meanFamilyMembers}
+              Confirmed: {ecosystemChildrenResult && ecosystemChildrenResult.meanConfirmedPerChild}
             </Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>
-              Money to NGO: {localResults && localResults.meanMoneyToNgoPerChild}
+              Delivered Child:
+              {ecosystemChildrenResult && ecosystemChildrenResult.meanDeliveredChildPerChild}
             </Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>
-              Needs Per Child {localResults && localResults.meanNeedsPerChild}
+              Delivered Ngo:
+              {ecosystemChildrenResult && ecosystemChildrenResult.meanDeliveredNgoPerChild}
             </Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>
-              Partial Pays: {localResults && localResults.meanPartialPayPerChild}
+              Family Members: {ecosystemChildrenResult && ecosystemChildrenResult.meanFamilyMembers}
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography>Purchased: {localResults && localResults.meanPurchasedPerChild}</Typography>
-          </Grid>
-          <Grid item xs={2}>
             <Typography>
-              UnConfirmed: {localResults && localResults.meanUnConfirmedPerChild}
+              Money to NGO:
+              {ecosystemChildrenResult && ecosystemChildrenResult.meanMoneyToNgoPerChild}
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography>Total Families: {localResults && localResults.totalFamilies}</Typography>
+            <Typography>
+              Needs Per Child {ecosystemChildrenResult && ecosystemChildrenResult.meanNeedsPerChild}
+            </Typography>
           </Grid>
           <Grid item xs={2}>
             <Typography>
-              TotalFamily Member: {localResults && localResults.totalFamilyMembers}
+              Partial Pays:
+              {ecosystemChildrenResult && ecosystemChildrenResult.meanPartialPayPerChild}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography>
+              Purchased: {ecosystemChildrenResult && ecosystemChildrenResult.meanPurchasedPerChild}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography>
+              UnConfirmed:
+              {ecosystemChildrenResult && ecosystemChildrenResult.meanUnConfirmedPerChild}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography>
+              Total Families: {ecosystemChildrenResult && ecosystemChildrenResult.totalFamilies}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography>
+              TotalFamily Member:
+              {ecosystemChildrenResult && ecosystemChildrenResult.totalFamilyMembers}
             </Typography>
           </Grid>
         </Grid>

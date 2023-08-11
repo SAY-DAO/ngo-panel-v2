@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { createTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import { blue, green, purple, red, yellow } from '@mui/material/colors';
+import { blue, green, purple, red, yellow, cyan } from '@mui/material/colors';
 import typography from './Typography';
 import components from './Override';
 import shadows from './Shadows';
@@ -83,6 +83,7 @@ const baseTheme = {
       green: green[200],
       purple: purple[200],
       blue: blue[200],
+      cyan: cyan[300],
     },
     extra: { main: '#00cec3', light: '#d7f8f6', dark: '#02b3a9' },
     collections: {

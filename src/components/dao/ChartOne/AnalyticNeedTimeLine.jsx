@@ -42,7 +42,7 @@ const AnalyticNeedTimeLine = () => {
   const { swInfo } = useSelector((state) => state.swDetails);
 
   useEffect(() => {
-    dispatch(fetchNeedAnalytics(0));
+    dispatch(fetchNeedAnalytics(NeedTypeEnum.SERVICE));
   }, []);
 
   useEffect(() => {
@@ -82,7 +82,9 @@ const AnalyticNeedTimeLine = () => {
         chart: {
           events: {
             click: (event, chartContext, config) => {
-              dispatch(fetchChildOneNeed(needsResult[0][config.dataPointIndex].id));
+              if (needsResult[0][config.dataPointIndex]) {
+                dispatch(fetchChildOneNeed(needsResult[0][config.dataPointIndex].id));
+              }
             },
           },
           fontFamily: 'DM Sans',
@@ -134,22 +136,22 @@ const AnalyticNeedTimeLine = () => {
           name: 'Confirmed',
           data:
             needsResult &&
-            needsResult[0].map((n) => moment(n.confirmDate).diff(moment(n.created), 'hours')),
+            needsResult[0].map((n) => moment(n.confirmDate).diff(moment(n.created), 'days')),
         },
         {
           name: 'Paid',
           data:
             needsResult &&
-            needsResult[0].map((n) => moment(n.doneAt).diff(moment(n.confirmDate), 'hours')),
+            needsResult[0].map((n) => moment(n.doneAt).diff(moment(n.confirmDate), 'days')),
         },
         {
-          name: 'Purchased / Money Transfer',
+          name: 'Purchased',
           data:
             needsResult &&
-            needsResult[0].map((n) =>
-              n.type === NeedTypeEnum.PRODUCT
-                ? moment(n.purchase_date).diff(moment(n.doneAt), 'hours')
-                : moment(n.ngo_delivery_date).diff(moment(n.doneAt), 'hours'),
+            needsResult[0].map(
+              (n) =>
+                n.type === NeedTypeEnum.PRODUCT &&
+                moment(n.purchase_date).diff(moment(n.doneAt), 'days'),
             ),
         },
         {
@@ -157,7 +159,9 @@ const AnalyticNeedTimeLine = () => {
           data:
             needsResult &&
             needsResult[0].map((n) =>
-              moment(n.ngo_delivery_date).diff(moment(n.purchase_date), 'hours'),
+              n.type === NeedTypeEnum.PRODUCT
+                ? moment(n.ngo_delivery_date).diff(moment(n.purchase_date), 'days')
+                : moment(n.ngo_delivery_date).diff(moment(n.doneAt), 'days'),
             ),
         },
         {
@@ -165,7 +169,7 @@ const AnalyticNeedTimeLine = () => {
           data:
             needsResult &&
             needsResult[0].map((n) =>
-              moment(n.child_delivery_date).diff(moment(n.ngo_delivery_date), 'hours'),
+              moment(n.child_delivery_date).diff(moment(n.ngo_delivery_date), 'days'),
             ),
         },
         {
@@ -173,7 +177,7 @@ const AnalyticNeedTimeLine = () => {
           data:
             needsResult &&
             needsResult[0].map((n) =>
-              moment(n.child_delivery_date).diff(moment(n.created), 'hours'),
+              moment(n.child_delivery_date).diff(moment(n.created), 'days'),
             ),
         },
       ],
@@ -187,7 +191,7 @@ const AnalyticNeedTimeLine = () => {
         </Grid>
       ) : (
         <Grid container>
-          <Grid item xs={8}>
+          <Grid item xs={12}>
             <DashboardCard custompadding="1" title="Timeline" action={<AnalyticSelect />}>
               {/* chart */}
               <Chart

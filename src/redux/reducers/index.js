@@ -47,6 +47,7 @@ import {
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
 import {
   signatureReducer,
+  signatureVerificationReducer,
   userSignaturesReducer,
   WalletInformationReducer,
   walletNonceReducer,
@@ -78,7 +79,7 @@ import {
 
 export default combineReducers({
   CustomizerReducer,
-  familyAnalyitics:analyticsFamilyReducer,
+  familyAnalyitics: analyticsFamilyReducer,
   childNeedsAnalytics: AnalyticChildNeedsReducer,
   ngosAnalytics: analyticsNgosReducer,
   contributionAnalytics: analyticsContributionReducer,
@@ -133,6 +134,7 @@ export default combineReducers({
   receiptDelete: receiptDeleteReducer,
   receiptAdd: receiptAddReducer,
   signature: signatureReducer,
+  signaturesVerification: signatureVerificationReducer,
   signatures: userSignaturesReducer,
   providerStatusUpdate: providerUpdateIsActiveReducer,
   providerById: providerByIdReducer,

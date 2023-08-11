@@ -44,7 +44,7 @@ import {
   SAYPlatformRoles,
 } from '../../utils/types';
 import ReceiptImage from './ReceiptImage';
-import { signTransaction } from '../../redux/actions/blockchainAction';
+import { signTransaction, verifySignature } from '../../redux/actions/blockchainAction';
 import DurationTimeLine from './DurationTimeLine';
 import { openTicketing, selectTicket } from '../../redux/actions/ticketAction';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
@@ -110,8 +110,9 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { loading: loadingDuplicates } = childNeedsDuplicates;
 
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
+  const { verification } = useSelector((state) => state.signaturesVerification);
 
-  const {  information } = useSelector((state) => state.walletInformation);
+  const { information } = useSelector((state) => state.walletInformation);
 
   const childOneNeed = useSelector((state) => state.childOneNeed);
   const { deleted } = childOneNeed;
@@ -121,6 +122,27 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     setAnchorEl(event.currentTarget);
   };
 
+  // signature verification
+  useEffect(() => {
+    if (thisCardSignature) {
+      console.log(thisCardSignature.hash);
+      dispatch(
+        verifySignature(
+          {
+            address,
+            flaskNeedId: need.id,
+            statuses: need.status_updates,
+            receipts: need.receipts_,
+            payments: need.payments,
+          },
+          thisCardSignature.hash,
+        ),
+      );
+      console.log(verification);
+    }
+  }, [thisCardSignature]);
+
+  // set card signature
   useEffect(() => {
     if (signature && signature.flaskNeedId === need.id) {
       setThisCardSignature(signature);
@@ -235,6 +257,22 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     });
   };
 
+  const socialWorkerId = need.created_by_id;
+  const auditorId = need.confirmUser;
+  let purchaserId = null;
+
+  if (!need.status_updates) {
+    if (new Date(need.doneAt).getFullYear() < 2023) {
+      purchaserId = 31; // Nyaz
+    }
+    if (new Date(need.doneAt).getFullYear() === 2023 && new Date(need.doneAt).getMonth() <= 3) {
+      purchaserId = 21; // Neda
+    }
+  } else {
+    purchaserId =
+      need.status_updates &&
+      need.status_updates.find((s) => s.old_status === PaymentStatusEnum.COMPLETE_PAY)?.sw_id;
+  }
   const iconImage = ipfsMetaData
     ? `${process.env.REACT_APP_IPFS_GATEWAY_1}/${ipfsMetaData.image.split('ipfs://')[1]}`
     : need.imageUrl && prepareUrl(need.imageUrl);
@@ -271,7 +309,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const theIpfs = ipfs && ipfs.need && ipfs.need.flaskId === need.id && ipfs;
   console.log(theIpfs || '');
   const category = getCategoryString(need.category, need.isUrgent);
-  const cost = need._cost.toLocaleString();
+  const cost = need._cost && need._cost.toLocaleString();
   const affiliateLinkUrl = need.affiliateLinkUrl && need.affiliateLinkUrl;
   const link = need.link && need.link;
   const receipts = need.receipts_ && need.receipts_;
@@ -510,7 +548,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                 </Grid>
 
                 <Grid item xs={3} sx={{ maxHeight: '40px' }}>
-                  {need.tickets[0] && (
+                  {need.tickets && need.tickets[0] && (
                     <>
                       {/* flag Icon- ticketHistory has one item in it due to announcement */}
                       {((need.tickets[0].lastAnnouncement && need.tickets[0].ticketHistories[1]) ||
@@ -876,16 +914,25 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                     </WalletButton>
                   ) : (
                     isConnected && (
-                      <WalletButton
-                        fullWidth
-                        signbutton="true"
-                        loading={
-                          loadingSignature || !information || isLoading || pendingConnector
-                        }
-                        onClick={handleSignature}
-                      >
-                        {t('button.wallet.sign')}
-                      </WalletButton>
+                      <>
+                        <WalletButton
+                          fullWidth
+                          signbutton="true"
+                          loading={
+                            loadingSignature || !information || isLoading || pendingConnector
+                          }
+                          onClick={handleSignature}
+                        >
+                          {t('button.wallet.sign')}
+                        </WalletButton>
+                        <Typography>
+                          Social Worker: {socialWorkerId}
+                          <br />
+                          Auditor: {auditorId}
+                          <br />
+                          Purchaser: {purchaserId}
+                        </Typography>
+                      </>
                     )
                   ))}
               </Grid>

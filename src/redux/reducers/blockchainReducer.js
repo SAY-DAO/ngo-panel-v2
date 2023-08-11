@@ -6,6 +6,10 @@ import {
   SIGNATURE_SUCCESS,
   SIGNATURE_FAIL,
   SIGNATURE_RESET,
+  SIGNATURE_VERIFICATION_REQUEST,
+  SIGNATURE_VERIFICATION_SUCCESS,
+  SIGNATURE_VERIFICATION_FAIL,
+  SIGNATURE_VERIFICATION_RESET,
   WALLET_NONCE_REQUEST,
   WALLET_NONCE_SUCCESS,
   WALLET_NONCE_FAIL,
@@ -92,6 +96,24 @@ export const signatureReducer = (state = {}, action) => {
     case SIGNATURE_FAIL:
       return { loading: false, error: action.payload };
     case SIGNATURE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const signatureVerificationReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SIGNATURE_VERIFICATION_REQUEST:
+      return { loading: true, success: false };
+    case SIGNATURE_VERIFICATION_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        verification: action.payload,
+      };
+    case SIGNATURE_VERIFICATION_FAIL:
+      return { loading: false, error: action.payload };
+    case SIGNATURE_VERIFICATION_RESET:
       return {};
     default:
       return state;

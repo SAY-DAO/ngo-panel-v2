@@ -2,6 +2,9 @@ import {
   GET_ANALYTICS_NEED_REQUEST,
   GET_ANALYTICS_NEED_SUCCESS,
   GET_ANALYTICS_NEED_FAIL,
+  GET_ANALYTICS_CHILD_FAMILY_REQUEST,
+  GET_ANALYTICS_CHILD_FAMILY_SUCCESS,
+  GET_ANALYTICS_CHILD_FAMILY_FAIL,
   GET_ANALYTICS_CHILD_REQUEST,
   GET_ANALYTICS_CHILD_SUCCESS,
   GET_ANALYTICS_CHILD_FAIL,
@@ -11,9 +14,9 @@ import {
   GET_ANALYTICS_NGOS_REQUEST,
   GET_ANALYTICS_NGOS_SUCCESS,
   GET_ANALYTICS_NGOS_FAIL,
-  GET_ANALYTICS_ECOSYSTEM_REQUEST,
-  GET_ANALYTICS_ECOSYSTEM_SUCCESS,
-  GET_ANALYTICS_ECOSYSTEM_FAIL,
+  GET_ANALYTICS_ECOSYSTEM_CHILDREN_REQUEST,
+  GET_ANALYTICS_ECOSYSTEM_CHILDREN_SUCCESS,
+  GET_ANALYTICS_ECOSYSTEM_CHILDREN_FAIL,
   GET_FAMILY_ANALYTICS_REQUEST,
   GET_FAMILY_ANALYTICS_SUCCESS,
   GET_FAMILY_ANALYTICS_FAIL,
@@ -62,11 +65,17 @@ export const analyticsNgosReducer = (state = {}, action) => {
 
 export const analyticsEcosystemReducer = (state = {}, action) => {
   switch (action.type) {
-    case GET_ANALYTICS_ECOSYSTEM_REQUEST:
+    case GET_ANALYTICS_CHILD_FAMILY_REQUEST:
+      return { ...state, loading: true, success: false };
+    case GET_ANALYTICS_CHILD_FAMILY_SUCCESS:
+      return { ...state, loading: false, success: true, ecosystemChildFamilyResult: action.payload };
+    case GET_ANALYTICS_CHILD_FAMILY_FAIL:
+      return { oading: false, error: action.payload };
+    case GET_ANALYTICS_ECOSYSTEM_CHILDREN_REQUEST:
       return { loading: true, success: false };
-    case GET_ANALYTICS_ECOSYSTEM_SUCCESS:
-      return { loading: false, success: true, ecosystemResult: action.payload };
-    case GET_ANALYTICS_ECOSYSTEM_FAIL:
+    case GET_ANALYTICS_ECOSYSTEM_CHILDREN_SUCCESS:
+      return { loading: false, success: true, ecosystemChildrenResult: action.payload };
+    case GET_ANALYTICS_ECOSYSTEM_CHILDREN_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
@@ -85,7 +94,6 @@ export const analyticsContributionReducer = (state = {}, action) => {
       return state;
   }
 };
-
 
 export const analyticsFamilyReducer = (state = {}, action) => {
   switch (action.type) {

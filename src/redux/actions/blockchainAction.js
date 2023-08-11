@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+import { readContract } from '@wagmi/core';
 import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   FAMILY_NETWORK_REQUEST,
@@ -6,6 +8,9 @@ import {
   SIGNATURE_REQUEST,
   SIGNATURE_FAIL,
   SIGNATURE_SUCCESS,
+  SIGNATURE_VERIFICATION_REQUEST,
+  SIGNATURE_VERIFICATION_FAIL,
+  SIGNATURE_VERIFICATION_SUCCESS,
   WALLET_NONCE_REQUEST,
   WALLET_NONCE_SUCCESS,
   WALLET_NONCE_FAIL,
@@ -19,6 +24,8 @@ import {
   USER_SIGNATURES_SUCCESS,
   USER_SIGNATURES_FAIL,
 } from '../constants/daoConstants';
+import VerifyVoucherContract from '../../build/contracts/needModule/VerifyVoucher.sol/VerifyVoucher.json';
+import network from '../../build/contracts/network-settings.json';
 
 export const fetchNonce = () => async (dispatch, getState) => {
   try {
@@ -83,7 +90,6 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
       payload: data,
     });
   } catch (e) {
-    console.log('here');
     console.log(e.response.statusText);
     dispatch({
       type: WALLET_VERIFY_FAIL,
@@ -212,7 +218,7 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
       },
       withCredentials: true,
     };
-    
+
     const request = {
       flaskNeedId: values.flaskNeedId,
       signerAddress: values.address,
@@ -223,11 +229,11 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
 
     const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
     const transaction = result1.data;
-    console.log(transaction);
     // The named list of all type definitions
     const types = {
       ...transaction.types,
     };
+
     const signatureHash = await signer.signTypedData({
       domain: transaction.domain,
       types,
@@ -242,8 +248,10 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
       statuses: values.statuses,
       receipts: values.receipts,
       payments: values.payments,
-      sayRole: transaction.sayRole,
+      sayRoles: transaction.sayRoles,
+      verifyVoucherAddress: transaction.domain.verifyingContract
     };
+
     const result2 = await daoApi.post(
       `/wallet/signature/create/${signatureHash}`,
       request2,
@@ -264,6 +272,67 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
           : e.response && e.response.data.message
           ? e.response.data.message
           : { reason: e.reason, code: e.code }, // metamask signature
+    });
+  }
+};
+
+export const verifySignature = (values, signatureHash) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: SIGNATURE_VERIFICATION_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskSwId: userInfo && userInfo.id,
+      },
+      withCredentials: true,
+    };
+
+    const request = {
+      flaskNeedId: values.flaskNeedId,
+      signerAddress: values.address,
+      statuses: values.statuses,
+      receipts: values.receipts,
+      payments: values.payments,
+    };
+
+    const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
+    const transaction = result1.data;
+
+    const data = await readContract({
+      address: network.sepolia.verifyVoucherAddress,
+      abi: VerifyVoucherContract.abi,
+      functionName: '_verify',
+      args: [
+        {
+          needId: transaction.message.needId,
+          title: transaction.message.title,
+          category: transaction.message.category,
+          paid: transaction.message.paid,
+          deliveryCode: transaction.message.deliveryCode,
+          child: transaction.message.child,
+          signer: transaction.message.signer,
+          swSignature: signatureHash, // social worker signature
+          role: transaction.message.role,
+          content: transaction.message.content,
+        },
+      ],
+      blockTag: 'safe',
+    });
+
+    dispatch({
+      type: SIGNATURE_VERIFICATION_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: SIGNATURE_VERIFICATION_FAIL,
+      payload: { e },
     });
   }
 };

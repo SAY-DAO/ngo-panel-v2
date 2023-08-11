@@ -59,7 +59,12 @@ import { fetchProviderList } from '../../redux/actions/providerAction';
 import { apiDao } from '../../env';
 import { convertFlaskToSayRoles, getAge, getOrganizedNeeds } from '../../utils/helpers';
 import { fetchSwOrNgoChildList } from '../../redux/actions/socialWorkerAction';
-import { FlaskUserTypesEnum, NeedTypeEnum, SAYPlatformRoles } from '../../utils/types';
+import {
+  ChildExistenceEnum,
+  FlaskUserTypesEnum,
+  NeedTypeEnum,
+  SAYPlatformRoles,
+} from '../../utils/types';
 import ProviderDialog from '../../components/dialogs/ProviderDialog';
 import { UNCONFIRMED_NEEDS_THRESHOLD } from '../../utils/configs';
 
@@ -368,7 +373,8 @@ const NeedAdd = () => {
               loading={loadingSw || !children}
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                  {option.isConfirmed ? (
+                  {option.isConfirmed &&
+                  option.existence_status === ChildExistenceEnum.ALIVE_PRESENT ? (
                     <>
                       <FeatherIcon color="green" icon="check" width="18" />
                       <Typography variant="body1" sx={{ fontSize: 13 }}>
@@ -378,7 +384,7 @@ const NeedAdd = () => {
                   ) : (
                     <>
                       <FeatherIcon color="red" icon="x" width="18" />
-                      <Typography>{`${option.id}  - ${option.firstName} ${option.lastName}`}</Typography>
+                      <Typography>{`${option.id}  - ${option.firstName_translations.fa} ${option.lastName_translations.fa}- (${option.sayname_translations.fa})`}</Typography>
                     </>
                   )}
                 </Box>
