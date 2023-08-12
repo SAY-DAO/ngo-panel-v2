@@ -950,13 +950,13 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                         >
                           {t('button.wallet.sign')}
                         </WalletButton>
-                        <Typography>
+                        {/* <Typography>
                           Social Worker: {socialWorkerId}
                           <br />
                           Auditor: {auditorId}
                           <br />
                           Purchaser: {purchaserId}
-                        </Typography>
+                        </Typography> */}
                       </>
                     )
                   ))}
