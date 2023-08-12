@@ -46,8 +46,7 @@ export const fetchUserTicketList = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
-
+        flaskId: userInfo && userInfo.id,
       },
     };
     const { data } = await daoApi.get(`/tickets/all/user/${userInfo.id}`, config);
@@ -75,7 +74,7 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -104,7 +103,7 @@ export const addTicket = (values) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 

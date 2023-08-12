@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -24,7 +25,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { useAccount, useConnect, useWalletClient } from 'wagmi';
+import { useAccount, useConnect, useWalletClient, useNetwork } from 'wagmi';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTheme } from '@mui/material/styles';
@@ -63,8 +64,10 @@ import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
 import signatureIcon from '../../resources/images/signature.svg';
 import DeleteDialog from '../dialogs/DeleteDialog';
+import SignatureArrivalDialog from '../dialogs/SignatureArrivalDialog';
 
 const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
+  const { chain } = useNetwork();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -75,6 +78,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const [deletedId, setDeletedId] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
+  const [openSigArrival, setOpenSigArrival] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openAnnouncement, setOpenAnnouncement] = useState({
     arrival: false,
@@ -206,19 +210,40 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     setAnchorEl(null);
   };
 
+  const handleNotDelivered = () => {
+    setOpenSigArrival(true);
+  };
+
   const handleSignature = async () => {
-    dispatch(
-      signTransaction(
-        {
-          address,
-          flaskNeedId: need.id,
-          statuses: need.status_updates,
-          receipts: need.receipts_,
-          payments: need.payments,
-        },
-        walletClient,
-      ),
-    );
+    const announcedNeeds = pageDetails.needs[2].map((n) => {
+      const notAnnouncedNeeds = n.tickets.filter(
+        (item) => item.lastAnnouncement > AnnouncementEnum.NONE,
+      );
+      return notAnnouncedNeeds;
+    });
+
+    // alert when social worker has not announced all arrivals - 3rd column in MyPage
+    if (pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length > 0) {
+      console.log(pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length);
+      handleNotDelivered();
+    } else if (
+      pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length <= 0 &&
+      !openSigArrival
+    ) {
+      dispatch(
+        signTransaction(
+          {
+            address,
+            flaskNeedId: need.id,
+            statuses: need.status_updates,
+            receipts: need.receipts_,
+            payments: need.payments,
+          },
+          walletClient,
+          chain.id,
+        ),
+      );
+    }
   };
 
   const handleAnnouncement = (Announcement) => {
@@ -959,6 +984,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       )}
       <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
       <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
+      <SignatureArrivalDialog open={openSigArrival} setOpen={setOpenSigArrival} />
     </Box>
   );
 };

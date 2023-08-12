@@ -29,7 +29,7 @@ export const fetchProviderById = (id) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -59,7 +59,7 @@ export const fetchProviderList = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -89,7 +89,7 @@ export const updateProvider = (values) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -134,7 +134,7 @@ export const updateProvider = (values) => async (dispatch, getState) => {
   }
 };
 
-export const addProvider = (values) => async (dispatch,getState) => {
+export const addProvider = (values) => async (dispatch, getState) => {
   try {
     dispatch({ type: ADD_PROVIDER_REQUEST });
     console.log(values);
@@ -147,7 +147,7 @@ export const addProvider = (values) => async (dispatch,getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -193,7 +193,7 @@ export const addProvider = (values) => async (dispatch,getState) => {
 };
 
 // export const deleteProvider = (providerId) => async (dispatch, getState) => {
-export const deleteProvider = (providerId) => async (dispatch,getState) => {
+export const deleteProvider = (providerId) => async (dispatch, getState) => {
   try {
     dispatch({ type: DELETE_PROVIDER_REQUEST });
     const {
@@ -204,10 +204,10 @@ export const deleteProvider = (providerId) => async (dispatch,getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
-    const { data } = await daoApi.delete(`/providers/${providerId}`,config);
+    const { data } = await daoApi.delete(`/providers/${providerId}`, config);
 
     // const {data} = await daoApi.delete(`/providers/${providerId}`, config, {});
     // const { data } = await daoApi.delete(`/providers/${providerId}`, { config });

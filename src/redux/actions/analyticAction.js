@@ -26,7 +26,6 @@ import {
   GET_ANALYTICS_CONTRIBUTION_FAIL,
 } from '../constants/analyticConstants';
 
-
 export const fetchChildFamilyAnalytic = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ANALYTICS_CHILD_FAMILY_REQUEST });
@@ -38,7 +37,7 @@ export const fetchChildFamilyAnalytic = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -68,7 +67,7 @@ export const fetchNeedAnalytics = (needType) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -98,7 +97,7 @@ export const fetchChildrenAnalytics = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -128,7 +127,7 @@ export const fetchChildAnalytics = (childId) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -158,7 +157,7 @@ export const fetchNgosAnalytics = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -188,7 +187,7 @@ export const fetchChildrenEcosystemAnalytics = () => async (dispatch, getState) 
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -220,7 +219,7 @@ export const fetchUserContribution = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -254,7 +253,7 @@ export const fetchFamilyAnalytic = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 

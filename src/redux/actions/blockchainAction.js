@@ -39,7 +39,7 @@ export const fetchNonce = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
       withCredentials: true,
       crossDomain: true,
@@ -71,7 +71,7 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
       withCredentials: true,
     };
@@ -117,7 +117,7 @@ export const fetchWalletInformation = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
       withCredentials: true,
     };
@@ -153,7 +153,7 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -183,7 +183,7 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -202,7 +202,7 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
   }
 };
 
-export const signTransaction = (values, signer) => async (dispatch, getState) => {
+export const signTransaction = (values, signer, chainId) => async (dispatch, getState) => {
   try {
     dispatch({ type: SIGNATURE_REQUEST });
 
@@ -214,7 +214,7 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
       withCredentials: true,
     };
@@ -225,6 +225,7 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
       statuses: values.statuses,
       receipts: values.receipts,
       payments: values.payments,
+      chainId
     };
 
     const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
@@ -249,7 +250,7 @@ export const signTransaction = (values, signer) => async (dispatch, getState) =>
       receipts: values.receipts,
       payments: values.payments,
       sayRoles: transaction.sayRoles,
-      verifyVoucherAddress: transaction.domain.verifyingContract
+      verifyVoucherAddress: transaction.domain.verifyingContract,
     };
 
     const result2 = await daoApi.post(
@@ -288,7 +289,7 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
       withCredentials: true,
     };
@@ -305,7 +306,7 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
     const transaction = result1.data;
 
     const data = await readContract({
-      address: network.sepolia.verifyVoucherAddress,
+      address: network.mainnet.verifyVoucherAddress,
       abi: VerifyVoucherContract.abi,
       functionName: '_verify',
       args: [

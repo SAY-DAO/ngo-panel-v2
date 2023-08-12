@@ -129,7 +129,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -471,13 +471,12 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
 
     const { data } = await publicApi.post(`/need/`, formData, config);
 
-
     // create relation between nest provider and flask need
     const config2 = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -507,7 +506,7 @@ export const fetchUnconfirmedCount = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 
@@ -538,7 +537,7 @@ export const fetchDuplicateChildNeeds = (childId, needId) => async (dispatch, ge
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
 

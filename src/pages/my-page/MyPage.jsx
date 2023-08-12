@@ -417,6 +417,7 @@ const MyPage = () => {
                         setCardSelected={setCardSelected}
                         cardSelected={cardSelected}
                         swNewDetails={swNewDetails}
+                        totalNeedCount={totalNeedCount}
                       />
                     ))}
                   </Grid>

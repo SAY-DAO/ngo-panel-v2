@@ -62,7 +62,7 @@ export const fetchActiveChildList = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id, // nest server needs this for auth
+        flaskId: userInfo && userInfo.id, // nest server needs this for auth
       },
     };
     // const { data } = await publicApi.get(`/child/actives`, config);
@@ -271,7 +271,9 @@ export const AddChild = (values) => async (dispatch, getState) => {
     if (values.education || values.school_type) {
       formData.append(
         'education',
-        values.education === '-2' ? `-${values.school_type}2` : values.school_type + values.education,
+        values.education === '-2'
+          ? `-${values.school_type}2`
+          : values.school_type + values.education,
       ); // because "int-2" cannot be stored. temporarily solution!
     }
     if (values.housingStatus) {

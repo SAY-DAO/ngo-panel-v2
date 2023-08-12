@@ -282,6 +282,7 @@
     "isCoordinator": "Coordinator Status",
     "update": "Edit",
     "updated": "Successfully Updated!",
+    "notAllAnnounced": "Please make sure all arrived needs are announced by you before signing needs!",
     "migrated": "Successfully Migrated!",
     "migrate": {
       "from": "From",

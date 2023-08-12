@@ -27,7 +27,7 @@ export const config = createConfig({
     }),
   ],
   publicClient: createPublicClient({
-    chain: sepolia,
+    chain: mainnet,
     transport: http(),
   }),
 

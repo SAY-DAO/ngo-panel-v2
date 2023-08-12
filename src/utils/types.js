@@ -1,3 +1,9 @@
+export const eEthereumNetworkChainId = {
+  mainnet: 1,
+  goerli: 5,
+  sepolia: 11155111,
+};
+
 export const VirtualFamilyRole = {
   FATHER: 0,
   MOTHER: 1,

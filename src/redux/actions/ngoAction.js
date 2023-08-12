@@ -261,10 +261,9 @@ export const fetchNgoArrivals = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
-        flaskSwId: userInfo && userInfo.id,
+        flaskId: userInfo && userInfo.id,
       },
     };
-
 
     const { data } = await daoApi.get(`/ngo/arrivals/${userInfo.id}`, config);
     dispatch({
@@ -279,34 +278,34 @@ export const fetchNgoArrivals = () => async (dispatch, getState) => {
   }
 };
 
-export const updateNgoArrivals =
-  (deliveryCode, arrivalCode) => async (dispatch, getState) => {
-    try {
-      dispatch({ type: UPDATE_NGO_ARRIVAL_REQUEST });
-      const {
-        userLogin: { userInfo },
-      } = getState();
-  
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: userInfo && userInfo.access_token,
-          flaskSwId: userInfo && userInfo.id,
-        },
-      };
-  console.log(config);
-      const { data } = await daoApi.patch(
-        `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,{},
-        config,
-      );
-      dispatch({
-        type: UPDATE_NGO_ARRIVAL_SUCCESS,
-        payload: data,
-      });
-    } catch (e) {
-      dispatch({
-        type: UPDATE_NGO_ARRIVAL_FAIL,
-        payload: e.response && (e.response.status ? e.response : e.response.data.message),
-      });
-    }
-  };
+export const updateNgoArrivals = (deliveryCode, arrivalCode) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_NGO_ARRIVAL_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+    console.log(config);
+    const { data } = await daoApi.patch(
+      `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,
+      {},
+      config,
+    );
+    dispatch({
+      type: UPDATE_NGO_ARRIVAL_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_NGO_ARRIVAL_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
