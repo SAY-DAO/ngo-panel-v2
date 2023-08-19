@@ -313,6 +313,9 @@
     "categories": {
       "title": "دسته بندی‌ها"
     },
+    "midjourney": {
+      "title": "Midjourney AI"
+    },
     "daoHeader": "DAO",
     "dashboard": "داشبورد",
     "list": "لیست",
@@ -802,11 +805,11 @@
   },
   "roles": {
     "socialWorker": "مددکار",
-    "auditor": "ناظر",
-    "purchaser": "خرید کننده",
+    "auditor": "شاهد",
+    "purchaser": "میانجی",
     "ngoSupervisor": "سرپرست انجمن",
     "noRole": "بدون نقش :(",
-    "familyMember": "عضو حوانواده",
+    "familyMember": "عضو خانواده",
     "friend": "دوست"
   },
   "wallet": {

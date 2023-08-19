@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -23,9 +22,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import Scrollbar from '../custom-scroll/Scrollbar';
-import { convertFlaskToSayRoles, getUserSAYRoleString, prepareUrl } from '../../utils/helpers';
+import { convertFlaskToSayRoles, getSAYRoleString, prepareUrl } from '../../utils/helpers';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
-import { AnnouncementEnum, colorChoices, SAYPlatformRoles } from '../../utils/types';
+import {
+  AnnouncementEnum,
+  colorChoices,
+  SAYPlatformRoles,
+  PanelContributors,
+} from '../../utils/types';
 import { dateTimeConvertor } from '../../utils/persianToEnglish';
 import { socketChangeTicketColor } from '../../utils/socketHelpers';
 import DurationTimeLine from '../my-profile/DurationTimeLine';
@@ -118,6 +122,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
   };
 
+
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   return (
     <WebsocketProvider value={socketHttp}>
@@ -180,7 +185,16 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                       <AvatarGroup max={4}>
                         {theTicket.contributors.map((c) => (
                           <Tooltip
-                            title={`${c.firstName} - ${t(`roles.${getUserSAYRoleString(c.role)}`)}`}
+                            title={`${c.firstName} - ${t(
+                              `roles.${getSAYRoleString(
+                                theTicket.need.socialWorker.flaskUserId === c.flaskUserId
+                                  ? PanelContributors.SOCIAL_WORKER
+                                  : theTicket.need.auditor.flaskUserId === c.flaskUserId
+                                  ? PanelContributors.AUDITOR
+                                  : theTicket.need.purchaser.flaskUserId === c.flaskUserId &&
+                                    PanelContributors.PURCHASER,
+                              )}`,
+                            )}`}
                             key={c.id}
                           >
                             <Avatar
@@ -362,7 +376,6 @@ const TicketContent = ({ toggleTicketSidebar }) => {
             >
               <FeatherIcon icon="menu" width="18" onClick={toggleTicketSidebar} />
             </Box>
-            <Typography variant="h4">Select Ticket</Typography>
           </Box>
         )}
       </Box>

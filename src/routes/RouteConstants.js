@@ -23,3 +23,4 @@ export const REPORTS = '/report/needs/paid';
 export const DAO_HOME = '/dao';
 export const MILESTONE_ADD = '/dao/milestone/add';
 export const MILESTONE_LIST = '/dao/milestone/list';
+export const NEED_MIDJOURNEY = '/midjourney/list';

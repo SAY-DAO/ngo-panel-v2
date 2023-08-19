@@ -67,7 +67,6 @@ import DeleteDialog from '../dialogs/DeleteDialog';
 import SignatureArrivalDialog from '../dialogs/SignatureArrivalDialog';
 
 const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
-  const { chain } = useNetwork();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -94,6 +93,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { isLoading, pendingConnector } = useConnect();
+  const { chain } = useNetwork();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -128,22 +128,22 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
 
   // signature verification
   // useEffect(() => {
-    // if (thisCardSignature) {
-      // console.log(thisCardSignature.hash);
-      // dispatch(
-      //   verifySignature(
-      //     {
-      //       address,
-      //       flaskNeedId: need.id,
-      //       statuses: need.status_updates,
-      //       receipts: need.receipts_,
-      //       payments: need.payments,
-      //     },
-      //     thisCardSignature.hash,
-      //   ),
-      // );
-      // console.log(verification);
-    // }
+  // if (thisCardSignature) {
+  // console.log(thisCardSignature.hash);
+  // dispatch(
+  //   verifySignature(
+  //     {
+  //       address,
+  //       flaskNeedId: need.id,
+  //       statuses: need.status_updates,
+  //       receipts: need.receipts_,
+  //       payments: need.payments,
+  //     },
+  //     thisCardSignature.hash,
+  //   ),
+  // );
+  // console.log(verification);
+  // }
   // }, [thisCardSignature]);
 
   // set card signature
@@ -215,35 +215,35 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   };
 
   const handleSignature = async () => {
-    const announcedNeeds = pageDetails.needs[2].map((n) => {
-      const notAnnouncedNeeds = n.tickets.filter(
-        (item) => item.lastAnnouncement > AnnouncementEnum.NONE,
-      );
-      return notAnnouncedNeeds;
-    });
+    // const announcedNeeds = pageDetails.needs[2].map((n) => {
+    //   const notAnnouncedNeeds = n.tickets.filter(
+    //     (item) => item.lastAnnouncement > AnnouncementEnum.NONE,
+    //   );
+    //   return notAnnouncedNeeds;
+    // });
 
-    // alert when social worker has not announced all arrivals - 3rd column in MyPage
-    if (pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length > 0) {
-      console.log(pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length);
-      handleNotDelivered();
-    } else if (
-      pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length <= 0 &&
-      !openSigArrival
-    ) {
-      dispatch(
-        signTransaction(
-          {
-            address,
-            flaskNeedId: need.id,
-            statuses: need.status_updates,
-            receipts: need.receipts_,
-            payments: need.payments,
-          },
-          walletClient,
-          chain.id,
-        ),
-      );
-    }
+    // // alert when social worker has not announced all arrivals - 3rd column in MyPage
+    // if (pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length > 0) {
+    //   console.log(pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length);
+    //   handleNotDelivered();
+    // } else if (
+    //   pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length <= 0 &&
+    //   !openSigArrival
+    // ) {
+    dispatch(
+      signTransaction(
+        {
+          address,
+          flaskNeedId: need.id,
+          statuses: need.status_updates,
+          receipts: need.receipts_,
+          payments: need.payments,
+        },
+        walletClient,
+        chain.id,
+      ),
+    );
+    // }
   };
 
   const handleAnnouncement = (Announcement) => {

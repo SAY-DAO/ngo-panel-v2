@@ -76,6 +76,7 @@ import {
   analyticsFamilyReducer,
   analyticsNgosReducer,
 } from './analyticReducer';
+import { midjourneyReducer } from './midjourneyReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -143,4 +144,5 @@ export default combineReducers({
   providerAdd: providerAddReducer,
   providerDelete: providerDeleteReducer,
   mileStone: milestoneReducer,
+  midjourney: midjourneyReducer,
 });

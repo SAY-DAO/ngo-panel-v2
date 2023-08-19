@@ -9,6 +9,7 @@ import React from 'react';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 
 const Menuitems = [
   {
@@ -131,7 +132,7 @@ const Menuitems = [
       },
       {
         title: 'sidebar.ngos.arrivals',
-        icon:  <DeliveryDiningIcon />,
+        icon: <DeliveryDiningIcon />,
         href: '/ngo/arrivals',
         admin: true,
       },
@@ -202,6 +203,21 @@ const Menuitems = [
         title: 'sidebar.add',
         icon: 'plus',
         href: '/categories/add',
+        admin: true,
+      },
+    ],
+  },
+  {
+    title: 'sidebar.midjourney.title',
+    icon: <HandshakeOutlinedIcon />,
+    href: '/admin/catagories',
+    collapse: true,
+    admin: true,
+    children: [
+      {
+        title: 'sidebar.list',
+        icon: 'list',
+        href: '/midjourney/list',
         admin: true,
       },
     ],

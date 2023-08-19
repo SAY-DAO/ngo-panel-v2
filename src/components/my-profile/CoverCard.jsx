@@ -87,7 +87,7 @@ const CoverCard = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const [signatureError, setSetsignatureError] = useState('');
+  const [signatureError, setSignatureError] = useState('');
   const [cover, setCover] = useState(null);
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
   const [optionsSocialWorkers, setOptionsSwList] = useState([]);
@@ -110,14 +110,9 @@ const CoverCard = ({
   const swAll = useSelector((state) => state.swAll);
   const { swList, success: successSwAll } = swAll;
 
-  const walletNonce = useSelector((state) => state.walletNonce);
-  const { nonceData, error: errorWalletNonce } = walletNonce;
-
+  const { nonceData, error: errorWalletNonce } = useSelector((state) => state.walletNonce);
   const { verifiedNonce, error: errorVerify } = useSelector((state) => state.walletVerify);
-
-  const { information } = useSelector((state) => state.walletInformation);
-
-  const { error: errorWalletInformation } = useSelector((state) => state.walletInformation);
+  const { information, error: errorWalletInformation  } = useSelector((state) => state.walletInformation);
 
   const myPage = useSelector((state) => state.myPage);
   const { loading: loadingPageDetails } = myPage;
@@ -200,7 +195,7 @@ const CoverCard = ({
             message: e.details,
             code: e.code,
           });
-          setSetsignatureError({
+          setSignatureError({
             message: e.details,
             code: e.code,
           });

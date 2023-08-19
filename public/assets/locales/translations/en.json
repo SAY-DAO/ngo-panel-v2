@@ -5,8 +5,8 @@
       "content": "Are you sure you want to delete this need?"
     },
     "receipt": {
-      "title":  "Deleting Receipt",
-      "content":"Are you sure you want to delete this receipt?"
+      "title": "Deleting Receipt",
+      "content": "Are you sure you want to delete this receipt?"
     }
   },
   "alert": {
@@ -42,8 +42,8 @@
     "remember": "Remeber this Device",
     "forgotPassword": "Forgot Password ?"
   },
-  "success":{
-    "confirmed":"Confirmed!"
+  "success": {
+    "confirmed": "Confirmed!"
   },
   "error": {
     "nestDown": "Nest server is not running",
@@ -267,6 +267,9 @@
     },
     "categories": {
       "title": "Categories"
+    },
+    "midjourney": {
+      "title": "Midjourney AI"
     },
     "daoHeader": "DAO",
     "dashboard": "Dashboard",
@@ -645,7 +648,6 @@
       "logOut": "Log out",
       "changePass": "Change password",
       "docs": "Documents"
-
     },
     "message": {
       "more": "See All Messages",
@@ -706,7 +708,6 @@
         "purchased": "Purchased",
         "moneyToNgo": "Money to NGO",
         "unpayable": "Unpayable"
-        
       },
       "date": {
         "created": "Created at",
@@ -737,7 +738,6 @@
         "moneyToNgoTicket": "َAnnounce Money Received",
         "more": "More",
         "ipfs": "IPFS"
-
       }
     }
   },

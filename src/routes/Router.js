@@ -27,6 +27,7 @@ import {
   SW_EDIT,
   SW_LIST,
   SW_MIGRATE,
+  NEED_MIDJOURNEY,
 } from './RouteConstants';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
@@ -60,6 +61,7 @@ const ReportList = Loadable(lazy(() => import('../pages/reports/ReportStatus')))
 const DAO = Loadable(lazy(() => import('../pages/dao/Dao')));
 const DaoMileStoneAdd = Loadable(lazy(() => import('../pages/milestone/DaoMileStoneAdd')));
 const DaoMileStoneList = Loadable(lazy(() => import('../pages/milestone/DaoMileStoneList')));
+const DaoMMidJourneyList = Loadable(lazy(() => import('../pages/midjourney/DaoMMidJourneyList')));
 
 /* ****Routes***** */
 
@@ -92,6 +94,7 @@ const Router = [
       { path: DAO_HOME, exact: true, element: <DAO /> },
       { path: MILESTONE_ADD, exact: true, element: <DaoMileStoneAdd /> },
       { path: MILESTONE_LIST, exact: true, element: <DaoMileStoneList /> },
+      { path: NEED_MIDJOURNEY, exact: true, element: <DaoMMidJourneyList /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
