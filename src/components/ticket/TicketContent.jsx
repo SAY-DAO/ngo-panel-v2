@@ -122,7 +122,6 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
   };
 
-
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   return (
     <WebsocketProvider value={socketHttp}>
@@ -189,9 +188,11 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                               `roles.${getSAYRoleString(
                                 theTicket.need.socialWorker.flaskUserId === c.flaskUserId
                                   ? PanelContributors.SOCIAL_WORKER
-                                  : theTicket.need.auditor.flaskUserId === c.flaskUserId
+                                  : theTicket.need.auditor &&
+                                    theTicket.need.auditor.flaskUserId === c.flaskUserId
                                   ? PanelContributors.AUDITOR
-                                  : theTicket.need.purchaser.flaskUserId === c.flaskUserId &&
+                                  : theTicket.need.purchaser &&
+                                    theTicket.need.purchaser.flaskUserId === c.flaskUserId &&
                                     PanelContributors.PURCHASER,
                               )}`,
                             )}`}
