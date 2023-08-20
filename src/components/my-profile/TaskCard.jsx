@@ -215,21 +215,21 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   };
 
   const handleSignature = async () => {
-    // const announcedNeeds = pageDetails.needs[2].map((n) => {
-    //   const notAnnouncedNeeds = n.tickets.filter(
-    //     (item) => item.lastAnnouncement > AnnouncementEnum.NONE,
-    //   );
-    //   return notAnnouncedNeeds;
-    // });
+    const announcedNeeds = pageDetails.needs[2].map((n) => {
+      const notAnnouncedNeeds = n.tickets.filter(
+        (item) => item.lastAnnouncement > AnnouncementEnum.NONE,
+      );
+      return notAnnouncedNeeds;
+    });
 
-    // // alert when social worker has not announced all arrivals - 3rd column in MyPage
-    // if (pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length > 0) {
-    //   console.log(pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length);
-    //   handleNotDelivered();
-    // } else if (
-    //   pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length <= 0 &&
-    //   !openSigArrival
-    // ) {
+    // alert when social worker has not announced all arrivals - 3rd column in MyPage
+    if (pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length > 0) {
+      console.log(pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length);
+      handleNotDelivered();
+    } else if (
+      pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length <= 0 &&
+      !openSigArrival
+    ) {
     dispatch(
       signTransaction(
         {
@@ -243,7 +243,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
         chain.id,
       ),
     );
-    // }
+    }
   };
 
   const handleAnnouncement = (Announcement) => {
