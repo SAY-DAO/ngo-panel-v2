@@ -143,7 +143,9 @@ export default function ProviderForm() {
   };
 
   const onImageChange = (e) => {
+    console.log('huh');
     if (e.target.files[0]) {
+      console.log(e.target.files[0]);
       setUploadProviderImage(e.target.files[0]);
       handleImageClickOpen();
     }

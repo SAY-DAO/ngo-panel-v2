@@ -42,11 +42,17 @@ export const selectMidjourneyImage = (needFlaskId, selectedImage) => async (disp
         flaskId: userInfo && userInfo.id,
       },
     };
-    const { data } = await daoApi.post(
-      `/midjourney/select/${needFlaskId}`,
-      { selectedImage },
-      config,
+
+    const { data: fileData } = await daoApi.get(
+      'http://localhost:8002/api/dao/download/streamable2/.%2Fuploads%2Fmidjourney%2Fneed-9297%2F9297_1.png',
     );
+    console.log(fileData);
+
+    const formData = new FormData();
+    formData.append('file', fileData);
+    formData.append('selectedImage', selectedImage);
+
+    const { data } = await daoApi.post(`/midjourney/select/${needFlaskId}`, formData, config);
 
     dispatch({
       type: SELECT_MIDJOURNEY_IMAGE_SUCCESS,

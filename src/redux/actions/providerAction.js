@@ -87,7 +87,7 @@ export const updateProvider = (values) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "multipart/form-data",
         Authorization: userInfo && userInfo.access_token,
         flaskId: userInfo && userInfo.id,
       },

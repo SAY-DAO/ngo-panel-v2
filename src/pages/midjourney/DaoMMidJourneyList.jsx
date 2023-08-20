@@ -13,14 +13,15 @@ import {
   AvatarGroup,
   Box,
   CardMedia,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
   Tooltip,
 } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { fetchMidjourneyImages, selectMidjourneyImage } from '../../redux/actions/midjourneyAction';
-import { apiDao } from '../../env';
 
 export default function DenseTable() {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ export default function DenseTable() {
               <TableCell align="center">Flask Id</TableCell>
               <TableCell align="center">Original</TableCell>
               <TableCell align="center">Selected</TableCell>
-              <TableCell align="center">Options</TableCell>
+              <TableCell align="center">Local Options</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -76,7 +77,7 @@ export default function DenseTable() {
                       <>
                         <CardMedia
                           component="img"
-                          image={`${apiDao}/midjourney/images/${need.selectedImage}`}
+                          image={`https://nest.saydao.org/api/dao/midjourney/images/${need.selectedImage}`}
                           alt="large"
                           sx={{ width: '100%' }}
                         />
@@ -86,7 +87,7 @@ export default function DenseTable() {
                   >
                     <Avatar
                       alt="Remy Sharp"
-                      src={`${apiDao}/midjourney/images/${need.selectedImage}`}
+                      src={`https://nest.saydao.org/api/dao/midjourney/images/${need.selectedImage}`}
                     />
                   </Tooltip>
                 </TableCell>
@@ -102,7 +103,7 @@ export default function DenseTable() {
                                 <>
                                   <CardMedia
                                     component="img"
-                                    image={`${apiDao}/midjourney/images/${need.needFlaskId}/${
+                                    image={`http://localhost:8002/api/dao/midjourney/images/${need.needFlaskId}/${
                                       index + 1
                                     }`}
                                     alt="large"
@@ -123,7 +124,7 @@ export default function DenseTable() {
                                   <IconButton {...bindTrigger(popupState)}>
                                     <Avatar
                                       alt="midjourney image"
-                                      src={`${apiDao}/midjourney/images/${need.needFlaskId}/${
+                                      src={`http://localhost:8002/api/dao/midjourney/images/${need.needFlaskId}/${
                                         index + 1
                                       }`}
                                     />
@@ -150,6 +151,46 @@ export default function DenseTable() {
                       </PopupState>
                     ))}
                   </AvatarGroup>
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  <div className="upload__image-wrapper">
+                    <Grid
+                      sx={{
+                        position: 'relative',
+                      }}
+                    >
+                      <label htmlFor="upload-image-provider">
+                        <input
+                          accept="image/*"
+                          id="upload-image-provider"
+                          type="file"
+                          style={{ display: 'none' }}
+                          // onChange={onImageChange}
+                        />
+
+                        <IconButton
+                          name="upload-image-provider"
+                          id="upload-image-provider"
+                          color="primary"
+                          component="div"
+                          sx={{
+                            position: 'absolute',
+                            bottom: '0px',
+                            right: '0px',
+                          }}
+                        >
+                          <AddCircleOutlineIcon
+                            color="primary"
+                            fontSize="small"
+                            sx={{
+                              zIndex: 10,
+                              borderRadius: '20%',
+                            }}
+                          />
+                        </IconButton>
+                      </label>
+                    </Grid>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
