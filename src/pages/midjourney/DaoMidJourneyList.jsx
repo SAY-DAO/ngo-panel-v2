@@ -93,7 +93,7 @@ export default function DenseTable() {
                 </TableCell>
                 <TableCell component="th" scope="row">
                   <AvatarGroup>
-                    {need.midjourneyImages.map((link, index) => (
+                    {[0,1,2,3].map((link, index) => (
                       <PopupState key={link} variant="popover" popupId="demo-popup-menu">
                         {(popupState) => (
                           <>
