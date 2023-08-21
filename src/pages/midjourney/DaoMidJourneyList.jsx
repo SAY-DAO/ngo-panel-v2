@@ -103,9 +103,9 @@ export default function DenseTable() {
                                 <>
                                   <CardMedia
                                     component="img"
-                                    image={`http://localhost:8002/api/dao/midjourney/images/${need.needFlaskId}/${
-                                      index + 1
-                                    }`}
+                                    image={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/need-${
+                                      need.needFlaskId
+                                    }/${need.needFlaskId}_${index + 1}.png`}
                                     alt="large"
                                     sx={{ width: '100%' }}
                                   />
@@ -124,9 +124,9 @@ export default function DenseTable() {
                                   <IconButton {...bindTrigger(popupState)}>
                                     <Avatar
                                       alt="midjourney image"
-                                      src={`http://localhost:8002/api/dao/midjourney/images/${need.needFlaskId}/${
-                                        index + 1
-                                      }`}
+                                      src={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/need-${
+                                        need.needFlaskId
+                                      }/${need.needFlaskId}_${index + 1}.png`}
                                     />
                                   </IconButton>
                                   <Menu {...bindMenu(popupState)}>
