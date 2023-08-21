@@ -11,10 +11,22 @@ import {
   GET_ALL_MIDJOURNEY_IMAGES_SUCCESS,
 } from '../constants/midjourneyConstants';
 
-export const fetchMidjourneyImages = () => async (dispatch) => {
+export const fetchMidjourneyImages = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_ALL_MIDJOURNEY_IMAGES_REQUEST });
-    const { data } = await daoApi.get(`/midjourney/local/all`);
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id, // nest server needs this for auth
+      },
+    };
+    const { data } = await daoApi.get(`/midjourney/local/all`, config);
     dispatch({
       type: GET_ALL_MIDJOURNEY_IMAGES_SUCCESS,
       payload: data,
@@ -43,13 +55,8 @@ export const selectMidjourneyImage = (needFlaskId, selectedImage) => async (disp
       },
     };
 
-    const { data: fileData } = await daoApi.get(
-      'http://localhost:8002/api/dao/download/streamable2/.%2Fuploads%2Fmidjourney%2Fneed-9297%2F9297_1.png',
-    );
-    console.log(fileData);
 
     const formData = new FormData();
-    formData.append('file', fileData);
     formData.append('selectedImage', selectedImage);
 
     const { data } = await daoApi.post(`/midjourney/select/${needFlaskId}`, formData, config);
