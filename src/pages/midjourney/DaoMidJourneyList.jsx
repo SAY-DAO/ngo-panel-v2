@@ -77,7 +77,7 @@ export default function DenseTable() {
                       <>
                         <CardMedia
                           component="img"
-                          image={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/${need.selectedImage}`}
+                          image={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${need.selectedImage}`}
                           alt="large"
                           sx={{ width: '100%' }}
                         />
@@ -87,7 +87,7 @@ export default function DenseTable() {
                   >
                     <Avatar
                       alt="Remy Sharp"
-                      src={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/${need.selectedImage}`}
+                      src={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${need.selectedImage}`}
                     />
                   </Tooltip>
                 </TableCell>
@@ -103,7 +103,7 @@ export default function DenseTable() {
                                 <>
                                   <CardMedia
                                     component="img"
-                                    image={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/need-${
+                                    image={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/need-${
                                       need.needFlaskId
                                     }/${need.needFlaskId}_${index + 1}.png`}
                                     alt="large"
@@ -124,7 +124,7 @@ export default function DenseTable() {
                                   <IconButton {...bindTrigger(popupState)}>
                                     <Avatar
                                       alt="midjourney image"
-                                      src={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/need-${
+                                      src={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/need-${
                                         need.needFlaskId
                                       }/${need.needFlaskId}_${index + 1}.png`}
                                     />
