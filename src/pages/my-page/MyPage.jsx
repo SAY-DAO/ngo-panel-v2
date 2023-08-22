@@ -250,6 +250,7 @@ const MyPage = () => {
     }
   }, [addedTicket, pageDetails, updatedTicket, tickets, signature]);
 
+  
   // set duplicates
   useEffect(() => {
     if (duplicates && selectedNeed) {

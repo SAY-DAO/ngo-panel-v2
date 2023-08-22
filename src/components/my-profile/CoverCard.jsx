@@ -60,6 +60,7 @@ import { WALLET_INFORMATION_RESET, WALLET_VERIFY_RESET } from '../../redux/const
 import ContributionOverview from './ContributionOverview';
 import { daysDifference } from '../../utils/helpers';
 import NgoArrivalSummery from '../../pages/ngos/NgoArrivalSummery';
+import SignatureArrivalDialog from '../dialogs/SignatureArrivalDialog';
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
   <Tooltip placement="left" {...props} classes={{ popper: className }} />
@@ -87,6 +88,7 @@ const CoverCard = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const [openSigArrival, setOpenSigArrival] = useState(false);
   const [signatureError, setSignatureError] = useState('');
   const [cover, setCover] = useState(null);
   const [openSocialWorkers, setOpenSocialWorker] = useState(false);
@@ -112,12 +114,24 @@ const CoverCard = ({
 
   const { nonceData, error: errorWalletNonce } = useSelector((state) => state.walletNonce);
   const { verifiedNonce, error: errorVerify } = useSelector((state) => state.walletVerify);
-  const { information, error: errorWalletInformation  } = useSelector((state) => state.walletInformation);
+  const { information, error: errorWalletInformation } = useSelector(
+    (state) => state.walletInformation,
+  );
 
   const myPage = useSelector((state) => state.myPage);
   const { loading: loadingPageDetails } = myPage;
 
   const { error: errorSignature } = useSelector((state) => state.signature);
+
+  const handleNotDelivered = () => {
+    setOpenSigArrival(true);
+  };
+
+  useEffect(() => {
+    if (errorSignature && errorSignature.status === 418) {
+      handleNotDelivered();
+    }
+  }, [errorSignature]);
 
   // fetch nonce for the wallet siwe
   useEffect(() => {
@@ -126,12 +140,12 @@ const CoverCard = ({
     }
   }, [swInfo]);
 
-    // fetch Wallet Information 
-    useEffect(() => {
-      if (nonceData && !information)  {
-        dispatch(fetchWalletInformation());
-      }
-    }, [nonceData ,information]);
+  // fetch Wallet Information
+  useEffect(() => {
+    if (nonceData && !information) {
+      dispatch(fetchWalletInformation());
+    }
+  }, [nonceData, information]);
 
   // toast
   useEffect(() => {
@@ -894,17 +908,22 @@ const CoverCard = ({
       {(signatureError ||
         errorVerify ||
         errorWalletInformation ||
-        errorSignature ||
+        (errorSignature && errorSignature.status !== 418) ||
         errorSignIn) && (
         <MessageWallet
           walletError={
-            signatureError || errorVerify || errorWalletInformation || errorSignature || errorSignIn
+            signatureError ||
+            errorVerify ||
+            errorWalletInformation ||
+            (errorSignature && errorSignature.message) ||
+            errorSignIn
           }
           walletToastOpen={walletToastOpen}
           handleCloseWalletToast={handleCloseWalletToast}
           severity={errorSignIn || errorSignature ? 'warning' : 'error'}
         />
       )}
+      <SignatureArrivalDialog open={openSigArrival} setOpen={setOpenSigArrival} />
     </Card>
   );
 };

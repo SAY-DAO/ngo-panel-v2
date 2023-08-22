@@ -202,80 +202,82 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
   }
 };
 
-export const signTransaction = (values, signer, chainId) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: SIGNATURE_REQUEST });
+export const signTransaction =
+  (values, signer, chainId, arrivedColumnNumber) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: SIGNATURE_REQUEST });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-        flaskId: userInfo && userInfo.id,
-      },
-      withCredentials: true,
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+          flaskId: userInfo && userInfo.id,
+        },
+        withCredentials: true,
+      };
 
-    const request = {
-      flaskNeedId: values.flaskNeedId,
-      signerAddress: values.address,
-      statuses: values.statuses,
-      receipts: values.receipts,
-      payments: values.payments,
-      chainId
-    };
+      const request = {
+        flaskNeedId: values.flaskNeedId,
+        signerAddress: values.address,
+        statuses: values.statuses,
+        receipts: values.receipts,
+        payments: values.payments,
+        chainId,
+        arrivedColumnNumber,
+      };
 
-    const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
-    const transaction = result1.data;
-    // The named list of all type definitions
-    const types = {
-      ...transaction.types,
-    };
+      const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
+      const transaction = result1.data;
+      // The named list of all type definitions
+      const types = {
+        ...transaction.types,
+      };
 
-    const signatureHash = await signer.signTypedData({
-      domain: transaction.domain,
-      types,
-      primaryType: 'Voucher',
-      message: {
-        ...transaction.message,
-      },
-    });
+      const signatureHash = await signer.signTypedData({
+        domain: transaction.domain,
+        types,
+        primaryType: 'Voucher',
+        message: {
+          ...transaction.message,
+        },
+      });
 
-    const request2 = {
-      flaskNeedId: values.flaskNeedId,
-      statuses: values.statuses,
-      receipts: values.receipts,
-      payments: values.payments,
-      sayRoles: transaction.sayRoles,
-      verifyVoucherAddress: transaction.domain.verifyingContract,
-    };
+      const request2 = {
+        flaskNeedId: values.flaskNeedId,
+        statuses: values.statuses,
+        receipts: values.receipts,
+        payments: values.payments,
+        sayRoles: transaction.sayRoles,
+        verifyVoucherAddress: transaction.domain.verifyingContract,
+      };
 
-    const result2 = await daoApi.post(
-      `/wallet/signature/create/${signatureHash}`,
-      request2,
-      config,
-    );
-    const { ipfs, signature } = result2.data;
-    dispatch({
-      type: SIGNATURE_SUCCESS,
-      payload: { transaction, ipfs, signature },
-    });
-  } catch (e) {
-    console.log(e);
-    dispatch({
-      type: SIGNATURE_FAIL,
-      payload:
-        e.response && e.response.data.detail
-          ? e.response.data.detail
-          : e.response && e.response.data.message
-          ? e.response.data.message
-          : { reason: e.reason, code: e.code }, // metamask signature
-    });
-  }
-};
+      const result2 = await daoApi.post(
+        `/wallet/signature/create/${signatureHash}`,
+        request2,
+        config,
+      );
+      const { ipfs, signature } = result2.data;
+      dispatch({
+        type: SIGNATURE_SUCCESS,
+        payload: { transaction, ipfs, signature },
+      });
+    } catch (e) {
+      console.log(e);
+      dispatch({
+        type: SIGNATURE_FAIL,
+        payload:
+          e.response && e.response.data.detail
+            ? e.response.data.detail
+            : e.response && e.response.data.message
+            ? { message: e.response.data.message, status: e.response.data.status }
+            : { reason: e.reason, code: e.code }, // metamask signature
+      });
+    }
+  };
 
 export const verifySignature = (values, signatureHash) => async (dispatch, getState) => {
   try {

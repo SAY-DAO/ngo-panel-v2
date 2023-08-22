@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -45,7 +44,7 @@ import {
   SAYPlatformRoles,
 } from '../../utils/types';
 import ReceiptImage from './ReceiptImage';
-import { signTransaction, verifySignature } from '../../redux/actions/blockchainAction';
+import { signTransaction } from '../../redux/actions/blockchainAction';
 import DurationTimeLine from './DurationTimeLine';
 import { openTicketing, selectTicket } from '../../redux/actions/ticketAction';
 import { ADD_TICKET_RESET, UPDATE_TICKET_COLOR_RESET } from '../../redux/constants/ticketConstants';
@@ -64,7 +63,6 @@ import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
 import signatureIcon from '../../resources/images/signature.svg';
 import DeleteDialog from '../dialogs/DeleteDialog';
-import SignatureArrivalDialog from '../dialogs/SignatureArrivalDialog';
 
 const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const dispatch = useDispatch();
@@ -77,7 +75,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const [deletedId, setDeletedId] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
-  const [openSigArrival, setOpenSigArrival] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openAnnouncement, setOpenAnnouncement] = useState({
     arrival: false,
@@ -114,7 +111,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { loading: loadingDuplicates } = childNeedsDuplicates;
 
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
-  const { verification } = useSelector((state) => state.signaturesVerification);
+  // const { verification } = useSelector((state) => state.signaturesVerification);
 
   const { information } = useSelector((state) => state.walletInformation);
 
@@ -210,41 +207,21 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     setAnchorEl(null);
   };
 
-  const handleNotDelivered = () => {
-    setOpenSigArrival(true);
-  };
-
   const handleSignature = async () => {
-    const announcedNeeds = pageDetails.needs[2].map((n) => {
-      const notAnnouncedNeeds = n.tickets.filter(
-        (item) => item.lastAnnouncement > AnnouncementEnum.NONE,
-      );
-      return notAnnouncedNeeds;
-    });
-    console.log(announcedNeeds);
-
-    // alert when social worker has not announced all arrivals - 3rd column in MyPage
-    if (pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length > 0) {
-      console.log(pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length);
-      handleNotDelivered();
-    } else if (
-      pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length <= 0 &&
-      !openSigArrival
-    ) {
-      dispatch(
-        signTransaction(
-          {
-            address,
-            flaskNeedId: need.id,
-            statuses: need.status_updates,
-            receipts: need.receipts_,
-            payments: need.payments,
-          },
-          walletClient,
-          chain.id,
-        ),
-      );
-    }
+    dispatch(
+      signTransaction(
+        {
+          address,
+          flaskNeedId: need.id,
+          statuses: need.status_updates,
+          receipts: need.receipts_,
+          payments: need.payments,
+        },
+        walletClient,
+        chain.id,
+        pageDetails.meta.purchased,
+      ),
+    );
   };
 
   const handleAnnouncement = (Announcement) => {
@@ -283,22 +260,22 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     });
   };
 
-  const socialWorkerId = need.created_by_id;
-  const auditorId = need.confirmUser;
-  let purchaserId = null;
+  // const socialWorkerId = need.created_by_id;
+  // const auditorId = need.confirmUser;
+  // let purchaserId = null;
 
-  if (!need.status_updates) {
-    if (new Date(need.doneAt).getFullYear() < 2023) {
-      purchaserId = 31; // Nyaz
-    }
-    if (new Date(need.doneAt).getFullYear() === 2023 && new Date(need.doneAt).getMonth() <= 3) {
-      purchaserId = 21; // Neda
-    }
-  } else {
-    purchaserId =
-      need.status_updates &&
-      need.status_updates.find((s) => s.old_status === PaymentStatusEnum.COMPLETE_PAY)?.sw_id;
-  }
+  // if (!need.status_updates) {
+  //   if (new Date(need.doneAt).getFullYear() < 2023) {
+  //     purchaserId = 31; // Nyaz
+  //   }
+  //   if (new Date(need.doneAt).getFullYear() === 2023 && new Date(need.doneAt).getMonth() <= 3) {
+  //     purchaserId = 21; // Neda
+  //   }
+  // } else {
+  //   purchaserId =
+  //     need.status_updates &&
+  //     need.status_updates.find((s) => s.old_status === PaymentStatusEnum.COMPLETE_PAY)?.sw_id;
+  // }
   const iconImage = ipfsMetaData
     ? `${process.env.REACT_APP_IPFS_GATEWAY_1}/${ipfsMetaData.image.split('ipfs://')[1]}`
     : need.imageUrl && prepareUrl(need.imageUrl);
@@ -985,7 +962,6 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       )}
       <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
       <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
-      <SignatureArrivalDialog open={openSigArrival} setOpen={setOpenSigArrival} />
     </Box>
   );
 };
