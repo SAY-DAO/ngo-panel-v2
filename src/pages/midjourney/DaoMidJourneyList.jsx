@@ -77,7 +77,7 @@ export default function DenseTable() {
                       <>
                         <CardMedia
                           component="img"
-                          image={`http://localhost:8002/api/dao/midjourney/images/${need.selectedImage}`}
+                          image={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/${need.selectedImage}`}
                           alt="large"
                           sx={{ width: '100%' }}
                         />
@@ -87,13 +87,13 @@ export default function DenseTable() {
                   >
                     <Avatar
                       alt="Remy Sharp"
-                      src={`http://localhost:8002/api/dao/midjourney/images/${need.selectedImage}`}
+                      src={`https://raw.githubusercontent.com/SAY-DAO/midjourney-bot/main/main/need-images/${need.selectedImage}`}
                     />
                   </Tooltip>
                 </TableCell>
                 <TableCell component="th" scope="row">
                   <AvatarGroup>
-                    {[0,1,2,3].map((link, index) => (
+                    {[0, 1, 2, 3].map((link, index) => (
                       <PopupState key={link} variant="popover" popupId="demo-popup-menu">
                         {(popupState) => (
                           <>
@@ -135,7 +135,9 @@ export default function DenseTable() {
                                         dispatch(
                                           selectMidjourneyImage(
                                             need.needFlaskId,
-                                            `${need.needFlaskId}/${index + 1}`,
+                                            `need-${need.needFlaskId}/${need.needFlaskId}_${
+                                              index + 1
+                                            }.png`,
                                           ),
                                         )
                                       }
