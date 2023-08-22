@@ -55,11 +55,11 @@ export const selectMidjourneyImage = (needFlaskId, selectedImage) => async (disp
       },
     };
 
-
-    const formData = new FormData();
-    formData.append('selectedImage', selectedImage);
-
-    const { data } = await daoApi.post(`/midjourney/select/${needFlaskId}`, formData, config);
+    const { data } = await daoApi.post(
+      `/midjourney/select/${needFlaskId}`,
+      { selectedImage },
+      config,
+    );
 
     dispatch({
       type: SELECT_MIDJOURNEY_IMAGE_SUCCESS,
