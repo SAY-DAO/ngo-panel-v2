@@ -221,6 +221,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       );
       return notAnnouncedNeeds;
     });
+    console.log(announcedNeeds);
 
     // alert when social worker has not announced all arrivals - 3rd column in MyPage
     if (pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length > 0) {
@@ -230,19 +231,19 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
       pageDetails.meta.purchased - announcedNeeds.filter((n) => n[0]).length <= 0 &&
       !openSigArrival
     ) {
-    dispatch(
-      signTransaction(
-        {
-          address,
-          flaskNeedId: need.id,
-          statuses: need.status_updates,
-          receipts: need.receipts_,
-          payments: need.payments,
-        },
-        walletClient,
-        chain.id,
-      ),
-    );
+      dispatch(
+        signTransaction(
+          {
+            address,
+            flaskNeedId: need.id,
+            statuses: need.status_updates,
+            receipts: need.receipts_,
+            payments: need.payments,
+          },
+          walletClient,
+          chain.id,
+        ),
+      );
     }
   };
 
