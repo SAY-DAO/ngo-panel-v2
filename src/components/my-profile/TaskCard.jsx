@@ -335,13 +335,6 @@ const TaskCard = ({
     }
   }, [deleted]);
 
-  console.log("-----------huh---------------");
-  console.log(loadingSignature);
-  console.log(loadingInformation);
-  console.log(isLoading);
-  console.log(pendingConnector);
-  console.log(loadingEthereumSignature);
-  console.log("--------------------------");
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
       {(deletedId !== need.id || !deleted) && (

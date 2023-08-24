@@ -14,7 +14,6 @@ import {
   Box,
   CardMedia,
   CircularProgress,
-  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -23,7 +22,6 @@ import {
   Tooltip,
 } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
@@ -93,7 +91,7 @@ export default function DaoMidJourneyList() {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
 
   const midjourney = useSelector((state) => state.midjourney);
   const { selected, loading: loadingSelected, needs } = midjourney;
@@ -120,7 +118,10 @@ export default function DaoMidJourneyList() {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Flask Id</TableCell>
+              <TableCell align="center">Need Id</TableCell>
+              <TableCell align="center">Child Id</TableCell>
+              <TableCell align="center">NGO Name</TableCell>
+              <TableCell align="center">Family Ids</TableCell>
               <TableCell align="center">Original</TableCell>
               <TableCell align="center">Selected</TableCell>
               <TableCell align="center">Local Options</TableCell>
@@ -136,6 +137,14 @@ export default function DaoMidJourneyList() {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell align="center">{need.needFlaskId}</TableCell>
+                <TableCell align="center">{need.childFlaskId}</TableCell>
+                <TableCell align="center">{need.ngoName}</TableCell>
+                <TableCell align="center">
+                  {need.usersFlaskId.map(
+                    (element, index) =>
+                      `${element} ${index + 1 < need.usersFlaskId.length ? ',' : ''} `,
+                  )}
+                </TableCell>
                 <TableCell align="center">
                   <Tooltip
                     arrow
@@ -249,46 +258,6 @@ export default function DaoMidJourneyList() {
                       </PopupState>
                     ))}
                   </AvatarGroup>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  <div className="upload__image-wrapper">
-                    <Grid
-                      sx={{
-                        position: 'relative',
-                      }}
-                    >
-                      <label htmlFor="upload-image-provider">
-                        <input
-                          accept="image/*"
-                          id="upload-image-provider"
-                          type="file"
-                          style={{ display: 'none' }}
-                          // onChange={onImageChange}
-                        />
-
-                        <IconButton
-                          name="upload-image-provider"
-                          id="upload-image-provider"
-                          color="primary"
-                          component="div"
-                          sx={{
-                            position: 'absolute',
-                            bottom: '0px',
-                            right: '0px',
-                          }}
-                        >
-                          <AddCircleOutlineIcon
-                            color="primary"
-                            fontSize="small"
-                            sx={{
-                              zIndex: 10,
-                              borderRadius: '20%',
-                            }}
-                          />
-                        </IconButton>
-                      </label>
-                    </Grid>
-                  </div>
                 </TableCell>
               </TableRow>
             ))}

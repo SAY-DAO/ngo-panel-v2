@@ -27,6 +27,7 @@ import { UPDATE_NEED_CONFIRM_RESET } from '../../redux/constants/needConstant';
 import { MY_PAGE_RESET } from '../../redux/constants/userConstants';
 import { fetchDuplicateChildNeeds } from '../../redux/actions/needsAction';
 import { fetchUserSignatures } from '../../redux/actions/blockchainAction';
+import { SIGNATURE_RESET } from '../../redux/constants/daoConstants';
 
 function getModifiedNeeds(updatedTicket, addedTicket, need) {
   let theNeed;
@@ -283,6 +284,7 @@ const MyPage = () => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    dispatch({ type: SIGNATURE_RESET });
     setModifiedNeeds([[], [], [], []]);
   };
 
