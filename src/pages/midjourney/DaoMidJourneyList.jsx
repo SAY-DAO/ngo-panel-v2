@@ -89,7 +89,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function DenseTable() {
+export default function DaoMidJourneyList() {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);

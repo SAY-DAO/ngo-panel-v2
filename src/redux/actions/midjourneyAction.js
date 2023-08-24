@@ -40,6 +40,7 @@ export const fetchMidjourneyImages = () => async (dispatch, getState) => {
 };
 
 export const selectMidjourneyImage = (needFlaskId, selectedImage) => async (dispatch, getState) => {
+  console.log(needFlaskId, selectedImage);
   try {
     dispatch({ type: SELECT_MIDJOURNEY_IMAGE_REQUEST });
 

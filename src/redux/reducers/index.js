@@ -77,9 +77,11 @@ import {
   analyticsNgosReducer,
 } from './analyticReducer';
 import { midjourneyReducer } from './midjourneyReducer';
+import { commentsReducer } from './commentReducer';
 
 export default combineReducers({
   CustomizerReducer,
+  commentResult: commentsReducer,
   familyAnalyitics: analyticsFamilyReducer,
   childNeedsAnalytics: AnalyticChildNeedsReducer,
   ngosAnalytics: analyticsNgosReducer,

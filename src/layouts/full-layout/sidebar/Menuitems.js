@@ -9,7 +9,8 @@ import React from 'react';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
-import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
+import BurstModeOutlinedIcon from '@mui/icons-material/BurstModeOutlined';
+import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 
 const Menuitems = [
   {
@@ -209,8 +210,8 @@ const Menuitems = [
   },
   {
     title: 'sidebar.midjourney.title',
-    icon: <HandshakeOutlinedIcon />,
-    href: '/admin/catagories',
+    icon: <BurstModeOutlinedIcon />,
+    href: '/admin/midjourney',
     collapse: true,
     admin: true,
     children: [
@@ -218,6 +219,21 @@ const Menuitems = [
         title: 'sidebar.list',
         icon: 'list',
         href: '/midjourney/list',
+        admin: true,
+      },
+    ],
+  },
+  {
+    title: 'sidebar.comment.title',
+    icon: <MapsUgcOutlinedIcon />,
+    href: '/admin/comment',
+    collapse: true,
+    admin: true,
+    children: [
+      {
+        title: 'sidebar.list',
+        icon: 'list',
+        href: '/comment/list',
         admin: true,
       },
     ],

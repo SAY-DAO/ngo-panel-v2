@@ -57,6 +57,7 @@ const MyPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  const [loadingEthereumSignature, setLoadingEthereumSignature] = useState(false);
   const [height, setHeight] = useState(306.8); // cover scrolling
   const [toastOpen, setToastOpen] = useState(false);
   const [page, setPage] = useState(0);
@@ -250,7 +251,6 @@ const MyPage = () => {
     }
   }, [addedTicket, pageDetails, updatedTicket, tickets, signature]);
 
-  
   // set duplicates
   useEffect(() => {
     if (duplicates && selectedNeed) {
@@ -312,6 +312,7 @@ const MyPage = () => {
         setSwNewDetails={setSwNewDetails}
         setSkeleton={setSkeleton}
         skeleton={skeleton}
+        setLoadingEthereumSignature={setLoadingEthereumSignature}
       />
 
       {!modifiedNeeds ? (
@@ -419,6 +420,7 @@ const MyPage = () => {
                         cardSelected={cardSelected}
                         swNewDetails={swNewDetails}
                         totalNeedCount={totalNeedCount}
+                        loadingEthereumSignature={loadingEthereumSignature}
                       />
                     ))}
                   </Grid>

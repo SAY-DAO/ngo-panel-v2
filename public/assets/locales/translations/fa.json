@@ -316,6 +316,9 @@
     "midjourney": {
       "title": "Midjourney AI"
     },
+    "comment": {
+      "title": "پیغام‌ها"
+    },
     "daoHeader": "DAO",
     "dashboard": "داشبورد",
     "list": "لیست",

@@ -84,6 +84,7 @@ const CoverCard = ({
   arrivals,
   skeleton,
   setSkeleton,
+  setLoadingEthereumSignature,
 }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -167,6 +168,7 @@ const CoverCard = ({
   useEffect(() => {
     if (!errorSignIn && isConnected && nonceData && nonceData.nonce) {
       setOpenWallets(false);
+      setLoadingEthereumSignature(true);
       const chainId = chain?.id;
 
       if (status === 'loading' || !address || !chainId) return;
@@ -225,6 +227,13 @@ const CoverCard = ({
     if (!isSuccess) return;
     dispatch(walletVerify(values.message, values.signature));
   }, [values]);
+
+  // keep the button loading going when has not sign in and wallet is open
+  useEffect(() => {
+    if (information) {
+      setLoadingEthereumSignature(false);
+    }
+  }, [information]);
 
   // Disconnect if did not sign in
   useEffect(() => {

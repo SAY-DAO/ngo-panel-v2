@@ -271,6 +271,9 @@
     "midjourney": {
       "title": "Midjourney AI"
     },
+    "comment": {
+      "title": "Comment"
+    },
     "daoHeader": "DAO",
     "dashboard": "Dashboard",
     "list": "List",

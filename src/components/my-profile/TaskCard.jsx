@@ -64,7 +64,13 @@ import fetchIpfsMetaData from '../../utils/ipfsHelper';
 import signatureIcon from '../../resources/images/signature.svg';
 import DeleteDialog from '../dialogs/DeleteDialog';
 
-const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
+const TaskCard = ({
+  need,
+  setCardSelected,
+  cardSelected,
+  handleDialog,
+  loadingEthereumSignature,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -113,7 +119,7 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
   // const { verification } = useSelector((state) => state.signaturesVerification);
 
-  const { information } = useSelector((state) => state.walletInformation);
+  const { loading: loadingInformation } = useSelector((state) => state.walletInformation);
 
   const childOneNeed = useSelector((state) => state.childOneNeed);
   const { deleted } = childOneNeed;
@@ -329,6 +335,13 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
     }
   }, [deleted]);
 
+  console.log("-----------huh---------------");
+  console.log(loadingSignature);
+  console.log(loadingInformation);
+  console.log(isLoading);
+  console.log(pendingConnector);
+  console.log(loadingEthereumSignature);
+  console.log("--------------------------");
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
       {(deletedId !== need.id || !deleted) && (
@@ -922,9 +935,14 @@ const TaskCard = ({ need, setCardSelected, cardSelected, handleDialog }) => {
                           fullWidth
                           signbutton="true"
                           loading={
-                            loadingSignature || !information || isLoading || pendingConnector
+                            loadingSignature ||
+                            loadingInformation ||
+                            isLoading ||
+                            pendingConnector ||
+                            loadingEthereumSignature
                           }
                           onClick={handleSignature}
+                          sx={{ color: 'black' }}
                         >
                           {t('button.wallet.sign')}
                         </WalletButton>
@@ -973,4 +991,5 @@ TaskCard.propTypes = {
   setCardSelected: PropTypes.func,
   handleDialog: PropTypes.func,
   cardSelected: PropTypes.number,
+  loadingEthereumSignature: PropTypes.bool,
 };
