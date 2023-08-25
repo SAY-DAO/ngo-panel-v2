@@ -925,6 +925,7 @@ const TaskCard = ({
                     </WalletButton>
                   ) : (
                     isConnected &&
+                    information &&
                     address === information.address && (
                       <>
                         <WalletButton
