@@ -116,8 +116,6 @@ const TaskCard = ({
   const childNeedsDuplicates = useSelector((state) => state.childNeedsDuplicates);
   const { loading: loadingDuplicates } = childNeedsDuplicates;
 
-  const { information } = useSelector((state) => state.walletInformation);
-
   const { signature, ipfs, loading: loadingSignature } = useSelector((state) => state.signature);
   // const { verification } = useSelector((state) => state.signaturesVerification);
 
