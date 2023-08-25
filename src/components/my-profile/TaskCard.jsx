@@ -924,9 +924,7 @@ const TaskCard = ({
                       {t('button.wallet.connect')}
                     </WalletButton>
                   ) : (
-                    isConnected &&
-                    information &&
-                    address === information.address && (
+                    isConnected && (
                       <>
                         <WalletButton
                           fullWidth
