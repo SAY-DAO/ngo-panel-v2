@@ -50,7 +50,6 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
   };
 
   const handleConfirm = () => {
-
     dispatch({ type: UPDATE_TICKET_COLOR_RESET });
     dispatch(
       addTicket({
@@ -62,7 +61,6 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
         statuses: need.status_updates,
         receipts: need.receipts_,
         payments: need.payments,
-
       }),
     );
   };
@@ -107,7 +105,7 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
                       SAYPlatformRoles[r] !== SAYPlatformRoles.NO_ROLE &&
                       SAYPlatformRoles[r] !== SAYPlatformRoles.NGO_SUPERVISOR &&
                       SAYPlatformRoles[r] !== SAYPlatformRoles.FAMILY &&
-                      SAYPlatformRoles[r] !== SAYPlatformRoles.FRIEND,
+                      SAYPlatformRoles[r] !== SAYPlatformRoles.RELATIVE,
                   )
                   .map((role) => (
                     <MenuItem

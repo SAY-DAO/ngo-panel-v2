@@ -230,7 +230,7 @@ export const signTransaction =
         arrivedColumnNumber,
       };
 
-      const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
+      const result1 = await daoApi.post(`/wallet/signature/panel/prepare`, request, config);
       const transaction = result1.data;
       // The named list of all type definitions
       const types = {

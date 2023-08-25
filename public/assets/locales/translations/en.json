@@ -768,7 +768,7 @@
     "ngoSupervisor": "NGO supervisor",
     "noRole": "No Role",
     "familyMember": "Family Member",
-    "friend": "Friend"
+    "relative": "Relative"
   },
   "wallet": {
     "signature": {
@@ -788,5 +788,12 @@
     "siwe": {
       "statement": "Sign in with Ethereum to the app"
     }
+  },
+  "comment": {
+    "report": "Report a problem",
+    "title": "Please report any mistakes related to this need from here",
+    "placeholder": "Report ...",
+    "disabledWallet": "This need is not available to be signed until the reported issue is resolved!",
+    "investigating": "Invetigating the issue"
   }
 }

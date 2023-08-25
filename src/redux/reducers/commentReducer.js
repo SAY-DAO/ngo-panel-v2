@@ -12,10 +12,22 @@ import {
   RESOLVE_COMMENT_REQUEST,
   RESOLVE_COMMENT_SUCCESS,
   RESOLVE_COMMENT_FAIL,
+  CREATE_COMMENT_REQUEST,
+  CREATE_COMMENT_FAIL,
+  CREATE_COMMENT_SUCCESS,
+  CREATE_COMMENT_RESET,
 } from '../constants/commentConstants';
 
 export const commentsReducer = (state = {}, action) => {
   switch (action.type) {
+    case CREATE_COMMENT_REQUEST:
+      return { ...state, loading: true, success: false };
+    case CREATE_COMMENT_SUCCESS:
+      return { ...state, loading: false, success: true, created: action.payload };
+    case CREATE_COMMENT_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case CREATE_COMMENT_RESET:
+      return {};
     case RESOLVE_COMMENT_REQUEST:
       return { ...state, loading: true, success: false };
     case RESOLVE_COMMENT_SUCCESS:

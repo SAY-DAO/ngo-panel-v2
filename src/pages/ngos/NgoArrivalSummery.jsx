@@ -15,7 +15,7 @@ import TodayCard from '../../components/TodayCard';
 
 export default function NgoArrivalSummery({ arrivals, dateList }) {
   const list = [];
-  if (arrivals) {
+  if (arrivals && arrivals[0]) {
     arrivals.sort((a, b) => {
       const fa = a.ngoName.toLowerCase();
       const fb = b.ngoName.toLowerCase();
@@ -36,6 +36,7 @@ export default function NgoArrivalSummery({ arrivals, dateList }) {
       <>
         <Card elevation={2}>
           {arrivals &&
+            arrivals[0] &&
             arrivals.map((a) => (
               <div key={a.deliveryCode}>
                 {!list.includes(a.ngoName) && (
@@ -108,7 +109,7 @@ export default function NgoArrivalSummery({ arrivals, dateList }) {
                             ? 1
                             : 0.4,
                         backgroundColor: (theme) =>
-                          Math.min(...dateList) === a.maxDate
+                          dateList && Math.min(...dateList) === a.maxDate
                             ? theme.palette.success.dark
                             : 'transparent',
                       }}

@@ -8,15 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import {
-  Box,
-  FormControlLabel,
-  IconButton,
-  Switch,
-  TableFooter,
-  TablePagination,
-  Typography,
-} from '@mui/material';
+import { Box, IconButton, TableFooter, TablePagination, Typography } from '@mui/material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
@@ -24,8 +16,11 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import { deleteComment, fetchComments, resolveComment } from '../../redux/actions/commentAction';
+import { LoadingButton } from '@mui/lab';
+import { deleteComment, fetchComments } from '../../redux/actions/commentAction';
 import { dateConvertor } from '../../utils/persianToEnglish';
+import DaoCommentSwitch from '../../components/dao/comment/DaoCommentSwitch';
+import CommentDialog from '../../components/dialogs/CommentDialog';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -89,10 +84,11 @@ export default function DaoCommentList() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [checked, setChecked] = useState(true);
-
+  const [message, setMessage] = useState('');
+  const [dialogNeed, setDialogNeed] = useState();
+  const [commentOpen, setCommentOpen] = useState(false);
   const commentResult = useSelector((state) => state.commentResult);
-  const { resolveResult, deletedComment, needsWithComment } = commentResult;
+  const { deletedComment, needsWithComment } = commentResult;
 
   useEffect(() => {
     dispatch(fetchComments());
@@ -110,18 +106,10 @@ export default function DaoCommentList() {
     setPage(0);
   };
 
-  const handleChange = (needId) => {
-    dispatch(resolveComment(needId));
+  const handleAnswer = (need) => {
+    setDialogNeed(need);
+    setCommentOpen(true);
   };
-
-  useEffect(() => {
-    if (resolveResult) {
-      setChecked(true);
-    } else {
-      setChecked(false);
-    }
-  }, [resolveResult]);
-
   return (
     <TableContainer component={Paper} sx={{ mt: 25 }}>
       {needsWithComment && (
@@ -132,7 +120,9 @@ export default function DaoCommentList() {
               <TableCell align="center">Need Name</TableCell>
               <TableCell align="center">Last Comment</TableCell>
               <TableCell align="center">Created</TableCell>
-              <TableCell align="center">Delete</TableCell>
+              <TableCell align="center">Delete Last Comment</TableCell>
+              <TableCell align="center">Resolved</TableCell>
+              <TableCell align="center">Answer</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -186,10 +176,10 @@ export default function DaoCommentList() {
                   </IconButton>
                 </TableCell>
                 <TableCell align="center">
-                  <FormControlLabel
-                    control={<Switch onChange={() => handleChange(need.id)} checked={checked} />}
-                    label="Label"
-                  />
+                  <DaoCommentSwitch needId={need.id} resolved={need.isResolved} />
+                </TableCell>
+                <TableCell align="center">
+                  <LoadingButton onClick={() => handleAnswer(need)}>Answer</LoadingButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -221,6 +211,13 @@ export default function DaoCommentList() {
           </TableFooter>
         </Table>
       )}
+      <CommentDialog
+        open={commentOpen}
+        setOpen={setCommentOpen}
+        message={message}
+        setMessage={setMessage}
+        dialogNeed={dialogNeed}
+      />
     </TableContainer>
   );
 }

@@ -141,12 +141,6 @@ const CoverCard = ({
     }
   }, [swInfo]);
 
-  // fetch Wallet Information
-  useEffect(() => {
-    if (nonceData && !information) {
-      dispatch(fetchWalletInformation());
-    }
-  }, [nonceData, information]);
 
   // toast
   useEffect(() => {
@@ -181,7 +175,7 @@ const CoverCard = ({
       const message = new SiweMessage({
         domain: window.location.host,
         address,
-        statement: 'Sign in WITH Ethereum Wallet',
+        statement: 'Sign in Ethereum Wallet',
         uri: window.location.origin,
         version: '1',
         chainId,

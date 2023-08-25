@@ -108,8 +108,8 @@ export function getSAYRoleInteger(sayRole) {
     roleInteger = SAYPlatformRoles.NGO_SUPERVISOR;
   } else if (sayRole === SAYPlatformRoles.FAMILY) {
     roleInteger = SAYPlatformRoles.FAMILY;
-  } else if (sayRole === SAYPlatformRoles.FRIEND) {
-    roleInteger = SAYPlatformRoles.FRIEND;
+  } else if (sayRole === SAYPlatformRoles.RELATIVE) {
+    roleInteger = SAYPlatformRoles.RELATIVE;
   } else if (sayRole === SAYPlatformRoles.NO_ROLE) {
     roleInteger = SAYPlatformRoles.NO_ROLE;
   }
@@ -128,8 +128,8 @@ export function getSAYRoleString(sayRole) {
     roleString = 'ngoSupervisor';
   } else if (sayRole === SAYPlatformRoles.FAMILY) {
     roleString = 'familyMember';
-  } else if (sayRole === SAYPlatformRoles.FRIEND) {
-    roleString = 'friend';
+  } else if (sayRole === SAYPlatformRoles.RELATIVE) {
+    roleString = 'relative';
   } else if (sayRole === SAYPlatformRoles.NO_ROLE) {
     roleString = 'noRole';
   }

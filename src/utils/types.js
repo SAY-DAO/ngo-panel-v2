@@ -4,15 +4,6 @@ export const eEthereumNetworkChainId = {
   sepolia: 11155111,
 };
 
-export const VirtualFamilyRole = {
-  FATHER: 0,
-  MOTHER: 1,
-  AMOO: 2,
-  KHALEH: 3,
-  DAEI: 4,
-  AMME: 5,
-};
-
 export const Colors = {
   WHITE: 0,
   BLUE: 1,
@@ -59,6 +50,15 @@ export const HousingStatusEnum = {
   CareCenters: 2,
 };
 
+export const VirtualFamilyRole = {
+  SAY: -2,
+  FATHER: 0,
+  MOTHER: 1,
+  AMOO: 2,
+  KHALEH: 3,
+  DAEI: 4,
+  AMME: 5,
+};
 export const PanelContributors = {
   SOCIAL_WORKER: 1,
   NGO_SUPERVISOR: 2,
@@ -67,17 +67,20 @@ export const PanelContributors = {
 };
 
 export const AppContributors = {
-  FAMILY: 5,
-  FRIEND: 6,
+  FAMILY: 7,
+  RELATIVE: 8,
 };
+
 export const SAYPlatformRoles = {
+  NGO: -2,
+  CHILD: -1,
   NO_ROLE: 0,
   SOCIAL_WORKER: PanelContributors.SOCIAL_WORKER,
   NGO_SUPERVISOR: PanelContributors.NGO_SUPERVISOR,
   PURCHASER: PanelContributors.PURCHASER,
   AUDITOR: PanelContributors.AUDITOR,
   FAMILY: AppContributors.FAMILY,
-  FRIEND: AppContributors.FRIEND,
+  RELATIVE: AppContributors.RELATIVE,
 };
 
 export const RolesEnumDefine = {
