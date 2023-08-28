@@ -46,6 +46,7 @@ import {
 } from './needReducer';
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
 import {
+  contributionReducer,
   signatureReducer,
   signatureVerificationReducer,
   userSignaturesReducer,
@@ -82,6 +83,7 @@ import { commentsReducer } from './commentReducer';
 export default combineReducers({
   CustomizerReducer,
   commentResult: commentsReducer,
+  ecoContribution: contributionReducer,
   familyAnalyitics: analyticsFamilyReducer,
   childNeedsAnalytics: AnalyticChildNeedsReducer,
   ngosAnalytics: analyticsNgosReducer,

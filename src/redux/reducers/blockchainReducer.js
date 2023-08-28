@@ -24,6 +24,15 @@ import {
   USER_SIGNATURES_REQUEST,
   USER_SIGNATURES_SUCCESS,
   USER_SIGNATURES_FAIL,
+  CONTRIBUTION_LIST_REQUEST,
+  CONTRIBUTION_LIST_SUCCESS,
+  CONTRIBUTION_LIST_FAIL,
+  CONTRIBUTION_CREATE_REQUEST,
+  CONTRIBUTION_CREATE_SUCCESS,
+  CONTRIBUTION_CREATE_FAIL,
+  DELETE_CONTRIBUTION_REQUEST,
+  DELETE_CONTRIBUTION_SUCCESS,
+  DELETE_CONTRIBUTION_FAIL,
 } from '../constants/daoConstants';
 
 export const walletNonceReducer = (state = {}, action) => {
@@ -131,6 +140,31 @@ export const userSignaturesReducer = (state = {}, action) => {
         userSignatures: action.payload,
       };
     case USER_SIGNATURES_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const contributionReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_CONTRIBUTION_REQUEST:
+      return { loading: true, success: false };
+    case DELETE_CONTRIBUTION_SUCCESS:
+      return { loading: false, success: true, deleted: action.payload };
+    case DELETE_CONTRIBUTION_FAIL:
+      return { loading: false, error: action.payload };
+    case CONTRIBUTION_LIST_REQUEST:
+      return { loading: true, success: false };
+    case CONTRIBUTION_LIST_SUCCESS:
+      return { loading: false, success: true, contributions: action.payload };
+    case CONTRIBUTION_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case CONTRIBUTION_CREATE_REQUEST:
+      return { loading: true, success: false };
+    case CONTRIBUTION_CREATE_SUCCESS:
+      return { loading: false, success: true, created: action.payload };
+    case CONTRIBUTION_CREATE_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

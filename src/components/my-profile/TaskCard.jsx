@@ -24,8 +24,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { useAccount, useConnect, useWalletClient, useNetwork } from 'wagmi';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import { useAccount, useConnect, useWalletClient, useNetwork, useSignMessage } from 'wagmi';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTheme } from '@mui/material/styles';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
@@ -69,7 +68,7 @@ const TaskCard = ({
   setCardSelected,
   cardSelected,
   handleDialog,
-  loadingEthereumSignature,
+  // loadingEthereumSignature,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -96,6 +95,7 @@ const TaskCard = ({
   const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { isLoading, pendingConnector } = useConnect();
+  const { isLoading: isLoadingSignIn } = useSignMessage();
   const { chain } = useNetwork();
 
   const swDetails = useSelector((state) => state.swDetails);
@@ -896,26 +896,6 @@ const TaskCard = ({
             )}
             {need.status === ProductStatusEnum.DELIVERED && (
               <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-                <Tooltip
-                  title={
-                    <>
-                      <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
-                        {t('wallet.signatureInformation.top')}
-                      </Typography>
-                      <Typography component="li" sx={{ fontSize: 10 }}>
-                        {t('wallet.signatureInformation.1')} {t('wallet.signatureInformation.2')}
-                      </Typography>
-                      <Typography component="li" sx={{ fontSize: 10 }}>
-                        {t('wallet.signatureInformation.3')}
-                      </Typography>
-                    </>
-                  }
-                >
-                  <IconButton>
-                    <HelpRoundedIcon />
-                  </IconButton>
-                </Tooltip>
-
                 {(!needSignatures[0] || !needSignatures.find((s) => s.flaskUserId === swInfo.id)) &&
                   (!isConnected ? (
                     <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
@@ -928,11 +908,12 @@ const TaskCard = ({
                           fullWidth
                           signbutton="true"
                           loading={
+                            isLoadingSignIn ||
                             loadingSignature ||
                             loadingInformation ||
                             isLoading ||
-                            pendingConnector ||
-                            loadingEthereumSignature
+                            pendingConnector 
+                            // loadingEthereumSignature
                           }
                           onClick={handleSignature}
                           sx={{ color: 'black' }}
@@ -984,5 +965,5 @@ TaskCard.propTypes = {
   setCardSelected: PropTypes.func,
   handleDialog: PropTypes.func,
   cardSelected: PropTypes.number,
-  loadingEthereumSignature: PropTypes.bool,
+  // loadingEthereumSignature: PropTypes.bool,
 };

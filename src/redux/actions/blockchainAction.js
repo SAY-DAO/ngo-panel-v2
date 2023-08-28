@@ -23,6 +23,15 @@ import {
   USER_SIGNATURES_REQUEST,
   USER_SIGNATURES_SUCCESS,
   USER_SIGNATURES_FAIL,
+  CONTRIBUTION_LIST_REQUEST,
+  CONTRIBUTION_LIST_SUCCESS,
+  CONTRIBUTION_LIST_FAIL,
+  CONTRIBUTION_CREATE_REQUEST,
+  CONTRIBUTION_CREATE_SUCCESS,
+  CONTRIBUTION_CREATE_FAIL,
+  DELETE_CONTRIBUTION_SUCCESS,
+  DELETE_CONTRIBUTION_REQUEST,
+  DELETE_CONTRIBUTION_FAIL,
 } from '../constants/daoConstants';
 import VerifyVoucherContract from '../../build/contracts/needModule/VerifyVoucher.sol/VerifyVoucher.json';
 import network from '../../build/contracts/network-settings.json';
@@ -336,6 +345,101 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
     dispatch({
       type: SIGNATURE_VERIFICATION_FAIL,
       payload: { e },
+    });
+  }
+};
+
+export const fetchAvailableContribution = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CONTRIBUTION_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/contribution/all`, config);
+
+    dispatch({
+      type: CONTRIBUTION_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: CONTRIBUTION_LIST_FAIL,
+      payload: e.response && e.response.data ? e.response.data.message : e.message,
+    });
+  }
+};
+
+export const createContribution = (title, description) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CONTRIBUTION_CREATE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.post(`/contribution/create`, { title, description }, config);
+
+    dispatch({
+      type: CONTRIBUTION_CREATE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: CONTRIBUTION_CREATE_FAIL,
+      payload: e.response && e.response.data ? e.response.data.message : e.message,
+    });
+  }
+};
+
+export const deleteContribution = (contributionId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_CONTRIBUTION_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.delete(`/contribution/${contributionId}`, config);
+
+    dispatch({
+      type: DELETE_CONTRIBUTION_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_CONTRIBUTION_FAIL,
+      payload:
+        e.response && e.response.data.detail
+          ? e.response.data
+          : e.response && e.response.data
+          ? e.response.data.message
+          : e.response,
     });
   }
 };

@@ -274,6 +274,9 @@
     "comment": {
       "title": "Comment"
     },
+    "contribution": {
+      "title": "Contribution"
+    },
     "daoHeader": "DAO",
     "dashboard": "Dashboard",
     "list": "List",
@@ -795,5 +798,9 @@
     "placeholder": "Report ...",
     "disabledWallet": "This need is not available to be signed until the reported issue is resolved!",
     "investigating": "Invetigating the issue"
+  },
+  "contribution":{
+    "add": "Add One"
   }
+
 }

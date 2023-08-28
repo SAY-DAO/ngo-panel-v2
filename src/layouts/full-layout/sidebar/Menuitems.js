@@ -11,6 +11,7 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import BurstModeOutlinedIcon from '@mui/icons-material/BurstModeOutlined';
 import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 
 const Menuitems = [
   {
@@ -234,6 +235,21 @@ const Menuitems = [
         title: 'sidebar.list',
         icon: 'list',
         href: '/comment/list',
+        admin: true,
+      },
+    ],
+  },
+  {
+    title: 'sidebar.contribution.title',
+    icon: <GroupsOutlinedIcon />,
+    href: '/admin/contribution',
+    collapse: true,
+    admin: true,
+    children: [
+      {
+        title: 'sidebar.list',
+        icon: 'list',
+        href: '/contribution/list',
         admin: true,
       },
     ],

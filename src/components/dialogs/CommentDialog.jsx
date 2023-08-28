@@ -22,11 +22,9 @@ export default function CommentDialog({ open, setOpen, message, setMessage, dial
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(dialogNeed);
+
   const submitComment = () => {
-    dispatch(
-      createComment(dialogNeed.flaskId, dialogNeed.id, message),
-    );
+    dispatch(createComment(dialogNeed.flaskId, dialogNeed.id, message));
   };
 
   useEffect(() => {

@@ -25,3 +25,4 @@ export const MILESTONE_ADD = '/dao/milestone/add';
 export const MILESTONE_LIST = '/dao/milestone/list';
 export const NEED_MIDJOURNEY = '/midjourney/list';
 export const NEED_COMMENT = '/comment/list';
+export const CONTRIBUTION = '/contribution/list';
