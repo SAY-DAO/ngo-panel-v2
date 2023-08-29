@@ -41,7 +41,7 @@ const SignatureCard = ({ signatureHash, need }) => {
           height: 200,
           background: need.midjourneyImage
             ? `url(${`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${need.midjourneyImage}`})`
-            : '',
+            : `url(${need.needRetailerImg})`,
           backgroundPosition: 'center',
           backgroundSize: 'cover',
           position: 'relative',
@@ -70,20 +70,23 @@ const SignatureCard = ({ signatureHash, need }) => {
             <Typography sx={{ color: 'white', fontWeight: 400 }} fontSize="small">
               {need.child.sayNameTranslations.fa}
             </Typography>
-            <Typography
-              sx={{
-                maxWidth: '90px !important',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                height: '1.2em',
-                whiteSpace: 'nowrap',
-              }}
-              fontSize="small"
-            >
-              {successNgoList && ngoList.find((ngo) => Number(ngo.id) === need.flaskNgoId)
-                ? ngoList.find((ngo) => Number(ngo.id) === need.flaskNgoId).name
-                : ''}
-            </Typography>
+            {successNgoList && (
+              <Typography
+                sx={{
+                  maxWidth: '90px !important',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  height: '1.2em',
+                  whiteSpace: 'nowrap',
+                }}
+                fontSize="small"
+              >
+                {ngoList.find((ngo) => Number(ngo.id) === need.flaskNgoId)
+                  ? ngoList.find((ngo) => Number(ngo.id) === need.flaskNgoId).name
+                  : ''}
+              </Typography>
+            )}
+
             <Typography sx={{ color: 'white', fontWeight: 400 }} fontSize="small">
               {need.socialWorker.firstName} {need.socialWorker.lastName}
             </Typography>
