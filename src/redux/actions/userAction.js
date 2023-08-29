@@ -1,4 +1,6 @@
 import { daoApi, publicApi } from '../../apis/sayBase';
+import { SIGNATURE_RESET } from '../constants/daoConstants';
+import { USER_TICKET_LIST_RESET } from '../constants/ticketConstants';
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -22,6 +24,7 @@ import {
   USER_CHANGE_PASSWORD_REQUEST,
   USER_CHANGE_PASSWORD_SUCCESS,
   USER_CHANGE_PASSWORD_FAIL,
+  MY_PAGE_RESET,
 } from '../constants/userConstants';
 
 export const register = (userName, password, theKey, value, otp) => async (dispatch) => {
@@ -97,6 +100,9 @@ export const login = (userName, password) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   dispatch({ type: USER_LOGOUT });
+  dispatch({ type: MY_PAGE_RESET });
+  dispatch({ type: SIGNATURE_RESET });
+  dispatch({ type: USER_TICKET_LIST_RESET });
   localStorage.removeItem('userInfo');
 };
 

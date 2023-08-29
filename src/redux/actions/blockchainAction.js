@@ -351,7 +351,7 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
     const result1 = await daoApi.post(`/wallet/signature/verify`, request, config);
     const transaction = result1.data;
 
-    const data = await readContract({
+    const verifiedAddress = await readContract({
       address: network.mainnet.verifyVoucherAddress,
       abi: VerifyVoucherContract.abi,
       functionName: '_verify',
@@ -371,11 +371,9 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
       ],
       blockTag: 'safe',
     });
-    console.log(data);
-
     dispatch({
       type: SIGNATURE_VERIFICATION_SUCCESS,
-      payload: data,
+      payload: { verifiedAddress, flaskNeedId: transaction.message.needId },
     });
   } catch (e) {
     console.log(e);

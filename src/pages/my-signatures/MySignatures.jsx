@@ -72,7 +72,7 @@ export default function MySignatures() {
         {(userSignatures || allSignatures || []).map((s) => (
           <ImageListItem key={s.id}>
             <SignatureCard
-              signatureHash={s.hash}
+              signature={s}
               cardSelected={cardSelected}
               setCardSelected={setCardSelected}
               need={s.need}

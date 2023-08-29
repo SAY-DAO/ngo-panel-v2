@@ -121,7 +121,7 @@ export const signatureVerificationReducer = (state = {}, action) => {
       return {
         loading: false,
         success: true,
-        transaction: action.payload,
+        verifiedData: action.payload,
       };
     case SIGNATURE_VERIFICATION_FAIL:
       return { loading: false, error: action.payload };

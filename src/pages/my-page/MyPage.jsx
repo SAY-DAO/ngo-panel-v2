@@ -106,7 +106,9 @@ const MyPage = () => {
   }, [swInfo]);
 
   useEffect(() => {
-    if (swInfo) dispatch(fetchUserSignatures());
+    if (swInfo) {
+      dispatch(fetchUserSignatures());
+    }
   }, [swInfo, signature]);
 
   useEffect(() => {

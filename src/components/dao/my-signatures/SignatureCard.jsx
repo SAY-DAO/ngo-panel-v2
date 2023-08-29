@@ -1,20 +1,40 @@
-import React from 'react';
-import { Avatar, Box, Card, Grid, IconButton, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import {
+  Tooltip,
+  Avatar,
+  Box,
+  Card,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import { PropTypes } from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { useAccount, useNetwork } from 'wagmi';
-import { prepareUrl } from '../../../utils/helpers';
+import { prepareUrl, shortenWallet } from '../../../utils/helpers';
 import { verifySignature } from '../../../redux/actions/blockchainAction';
 
-const SignatureCard = ({ signatureHash, need }) => {
+const SignatureCard = ({ signature, need }) => {
   const dispatch = useDispatch();
+
+  const [cardAddress, setCardAddress] = useState();
 
   const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
+
+  const signaturesVerification = useSelector((state) => state.signaturesVerification);
+  const { verifiedData, loading: loadingSignaturesVerification } = signaturesVerification;
+
+  useEffect(() => {
+    if (verifiedData && verifiedData.flaskNeedId === need.flaskId) {
+      setCardAddress(verifiedData.verifiedAddress);
+    }
+  }, [verifiedData]);
 
   const handleVerifySignature = () => {
     dispatch(
@@ -27,7 +47,7 @@ const SignatureCard = ({ signatureHash, need }) => {
           receipts: need.receipts,
           payments: need.verifiedPayments,
         },
-        signatureHash,
+        signature.hash,
       ),
     );
   };
@@ -48,9 +68,31 @@ const SignatureCard = ({ signatureHash, need }) => {
         }}
       >
         {isConnected && (
-          <IconButton onClick={handleVerifySignature}>
-            <ReplayIcon />
-          </IconButton>
+          <>
+            {loadingSignaturesVerification ? (
+              <Grid container>
+                <CircularProgress size={15} sx={{ m: 'auto' }} />
+              </Grid>
+            ) : !cardAddress ? (
+              <Tooltip title="verify signature">
+                <IconButton onClick={handleVerifySignature}>
+                  <ReplayIcon sx={{ color: 'grey' }} />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Typography
+                sx={{
+                  bgcolor: !signature.user.wallets.find((w) => w.address === cardAddress)
+                    ? 'red'
+                    : 'green',
+                  textAlign: 'center',
+                  fontWeight: 400,
+                }}
+              >
+                {shortenWallet(cardAddress)}
+              </Typography>
+            )}
+          </>
         )}
 
         <Grid
@@ -116,5 +158,5 @@ export default SignatureCard;
 
 SignatureCard.propTypes = {
   need: PropTypes.object,
-  signatureHash: PropTypes.string,
+  signature: PropTypes.string,
 };

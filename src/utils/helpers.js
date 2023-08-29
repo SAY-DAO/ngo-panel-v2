@@ -9,6 +9,9 @@ import {
 } from './types';
 import { PRODUCT_UNPAYABLE_PERIOD } from './configs';
 
+export function shortenWallet(address) {
+  return `${address.slice(0, 5)}...${address.slice(-4)}`;
+}
 export function median(values) {
   if (values.length === 0) throw new Error('No inputs');
   values.sort((a, b) => {
