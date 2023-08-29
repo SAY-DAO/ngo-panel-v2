@@ -64,7 +64,7 @@ const SignatureCard = ({ signature, need }) => {
   };
   return (
     <div>
-      {!isConnected && (
+      {isConnected && (
         <div style={{ position: 'absolute', zIndex: 10, right: 12, top: 8 }}>
           {loadingSignaturesVerification ? (
             <Grid container>
