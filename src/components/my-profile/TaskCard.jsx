@@ -129,26 +129,6 @@ const TaskCard = ({
     setAnchorEl(event.currentTarget);
   };
 
-  // signature verification
-  // useEffect(() => {
-  // if (thisCardSignature) {
-  // console.log(thisCardSignature.hash);
-  // dispatch(
-  //   verifySignature(
-  //     {
-  //       address,
-  //       flaskNeedId: need.id,
-  //       statuses: need.status_updates,
-  //       receipts: need.receipts_,
-  //       payments: need.payments,
-  //     },
-  //     thisCardSignature.hash,
-  //   ),
-  // );
-  // console.log(verification);
-  // }
-  // }, [thisCardSignature]);
-
   // set card signature
   useEffect(() => {
     if (signature && signature.flaskNeedId === need.id) {
@@ -912,7 +892,7 @@ const TaskCard = ({
                             loadingSignature ||
                             loadingInformation ||
                             isLoading ||
-                            pendingConnector 
+                            pendingConnector
                             // loadingEthereumSignature
                           }
                           onClick={handleSignature}

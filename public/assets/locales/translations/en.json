@@ -243,6 +243,7 @@
   "sidebar": {
     "swHeader": "Social Worker",
     "myPage": "My Page",
+    "signatures": "My Signatures",
     "children": {
       "title": "Children"
     },
@@ -799,8 +800,7 @@
     "disabledWallet": "This need is not available to be signed until the reported issue is resolved!",
     "investigating": "Invetigating the issue"
   },
-  "contribution":{
+  "contribution": {
     "add": "Add One"
   }
-
 }

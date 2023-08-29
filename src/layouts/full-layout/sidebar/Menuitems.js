@@ -12,6 +12,7 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import BurstModeOutlinedIcon from '@mui/icons-material/BurstModeOutlined';
 import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 
 const Menuitems = [
   {
@@ -39,7 +40,12 @@ const Menuitems = [
     href: '/page/view',
     admin: false,
   },
-
+  {
+    title: 'sidebar.signatures',
+    icon: <HandshakeOutlinedIcon />,
+    href: '/signatures/me',
+    admin: false,
+  },
   {
     title: 'sidebar.children.title',
     icon: <ChildCareIcon />,

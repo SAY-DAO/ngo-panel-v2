@@ -24,6 +24,9 @@ import {
   USER_SIGNATURES_REQUEST,
   USER_SIGNATURES_SUCCESS,
   USER_SIGNATURES_FAIL,
+  ALL_SIGNATURES_REQUEST,
+  ALL_SIGNATURES_SUCCESS,
+  ALL_SIGNATURES_FAIL,
   CONTRIBUTION_LIST_REQUEST,
   CONTRIBUTION_LIST_SUCCESS,
   CONTRIBUTION_LIST_FAIL,
@@ -118,7 +121,7 @@ export const signatureVerificationReducer = (state = {}, action) => {
       return {
         loading: false,
         success: true,
-        verification: action.payload,
+        transaction: action.payload,
       };
     case SIGNATURE_VERIFICATION_FAIL:
       return { loading: false, error: action.payload };
@@ -131,6 +134,16 @@ export const signatureVerificationReducer = (state = {}, action) => {
 
 export const userSignaturesReducer = (state = {}, action) => {
   switch (action.type) {
+    case ALL_SIGNATURES_REQUEST:
+      return { loading: true, success: false };
+    case ALL_SIGNATURES_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        allSignatures: action.payload,
+      };
+    case ALL_SIGNATURES_FAIL:
+      return { loading: false, error: action.payload };
     case USER_SIGNATURES_REQUEST:
       return { loading: true, success: false };
     case USER_SIGNATURES_SUCCESS:

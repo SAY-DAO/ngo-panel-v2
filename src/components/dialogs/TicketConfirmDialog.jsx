@@ -105,7 +105,9 @@ export default function TicketConfirmDialog({ openConfirm, setOpenConfirm, loadi
                       SAYPlatformRoles[r] !== SAYPlatformRoles.NO_ROLE &&
                       SAYPlatformRoles[r] !== SAYPlatformRoles.NGO_SUPERVISOR &&
                       SAYPlatformRoles[r] !== SAYPlatformRoles.FAMILY &&
-                      SAYPlatformRoles[r] !== SAYPlatformRoles.RELATIVE,
+                      SAYPlatformRoles[r] !== SAYPlatformRoles.RELATIVE &&
+                      SAYPlatformRoles[r] !== SAYPlatformRoles.NGO &&
+                      SAYPlatformRoles[r] !== SAYPlatformRoles.CHILD 
                   )
                   .map((role) => (
                     <MenuItem

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { readContract } from '@wagmi/core';
 import { daoApi, publicApi } from '../../apis/sayBase';
 import {
@@ -32,6 +31,9 @@ import {
   DELETE_CONTRIBUTION_SUCCESS,
   DELETE_CONTRIBUTION_REQUEST,
   DELETE_CONTRIBUTION_FAIL,
+  ALL_SIGNATURES_REQUEST,
+  ALL_SIGNATURES_SUCCESS,
+  ALL_SIGNATURES_FAIL,
 } from '../constants/daoConstants';
 import VerifyVoucherContract from '../../build/contracts/needModule/VerifyVoucher.sol/VerifyVoucher.json';
 import network from '../../build/contracts/network-settings.json';
@@ -62,7 +64,9 @@ export const fetchNonce = () => async (dispatch, getState) => {
     dispatch({
       type: WALLET_NONCE_FAIL,
       payload:
-        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+        e && e.response && e.response.data.detail
+          ? e.response.data.detail
+          : e.response.data.message,
     });
   }
 };
@@ -211,6 +215,36 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
   }
 };
 
+export const fetchAllSignatures = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ALL_SIGNATURES_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/wallet/all/signatures`, config);
+
+    dispatch({
+      type: ALL_SIGNATURES_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: ALL_SIGNATURES_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
 export const signTransaction =
   (values, signer, chainId, arrivedColumnNumber) => async (dispatch, getState) => {
     try {
@@ -306,14 +340,15 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
     };
 
     const request = {
+      chainId: values.chainId,
       flaskNeedId: values.flaskNeedId,
-      signerAddress: values.address,
+      signerAddress: values.signerAddress,
       statuses: values.statuses,
       receipts: values.receipts,
       payments: values.payments,
     };
 
-    const result1 = await daoApi.post(`/wallet/signature/prepare`, request, config);
+    const result1 = await daoApi.post(`/wallet/signature/verify`, request, config);
     const transaction = result1.data;
 
     const data = await readContract({
@@ -336,15 +371,17 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
       ],
       blockTag: 'safe',
     });
+    console.log(data);
 
     dispatch({
       type: SIGNATURE_VERIFICATION_SUCCESS,
       payload: data,
     });
   } catch (e) {
+    console.log(e);
     dispatch({
       type: SIGNATURE_VERIFICATION_FAIL,
-      payload: { e },
+      payload: e,
     });
   }
 };

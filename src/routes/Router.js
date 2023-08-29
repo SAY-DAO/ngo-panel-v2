@@ -30,6 +30,7 @@ import {
   NEED_MIDJOURNEY,
   NEED_COMMENT,
   CONTRIBUTION,
+  MY_SIGNATURES,
 } from './RouteConstants';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
@@ -47,6 +48,7 @@ const SocialWorkerMigrate = Loadable(
   lazy(() => import('../pages/socialWorkers/SocialWorkerMigrate')),
 );
 const SocialWorkerProfile = Loadable(lazy(() => import('../pages/my-page/MyPage')));
+const MySignatures = Loadable(lazy(() => import('../pages/my-signatures/MySignatures')));
 const ProviderList = Loadable(lazy(() => import('../pages/providers/ProviderList')));
 const ProviderEdit = Loadable(lazy(() => import('../pages/providers/ProviderEdit')));
 const ProviderAdd = Loadable(lazy(() => import('../pages/providers/ProviderAdd')));
@@ -78,6 +80,7 @@ const Router = [
     children: [
       { path: HOME, element: <Navigate to={PROFILE_VIEW} /> },
       { path: PROFILE_VIEW, exact: true, element: <SocialWorkerProfile /> },
+      { path: MY_SIGNATURES, exact: true, element: <MySignatures /> },
       { path: CHANGE_PASS, exac: true, element: <ChangePass /> },
       { path: SW_LIST, exact: true, element: <SocialWorkerList /> },
       { path: SW_EDIT, exact: true, element: <SocialWorkerEdit /> },

@@ -52,7 +52,6 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
         swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
       ) {
         setMyMenuItems(Menuitems);
-        console.log(Menuitems);
       } else {
         const adminMenuitems = Menuitems.filter((m) => m.admin === false);
         setMyMenuItems(adminMenuitems);
