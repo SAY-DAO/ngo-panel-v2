@@ -793,6 +793,14 @@
       }
     }
   },
+  "mySignatures":{
+    "noMidjourney": "در انتظار تصویر هوش مصنوعی",
+    "tabs":{
+      "swSignatures":"امضاهای من",
+      "familySigned":"خانواده امضا کرده",
+      "auditorSigned":"شاهد امضا کرده"
+    }
+  },
   "ticket": {
     "new": "نخوانده",
     "daysAgo": "روز پیش",

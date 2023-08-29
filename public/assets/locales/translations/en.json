@@ -748,6 +748,14 @@
       }
     }
   },
+  "mySignatures": {
+    "noMidjourney": "Waiting for AI image",
+    "tabs": {
+      "swSignatures": "My signatures",
+      "familySigned": "Family Signed",
+      "auditorSigned": "Auditor Signed"
+    }
+  },
   "ticket": {
     "new": "New",
     "daysAgo": "days ago",

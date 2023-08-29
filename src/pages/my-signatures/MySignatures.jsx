@@ -5,12 +5,14 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { fetchAllSignatures, fetchUserSignatures } from '../../redux/actions/blockchainAction';
 import SignatureCard from '../../components/dao/my-signatures/SignatureCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 
 export default function MySignatures() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [value, setValue] = useState(0);
   const [cardSelected, setCardSelected] = useState();
@@ -62,13 +64,13 @@ export default function MySignatures() {
     <>
       <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="socialWorker-signed" />
-          <Tab label="auditor-signed" />
-          <Tab label="read-to-mint" />
+          <Tab label={t('mySignatures.tabs.swSignatures')} />
+          <Tab label={t('mySignatures.tabs.familySigned')} />
+          <Tab label={t('mySignatures.tabs.auditorSigned')} />
         </Tabs>
       </Box>
 
-      <ImageList variant="standard" cols={6} gap={2}>
+      <ImageList variant="standard" cols={5} gap={1}>
         {(userSignatures || allSignatures || []).map((s) => (
           <ImageListItem key={s.id}>
             <SignatureCard
