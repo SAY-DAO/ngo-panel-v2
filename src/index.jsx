@@ -24,7 +24,9 @@ root.render(
 );
 
 // If you want to enable client cache, register instead.
-serviceWorker.register();
+if (process.env.REACT_APP_NODE_ENV === 'production') {
+  serviceWorker.register();
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

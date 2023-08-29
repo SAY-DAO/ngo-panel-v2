@@ -65,8 +65,8 @@ export default function MySignatures() {
       <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <Tabs value={value} onChange={handleChange} centered>
           <Tab label={t('mySignatures.tabs.swSignatures')} />
-          <Tab label={t('mySignatures.tabs.familySigned')} />
-          <Tab label={t('mySignatures.tabs.auditorSigned')} />
+          <Tab disabled label={t('mySignatures.tabs.familySigned')} />
+          <Tab disabled label={t('mySignatures.tabs.auditorSigned')} />
         </Tabs>
       </Box>
 
