@@ -63,7 +63,24 @@ const SignatureCard = ({ signature, need }) => {
     }
   };
   return (
-    <>
+    <div>
+      {!isConnected && (
+        <div style={{ position: 'absolute', zIndex: 10, right: 12, top: 8 }}>
+          {loadingSignaturesVerification ? (
+            <Grid container>
+              <CircularProgress size={15} sx={{ m: 'auto' }} />
+            </Grid>
+          ) : (
+            !cardAddress && (
+              <Tooltip title="verify signature">
+                <IconButton onClick={handleVerifySignature}>
+                  <ReplayIcon sx={{ color: 'grey' }} />
+                </IconButton>
+              </Tooltip>
+            )
+          )}
+        </div>
+      )}
       <CardActionArea onClick={handleImageSwipe}>
         <Card
           elevation={3}
@@ -164,30 +181,12 @@ const SignatureCard = ({ signature, need }) => {
           )}
         </Card>
       </CardActionArea>
-      {isConnected && (
-        <>
-          {loadingSignaturesVerification ? (
-            <Grid container>
-              <CircularProgress size={15} sx={{ m: 'auto' }} />
-            </Grid>
-          ) : (
-            !cardAddress && (
-              <Tooltip title="verify signature">
-                <IconButton onClick={handleVerifySignature}>
-                  <ReplayIcon sx={{ color: 'grey' }} />
-                </IconButton>
-              </Tooltip>
-            )
-          )}
-        </>
-      )}
-
       <Grid container>
         <Typography sx={{ color: 'white', m: 'auto', fontWeight: 800 }} fontSize="small">
           {need.nameTranslations.fa}
         </Typography>
       </Grid>
-    </>
+    </div>
   );
 };
 
