@@ -101,7 +101,7 @@ const SignatureCard = ({ signature, need }) => {
             <Typography
               sx={{
                 bgcolor:
-                  !signature.user.wallets ||
+                  (signature.user && !signature.user.wallets) ||
                   !signature.user.wallets.find((w) => w.address === cardAddress)
                     ? 'red'
                     : 'green',
