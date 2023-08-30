@@ -371,6 +371,10 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
       ],
       blockTag: 'safe',
     });
+
+    if (values.signerAddress !== verifiedAddress) {
+      throw new Error('Not the ame address!');
+    }
     dispatch({
       type: SIGNATURE_VERIFICATION_SUCCESS,
       payload: { verifiedAddress, flaskNeedId: transaction.message.needId },

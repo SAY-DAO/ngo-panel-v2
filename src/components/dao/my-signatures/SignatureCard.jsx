@@ -24,7 +24,7 @@ const SignatureCard = ({ signature, need }) => {
   const [cardAddress, setCardAddress] = useState();
   const [images, setImages] = useState(false);
 
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { chain } = useNetwork();
 
   const ngoAll = useSelector((state) => state.ngoAll);
@@ -45,7 +45,7 @@ const SignatureCard = ({ signature, need }) => {
         {
           chainId: chain?.id,
           flaskNeedId: need.flaskId,
-          signerAddress: address,
+          signerAddress: need.signature.signerAddress,
           statuses: need.statusUpdates,
           receipts: need.receipts,
           payments: need.verifiedPayments,

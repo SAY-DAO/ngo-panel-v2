@@ -1,5 +1,5 @@
 import { createConfig, configureChains, mainnet, sepolia } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
@@ -9,7 +9,7 @@ import { createPublicClient, http } from 'viem';
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, sepolia],
   [
-    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_KEY, stallTimeout: 600000 }),
+    infuraProvider({ apiKey: process.env.REACT_APP_INFURA_KEY, stallTimeout: 80000 }),
     publicProvider(),
   ],
 );
