@@ -104,6 +104,7 @@ export const logout = () => async (dispatch) => {
   dispatch({ type: SIGNATURE_RESET });
   dispatch({ type: USER_TICKET_LIST_RESET });
   localStorage.removeItem('userInfo');
+  localStorage.removeItem('say-siwe');
 };
 
 export const forgotPassword = (theKey, value) => async (dispatch) => {
