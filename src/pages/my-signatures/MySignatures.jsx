@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchAllSignatures, fetchUserSignatures } from '../../redux/actions/blockchainAction';
 import SignatureCard from '../../components/dao/my-signatures/SignatureCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
+import MessageWallet from '../../components/MessageWallet';
 
 export default function MySignatures() {
   const dispatch = useDispatch();
@@ -16,9 +17,13 @@ export default function MySignatures() {
 
   const [value, setValue] = useState(0);
   const [cardSelected, setCardSelected] = useState();
+  const [walletToastOpen, setWalletToastOpen] = useState(false);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
+
+  const signaturesVerification = useSelector((state) => state.signaturesVerification);
+  const { error: errorSignaturesVerification } = signaturesVerification;
 
   const { allSignatures, userSignatures } = useSelector((state) => state.signatures);
 
@@ -56,6 +61,21 @@ export default function MySignatures() {
     }
   }, [value, swInfo]);
 
+  // toast
+  useEffect(() => {
+    if (errorSignaturesVerification) {
+      setWalletToastOpen(true);
+    }
+  }, [errorSignaturesVerification]);
+
+  // close toast
+  const handleCloseWalletToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setWalletToastOpen(false);
+  };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -82,6 +102,15 @@ export default function MySignatures() {
           </ImageListItem>
         ))}
       </ImageList>
+
+      {errorSignaturesVerification && (
+        <MessageWallet
+          walletError={errorSignaturesVerification}
+          walletToastOpen={walletToastOpen}
+          handleCloseWalletToast={handleCloseWalletToast}
+          severity="error"
+        />
+      )}
     </>
   );
 }
