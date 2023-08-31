@@ -54,6 +54,8 @@ function getModifiedNeeds(updatedTicket, addedTicket, need) {
   return need;
 }
 
+let counter = 0;
+
 const MyPage = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -131,6 +133,19 @@ const MyPage = () => {
       });
     }
   }, [pageDetails]);
+
+  // for third column total update same time adding to total signature after signature
+  useEffect(() => {
+    if (signature) {
+      counter++;
+      setTotalNeedCount({
+        notPaid: pageDetails.meta.notPaid,
+        paid: pageDetails.meta.paid,
+        purchased: pageDetails.meta.purchased,
+        delivered: pageDetails.meta.delivered - counter,
+      });
+    }
+  }, [signature]);
 
   useEffect(() => {
     if (pageDetails) {

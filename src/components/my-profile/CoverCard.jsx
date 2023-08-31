@@ -839,7 +839,7 @@ const CoverCard = ({
                                   }}
                                 >
                                   {ensName
-                                    ? `${ensName} (${address.slice(0, 5)}...${address.slice(-4)})`
+                                    ? `${ensName}`
                                     : `${address.slice(0, 5)}...${address.slice(-4)}`}
                                 </Typography>
                               </Button>

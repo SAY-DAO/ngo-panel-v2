@@ -876,7 +876,9 @@ const TaskCard = ({
             )}
             {need.status === ProductStatusEnum.DELIVERED && (
               <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-                {(!needSignatures[0] || !needSignatures.find((s) => s.flaskUserId === swInfo.id)) &&
+                {(!needSignatures ||
+                  !needSignatures[0] ||
+                  !needSignatures.find((s) => s.flaskUserId === swInfo.id)) &&
                   (!isConnected ? (
                     <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
                       {t('button.wallet.connect')}
