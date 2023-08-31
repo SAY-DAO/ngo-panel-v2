@@ -45,10 +45,7 @@ const SignatureCard = ({ signature, need }) => {
         {
           chainId: chain?.id,
           flaskNeedId: need.flaskId,
-          signerAddress: need.signature.signerAddress,
-          statuses: need.statusUpdates,
-          receipts: need.receipts,
-          payments: need.verifiedPayments,
+          signerAddress: signature.signerAddress,
         },
         signature.hash,
       ),

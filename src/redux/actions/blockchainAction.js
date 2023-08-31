@@ -343,9 +343,6 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
       chainId: values.chainId,
       flaskNeedId: values.flaskNeedId,
       signerAddress: values.signerAddress,
-      statuses: values.statuses,
-      receipts: values.receipts,
-      payments: values.payments,
     };
 
     const result1 = await daoApi.post(`/wallet/signature/verify`, request, config);

@@ -558,16 +558,6 @@ const ReportStatusTable = () => {
         dispatch(fetchNeedReceipts(row.id));
       }
     }, [accOpen]);
-    // set type name for status dialogue
-    // useEffect(() => {
-    //   if (statusDialog && row && needs.needs) {
-    //     setStatusNeed(needs.needs.find((n) => n.id === row.id));
-    //   }
-    // }, [statusDialog, row, needs]);
-
-    // const signReport = () => {
-    //   dispatch(signTransaction(row));
-    // };
 
     return (
       <>
@@ -894,23 +884,6 @@ const ReportStatusTable = () => {
                         {t('need.needStatus.signature')}
                       </TableCell>
                       <TableCell component="th" scope="row" />
-                      {/* <TableCell component="th" scope="row">
-                        <LoadingButton
-                          // loading={loadingOneNeed}
-                          onClick={() => signReport()}
-                          disabled={
-                            (typeId === NeedTypeEnum.PRODUCT && statusId !== 5) ||
-                            (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
-                          }
-                          variant="outlined"
-                          fullWidth
-                        >
-                          {(typeId === NeedTypeEnum.PRODUCT && statusId !== 5) ||
-                          (typeId === NeedTypeEnum.SERVICE && statusId !== 4)
-                            ? t('need.needStatus.pending')
-                            : t('need.needStatus.sign')}
-                        </LoadingButton>
-                      </TableCell> */}
                     </TableRow>
                   </TableBody>
                 </Table>
