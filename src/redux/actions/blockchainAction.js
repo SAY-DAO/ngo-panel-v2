@@ -55,7 +55,7 @@ export const fetchNonce = () => async (dispatch, getState) => {
       withCredentials: true,
       crossDomain: true,
     };
-    const response = await daoApi.get(`/wallet/nonce/${swInfo.id}/${swInfo.typeId}`, config);
+    const response = await daoApi.get(`/wallet/nonce/${swInfo.typeId}`, config);
     dispatch({
       type: WALLET_NONCE_SUCCESS,
       payload: response.data,

@@ -211,7 +211,6 @@ export const fetchUserContribution = () => async (dispatch, getState) => {
     dispatch({ type: GET_ANALYTICS_CONTRIBUTION_REQUEST });
 
     const {
-      swDetails: { swInfo },
       userLogin: { userInfo },
     } = getState();
 
@@ -223,10 +222,7 @@ export const fetchUserContribution = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await daoApi.get(
-      `/analytic/contributions/${swInfo.id}/${swInfo.typeId}`,
-      config,
-    );
+    const { data } = await daoApi.get(`/analytic/contributions`, config);
 
     dispatch({
       type: GET_ANALYTICS_CONTRIBUTION_SUCCESS,

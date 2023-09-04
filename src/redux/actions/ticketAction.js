@@ -49,7 +49,7 @@ export const fetchUserTicketList = () => async (dispatch, getState) => {
         flaskId: userInfo && userInfo.id,
       },
     };
-    const { data } = await daoApi.get(`/tickets/all/user/${userInfo.id}`, config);
+    const { data } = await daoApi.get(`/tickets/all/user`, config);
 
     dispatch({
       type: USER_TICKET_LIST_SUCCESS,
@@ -78,7 +78,7 @@ export const fetchTicketById = (ticketId) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await daoApi.get(`/tickets/ticket/${ticketId}/${userInfo.id}`, config);
+    const { data } = await daoApi.get(`/tickets/ticket/${ticketId}`, config);
 
     dispatch({
       type: TICKET_BY_ID_SUCCESS,
