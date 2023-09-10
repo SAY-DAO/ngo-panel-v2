@@ -32,8 +32,8 @@ export default function AnalyticFamilyDelivered() {
             data: roles.scattered.khaleh,
           },
           {
-            name: 'Daie',
-            data: roles.scattered.daie,
+            name: 'Daei',
+            data: roles.scattered.daei,
           },
           {
             name: 'Amme',

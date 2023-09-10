@@ -92,6 +92,8 @@ const SocialWorkerEdit = () => {
     idNumber: '',
     ngoId: '',
     avatarFile: '',
+    newPassword: null,
+    confirmNewPassword: null,
   });
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -207,13 +209,13 @@ const SocialWorkerEdit = () => {
       .min(6, 'Username must be at least 6 characters')
       .max(20, 'Username must not exceed 20 characters'),
     // email: Yup.string().required('Email is required').email('Email is invalid'),
-    // password: Yup.string()
-    //   .required('Password is required')
-    //   .min(6, 'Password must be at least 6 characters')
-    //   .max(40, 'Password must not exceed 40 characters'),
-    // confirmPassword: Yup.string()
-    //   .required('Confirm Password is required')
-    //   .oneOf([Yup.ref('password'), null], 'Confirm Password does not match'),
+    newPassword: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters')
+      .max(40, 'Password must not exceed 40 characters'),
+    confirmNewPassword: Yup.string()
+      .required('Confirm Password is required')
+      .oneOf([Yup.ref('newPassword'), null], 'Confirm Password does not match'),
     acceptTerms: Yup.bool(),
   });
 
@@ -249,6 +251,7 @@ const SocialWorkerEdit = () => {
         ngoId: data.ngoId,
         avatarFile: finalImageFile,
         birthDate,
+        password: data.newPassword && data.newPassword,
       }),
     );
     dispatch({ type: SW_BY_ID_RESET });
@@ -719,7 +722,7 @@ const SocialWorkerEdit = () => {
                         <CustomSelect
                           labelId="ngoId-controlled-open-select-label"
                           id="ngoId-controlled-open-select"
-                          defaultValue={ngoList.find((n) => n.id === result.ngoId).id}
+                          defaultValue={ngoList && ngoList.find((n) => n.id === result.ngoId).id}
                           register={{ ...register('ngoId') }}
                           control={control}
                           error={!!errors.ngoId}
@@ -770,6 +773,46 @@ const SocialWorkerEdit = () => {
                         />
                         <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
                           {errors && errors.userName && errors.userName.message}
+                        </FormHelperText>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <CustomFormLabel htmlFor="password">
+                          {t('changePassword.newPassword')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="newPassword"
+                          variant="outlined"
+                          defaultValue={result.newPassword}
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          onChange={handleChangeInput('newPassword')}
+                          control={control}
+                          {...register('newPassword')}
+                          error={!!errors.newPassword}
+                        />
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.newPassword && errors.newPassword.message}
+                        </FormHelperText>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <CustomFormLabel htmlFor="confirmNewPassword">
+                          {t('changePassword.confirmNewPassword')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="confirmNewPassword"
+                          variant="outlined"
+                          defaultValue={result.confirmNewPassword}
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          onChange={handleChangeInput('confirmNewPassword')}
+                          control={control}
+                          {...register('confirmNewPassword')}
+                          error={!!errors.confirmNewPassword}
+                        />
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.confirmNewPassword && errors.confirmNewPassword.message}
                         </FormHelperText>
                       </Grid>
                       <Grid item sx={{ m: 'auto' }}>

@@ -821,7 +821,7 @@ const TaskCard = ({
                         color: '#000000',
                         backgroundColor: '#ff9800',
                       }}
-                      label="Money to NGO"
+                      label={t('myPage.taskCard.tags.moneyToNgo')}
                       size="small"
                     />
                   </ListItem>

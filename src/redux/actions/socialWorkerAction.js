@@ -318,7 +318,9 @@ export const updateSw = (values) => async (dispatch, getState) => {
     if (values.birthDate) {
       formData.set('birthDate', Date.parse(values.birthDate));
     }
-
+    if (values.password) {
+      formData.set('password', values.password);
+    }
     const { data } = await publicApi.patch(`/socialworkers/${values.id}`, formData, config);
 
     dispatch({

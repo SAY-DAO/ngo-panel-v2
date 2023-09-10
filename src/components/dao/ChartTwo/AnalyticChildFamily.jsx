@@ -64,7 +64,9 @@ const AnalyticChildFamily = () => {
       },
       xaxis: {
         type: 'category',
-        categories: ecosystemChildFamilyResult.actives.map((c) => c.childSayName),
+        categories:
+          ecosystemChildFamilyResult.actives &&
+          ecosystemChildFamilyResult.actives.map((c) => c.childSayName),
         axisBorder: {
           show: false,
         },
