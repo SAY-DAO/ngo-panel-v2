@@ -878,13 +878,6 @@ const ReportStatusTable = () => {
                         </TableCell>
                       </TableRow>
                     )}
-                    {/* Signature */}
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        {t('need.needStatus.signature')}
-                      </TableCell>
-                      <TableCell component="th" scope="row" />
-                    </TableRow>
                   </TableBody>
                 </Table>
               </Box>
