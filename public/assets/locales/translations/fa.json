@@ -784,6 +784,7 @@
         "updateChild": "ویرایش کودک",
         "updateٔNeed": "ویرایش نیاز",
         "addTicket": "اضافه کردن تیکت",
+        "addReceipt": "لطفا ابتدا رسید را اضافه کنید",
         "readTicket": "خواندن تیکت",
         "tickets": "تیکت‌ها",
         "deliveryTicket": "َاعلام رسیدن کالا به سمن",
@@ -793,12 +794,12 @@
       }
     }
   },
-  "mySignatures":{
+  "mySignatures": {
     "noMidjourney": "در انتظار تصویر هوش مصنوعی",
-    "tabs":{
-      "swSignatures":"امضاهای من",
-      "familySigned":"خانواده امضا کرده",
-      "auditorSigned":"شاهد امضا کرده"
+    "tabs": {
+      "swSignatures": "امضاهای من",
+      "familySigned": "خانواده امضا کرده",
+      "auditorSigned": "شاهد امضا کرده"
     }
   },
   "ticket": {

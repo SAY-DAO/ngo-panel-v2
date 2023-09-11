@@ -246,22 +246,6 @@ const TaskCard = ({
     });
   };
 
-  // const socialWorkerId = need.created_by_id;
-  // const auditorId = need.confirmUser;
-  // let purchaserId = null;
-
-  // if (!need.status_updates) {
-  //   if (new Date(need.doneAt).getFullYear() < 2023) {
-  //     purchaserId = 31; // Nyaz
-  //   }
-  //   if (new Date(need.doneAt).getFullYear() === 2023 && new Date(need.doneAt).getMonth() <= 3) {
-  //     purchaserId = 21; // Neda
-  //   }
-  // } else {
-  //   purchaserId =
-  //     need.status_updates &&
-  //     need.status_updates.find((s) => s.old_status === PaymentStatusEnum.COMPLETE_PAY)?.sw_id;
-  // }
   const iconImage = ipfsMetaData
     ? `${process.env.REACT_APP_IPFS_GATEWAY_1}/${ipfsMetaData.image.split('ipfs://')[1]}`
     : need.imageUrl && prepareUrl(need.imageUrl);
@@ -480,14 +464,20 @@ const TaskCard = ({
                       (!need.tickets[0] ||
                         need.tickets.find(
                           (item2) => item2.lastAnnouncement !== AnnouncementEnum.NGO_RECEIVED_MONEY,
-                        )) && (
+                        )) &&
+                      (receipts && receipts[0] ? (
                         <MenuItem
                           onClick={() => handleAnnouncement(AnnouncementEnum.NGO_RECEIVED_MONEY)}
                         >
                           <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
                           {t('myPage.taskCard.menu.moneyToNgoTicket')}
                         </MenuItem>
-                      )}
+                      ) : (
+                        <MenuItem disabled>
+                          <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                          {t('myPage.taskCard.menu.addReceipt')}
+                        </MenuItem>
+                      ))}
 
                     {need && need.ipfs && need.ipfs.needDetailsHash && (
                       <MenuItem>
@@ -659,10 +649,6 @@ const TaskCard = ({
               >
                 ( {t(category)} )
               </Typography>
-              {/* 
-                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                    {t('myPage.taskCard.paid')}: {need.paid.toLocaleString()}
-                  </Typography> */}
               <Typography color="textSecondary" variant="h6" fontWeight="400">
                 {t('myPage.taskCard.cost')}: {cost}
               </Typography>
@@ -699,9 +685,16 @@ const TaskCard = ({
                     ))}
                   </AvatarGroup>
                 ) : (
-                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                    {t('myPage.taskCard.noReceipt')}
-                  </Typography>
+                  need.type === NeedTypeEnum.SERVICE &&
+                  need.status >= ServiceStatusEnum.MONEY_TO_NGO && (
+                    <Typography
+                      sx={{ color: () => theme.palette.warning.dark }}
+                      variant="h6"
+                      fontWeight="400"
+                    >
+                      {t('myPage.taskCard.noReceipt')}
+                    </Typography>
+                  )
                 )}
               </Grid>
             </CardContent>
@@ -895,20 +888,12 @@ const TaskCard = ({
                             loadingInformation ||
                             isLoading ||
                             pendingConnector
-                            // loadingEthereumSignature
                           }
                           onClick={handleSignature}
                           sx={{ color: 'black' }}
                         >
                           {t('button.wallet.sign')}
                         </WalletButton>
-                        {/* <Typography>
-                          Social Worker: {socialWorkerId}
-                          <br />
-                          Auditor: {auditorId}
-                          <br />
-                          Purchaser: {purchaserId}
-                        </Typography> */}
                       </>
                     )
                   ))}

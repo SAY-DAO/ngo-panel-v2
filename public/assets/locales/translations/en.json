@@ -738,6 +738,7 @@
       "menu": {
         "updateChild": "Edit Child",
         "updateٔNeed": "َEdit Need",
+        "addReceipt": "Please add the receipt first",
         "addTicket": "َAdd ticket",
         "readTicket": "َRead ticket",
         "tickets": "َAll tickets",
