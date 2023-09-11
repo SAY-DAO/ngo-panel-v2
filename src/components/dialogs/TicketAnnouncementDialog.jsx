@@ -76,7 +76,7 @@ export default function TicketAnnouncementDialog({
       addTicket({
         roles: ['AUDITOR'],
         title: need.name_translations.en,
-        flaskUserId: pageDetails.userId,
+        flaskUserId: pageDetails.panelFlaskUserId,
         userTypeId: pageDetails.typeId,
         flaskNeedId: need.id,
         statuses: need.status_updates,
