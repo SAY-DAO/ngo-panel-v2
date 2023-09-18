@@ -34,6 +34,7 @@ import {
   fetchMidjourneyImages,
   selectMidjourneyImage,
 } from '../../redux/actions/midjourneyAction';
+import { GET_ALL_MIDJOURNEY_IMAGES_RESET } from '../../redux/constants/midjourneyConstants';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -104,7 +105,7 @@ export default function DaoMidJourneyList() {
   useEffect(() => {
     dispatch(fetchMidjourneyImages(page, rowsPerPage));
     return () => {
-      dispatch({ type: RESET_ });
+      dispatch({ type: GET_ALL_MIDJOURNEY_IMAGES_RESET });
     };
   }, [page, rowsPerPage]);
 
