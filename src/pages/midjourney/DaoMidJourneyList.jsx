@@ -103,6 +103,9 @@ export default function DaoMidJourneyList() {
 
   useEffect(() => {
     dispatch(fetchMidjourneyImages(page, rowsPerPage));
+    return () => {
+      dispatch({ type: RESET_ });
+    };
   }, [page, rowsPerPage]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -284,7 +287,7 @@ export default function DaoMidJourneyList() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                rowsPerPageOptions={[5, 10, 25]}
                 colSpan={3}
                 count={needsResult.total}
                 rowsPerPage={rowsPerPage}

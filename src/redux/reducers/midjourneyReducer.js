@@ -5,6 +5,7 @@ import {
   DELETE_MIDJOURNEY_FOLDER_SUCCESS,
   GET_ALL_MIDJOURNEY_IMAGES_FAIL,
   GET_ALL_MIDJOURNEY_IMAGES_REQUEST,
+  GET_ALL_MIDJOURNEY_IMAGES_RESET,
   GET_ALL_MIDJOURNEY_IMAGES_SUCCESS,
   SELECT_MIDJOURNEY_IMAGE_FAIL,
   SELECT_MIDJOURNEY_IMAGE_REQUEST,
@@ -31,6 +32,8 @@ export const midjourneyReducer = (state = {}, action) => {
       return { ...state, loading: false, success: true, deleted: action.payload };
     case DELETE_MIDJOURNEY_FOLDER_FAIL:
       return { loading: false, error: action.payload };
+    case GET_ALL_MIDJOURNEY_IMAGES_RESET:
+      return {};
     default:
       return state;
   }
