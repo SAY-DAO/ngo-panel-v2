@@ -110,7 +110,8 @@ export default function DaoMidJourneyList() {
   }, [page, rowsPerPage]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needsResult.list.length) : 0;
+  const emptyRows =
+    needsResult && page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needsResult.list.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
