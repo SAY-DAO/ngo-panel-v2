@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  ARCHIVE_MIDJOURNEY_IMAGES_FAIL,
-  ARCHIVE_MIDJOURNEY_IMAGES_REQUEST,
-  ARCHIVE_MIDJOURNEY_IMAGES_SUCCESS,
+  DELETE_MIDJOURNEY_FOLDER_FAIL,
+  DELETE_MIDJOURNEY_FOLDER_REQUEST,
+  DELETE_MIDJOURNEY_FOLDER_SUCCESS,
   GET_ALL_MIDJOURNEY_IMAGES_FAIL,
   GET_ALL_MIDJOURNEY_IMAGES_REQUEST,
   GET_ALL_MIDJOURNEY_IMAGES_SUCCESS,
@@ -25,11 +25,11 @@ export const midjourneyReducer = (state = {}, action) => {
       return { ...state, ...state, loading: false, success: true, needs: action.payload };
     case GET_ALL_MIDJOURNEY_IMAGES_FAIL:
       return { loading: false, error: action.payload };
-    case ARCHIVE_MIDJOURNEY_IMAGES_REQUEST:
+    case DELETE_MIDJOURNEY_FOLDER_REQUEST:
       return { ...state, loading: true, success: false };
-    case ARCHIVE_MIDJOURNEY_IMAGES_SUCCESS:
-      return { ...state, loading: false, success: true, archived: action.payload };
-    case ARCHIVE_MIDJOURNEY_IMAGES_FAIL:
+    case DELETE_MIDJOURNEY_FOLDER_SUCCESS:
+      return { ...state, loading: false, success: true, deleted: action.payload };
+    case DELETE_MIDJOURNEY_FOLDER_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

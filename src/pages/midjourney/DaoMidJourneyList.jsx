@@ -28,7 +28,12 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { fetchMidjourneyImages, selectMidjourneyImage } from '../../redux/actions/midjourneyAction';
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import {
+  deleteMidjourneyFolder,
+  fetchMidjourneyImages,
+  selectMidjourneyImage,
+} from '../../redux/actions/midjourneyAction';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -91,14 +96,14 @@ export default function DaoMidJourneyList() {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(15);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const midjourney = useSelector((state) => state.midjourney);
   const { selected, loading: loadingSelected, needs } = midjourney;
 
   useEffect(() => {
-    dispatch(fetchMidjourneyImages());
-  }, []);
+    dispatch(fetchMidjourneyImages(page, rowsPerPage));
+  }, [page, rowsPerPage]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.length) : 0;
@@ -112,6 +117,9 @@ export default function DaoMidJourneyList() {
     setPage(0);
   };
 
+  const handleDelete = (flaskNeedId) => {
+    dispatch(deleteMidjourneyFolder(flaskNeedId));
+  };
   return (
     <TableContainer component={Paper} sx={{ mt: 25 }}>
       {needs && (
@@ -125,6 +133,7 @@ export default function DaoMidJourneyList() {
               <TableCell align="center">Original</TableCell>
               <TableCell align="center">Selected</TableCell>
               <TableCell align="center">Local Options</TableCell>
+              <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -258,6 +267,11 @@ export default function DaoMidJourneyList() {
                       </PopupState>
                     ))}
                   </AvatarGroup>
+                </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleDelete(need.needFlaskId)}>
+                    <HighlightOffRoundedIcon color="error" />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
