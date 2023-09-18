@@ -125,6 +125,7 @@ export default function DaoMidJourneyList() {
   const handleDelete = (flaskNeedId) => {
     dispatch(deleteMidjourneyFolder(flaskNeedId));
   };
+
   return (
     <TableContainer component={Paper} sx={{ mt: 25 }}>
       {needsResult && needsResult.list && (
@@ -142,10 +143,7 @@ export default function DaoMidJourneyList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? needsResult.list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : needsResult.list
-            ).map((need) => (
+            {(rowsPerPage > 0 && needsResult.list).map((need) => (
               <TableRow
                 key={need.needFlaskId}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
