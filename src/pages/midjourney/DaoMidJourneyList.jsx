@@ -99,14 +99,14 @@ export default function DaoMidJourneyList() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const midjourney = useSelector((state) => state.midjourney);
-  const { selected, loading: loadingSelected, needs } = midjourney;
+  const { selected, loading: loadingSelected, needsResult } = midjourney;
 
   useEffect(() => {
     dispatch(fetchMidjourneyImages(page, rowsPerPage));
   }, [page, rowsPerPage]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needs.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needsResult.list.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -122,7 +122,7 @@ export default function DaoMidJourneyList() {
   };
   return (
     <TableContainer component={Paper} sx={{ mt: 25 }}>
-      {needs && (
+      {needsResult && needsResult.list && (
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
@@ -138,8 +138,8 @@ export default function DaoMidJourneyList() {
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? needs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : needs
+              ? needsResult.list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : needsResult.list
             ).map((need) => (
               <TableRow
                 key={need.needFlaskId}
@@ -286,7 +286,7 @@ export default function DaoMidJourneyList() {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={needs.length}
+                count={needsResult.total}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

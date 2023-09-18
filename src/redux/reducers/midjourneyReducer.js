@@ -22,7 +22,7 @@ export const midjourneyReducer = (state = {}, action) => {
     case GET_ALL_MIDJOURNEY_IMAGES_REQUEST:
       return { ...state, loading: true, success: false };
     case GET_ALL_MIDJOURNEY_IMAGES_SUCCESS:
-      return { ...state, ...state, loading: false, success: true, needs: action.payload };
+      return { ...state, ...state, loading: false, success: true, needsResult: action.payload };
     case GET_ALL_MIDJOURNEY_IMAGES_FAIL:
       return { loading: false, error: action.payload };
     case DELETE_MIDJOURNEY_FOLDER_REQUEST:
