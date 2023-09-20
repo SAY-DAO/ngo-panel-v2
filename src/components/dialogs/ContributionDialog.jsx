@@ -58,13 +58,13 @@ export default function ContributionDialog({ open, setOpen, values, setValues })
   useEffect(() => {
     if (created) {
       setOpen(false);
-      setValues();
+      setValues({
+        title: '',
+        description: '',
+      });
     }
   }, [created]);
 
-  const handleChange = (e) => {
-    setValues({ description: e.target.value });
-  };
   return (
     <div>
       <Dialog
@@ -88,7 +88,7 @@ export default function ContributionDialog({ open, setOpen, values, setValues })
                   label="Controlled"
                   value={values.title}
                   onChange={(event) => {
-                    setValues({ title: event.target.value });
+                    setValues({ description: values.description, title: event.target.value });
                   }}
                   sx={{ width: '100% !important' }}
                 />
@@ -99,7 +99,7 @@ export default function ContributionDialog({ open, setOpen, values, setValues })
                   label="Contribution Area"
                   minRows={10}
                   value={values.description}
-                  onChange={handleChange}
+                  onChange={(e) => setValues({ title: values.title, description: e.target.value })}
                   variant="soft"
                   sx={{ width: '100%' }}
                 />

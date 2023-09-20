@@ -102,11 +102,11 @@ export default function DaoContributionList() {
     description: '',
   });
   const ecoContribution = useSelector((state) => state.ecoContribution);
-  const { contributions } = ecoContribution;
+  const { deleted, created, contributions } = ecoContribution;
 
   useEffect(() => {
     dispatch(fetchAvailableContribution());
-  }, []);
+  }, [created, deleted]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - contributions.length) : 0;
