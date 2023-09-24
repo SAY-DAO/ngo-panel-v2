@@ -101,7 +101,7 @@ const MyPage = () => {
   const { duplicates } = childNeedsDuplicates;
 
   const { signature } = useSelector((state) => state.signature);
-  const { userSignatures } = useSelector((state) => state.signatures);
+  const { total } = useSelector((state) => state.signatures);
 
   useEffect(() => {
     if (swInfo) setSwNewDetails(swInfo && swInfo);
@@ -109,7 +109,7 @@ const MyPage = () => {
 
   useEffect(() => {
     if (swInfo) {
-      dispatch(fetchUserSignatures());
+      dispatch(fetchUserSignatures(10, 0));
     }
   }, [swInfo, signature]);
 
@@ -326,7 +326,7 @@ const MyPage = () => {
         theUser={swNewDetails}
         needCount={pageDetails ? pageDetails.meta.realNotConfirmCount : -1}
         childCount={pageDetails && pageDetails.children}
-        signatureCount={userSignatures && userSignatures.length}
+        signatureCount={total}
         arrivals={pageDetails && pageDetails.arrivals}
         swNewDetails={swNewDetails}
         setSwNewDetails={setSwNewDetails}
