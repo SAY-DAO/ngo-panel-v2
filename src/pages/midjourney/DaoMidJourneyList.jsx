@@ -109,10 +109,6 @@ export default function DaoMidJourneyList() {
     };
   }, [page, rowsPerPage]);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    needsResult && page > 0 ? Math.max(0, (1 + page) * rowsPerPage - needsResult.list.length) : 0;
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -128,7 +124,7 @@ export default function DaoMidJourneyList() {
 
   return (
     <TableContainer component={Paper} sx={{ mt: 25 }}>
-      {needsResult && needsResult.list && (
+      {needsResult && needsResult.list && needsResult.list[0] && (
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
@@ -143,7 +139,7 @@ export default function DaoMidJourneyList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0 && needsResult.list).map((need) => (
+            {needsResult.list.map((need) => (
               <TableRow
                 key={need.needFlaskId}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -278,11 +274,6 @@ export default function DaoMidJourneyList() {
                 </TableCell>
               </TableRow>
             ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
           </TableBody>
           <TableFooter>
             <TableRow>

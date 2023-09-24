@@ -6,6 +6,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { TablePagination } from '@mui/material';
 import { fetchAllSignatures, fetchUserSignatures } from '../../redux/actions/blockchainAction';
 import SignatureCard from '../../components/dao/my-signatures/SignatureCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
@@ -18,6 +19,8 @@ export default function MySignatures() {
   const [value, setValue] = useState(0);
   const [cardSelected, setCardSelected] = useState();
   const [walletToastOpen, setWalletToastOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
@@ -25,7 +28,16 @@ export default function MySignatures() {
   const signaturesVerification = useSelector((state) => state.signaturesVerification);
   const { error: errorSignaturesVerification } = signaturesVerification;
 
-  const { allSignatures, userSignatures } = useSelector((state) => state.signatures);
+  const { total, signatures } = useSelector((state) => state.signatures);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect(() => {
     if (
@@ -36,7 +48,7 @@ export default function MySignatures() {
       )
     ) {
       if (value === 0) {
-        dispatch(fetchUserSignatures());
+        dispatch(fetchUserSignatures(page, rowsPerPage));
       }
       if (value === 1) {
         // dispatch(fetchMySignatures());
@@ -50,7 +62,7 @@ export default function MySignatures() {
         swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN)
     ) {
       if (value === 0) {
-        dispatch(fetchAllSignatures());
+        dispatch(fetchAllSignatures(page, rowsPerPage));
       }
       if (value === 1) {
         // dispatch(fetchMySignatures());
@@ -59,7 +71,7 @@ export default function MySignatures() {
         // dispatch(fetchMySignatures());
       }
     }
-  }, [value, swInfo]);
+  }, [value, swInfo, page, rowsPerPage]);
 
   // toast
   useEffect(() => {
@@ -90,18 +102,38 @@ export default function MySignatures() {
         </Tabs>
       </Box>
 
-      <ImageList variant="standard" cols={5} gap={1}>
-        {(userSignatures || allSignatures || []).map((s) => (
-          <ImageListItem key={s.id}>
-            <SignatureCard
-              signature={s}
-              cardSelected={cardSelected}
-              setCardSelected={setCardSelected}
-              need={s.need}
-            />
-          </ImageListItem>
-        ))}
-      </ImageList>
+      {signatures && (
+        <>
+          <ImageList variant="standard" cols={5} gap={1}>
+            {signatures.map((s) => (
+              <ImageListItem key={s.id}>
+                <SignatureCard
+                  signature={s}
+                  cardSelected={cardSelected}
+                  setCardSelected={setCardSelected}
+                  need={s.need}
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            colSpan={6}
+            count={total}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            SelectProps={{
+              inputProps: {
+                'aria-label': 'rows per page',
+              },
+              native: true,
+            }}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </>
+      )}
 
       {errorSignaturesVerification && (
         <MessageWallet

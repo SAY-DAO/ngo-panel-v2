@@ -185,7 +185,7 @@ export const fetchFamilyNetworks = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchUserSignatures = () => async (dispatch, getState) => {
+export const fetchUserSignatures = (take, limit) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_SIGNATURES_REQUEST });
     const {
@@ -197,6 +197,8 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         flaskId: userInfo && userInfo.id,
+        'X-TAKE': take,
+        'X-LIMIT': limit,
       },
     };
 
@@ -215,7 +217,7 @@ export const fetchUserSignatures = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchAllSignatures = () => async (dispatch, getState) => {
+export const fetchAllSignatures = (take, limit) => async (dispatch, getState) => {
   try {
     dispatch({ type: ALL_SIGNATURES_REQUEST });
     const {
@@ -227,6 +229,8 @@ export const fetchAllSignatures = () => async (dispatch, getState) => {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         flaskId: userInfo && userInfo.id,
+        'X-TAKE': take,
+        'X-LIMIT': limit,
       },
     };
 

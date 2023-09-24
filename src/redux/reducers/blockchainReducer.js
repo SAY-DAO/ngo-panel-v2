@@ -140,7 +140,8 @@ export const userSignaturesReducer = (state = {}, action) => {
       return {
         loading: false,
         success: true,
-        allSignatures: action.payload,
+        signatures: action.payload.signatures,
+        total: action.payload.total,
       };
     case ALL_SIGNATURES_FAIL:
       return { loading: false, error: action.payload };
@@ -150,7 +151,8 @@ export const userSignaturesReducer = (state = {}, action) => {
       return {
         loading: false,
         success: true,
-        userSignatures: action.payload,
+        signatures: action.payload.signatures,
+        total: action.payload.total,
       };
     case USER_SIGNATURES_FAIL:
       return { loading: false, error: action.payload };
