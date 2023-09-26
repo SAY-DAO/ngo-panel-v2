@@ -1,7 +1,18 @@
 ﻿@import url(fontiran.css);
 
+@font-face {
+  font-family: 'Exodar-outline';
+  src: url(../../fonts/ttf/Exodar-Outline.ttf) format('truetype');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
 body {
   font-family: iranyekan !important;
+}
+
+#logo {
+  font-family: Exodar-outline !important;
 }
 
 /* Works on Firefox */
@@ -93,12 +104,5 @@ body {
 
 /* pie chart */
 .apexcharts-legend-marker {
-  margin: 4px
+  margin: 4px;
 }
-
-
-
-
-
-
-

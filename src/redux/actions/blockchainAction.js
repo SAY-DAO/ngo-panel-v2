@@ -352,6 +352,26 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
     const result1 = await daoApi.post(`/wallet/signature/verify`, request, config);
     const transaction = result1.data;
 
+    console.log({
+      address: network.mainnet.verifyVoucherAddress,
+      abi: VerifyVoucherContract.abi,
+      functionName: '_verify',
+      args: [
+        {
+          needId: transaction.message.needId,
+          title: transaction.message.title,
+          category: transaction.message.category,
+          paid: transaction.message.paid,
+          deliveryCode: transaction.message.deliveryCode,
+          child: transaction.message.child,
+          signer: transaction.message.signer,
+          swSignature: signatureHash, // social worker signature
+          role: transaction.message.role,
+          content: transaction.message.content,
+        },
+      ],
+      blockTag: 'safe',
+    });
     const verifiedAddress = await readContract({
       address: network.mainnet.verifyVoucherAddress,
       abi: VerifyVoucherContract.abi,

@@ -109,7 +109,7 @@ const MyPage = () => {
 
   useEffect(() => {
     if (swInfo) {
-      dispatch(fetchUserSignatures(10, 0));
+      dispatch(fetchUserSignatures());
     }
   }, [swInfo, signature]);
 

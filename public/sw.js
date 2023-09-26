@@ -1,4 +1,4 @@
-const staticCacheName = 'SAY-GateWay-v2.0.3';
+const staticCacheName = 'SAY-GateWay-v2.0.18';
 const urlsToCache = [
     '/',
   'manifest.json',
