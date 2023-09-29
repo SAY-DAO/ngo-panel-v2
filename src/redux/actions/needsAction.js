@@ -133,7 +133,7 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await daoApi.get(`/needs/flask/preneeds`, config);
+    const { data } = await daoApi.get(`/needs/flask/preneeds/templates`, config);
 
     dispatch({
       type: CHILD_EXAMPLE_NEEDS_SUCCESS,
