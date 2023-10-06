@@ -17,6 +17,7 @@ import { useAccount, useNetwork } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { prepareUrl, shortenWallet } from '../../../utils/helpers';
 import { verifySignature } from '../../../redux/actions/blockchainAction';
+import { FlaskUserTypesEnum } from '../../../utils/types';
 
 const SignatureCard = ({ signature, need }) => {
   const dispatch = useDispatch();
@@ -26,6 +27,9 @@ const SignatureCard = ({ signature, need }) => {
 
   const { isConnected } = useAccount();
   const { chain } = useNetwork();
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList } = ngoAll;
@@ -94,6 +98,11 @@ const SignatureCard = ({ signature, need }) => {
             position: 'relative',
           }}
         >
+          {swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN && (
+            <Typography sx={{ color: 'black', textAlign:'center' }}>
+              {new Date(need.signatures[0].createdAt).toLocaleDateString()}
+            </Typography>
+          )}
           {cardAddress && (
             <Typography
               sx={{

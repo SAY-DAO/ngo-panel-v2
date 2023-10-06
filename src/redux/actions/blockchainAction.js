@@ -394,7 +394,10 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
     });
 
     if (values.signerAddress !== verifiedAddress) {
-      throw new Error('Not the ame address!');
+      dispatch({
+        type: SIGNATURE_VERIFICATION_FAIL,
+        payload: 'Not the same address!',
+      });
     }
     dispatch({
       type: SIGNATURE_VERIFICATION_SUCCESS,
