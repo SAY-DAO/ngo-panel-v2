@@ -6,13 +6,21 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { createPublicClient, webSocket } from 'viem';
 
 // Two popular providers are Alchemy (alchemy.com) and Infura (infura.io)
-export const { chains, publicClient, webSocketPublicClient } = configureChains(
+export const { chains, webSocketPublicClient } = configureChains(
   [mainnet, sepolia],
   [
     infuraProvider({ apiKey: process.env.REACT_APP_INFURA_KEY, stallTimeout: 8000 }),
     publicProvider(),
   ],
 );
+
+export const publicClient = createPublicClient({
+  // batch: {
+  //   multicall: true,
+  // },
+  transport: webSocket(`wss://mainnet.infura.io/ws/v3/${process.env.REACT_APP_INFURA_KEY}`),
+  chain: mainnet,
+});
 
 // Set up client
 export const config = createConfig({
@@ -26,15 +34,6 @@ export const config = createConfig({
     //   },
     // }),
   ],
-  publicClient: createPublicClient({
-    // batch: {
-    //   multicall: true,
-    // },
-    transport: webSocket(`wss://mainnet.infura.io/ws/v3/${process.env.REACT_APP_INFURA_KEY}`),
-    chain: mainnet,
-  }),
-
+  publicClient,
   webSocketPublicClient,
 });
-
-
