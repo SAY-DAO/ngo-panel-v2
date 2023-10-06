@@ -17,7 +17,7 @@ import { useAccount, useNetwork } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import { prepareUrl, shortenWallet } from '../../../utils/helpers';
-import { verifySignature } from '../../../redux/actions/blockchainAction';
+import { deleteSignature, verifySignature } from '../../../redux/actions/blockchainAction';
 import { FlaskUserTypesEnum } from '../../../utils/types';
 
 const SignatureCard = ({ signature, need }) => {
@@ -25,6 +25,7 @@ const SignatureCard = ({ signature, need }) => {
   const { t } = useTranslation();
   const [cardAddress, setCardAddress] = useState();
   const [images, setImages] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const { isConnected } = useAccount();
   const { chain } = useNetwork();
@@ -43,6 +44,14 @@ const SignatureCard = ({ signature, need }) => {
       setCardAddress(verifiedData.verifiedAddress);
     }
   }, [verifiedData]);
+
+  const { deleted } = useSelector((state) => state.signatures);
+
+  useEffect(() => {
+    if (deleted === signature.id) {
+      setIsDeleted(true);
+    }
+  }, [deleted]);
 
   const handleVerifySignature = () => {
     dispatch(
@@ -65,7 +74,11 @@ const SignatureCard = ({ signature, need }) => {
     }
   };
   return (
-    <div>
+    <div
+      style={{
+        display: isDeleted && 'none',
+      }}
+    >
       {isConnected && (
         <div style={{ position: 'absolute', zIndex: 10, right: 12, top: 8 }}>
           {loadingSignaturesVerification ? (
@@ -83,7 +96,10 @@ const SignatureCard = ({ signature, need }) => {
           ) : (
             !signature.need.socialWorker.wallets.find((w) => w.address === cardAddress) && (
               <Tooltip title="delete signature">
-                <IconButton onClick={handleVerifySignature} sx={{ p: 1 }}>
+                <IconButton
+                  onClick={() => dispatch(deleteSignature(need.signatures[0].hash))}
+                  sx={{ p: 1 }}
+                >
                   <HighlightOffOutlinedIcon sx={{ color: 'red' }} />
                 </IconButton>
               </Tooltip>
@@ -91,7 +107,12 @@ const SignatureCard = ({ signature, need }) => {
           )}
         </div>
       )}
-      <CardActionArea onClick={handleImageSwipe}>
+      <CardActionArea
+        onClick={handleImageSwipe}
+        sx={{
+          display: isDeleted && 'none',
+        }}
+      >
         <Card
           elevation={3}
           sx={{
@@ -105,6 +126,7 @@ const SignatureCard = ({ signature, need }) => {
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             position: 'relative',
+            display: deleted === signature.id && 'none',
           }}
         >
           {swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN && (

@@ -30,6 +30,9 @@ import {
   DELETE_CONTRIBUTION_SUCCESS,
   DELETE_CONTRIBUTION_REQUEST,
   DELETE_CONTRIBUTION_FAIL,
+  DELETE_SIGNATURE_SUCCESS,
+  DELETE_SIGNATURE_REQUEST,
+  DELETE_SIGNATURE_FAIL,
   ALL_SIGNATURES_REQUEST,
   ALL_SIGNATURES_SUCCESS,
   ALL_SIGNATURES_FAIL,
@@ -284,6 +287,14 @@ export const signTransaction =
         ...transaction.types,
       };
 
+      console.log({
+        domain: transaction.domain,
+        types,
+        primaryType: 'Voucher',
+        message: {
+          ...transaction.message,
+        },
+      });
       const signatureHash = await signer.signTypedData({
         domain: transaction.domain,
         types,
@@ -497,6 +508,41 @@ export const deleteContribution = (contributionId) => async (dispatch, getState)
   } catch (e) {
     dispatch({
       type: DELETE_CONTRIBUTION_FAIL,
+      payload:
+        e.response && e.response.data.detail
+          ? e.response.data
+          : e.response && e.response.data
+          ? e.response.data.message
+          : e.response,
+    });
+  }
+};
+
+export const deleteSignature = (signatureHash) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_SIGNATURE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.delete(`/wallet/signature/${signatureHash}`, config);
+
+    dispatch({
+      type: DELETE_SIGNATURE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_SIGNATURE_FAIL,
       payload:
         e.response && e.response.data.detail
           ? e.response.data

@@ -36,6 +36,9 @@ import {
   DELETE_CONTRIBUTION_REQUEST,
   DELETE_CONTRIBUTION_SUCCESS,
   DELETE_CONTRIBUTION_FAIL,
+  DELETE_SIGNATURE_REQUEST,
+  DELETE_SIGNATURE_SUCCESS,
+  DELETE_SIGNATURE_FAIL,
 } from '../constants/daoConstants';
 
 export const walletNonceReducer = (state = {}, action) => {
@@ -156,6 +159,12 @@ export const userSignaturesReducer = (state = {}, action) => {
       };
     case USER_SIGNATURES_FAIL:
       return { loading: false, error: action.payload };
+    case DELETE_SIGNATURE_REQUEST:
+      return { ...state, loading: true, success: false };
+    case DELETE_SIGNATURE_SUCCESS:
+      return { ...state, loading: false, success: true, deleted: action.payload };
+    case DELETE_SIGNATURE_FAIL:
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
