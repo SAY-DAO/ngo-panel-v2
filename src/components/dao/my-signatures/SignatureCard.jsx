@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { useAccount, useNetwork } from 'wagmi';
 import { useTranslation } from 'react-i18next';
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import { prepareUrl, shortenWallet } from '../../../utils/helpers';
 import { verifySignature } from '../../../redux/actions/blockchainAction';
 import { FlaskUserTypesEnum } from '../../../utils/types';
@@ -69,13 +70,21 @@ const SignatureCard = ({ signature, need }) => {
         <div style={{ position: 'absolute', zIndex: 10, right: 12, top: 8 }}>
           {loadingSignaturesVerification ? (
             <Grid container>
-              <CircularProgress size={15} sx={{ m: 'auto' }} />
+              <IconButton>
+                <CircularProgress size={15} sx={{ m: 'auto' }} />
+              </IconButton>
             </Grid>
+          ) : !cardAddress ? (
+            <Tooltip title="verify signature">
+              <IconButton onClick={handleVerifySignature}>
+                <ReplayIcon sx={{ color: 'grey' }} />
+              </IconButton>
+            </Tooltip>
           ) : (
-            !cardAddress && (
-              <Tooltip title="verify signature">
-                <IconButton onClick={handleVerifySignature}>
-                  <ReplayIcon sx={{ color: 'grey' }} />
+            !signature.need.socialWorker.wallets.find((w) => w.address === cardAddress) && (
+              <Tooltip title="delete signature">
+                <IconButton onClick={handleVerifySignature} sx={{ p: 1 }}>
+                  <HighlightOffOutlinedIcon sx={{ color: 'red' }} />
                 </IconButton>
               </Tooltip>
             )
@@ -99,7 +108,7 @@ const SignatureCard = ({ signature, need }) => {
           }}
         >
           {swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN && (
-            <Typography sx={{ color: 'black', textAlign:'center' }}>
+            <Typography sx={{ color: 'black', textAlign: 'center' }}>
               {new Date(need.signatures[0].createdAt).toLocaleDateString()}
             </Typography>
           )}
