@@ -276,9 +276,9 @@ export default function DaoMidJourneyList() {
             ))}
           </TableBody>
           <TableFooter>
-            <TableRow >
+            <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[5, 10, 25, 50]}
                 colSpan={12}
                 count={needsResult.total}
                 rowsPerPage={rowsPerPage}
