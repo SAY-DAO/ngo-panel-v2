@@ -12,14 +12,17 @@ import {
   Avatar,
   AvatarGroup,
   Box,
+  Card,
   CardMedia,
   CircularProgress,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
   TableFooter,
   TablePagination,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
@@ -123,69 +126,53 @@ export default function DaoMidJourneyList() {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 25 }}>
-      {needsResult && needsResult.list && needsResult.list[0] && (
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Need Id</TableCell>
-              <TableCell align="center">Child Id</TableCell>
-              <TableCell align="center">NGO Name</TableCell>
-              <TableCell align="center">Family Ids</TableCell>
-              <TableCell align="center">Original</TableCell>
-              <TableCell align="center">Selected</TableCell>
-              <TableCell align="center">Local Options</TableCell>
-              <TableCell align="center">Delete</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {needsResult.list.map((need) => (
-              <TableRow
-                key={need.needFlaskId}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell align="center">{need.needFlaskId}</TableCell>
-                <TableCell align="center">{need.childFlaskId}</TableCell>
-                <TableCell align="center">{need.ngoName}</TableCell>
-                <TableCell align="center">
-                  {need.usersFlaskId.map(
-                    (element, index) =>
-                      `${element} ${index + 1 < need.usersFlaskId.length ? ',' : ''} `,
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  <Tooltip
-                    arrow
-                    title={
-                      <>
-                        <CardMedia
-                          component="img"
-                          image={need.originalImage}
-                          alt="large"
-                          sx={{ width: '100%' }}
-                        />
-                      </>
-                    }
-                    placement="top"
-                  >
-                    <Avatar alt="Remy Sharp" src={need.originalImage} />
-                  </Tooltip>
-                </TableCell>
-                <TableCell align="center">
-                  {loadingSelected ? (
-                    <CircularProgress />
-                  ) : (
+    <>
+      <Grid container>
+        <Card sx={{ m: 'auto', mt: 5, height: 50, width: 200 }}>
+          <Typography sx={{ textAlign: 'center' }}>
+            Total: {needsResult && needsResult.total}
+          </Typography>
+        </Card>
+      </Grid>
+
+      <TableContainer component={Paper} sx={{ mt: 10 }}>
+        {needsResult && needsResult.list && needsResult.list[0] && (
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Need Id</TableCell>
+                <TableCell align="center">Child Id</TableCell>
+                <TableCell align="center">NGO Name</TableCell>
+                <TableCell align="center">Family Ids</TableCell>
+                <TableCell align="center">Original</TableCell>
+                <TableCell align="center">Selected</TableCell>
+                <TableCell align="center">Local Options</TableCell>
+                <TableCell align="center">Delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {needsResult.list.map((need) => (
+                <TableRow
+                  key={need.needFlaskId}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell align="center">{need.needFlaskId}</TableCell>
+                  <TableCell align="center">{need.childFlaskId}</TableCell>
+                  <TableCell align="center">{need.ngoName}</TableCell>
+                  <TableCell align="center">
+                    {need.usersFlaskId.map(
+                      (element, index) =>
+                        `${element} ${index + 1 < need.usersFlaskId.length ? ',' : ''} `,
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
                     <Tooltip
                       arrow
                       title={
                         <>
                           <CardMedia
                             component="img"
-                            image={
-                              selected && selected.id === need.id
-                                ? `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${selected}`
-                                : `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${need.selectedImage}`
-                            }
+                            image={need.originalImage}
                             alt="large"
                             sx={{ width: '100%' }}
                           />
@@ -193,110 +180,136 @@ export default function DaoMidJourneyList() {
                       }
                       placement="top"
                     >
-                      <Avatar
-                        alt="Remy Sharp"
-                        src={
-                          selected && selected.id === need.id
-                            ? `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${selected}`
-                            : `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${need.selectedImage}`
-                        }
-                      />
+                      <Avatar alt="Remy Sharp" src={need.originalImage} />
                     </Tooltip>
-                  )}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  <AvatarGroup>
-                    {[0, 1, 2, 3].map((link, index) => (
-                      <PopupState key={link} variant="popover" popupId="demo-popup-menu">
-                        {(popupState) => (
+                  </TableCell>
+                  <TableCell align="center">
+                    {loadingSelected ? (
+                      <CircularProgress />
+                    ) : (
+                      <Tooltip
+                        arrow
+                        title={
                           <>
-                            <Tooltip
-                              arrow
-                              title={
-                                <>
-                                  <CardMedia
-                                    component="img"
-                                    image={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/need-${
-                                      need.needFlaskId
-                                    }/${need.needFlaskId}_${index + 1}.png`}
-                                    alt="large"
-                                    sx={{ width: '100%' }}
-                                  />
-                                </>
+                            <CardMedia
+                              component="img"
+                              image={
+                                selected && selected.id === need.id
+                                  ? `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${selected}`
+                                  : `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${need.selectedImage}`
                               }
-                              placement="top"
-                            >
-                              <Box
-                                sx={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  textAlign: 'center',
-                                }}
-                              >
-                                <>
-                                  <IconButton {...bindTrigger(popupState)}>
-                                    <Avatar
-                                      alt="midjourney image"
-                                      src={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/need-${
+                              alt="large"
+                              sx={{ width: '100%' }}
+                            />
+                          </>
+                        }
+                        placement="top"
+                      >
+                        <Avatar
+                          alt="Remy Sharp"
+                          src={
+                            selected && selected.id === need.id
+                              ? `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${selected}`
+                              : `${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/${need.selectedImage}`
+                          }
+                        />
+                      </Tooltip>
+                    )}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    <AvatarGroup>
+                      {[0, 1, 2, 3].map((link, index) => (
+                        <PopupState key={link} variant="popover" popupId="demo-popup-menu">
+                          {(popupState) => (
+                            <>
+                              <Tooltip
+                                arrow
+                                title={
+                                  <>
+                                    <CardMedia
+                                      component="img"
+                                      image={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/need-${
                                         need.needFlaskId
                                       }/${need.needFlaskId}_${index + 1}.png`}
+                                      alt="large"
+                                      sx={{ width: '100%' }}
                                     />
-                                  </IconButton>
-                                  <Menu {...bindMenu(popupState)}>
-                                    <MenuItem
-                                      onClick={() =>
-                                        dispatch(
-                                          selectMidjourneyImage(
-                                            need.needFlaskId,
-                                            `need-${need.needFlaskId}/${need.needFlaskId}_${
-                                              index + 1
-                                            }.png`,
-                                          ),
-                                        )
-                                      }
-                                    >
-                                      Select
-                                    </MenuItem>
-                                  </Menu>
-                                </>
-                              </Box>
-                            </Tooltip>
-                          </>
-                        )}
-                      </PopupState>
-                    ))}
-                  </AvatarGroup>
-                </TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleDelete(need.needFlaskId)}>
-                    <HighlightOffRoundedIcon color="error" />
-                  </IconButton>
-                </TableCell>
+                                  </>
+                                }
+                                placement="top"
+                              >
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  <>
+                                    <IconButton {...bindTrigger(popupState)}>
+                                      <Avatar
+                                        alt="midjourney image"
+                                        src={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/need-${
+                                          need.needFlaskId
+                                        }/${need.needFlaskId}_${index + 1}.png`}
+                                      />
+                                    </IconButton>
+                                    <Menu {...bindMenu(popupState)}>
+                                      <MenuItem
+                                        onClick={() =>
+                                          dispatch(
+                                            selectMidjourneyImage(
+                                              need.needFlaskId,
+                                              `need-${need.needFlaskId}/${need.needFlaskId}_${
+                                                index + 1
+                                              }.png`,
+                                            ),
+                                          )
+                                        }
+                                      >
+                                        Select
+                                      </MenuItem>
+                                    </Menu>
+                                  </>
+                                </Box>
+                              </Tooltip>
+                            </>
+                          )}
+                        </PopupState>
+                      ))}
+                    </AvatarGroup>
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleDelete(need.needFlaskId)}>
+                      <HighlightOffRoundedIcon color="error" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, 50]}
+                  colSpan={12}
+                  count={needsResult.totalReady}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
               </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, 50]}
-                colSpan={12}
-                count={needsResult.total}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      )}
-    </TableContainer>
+            </TableFooter>
+          </Table>
+        )}
+      </TableContainer>
+    </>
   );
 }
