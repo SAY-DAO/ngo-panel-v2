@@ -180,7 +180,11 @@ export default function DaoMidJourneyList() {
                       }
                       placement="top"
                     >
-                      <Avatar alt="Remy Sharp" src={need.originalImage} />
+                      <Avatar
+                        sx={{ height: 100, width: 100 }}
+                        alt="Remy Sharp"
+                        src={need.originalImage}
+                      />
                     </Tooltip>
                   </TableCell>
                   <TableCell align="center">
@@ -249,6 +253,7 @@ export default function DaoMidJourneyList() {
                                     <IconButton {...bindTrigger(popupState)}>
                                       <Avatar
                                         alt="midjourney image"
+                                        sx={{ height: 100, width: 100 }}
                                         src={`${process.env.REACT_APP_GITHUB_IMAGE_SERVE}/need-${
                                           need.needFlaskId
                                         }/${need.needFlaskId}_${index + 1}.png`}
