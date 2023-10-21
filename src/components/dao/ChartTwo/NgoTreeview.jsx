@@ -113,7 +113,11 @@ const NgoTreeview = () => {
                 <StyledTreeItem nodeId="1" label="NGOs">
                   {ngosResult &&
                     ngosResult.map((n) => (
-                      <StyledTreeItem key={n.id} nodeId={n.id.toString() + n.name} label={n.name}>
+                      <StyledTreeItem
+                        key={n.id}
+                        nodeId={n.id.toString() + n.name}
+                        label={`${n.id.toString()} - ${n.name}`}
+                      >
                         {n.children.map((c) => (
                           <StyledTreeItem
                             key={c.id}

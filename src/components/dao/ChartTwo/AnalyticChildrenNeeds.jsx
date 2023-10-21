@@ -67,7 +67,9 @@ const AnalyticChildrenNeeds = () => {
     },
     xaxis: {
       type: 'category',
-      categories: ecosystemChildrenResult.childrenList.map((c) => c.child.sayname_translations.en),
+      categories: ecosystemChildrenResult.childrenList.map(
+        (c) => `${c.child.sayname_translations.en} - ${c.child.id_ngo}`,
+      ),
       axisBorder: {
         show: false,
       },
