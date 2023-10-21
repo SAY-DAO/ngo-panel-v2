@@ -35,6 +35,7 @@ import {
   allReportNeedsReducer,
   childNeedsReducer,
   childOneNeedReducer,
+  deleteOldNeedsReducer,
   duplicatesReducer,
   exampleNeedsReducer,
   needAddReducer,
@@ -149,4 +150,5 @@ export default combineReducers({
   providerDelete: providerDeleteReducer,
   mileStone: milestoneReducer,
   midjourney: midjourneyReducer,
+  deletedOld: deleteOldNeedsReducer,
 });

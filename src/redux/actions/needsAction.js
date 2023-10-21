@@ -45,6 +45,12 @@ import {
   DELETE_NEED_REQUEST,
   DELETE_NEED_SUCCESS,
   DELETE_NEED_FAIL,
+  DELETE_OLD_NEEDS_REQUEST,
+  DELETE_OLD_NEEDS_SUCCESS,
+  DELETE_OLD_NEEDS_FAIL,
+  DELETE_CANDIDATES_REQUEST,
+  DELETE_CANDIDATES_SUCCESS,
+  DELETE_CANDIDATES_FAIL,
 } from '../constants/needConstant';
 
 export const fetchAllNeeds = (ngoId, take) => async (dispatch, getState) => {
@@ -552,6 +558,69 @@ export const fetchDuplicateChildNeeds = (childId, needId) => async (dispatch, ge
     dispatch({
       type: DUPLICATES_NEEDS_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const deleteOldNeeds = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_OLD_NEEDS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/needs/delete/old`, config);
+
+    dispatch({
+      type: DELETE_OLD_NEEDS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_OLD_NEEDS_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+    });
+  }
+};
+
+
+export const deleteCandidates = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_CANDIDATES_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/needs/delete/candidates`, config);
+
+    dispatch({
+      type: DELETE_CANDIDATES_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_CANDIDATES_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });
   }
 };

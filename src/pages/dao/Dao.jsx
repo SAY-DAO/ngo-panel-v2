@@ -1,6 +1,7 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
-import { Grid } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Grid, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import AnalyticNeedTimeLine from '../../components/dao/ChartOne/AnalyticNeedTimeLine';
 import AnalyticChildrenNeeds from '../../components/dao/ChartTwo/AnalyticChildrenNeeds';
@@ -10,12 +11,32 @@ import AnalyticFamilyDelivered from '../../components/dao/ChartOne/AnalyticFamil
 import AnalyticChildFamily from '../../components/dao/ChartTwo/AnalyticChildFamily';
 import AnalyticChildFamilyInOneMonth from '../../components/dao/ChartTwo/AnalyticChildFamilyInOneMonth';
 import AnalyticChildFamilyInThreeMonths from '../../components/dao/ChartTwo/AnalyticChildFamilyInThreeMonths';
+import { deleteCandidates, deleteOldNeeds } from '../../redux/actions/needsAction';
 
 const Dao = () => {
+  const dispatch = useDispatch();
+
+  const { total, loading } = useSelector((state) => state.deletedOld);
+
+  useEffect(() => {
+    dispatch(deleteCandidates());
+  }, []);
+
   return (
     <>
       <PageContainer>
         <Grid container direction="row">
+          <Grid item sx={{ textAlign: 'center' }} xs={12}>
+            <Typography>total: {total || 0}</Typography>
+            <LoadingButton
+              loading={loading}
+              variant="outlined"
+              color="danger"
+              onClick={() => dispatch(deleteOldNeeds())}
+            >
+              DELETE OLD NEEDS
+            </LoadingButton>
+          </Grid>
           <Grid item xs={12}>
             <AnalyticChildSummary />
           </Grid>

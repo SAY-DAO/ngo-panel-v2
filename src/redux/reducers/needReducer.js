@@ -48,6 +48,12 @@ import {
   DUPLICATES_NEEDS_SUCCESS,
   DUPLICATES_NEEDS_FAIL,
   DUPLICATES_NEEDS_RESET,
+  DELETE_OLD_NEEDS_REQUEST,
+  DELETE_OLD_NEEDS_SUCCESS,
+  DELETE_OLD_NEEDS_FAIL,
+  DELETE_CANDIDATES_REQUEST,
+  DELETE_CANDIDATES_SUCCESS,
+  DELETE_CANDIDATES_FAIL,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -226,6 +232,24 @@ export const duplicatesReducer = (state = { success: false }, action) => {
       return { loading: false, error: action.payload };
     case DUPLICATES_NEEDS_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+export const deleteOldNeedsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_OLD_NEEDS_REQUEST:
+      return { count: state.count, loading: true, success: false };
+    case DELETE_OLD_NEEDS_SUCCESS:
+      return { count: state.count, loading: false, success: true, result: action.payload };
+    case DELETE_OLD_NEEDS_FAIL:
+      return { count: state.count, loading: false, error: action.payload };
+    case DELETE_CANDIDATES_REQUEST:
+      return { loading: true, success: false };
+    case DELETE_CANDIDATES_SUCCESS:
+      return { loading: false, success: true, count: action.payload };
+    case DELETE_CANDIDATES_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
