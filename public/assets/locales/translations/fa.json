@@ -2,12 +2,15 @@
   "deleteModal": {
     "need": {
       "title": "حذف نیاز",
-      "content": "آیا مطمين به حذف نیاز هستید؟"
+      "content": "آیا مطمئن به حذف نیاز هستید؟"
     },
     "receipt": {
       "title": "حذف رسید",
-      "content": "آیا مطمين به حذف رسید هستید؟"
+      "content": "آیا مطمئن به حذف رسید هستید؟"
     }
+  },
+  "childStatusModal": {
+    "checkBox": "مطمئن هستم!"
   },
   "alert": {
     "title": "لطفا در جریان باشید!",
@@ -113,6 +116,10 @@
     "rotate": "چرخش"
   },
   "button": {
+    "reset": "بازنشانی",
+    "finish": "ارسال",
+    "next": "صفحه بعد",
+    "back": "صفحه قبل",
     "update": "ویرایش",
     "skip": "می‌دانم",
     "register": "ثبت نام",
@@ -326,7 +333,9 @@
     "daoHeader": "DAO",
     "dashboard": "داشبورد",
     "list": "لیست",
-    "add": "اضافه کردن"
+    "add": "اضافه کردن",
+    "preregister": "پیش‌ثبت‌نام",
+    "preregisterList": "لیست پیش‌ثبت‌نام"
   },
   "socialWorker": {
     "title": "مددکار",
@@ -580,11 +589,24 @@
     }
   },
   "child": {
+    "steps":{
+      "first":"معرفی کودک",
+      "second":"اطلاعات کودک",
+      "third":"صدای کودک"
+    },
     "title": "کودک",
     "all": "تمام کودکان",
     "id": "شناسه",
     "isConfirmed": "وضعیت تائید",
     "existence_status": "وضعیت کودک",
+    "updateStatus": "تغییر وصعیت",
+    "statuses": {
+      "dead": "فوت شده",
+      "aliveAndPresent": "فعال",
+      "aliveAndGone": "ترک کرده",
+      "tempGone": "ترک موقت",
+      "confirmed":"تائید شده"
+    },
     "isDeleted": "وضعیت حذف",
     "status": "وضعیت",
     "sayname_translations": {
@@ -592,12 +614,12 @@
       "en": "SAY نام انگلیسی (en)"
     },
     "firstName_translations": {
-      "fa": "نام فارسی",
-      "en": "نام انگلیسی"
+      "fa": "نام کودک فارسی",
+      "en": "نام کودک انگلیسی"
     },
     "lastName_translations": {
-      "fa": "نام خانوادگی فارسی",
-      "en": "نام خانوادگی انگلیسی"
+      "fa": "نام خانوادگی کودک فارسی",
+      "en": "نام خانوادگی کودک انگلیسی"
     },
     "bio_translations": {
       "fa": "داستان فارسی کودک",
@@ -613,7 +635,7 @@
     },
     "awakeAvatarUrl": "آواتار کودک",
     "sleptAvatarUrl": "آواتار خواب کودک",
-    "uploadVoice": "آپلود صدای کودک",
+    "uploadVoice": "بارگزاری صدای کودک",
     "bio": "داستان کودک",
     "bioSummary": "خلاصه داستان کودک",
     "bioSummaryTranslations": "ترجمه خلاصه داستان کودک",

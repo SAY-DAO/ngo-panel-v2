@@ -1,4 +1,4 @@
-import { publicApi } from '../../apis/sayBase';
+import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   SW_DETAILS_REQUEST,
   SW_LIST_REQUEST,
@@ -75,6 +75,7 @@ export const fetchSocialWorkerById = (id) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
+
     const { data } = await publicApi.get(`/socialworkers/${id}`, config);
 
     dispatch({
@@ -89,7 +90,7 @@ export const fetchSocialWorkerById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const fetchSocialWorkersList = () => async (dispatch, getState) => {
+export const fetchSocialWorkersList = (flaskNgiId) => async (dispatch, getState) => {
   try {
     dispatch({ type: SW_LIST_REQUEST });
     const {
@@ -100,10 +101,11 @@ export const fetchSocialWorkersList = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id, // nest server needs this for auth
       },
     };
 
-    const { data } = await publicApi.get('/socialworkers/', config);
+    const { data } = await daoApi.get(`ngo/socialworkers/${flaskNgiId}`, config);
 
     dispatch({
       type: SW_LIST_SUCCESS,

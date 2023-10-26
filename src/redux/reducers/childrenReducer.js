@@ -11,9 +11,6 @@ import {
   CHILDREN_BY_NGO_RESET,
   CHILDREN_BY_NGO_SUCCESS,
   UPDATE_CHILD_FAIL,
-  UPDATE_CHILD_IS_ACTIVE_FAIL,
-  UPDATE_CHILD_IS_ACTIVE_REQUEST,
-  UPDATE_CHILD_IS_ACTIVE_SUCCESS,
   UPDATE_CHILD_REQUEST,
   UPDATE_CHILD_SUCCESS,
   CHILD_LIST_REQUEST,
@@ -24,6 +21,21 @@ import {
   CHILD_ACTIVE_LIST_SUCCESS,
   CHILD_ACTIVE_LIST_FAIL,
   CHILD_ACTIVE_LIST_RESET,
+  UPDATE_CHILD_STATUS_REQUEST,
+  UPDATE_CHILD_STATUS_SUCCESS,
+  UPDATE_CHILD_STATUS_FAIL,
+  CHECK_SIMILAR_NAMES_REQUEST,
+  CHECK_SIMILAR_NAMES_SUCCESS,
+  CHECK_SIMILAR_NAMES_FAIL,
+  PRE_REGISTER_CHILD_UPDATE_REQUEST,
+  PRE_REGISTER_CHILD_UPDATE_SUCCESS,
+  PRE_REGISTER_CHILD_UPDATE_FAIL,
+  PRE_REGISTER_CHILD_ADD_REQUEST,
+  PRE_REGISTER_CHILD_ADD_SUCCESS,
+  PRE_REGISTER_CHILD_ADD_FAIL,
+  PRE_REGISTER_CHILD_LIST_REQUEST,
+  PRE_REGISTER_CHILD_LIST_SUCCESS,
+  PRE_REGISTER_CHILD_LIST_FAIL,
 } from '../constants/childrenConstants';
 
 export const childByIdReducer = (state = { success: false }, action) => {
@@ -89,13 +101,13 @@ export const childrenByNgoReducer = (state = { success: false }, action) => {
   }
 };
 
-export const childUpdateIsActiveReducer = (state = { success: false }, action) => {
+export const childUpdateStatusReducer = (state = { success: false }, action) => {
   switch (action.type) {
-    case UPDATE_CHILD_IS_ACTIVE_REQUEST:
+    case UPDATE_CHILD_STATUS_REQUEST:
       return { loading: true };
-    case UPDATE_CHILD_IS_ACTIVE_SUCCESS:
-      return { loading: false, success: true, status: action.payload };
-    case UPDATE_CHILD_IS_ACTIVE_FAIL:
+    case UPDATE_CHILD_STATUS_SUCCESS:
+      return { loading: false, success: true, statusResult: action.payload };
+    case UPDATE_CHILD_STATUS_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
@@ -122,6 +134,44 @@ export const childAddReducer = (state = { success: false }, action) => {
     case ADD_CHILD_SUCCESS:
       return { loading: false, success: true, added: action.payload };
     case ADD_CHILD_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const childNameCheckReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case CHECK_SIMILAR_NAMES_REQUEST:
+      return { loading: true };
+    case CHECK_SIMILAR_NAMES_SUCCESS:
+      return { loading: false, success: true, total: action.payload };
+    case CHECK_SIMILAR_NAMES_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const childPreRegisterReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case PRE_REGISTER_CHILD_LIST_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_CHILD_LIST_SUCCESS:
+      return { loading: false, success: true, preRegisterList: action.payload };
+    case PRE_REGISTER_CHILD_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case PRE_REGISTER_CHILD_ADD_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_CHILD_ADD_SUCCESS:
+      return { loading: false, success: true, added: action.payload };
+    case PRE_REGISTER_CHILD_ADD_FAIL:
+      return { loading: false, error: action.payload };
+    case PRE_REGISTER_CHILD_UPDATE_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_CHILD_UPDATE_SUCCESS:
+      return { loading: false, success: true, updated: action.payload };
+    case PRE_REGISTER_CHILD_UPDATE_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full-layout/loadable/Loadable';
 import NgoArrival from '../pages/ngos/NgoArrival';
 import {
-  CHILDREN_ADD,
   CHILDREN_EDIT,
   CHILDREN_LIST,
   DAO_HOME,
@@ -31,6 +30,8 @@ import {
   NEED_COMMENT,
   CONTRIBUTION,
   MY_SIGNATURES,
+  CHILDREN_PRE_REGISTER,
+  CHILDREN_PRE_REGISTER_LIST,
 } from './RouteConstants';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
@@ -57,7 +58,10 @@ const NgoEdit = Loadable(lazy(() => import('../pages/ngos/NgoEdit')));
 const NgoAdd = Loadable(lazy(() => import('../pages/ngos/NgoAdd')));
 const ChildrenList = Loadable(lazy(() => import('../pages/children/ChildrenList')));
 const ChildrenEdit = Loadable(lazy(() => import('../pages/children/ChildrenEdit')));
-const ChildrenAdd = Loadable(lazy(() => import('../pages/children/ChildrenAdd')));
+const ChildrenPreRegister = Loadable(lazy(() => import('../pages/children/ChildrenPreRegister')));
+const ChildrenPreRegisterList = Loadable(
+  lazy(() => import('../pages/children/ChildrenPreRegisterList')),
+);
 const NeedList = Loadable(lazy(() => import('../pages/needs/NeedList')));
 const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
 const NeedAdd = Loadable(lazy(() => import('../pages/needs/NeedAdd')));
@@ -94,7 +98,8 @@ const Router = [
       { path: NGO_ADD, exact: true, element: <NgoAdd /> },
       { path: CHILDREN_LIST, exact: true, element: <ChildrenList /> },
       { path: CHILDREN_EDIT, exact: true, element: <ChildrenEdit /> },
-      { path: CHILDREN_ADD, exact: true, element: <ChildrenAdd /> },
+      { path: CHILDREN_PRE_REGISTER, exact: true, element: <ChildrenPreRegister /> },
+      { path: CHILDREN_PRE_REGISTER_LIST, exact: true, element: <ChildrenPreRegisterList /> },
       { path: NEED_LIST, exact: true, element: <NeedList /> },
       { path: NEED_EDIT, exact: true, element: <NeedEdit /> },
       { path: NEED_ADD, exact: true, element: <NeedAdd /> },

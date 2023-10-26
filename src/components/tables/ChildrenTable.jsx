@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import {
@@ -21,17 +21,24 @@ import {
   Typography,
   Avatar,
   Link,
+  CircularProgress,
+  Grid,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@mui/lab';
+import { useDispatch, useSelector } from 'react-redux';
+import ChildStatusDialog from '../dialogs/ChildStatusDialog';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { ChildExistenceEnum } from '../../utils/types';
-import { getAge } from '../../utils/helpers';
+import { ChildExistenceEnum, FlaskUserTypesEnum } from '../../utils/types';
+import { getAge, prepareUrl } from '../../utils/helpers';
+import SelectCheckBox from '../children/SelectCheckBox';
+import { fetchChildList } from '../../redux/actions/childrenAction';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -102,6 +109,14 @@ function EnhancedTableHead(props) {
       width: '200px',
     },
     {
+      id: 'updateStatus',
+      numeric: false,
+      disablePadding: false,
+      label: t('child.updateStatus'),
+      width: '200px',
+    },
+
+    {
       id: 'generatedCode',
       numeric: false,
       disablePadding: false,
@@ -147,12 +162,6 @@ function EnhancedTableHead(props) {
       width: '180px',
     },
     {
-      id: 'bioSummary',
-      numeric: false,
-      disablePadding: false,
-      label: t('child.bioSummary'),
-    },
-    {
       id: 'birthPlace',
       numeric: true,
       disablePadding: false,
@@ -176,7 +185,7 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('child.confirmDate'),
-      width: '150px',
+      width: '10px',
     },
     {
       id: 'confirmUser',
@@ -190,14 +199,7 @@ function EnhancedTableHead(props) {
       numeric: true,
       disablePadding: false,
       label: t('child.id_ngo'),
-      width: '150px',
-    },
-    {
-      id: 'done_needs_count',
-      numeric: true,
-      disablePadding: false,
-      label: t('child.done_needs_count'),
-      width: '220px',
+      width: '100px',
     },
     {
       id: 'familyCount',
@@ -213,14 +215,6 @@ function EnhancedTableHead(props) {
       disablePadding: false,
       label: t('child.id_social_worker'),
     },
-    {
-      id: 'spent_credit',
-      numeric: true,
-      disablePadding: false,
-      label: t('child.spent_credit'),
-      width: '180px',
-    },
-
     {
       id: 'nationality',
       numeric: false,
@@ -266,7 +260,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align="center"
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             sx={{ minWidth: headCell.width }}
@@ -346,9 +340,17 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-const ChildrenTable = ({ childList }) => {
+const ChildrenTable = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const { swInfo } = useSelector((state) => state.swDetails);
+  const childAll = useSelector((state) => state.childAll);
+  const { myChildren, success: successMyChildren } = childAll;
+
+  const swById = useSelector((state) => state.swById);
+  const { children, success: successChildren } = swById;
 
   const BCrumb = [
     {
@@ -365,6 +367,27 @@ const ChildrenTable = ({ childList }) => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [dialogValues, setDialogValues] = useState();
+  const [childList, setChildList] = useState([]);
+  const [filters, setFilters] = useState({
+    statuses: [],
+    isConfirmed: null,
+  });
+
+  // fetch children
+  useEffect(() => {
+    console.log(filters);
+    if (swInfo) {
+      dispatch(fetchChildList(page, rowsPerPage, filters));
+    }
+  }, [swInfo, page, rowsPerPage, filters]);
+
+  useEffect(() => {
+    if (children || myChildren) {
+      setChildList(children ? children.children : myChildren && myChildren.data);
+    }
+  }, [children, myChildren]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -423,36 +446,48 @@ const ChildrenTable = ({ childList }) => {
   };
   const isSelected = (firstName) => selected.indexOf(firstName) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - childList.length) : 0;
+  const handleStatusDialog = (childId, currentStatus) => {
+    setStatusDialogOpen(true);
+    setDialogValues({
+      childId,
+      currentStatus,
+    });
+  };
+
   return (
     <PageContainer>
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      <Card>
-        <CardContent>
-          <Box>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-              {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={dense ? 'small' : 'medium'}
-                >
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    // onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={childList.length}
-                  />
-                  <TableBody>
-                    {stableSort(childList, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => {
+      <Grid>
+        <SelectCheckBox setFilters={setFilters} />
+      </Grid>
+      {!swInfo || (!successChildren && !successMyChildren) ? (
+        <Grid sx={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </Grid>
+      ) : (
+        <Card>
+          <CardContent>
+            <Box>
+              <Paper sx={{ width: '100%', mb: 2 }}>
+                {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
+                <TableContainer>
+                  <Table
+                    sx={{ minWidth: 750 }}
+                    aria-labelledby="tableTitle"
+                    size={dense ? 'small' : 'medium'}
+                  >
+                    <EnhancedTableHead
+                      numSelected={selected.length}
+                      order={order}
+                      orderBy={orderBy}
+                      // onSelectAllClick={handleSelectAllClick}
+                      onRequestSort={handleRequestSort}
+                      rowCount={childList.length}
+                    />
+                    <TableBody>
+                      {stableSort(childList, getComparator(order, orderBy)).map((row) => {
                         const isItemSelected = isSelected(row.firstName);
                         // const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -467,15 +502,15 @@ const ChildrenTable = ({ childList }) => {
                             selected={isItemSelected}
                           >
                             {/* <TableCell padding="checkbox">
-                              <CustomCheckbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputprops={{
-                                  'aria-labelledby': labelId,
-                                }}
-                              />
-                            </TableCell> */}
-                            <TableCell>
+                                <CustomCheckbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputprops={{
+                                    'aria-labelledby': labelId,
+                                  }}
+                                />
+                              </TableCell> */}
+                            <TableCell align="center">
                               <IconButton
                                 onClick={() => handleEdit(row)}
                                 color="primary"
@@ -484,12 +519,12 @@ const ChildrenTable = ({ childList }) => {
                                 <EditOutlinedIcon />
                               </IconButton>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="h6" fontWeight="600">
                                 {row.id}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Box display="flex" alignItems="center">
                                 <Box
                                   sx={{
@@ -583,15 +618,31 @@ const ChildrenTable = ({ childList }) => {
                                 </Typography>
                               </Box>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
+                              <Typography color="textSecondary" variant="h6" fontWeight="600">
+                                <LoadingButton
+                                  disabled={
+                                    !(
+                                      swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                                      swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
+                                    )
+                                  }
+                                  variant="outlined"
+                                  onClick={() => handleStatusDialog(row.id, row.existence_status)}
+                                >
+                                  {t('child.updateStatus')}
+                                </LoadingButton>
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="h6" fontWeight="600">
                                 {row.generatedCode}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Box display="flex" alignItems="center">
                                 <Avatar
-                                  src={row.awakeAvatarUrl}
+                                  src={prepareUrl(row.awakeAvatarUrl)}
                                   alt="child logo"
                                   width="35"
                                   sx={{
@@ -604,21 +655,21 @@ const ChildrenTable = ({ childList }) => {
                                   }}
                                 >
                                   <Typography variant="h6" fontWeight="600">
-                                    {row.firstName}
+                                    {row.firstName_translations.fa}
                                   </Typography>
                                   <Typography variant="h6" fontWeight="600">
-                                    {row.lastName}
+                                    {row.lastName_translations.fa}
                                   </Typography>
                                   <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                    ({row.sayName})
+                                    ({row.sayname_translations.fa})
                                   </Typography>
                                 </Box>
                               </Box>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Box display="flex" alignItems="center">
                                 <Avatar
-                                  src={row.sleptAvatarUrl}
+                                  src={prepareUrl(row.sleptAvatarUrl)}
                                   alt="child logo"
                                   width="35"
                                   sx={{
@@ -627,37 +678,17 @@ const ChildrenTable = ({ childList }) => {
                                 />
                               </Box>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="h6" fontWeight="400">
                                 {getAge(row.birthDate)} {t('child.years')}
                               </Typography>
                             </TableCell>
-
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="h6" fontWeight="600">
                                 {row.education}
                               </Typography>
                             </TableCell>
-                            <TableCell>
-                              <Tooltip title={row.bio ? row.bio : ''} placement="top-end">
-                                <Typography
-                                  color="textSecondary"
-                                  variant="h6"
-                                  fontWeight="600"
-                                  sx={{
-                                    maxWidth: '400px',
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden',
-                                    width: '160px',
-                                    height: '1.2em',
-                                    whiteSpace: 'nowrap',
-                                  }}
-                                >
-                                  {row.bio}
-                                </Typography>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Tooltip
                                 title={row.bio_translations.fa ? row.bio_translations.fa : ''}
                                 placement="top-end"
@@ -679,14 +710,18 @@ const ChildrenTable = ({ childList }) => {
                                 </Typography>
                               </Tooltip>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Tooltip
-                                title={row.bioSummary ? row.bioSummary : ''}
+                                title={
+                                  row.bio_summary_translations.fa
+                                    ? row.bio_summary_translations.fa
+                                    : ''
+                                }
                                 placement="top-end"
                               >
                                 <Typography
                                   color="textSecondary"
-                                  variant="body1"
+                                  variant="h6"
                                   fontWeight="600"
                                   sx={{
                                     maxWidth: '400px',
@@ -697,77 +732,68 @@ const ChildrenTable = ({ childList }) => {
                                     whiteSpace: 'nowrap',
                                   }}
                                 >
-                                  {row.bioSummary}
+                                  {row.bio_summary_translations.fa}
                                 </Typography>
                               </Tooltip>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography variant="h6">{row.birthPlace}</Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.city}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.country}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.confirmDate}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.confirmUser}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.id_ngo}
                               </Typography>
                             </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.done_needs_count}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
+
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.familyCount}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.id_social_worker}
                               </Typography>
                             </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.spent_credit.toLocaleString()}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.nationality}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.created}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.updated}
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="center">
                               <Typography color="textSecondary" variant="body1" fontWeight="400">
                                 {row.voiceUrl && (
-                                  <Link target="_blank" href={row.voiceUrl}>
+                                  <Link target="_blank" href={prepareUrl(row.voiceUrl)}>
                                     Link
                                   </Link>
                                 )}
@@ -776,42 +802,39 @@ const ChildrenTable = ({ childList }) => {
                           </TableRow>
                         );
                       })}
-                    {emptyRows > 0 && (
-                      <TableRow
-                        style={{
-                          height: (dense ? 33 : 53) * emptyRows,
-                        }}
-                      >
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, 100]}
-                labelRowsPerPage={t('table.rowCount')}
-                component="div"
-                count={childList.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, 100]}
+                  labelRowsPerPage={t('table.rowCount')}
+                  component="div"
+                  count={
+                    children ? children.children.length : myChildren && myChildren.meta.totalItems
+                  }
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Paper>
+              <FormControlLabel
+                control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
+                label={t('table.dense')}
               />
-            </Paper>
-            <FormControlLabel
-              control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label={t('table.dense')}
-            />
-          </Box>
-        </CardContent>
-      </Card>
+            </Box>
+          </CardContent>
+        </Card>
+      )}
+
+      {statusDialogOpen && (
+        <ChildStatusDialog
+          open={statusDialogOpen}
+          setOpen={setStatusDialogOpen}
+          dialogValues={dialogValues}
+        />
+      )}
     </PageContainer>
   );
 };
-
 export default ChildrenTable;
-
-ChildrenTable.propTypes = {
-  childList: PropTypes.array.isRequired,
-};

@@ -39,7 +39,7 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
-import { AddChild } from '../../redux/actions/childrenAction';
+import { AddChild, checkSimilarNames } from '../../redux/actions/childrenAction';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
@@ -188,7 +188,7 @@ const ChildAdd = () => {
         const activeNgoList = ngoList.filter((ngo) => ngo.isActive);
         setOptionsNgo([
           {
-            id: '',
+            id: 0,
             name: t('ngo.allNgos'),
           },
           ...activeNgoList,
@@ -217,9 +217,7 @@ const ChildAdd = () => {
     let active = true;
     if (active && successSwAll) {
       // sort social worker
-      const filtered = swList.filter((s) => s.ngoId === ngoId);
-
-      const sortedSocialWorkers = filtered.sort((a, b) => Number(b.isActive) - Number(a.isActive));
+      const sortedSocialWorkers = swList.sort((a, b) => Number(b.is_active) - Number(a.is_active));
       setOptions([...sortedSocialWorkers]);
     }
     return () => {
@@ -231,19 +229,29 @@ const ChildAdd = () => {
   useEffect(() => {
     if (!open || openNgo) {
       setOptions([]);
-    } else if (ngoId && (open || !openNgo)) {
-      dispatch(fetchSocialWorkersList());
+    } else if (open || !openNgo) {
+      dispatch(fetchSocialWorkersList(ngoId));
     }
   }, [open, openNgo, ngoId]);
+  // // fetch needs
+  // useEffect(() => {
+  //   if (swInfo && !loadingNgo) {
+  //     if (successNgoList) {
+  //       dispatch(fetchSocialWorkersList());
+  //     }
+  //   }
+  // }, [ngoId, open, openNgo, ngoId, swInfo, successNgoList]);
 
-  // fetch needs
+  // check for similar SAY name
   useEffect(() => {
-    if (swInfo && !loadingNgo) {
-      if (successNgoList) {
-        dispatch(fetchSocialWorkersList());
-      }
+    if (watch('sayname_translations_en') && watch('sayname_translations_fa')) {
+      const sayNameTranslations = JSON.stringify({
+        en: watch('sayname_translations_en'),
+        fa: watch('sayname_translations_fa'),
+      });
+      dispatch(checkSimilarNames(sayNameTranslations));
     }
-  }, [ngoId, open, openNgo, ngoId, swInfo, successNgoList]);
+  }, [watch('sex')]);
 
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
@@ -290,7 +298,6 @@ const ChildAdd = () => {
         country: 98,
         // state: parseInt(data.state, 10),  no state in flask server
         // city: parseInt(data.city, 10),
-   
       }),
     );
   };
@@ -352,18 +359,6 @@ const ChildAdd = () => {
         <Grid item md={3} xs={12}>
           {swInfo && (
             <Autocomplete
-              // defaultValue={
-              //   swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
-              //   swInfo.typeId === FlaskUserTypesEnum.ADMIN
-              //     ? {
-              //         id: '',
-              //         name: t('ngo.allNgos'),
-              //       }
-              //     : {
-              //         id: swInfo.ngoId,
-              //         name: swInfo.ngoName,
-              //       }
-              // }
               id="asynchronous-ngo"
               open={openNgo}
               onOpen={() => {
@@ -374,7 +369,7 @@ const ChildAdd = () => {
               }}
               onChange={(e, value) => setNgoId(value && value.id)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => `${option.id} - ${option.name}`}
+              getOptionLabel={(option) => `${option > 0 ? option.id : ''} - ${option.name}`}
               options={optionsNgo}
               loading={loadingNgo}
               renderInput={(params) => (
@@ -396,7 +391,7 @@ const ChildAdd = () => {
           )}
         </Grid>
         <Grid item>
-          {ngoId && (
+          {ngoId >= 0 && (
             <Autocomplete
               id="asynchronous-social-worker"
               sx={{ width: 300 }}
@@ -407,16 +402,16 @@ const ChildAdd = () => {
               onClose={() => {
                 setOpen(false);
               }}
-              onChange={(e, value) => setSwId(value && value.id)}
+              onChange={(e, value) => setSwId(value && value.is_active && value.id)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) =>
-                option.isActive
+                option.is_active
                   ? `${option.id} - ${option.firstName}`
                   : `${option.id} - ${option.firstName}`
               }
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                  {option.isActive ? (
+                  {option.is_active ? (
                     <>
                       <FeatherIcon color="green" icon="check" width="18" />
                       <Typography>{`${option.id} - ${option.firstName}`}</Typography>

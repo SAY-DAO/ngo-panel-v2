@@ -12,15 +12,27 @@ import {
   CHILD_LIST_REQUEST,
   CHILD_LIST_SUCCESS,
   CHILD_LIST_FAIL,
-  UPDATE_CHILD_FAIL,
-  UPDATE_CHILD_IS_ACTIVE_FAIL,
-  UPDATE_CHILD_IS_ACTIVE_REQUEST,
-  UPDATE_CHILD_IS_ACTIVE_SUCCESS,
   UPDATE_CHILD_REQUEST,
   UPDATE_CHILD_SUCCESS,
+  UPDATE_CHILD_STATUS_FAIL,
+  UPDATE_CHILD_STATUS_REQUEST,
+  UPDATE_CHILD_STATUS_SUCCESS,
+  PRE_REGISTER_CHILD_ADD_FAIL,
+  PRE_REGISTER_CHILD_ADD_REQUEST,
+  PRE_REGISTER_CHILD_ADD_SUCCESS,
+  CHECK_SIMILAR_NAMES_FAIL,
+  CHECK_SIMILAR_NAMES_REQUEST,
+  CHECK_SIMILAR_NAMES_SUCCESS,
+  UPDATE_CHILD_FAIL,
   CHILD_ACTIVE_LIST_REQUEST,
   CHILD_ACTIVE_LIST_SUCCESS,
   CHILD_ACTIVE_LIST_FAIL,
+  PRE_REGISTER_CHILD_LIST_REQUEST,
+  PRE_REGISTER_CHILD_LIST_SUCCESS,
+  PRE_REGISTER_CHILD_LIST_FAIL,
+  PRE_REGISTER_CHILD_UPDATE_REQUEST,
+  PRE_REGISTER_CHILD_UPDATE_SUCCESS,
+  PRE_REGISTER_CHILD_UPDATE_FAIL,
 } from '../constants/childrenConstants';
 
 export const fetchMyChildById = (childId) => async (dispatch, getState) => {
@@ -80,7 +92,7 @@ export const fetchActiveChildList = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchChildList = () => async (dispatch, getState) => {
+export const fetchChildList = (take, limit, filters) => async (dispatch, getState) => {
   try {
     dispatch({ type: CHILD_LIST_REQUEST });
     const {
@@ -91,28 +103,17 @@ export const fetchChildList = () => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id, // nest server needs this for auth
+        'X-TAKE': take,
+        'X-LIMIT': limit,
       },
     };
-    const responseDead = await publicApi.get(`/child/all/confirm=2?existence_status=0`, config);
 
-    const responseAlivePresent = await publicApi.get(
-      `/child/all/confirm=2?existence_status=1`,
-      config,
-    );
-    const array1 = responseDead.data.children.concat(responseAlivePresent.data.children);
-
-    const responseAliveGone = await publicApi.get(
-      `/child/all/confirm=2?existence_status=2`,
-      config,
-    );
-    const array2 = array1.concat(responseAliveGone.data.children);
-
-    const responseTempGone = await publicApi.get(`/child/all/confirm=2?existence_status=3`, config);
-    const array4 = array2.concat(responseTempGone.data.children);
+    const { data } = await daoApi.post(`/children/flask/all`, filters, config);
 
     dispatch({
       type: CHILD_LIST_SUCCESS,
-      payload: array4,
+      payload: data,
     });
   } catch (e) {
     dispatch({
@@ -152,33 +153,6 @@ export const fetchChildrenByNgo =
     }
   };
 
-export const updateChildIsActive = (id, status) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: UPDATE_CHILD_IS_ACTIVE_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-    const { data } = await publicApi.patch(`/ngo/${status}/ngoId=${id}`, id, config);
-
-    dispatch({
-      type: UPDATE_CHILD_IS_ACTIVE_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    dispatch({
-      type: UPDATE_CHILD_IS_ACTIVE_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
-    });
-  }
-};
-
 export const updateChild = (values) => async (dispatch, getState) => {
   try {
     dispatch({ type: UPDATE_CHILD_REQUEST });
@@ -217,6 +191,162 @@ export const updateChild = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const updateChildExistenceStatus = (childId, status) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_CHILD_STATUS_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+
+    const formData = new FormData();
+
+    formData.append('existence_status', status); // 0 dead :( | 1 alive and present | 2 alive but gone | 3 Temporary gone
+    const { data } = await publicApi.patch(`/child/update/childId=${childId}`, formData, config);
+    dispatch({
+      type: UPDATE_CHILD_STATUS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_CHILD_STATUS_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const checkSimilarNames = (newName, lang) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CHECK_SIMILAR_NAMES_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.patch(`/children/check/names/${newName}/${lang}`, config);
+    dispatch({
+      type: CHECK_SIMILAR_NAMES_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: CHECK_SIMILAR_NAMES_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const createPreRegisterChild = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRE_REGISTER_CHILD_ADD_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+
+    const formData = new FormData();
+    formData.append('awakeFile', values.awakeFile);
+    formData.append('sleptFile', values.sleptFile);
+    formData.append('sayNameEn', values.sayName.en);
+    formData.append('sayNameFa', values.sayName.fa);
+
+    const config = {
+      headers: {
+        'Content-Type': `multipart/form-data`,
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+        
+      },
+    };
+
+
+    const { data } = await daoApi.post(`/children/preregister`, formData, config);
+
+    dispatch({
+      type: PRE_REGISTER_CHILD_ADD_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: PRE_REGISTER_CHILD_ADD_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const updatePreRegisterChild = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRE_REGISTER_CHILD_UPDATE_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        processData: false,
+        contentType: false,
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.patch(`/children/preregister`, values, config);
+
+    dispatch({
+      type: PRE_REGISTER_CHILD_UPDATE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: PRE_REGISTER_CHILD_UPDATE_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const getPreRegisters = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRE_REGISTER_CHILD_LIST_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/children/preregister/all`, config);
+
+    dispatch({
+      type: PRE_REGISTER_CHILD_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: PRE_REGISTER_CHILD_LIST_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }

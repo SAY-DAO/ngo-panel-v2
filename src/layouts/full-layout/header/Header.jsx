@@ -29,7 +29,6 @@ import { fetchSocialWorkerDetails } from '../../../redux/actions/socialWorkerAct
 import { SW_DETAILS_RESET, SW_LIST_RESET } from '../../../redux/constants/socialWorkerConstants';
 import { FlaskUserTypesEnum } from '../../../utils/types';
 import {
-  CHILDREN_ADD,
   DAO_HOME,
   MILESTONE_ADD,
   MILESTONE_LIST,
@@ -129,7 +128,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         location.pathname === SW_LIST ||
         location.pathname === PROVIDER_LIST ||
         location.pathname === NGO_LIST ||
-        location.pathname === CHILDREN_ADD ||
         location.pathname === MILESTONE_LIST ||
         location.pathname === MILESTONE_ADD
       ) {

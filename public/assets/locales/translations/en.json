@@ -9,6 +9,9 @@
       "content": "Are you sure you want to delete this receipt?"
     }
   },
+  "childStatusModal": {
+    "checkBox": "I am sure!"
+  },
   "alert": {
     "title": "Please be Advised!",
     "body": "Up to End of Day We are working on some feature and you might encounter some minor issues",
@@ -76,6 +79,10 @@
     "rotate": "Rotate"
   },
   "button": {
+    "reset": "Reset",
+    "finish": "Finish",
+    "next": "Next",
+    "back": "Back",
     "update": "Update",
     "skip": "Skip",
     "register": "Register",
@@ -281,7 +288,10 @@
     "daoHeader": "DAO",
     "dashboard": "Dashboard",
     "list": "List",
-    "add": "Add"
+    "add": "Add",
+    "preregister": "Pre Register",
+    "preregisterList": "Pre Register List"
+
   },
   "socialWorker": {
     "title": "Social Worker",
@@ -534,6 +544,11 @@
     }
   },
   "child": {
+    "steps": {
+      "first": "Introduction",
+      "second": "Child information",
+      "third": "Child Voice"
+    },
     "title": "Child",
     "all": "All Children",
     "id": "Id",
@@ -541,6 +556,14 @@
     "titleAdd": "Add Details",
     "isConfirmed": "Is Condirmed",
     "existence_status": "Existence",
+    "updateStatus": "Change Status",
+    "statuses": {
+      "dead": "Passed Away",
+      "aliveAndPresent": "Active",
+      "aliveAndGone": "Has Left",
+      "tempGone": "Temporary left",
+      "confirmed": "Confirmed"
+    },
     "isDeleted": "Is Deleted",
     "status": "Status",
     "sayname_translations": {

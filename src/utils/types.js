@@ -142,6 +142,13 @@ export const ChildExistenceEnum = {
   ALIVE_PRESENT: 1,
   ALIVE_GONE: 2,
   TEMP_GONE: 3,
+  CONFIRMED: -1,
+};
+
+export const ChildConfirmation = {
+  NOT_CONFIRMED: 0,
+  CONFIRMED: 1,
+  BOTH: 2,
 };
 
 export const NeedCategoryEnum = {

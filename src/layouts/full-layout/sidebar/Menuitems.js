@@ -13,6 +13,31 @@ import BurstModeOutlinedIcon from '@mui/icons-material/BurstModeOutlined';
 import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import {
+  PROFILE_VIEW,
+  SW_LIST,
+  SW_ADD,
+  SW_MIGRATE,
+  PROVIDER_LIST,
+  PROVIDER_ADD,
+  NGO_LIST,
+  NGO_ARRIVALS,
+  NGO_ADD,
+  CHILDREN_LIST,
+  CHILDREN_PRE_REGISTER,
+  NEED_LIST,
+  NEED_ADD,
+  REPORTS,
+  MILESTONE_ADD,
+  MILESTONE_LIST,
+  NEED_MIDJOURNEY,
+  NEED_COMMENT,
+  CONTRIBUTION,
+  MY_SIGNATURES,
+  DAO_HOME,
+  CHILDREN_PRE_REGISTER_LIST,
+} from '../../../routes/RouteConstants';
 
 const Menuitems = [
   {
@@ -24,7 +49,7 @@ const Menuitems = [
   {
     title: 'sidebar.dashboard',
     icon: <HubIcon />,
-    href: '/dao',
+    href: DAO_HOME,
     admin: true,
   },
   {
@@ -37,13 +62,13 @@ const Menuitems = [
   {
     title: 'sidebar.myPage',
     icon: 'user',
-    href: '/page/view',
+    href: PROFILE_VIEW,
     admin: false,
   },
   {
     title: 'sidebar.signatures',
     icon: <HandshakeOutlinedIcon />,
-    href: '/signatures/me',
+    href: MY_SIGNATURES,
     admin: false,
   },
   {
@@ -56,12 +81,22 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/children/list',
+        href: CHILDREN_LIST,
+      },
+      // {
+      //   title: 'sidebar.add',
+      //   icon: 'plus-square',
+      //   href: CHILDREN_ADD,
+      // },
+      {
+        title: 'sidebar.preregister',
+        icon: <HowToRegIcon />,
+        href: CHILDREN_PRE_REGISTER,
       },
       {
-        title: 'sidebar.add',
-        icon: 'edit',
-        href: '/children/add',
+        title: 'sidebar.preregisterList',
+        icon: 'list',
+        href: CHILDREN_PRE_REGISTER_LIST,
       },
     ],
   },
@@ -75,12 +110,12 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/need/list',
+        href: NEED_LIST,
       },
       {
         title: 'sidebar.add',
-        icon: 'edit',
-        href: '/need/add',
+        icon: 'plus-square',
+        href: NEED_ADD,
       },
     ],
   },
@@ -95,19 +130,19 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/dao/milestone/list',
+        href: MILESTONE_LIST,
       },
       {
         title: 'sidebar.add',
-        icon: 'plus',
-        href: '/dao/milestone/add',
+        icon: 'plus-square',
+        href: MILESTONE_ADD,
       },
     ],
   },
   {
     title: 'sidebar.reports',
     icon: <MenuBookIcon />,
-    href: '/report/needs/paid',
+    href: REPORTS,
     collapse: true,
     admin: false,
   },
@@ -129,19 +164,19 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/ngo/list',
+        href: NGO_LIST,
         admin: true,
       },
       {
         title: 'sidebar.add',
-        icon: 'plus',
-        href: '/ngo/add',
+        icon: 'plus-square',
+        href: NGO_ADD,
         admin: true,
       },
       {
         title: 'sidebar.ngos.arrivals',
         icon: <DeliveryDiningIcon />,
-        href: '/ngo/arrivals',
+        href: NGO_ARRIVALS,
         admin: true,
       },
     ],
@@ -156,13 +191,13 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/provider/list',
+        href: PROVIDER_LIST,
         admin: true,
       },
       {
         title: 'sidebar.add',
-        icon: 'plus',
-        href: '/provider/add',
+        icon: 'plus-square',
+        href: PROVIDER_ADD,
         admin: true,
       },
     ],
@@ -177,19 +212,19 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/sw/list',
+        href: SW_LIST,
         admin: true,
       },
       {
         title: 'sidebar.add',
-        icon: 'plus',
-        href: '/sw/add',
+        icon: 'plus-square',
+        href: SW_ADD,
         admin: true,
       },
       {
         title: 'sidebar.socialWorkers.migrate',
         icon: <MoveDownIcon />,
-        href: '/sw/migrate',
+        href: SW_MIGRATE,
         admin: true,
       },
     ],
@@ -209,7 +244,7 @@ const Menuitems = [
       },
       {
         title: 'sidebar.add',
-        icon: 'plus',
+        icon: 'plus-square',
         href: '/categories/add',
         admin: true,
       },
@@ -225,7 +260,7 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/midjourney/list',
+        href: NEED_MIDJOURNEY,
         admin: true,
       },
     ],
@@ -240,7 +275,7 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/comment/list',
+        href: NEED_COMMENT,
         admin: true,
       },
     ],
@@ -255,7 +290,7 @@ const Menuitems = [
       {
         title: 'sidebar.list',
         icon: 'list',
-        href: '/contribution/list',
+        href: CONTRIBUTION,
         admin: true,
       },
     ],

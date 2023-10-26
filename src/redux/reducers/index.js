@@ -26,8 +26,11 @@ import {
   childAddReducer,
   childByIdReducer,
   childListReducer,
+  childNameCheckReducer,
+  childPreRegisterReducer,
   childrenByNgoReducer,
   childUpdateReducer,
+  childUpdateStatusReducer,
 } from './childrenReducer';
 import { userLoginReducer, myPageReducer, userChangePasswordReducer } from './userReducer';
 import {
@@ -125,6 +128,9 @@ export default combineReducers({
   childUpdate: childUpdateReducer,
   childAdd: childAddReducer,
   childNeedsDuplicates: duplicatesReducer,
+  childStatusUpdate: childUpdateStatusReducer,
+  childNameCheck: childNameCheckReducer,
+  childPreRegister: childPreRegisterReducer,
   allNeeds: allNeedsReducer,
   allReportNeeds: allReportNeedsReducer,
   needConfirm: needConfirmReducer,
