@@ -33,6 +33,12 @@ import {
   PRE_REGISTER_CHILD_UPDATE_REQUEST,
   PRE_REGISTER_CHILD_UPDATE_SUCCESS,
   PRE_REGISTER_CHILD_UPDATE_FAIL,
+  DELETE_PRE_REGISTER_REQUEST,
+  DELETE_PRE_REGISTER_SUCCESS,
+  DELETE_PRE_REGISTER_FAIL,
+  APPROVE_PRE_REGISTER_REQUEST,
+  APPROVE_PRE_REGISTER_SUCCESS,
+  APPROVE_PRE_REGISTER_FAIL,
 } from '../constants/childrenConstants';
 
 export const fetchMyChildById = (childId) => async (dispatch, getState) => {
@@ -58,7 +64,11 @@ export const fetchMyChildById = (childId) => async (dispatch, getState) => {
     // check for generic and custom message to return using ternary statement
     dispatch({
       type: CHILD_BY_ID_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -87,7 +97,11 @@ export const fetchActiveChildList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: CHILD_ACTIVE_LIST_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -108,7 +122,6 @@ export const fetchChildList = (take, limit, filters) => async (dispatch, getStat
         'X-LIMIT': limit,
       },
     };
-
     const { data } = await daoApi.post(`/children/flask/all`, filters, config);
 
     dispatch({
@@ -118,7 +131,11 @@ export const fetchChildList = (take, limit, filters) => async (dispatch, getStat
   } catch (e) {
     dispatch({
       type: CHILD_LIST_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -148,7 +165,11 @@ export const fetchChildrenByNgo =
     } catch (e) {
       dispatch({
         type: CHILDREN_BY_NGO_FAIL,
-        payload: e.response && (e.response.status ? e.response : e.response.data.message),
+        payload: e.response.message
+          ? e.response.message
+          : e.response.data
+          ? e.response.data.message
+          : e.response,
       });
     }
   };
@@ -191,7 +212,11 @@ export const updateChild = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -221,7 +246,11 @@ export const updateChildExistenceStatus = (childId, status) => async (dispatch, 
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_STATUS_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -249,7 +278,11 @@ export const checkSimilarNames = (newName, lang) => async (dispatch, getState) =
   } catch (e) {
     dispatch({
       type: CHECK_SIMILAR_NAMES_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -261,8 +294,8 @@ export const createPreRegisterChild = (values) => async (dispatch, getState) => 
       userLogin: { userInfo },
     } = getState();
 
-
     const formData = new FormData();
+    formData.append('sex', values.sex);
     formData.append('awakeFile', values.awakeFile);
     formData.append('sleptFile', values.sleptFile);
     formData.append('sayNameEn', values.sayName.en);
@@ -273,10 +306,8 @@ export const createPreRegisterChild = (values) => async (dispatch, getState) => 
         'Content-Type': `multipart/form-data`,
         Authorization: userInfo && userInfo.access_token,
         flaskId: userInfo && userInfo.id,
-        
       },
     };
-
 
     const { data } = await daoApi.post(`/children/preregister`, formData, config);
 
@@ -287,7 +318,11 @@ export const createPreRegisterChild = (values) => async (dispatch, getState) => 
   } catch (e) {
     dispatch({
       type: PRE_REGISTER_CHILD_ADD_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -301,29 +336,52 @@ export const updatePreRegisterChild = (values) => async (dispatch, getState) => 
 
     const config = {
       headers: {
-        'Content-Type': 'application/json',
-        processData: false,
-        contentType: false,
+        'Content-Type': `multipart/form-data`,
         Authorization: userInfo && userInfo.access_token,
         flaskId: userInfo && userInfo.id,
       },
     };
 
-    const { data } = await daoApi.patch(`/children/preregister`, values, config);
+    const formData = new FormData();
+    formData.append('ngoId', values.ngoId);
+    formData.append('swId', values.swId);
+    formData.append('bio', values.bio);
+    formData.append('sex', values.sex);
+    formData.append('phoneNumber', values.phoneNumber);
+    formData.append('birthDate', values.birthDate);
+    formData.append('voiceFile', values.voiceFile);
+    formData.append('birthPlaceId', values.birthPlaceId);
+    formData.append('address', values.address);
+    formData.append('familyCount', values.familyCount);
+    formData.append('educationLevel', values.educationLevel);
+    formData.append('schoolType', values.schoolType);
+    formData.append('housingStatus', values.housingStatus);
+    formData.append('firstName', values.firstName);
+    formData.append('lastName', values.lastName);
+    formData.append('country', values.country);
+    formData.append('state', values.state);
+    formData.append('city', values.city);
+
+    const { data } = await daoApi.patch(`/children/preregister`, formData, config);
 
     dispatch({
       type: PRE_REGISTER_CHILD_UPDATE_SUCCESS,
       payload: data,
     });
   } catch (e) {
+    console.log({ e });
     dispatch({
       type: PRE_REGISTER_CHILD_UPDATE_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
 
-export const getPreRegisters = () => async (dispatch, getState) => {
+export const getPreRegisters = (tabNumber, take, limit) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRE_REGISTER_CHILD_LIST_REQUEST });
     const {
@@ -335,10 +393,12 @@ export const getPreRegisters = () => async (dispatch, getState) => {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
         flaskId: userInfo && userInfo.id,
+        'X-TAKE': take,
+        'X-LIMIT': limit,
       },
     };
 
-    const { data } = await daoApi.get(`/children/preregister/all`, config);
+    const { data } = await daoApi.get(`/children/preregister/all/${tabNumber}`, config);
 
     dispatch({
       type: PRE_REGISTER_CHILD_LIST_SUCCESS,
@@ -347,7 +407,11 @@ export const getPreRegisters = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: PRE_REGISTER_CHILD_LIST_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
     });
   }
 };
@@ -419,7 +483,81 @@ export const AddChild = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_CHILD_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+        ? e.response.data.message
+        : e.response,
+    });
+  }
+};
+
+export const approvePreRegister = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: APPROVE_PRE_REGISTER_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.post(`/children/preregister/approve/${id}`, config);
+
+    dispatch({
+      type: APPROVE_PRE_REGISTER_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: APPROVE_PRE_REGISTER_FAIL,
+      payload:
+        e.response && e.response.data.detail
+          ? e.response.data
+          : e.response && e.response.data
+          ? e.response.data.message
+          : e.response,
+    });
+  }
+};
+
+export const deletePreRegister = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_PRE_REGISTER_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.delete(`/children/preregister/${id}`, config);
+
+    dispatch({
+      type: DELETE_PRE_REGISTER_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: DELETE_PRE_REGISTER_FAIL,
+      payload:
+        e.response && e.response.data.detail
+          ? e.response.data
+          : e.response && e.response.data
+          ? e.response.data.message
+          : e.response,
     });
   }
 };

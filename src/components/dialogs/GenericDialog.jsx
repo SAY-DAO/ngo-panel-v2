@@ -10,8 +10,9 @@ import { useDispatch } from 'react-redux';
 import { DialogTitle } from '@mui/material';
 import { deleteReceipt } from '../../redux/actions/reportAction';
 import { deleteNeed } from '../../redux/actions/needsAction';
+import { deletePreRegister } from '../../redux/actions/childrenAction';
 
-export default function DeleteDialog({ open, setOpen, dialogValues }) {
+export default function GenericDialog({ open, setOpen, dialogValues }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -25,6 +26,12 @@ export default function DeleteDialog({ open, setOpen, dialogValues }) {
     }
     if (dialogValues.type === 'deleteNeed') {
       dispatch(deleteNeed(dialogValues.needId));
+    }
+    if (dialogValues.type === 'deletePreregister') {
+      dispatch(deletePreRegister(dialogValues.preRegisterId));
+    }
+    if (dialogValues.type === 'resetPreregister') {
+      // dispatch(deletePreRegister(dialogValues.preRegisterId));
     }
     setOpen(false);
   };
@@ -41,13 +48,17 @@ export default function DeleteDialog({ open, setOpen, dialogValues }) {
           <DialogTitle>
             {dialogValues.type === 'deleteNeed'
               ? t('deleteModal.need.title')
-              : t('deleteModal.receipt.title')}
+              : dialogValues.type === 'deleteReceipt'
+              ? t('deleteModal.receipt.title')
+              : dialogValues.type === 'deletePreregister' && t('deleteModal.preRegister.title')}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               {dialogValues.type === 'deleteNeed'
                 ? t('deleteModal.need.content')
-                : t('deleteModal.receipt.content')}
+                : dialogValues.type === 'deleteReceipt'
+                ? t('deleteModal.receipt.content')
+                : dialogValues.type === 'deletePreregister' && t('deleteModal.preRegister.content')}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -62,7 +73,7 @@ export default function DeleteDialog({ open, setOpen, dialogValues }) {
   );
 }
 
-DeleteDialog.propTypes = {
+GenericDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
   dialogValues: PropTypes.object,

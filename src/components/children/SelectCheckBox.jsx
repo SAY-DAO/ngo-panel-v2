@@ -16,17 +16,20 @@ export default function SelectCheckBox({ setFilters }) {
     { title: t('child.statuses.aliveAndGone'), status: ChildExistenceEnum.ALIVE_GONE },
     { title: t('child.statuses.tempGone'), status: ChildExistenceEnum.TEMP_GONE },
     { title: t('child.statuses.confirmed'), status: ChildExistenceEnum.CONFIRMED },
+    { title: t('child.statuses.migrated'), status: ChildExistenceEnum.MIGRATED },
   ];
 
   const [values, setValues] = useState([existenceStatus[1].status, existenceStatus[4].status]);
 
   useEffect(() => {
+    console.log(values);
     setFilters({
       statuses: values.filter((v) => v !== ChildExistenceEnum.CONFIRMED),
       isConfirmed:
         values.filter((v) => v !== ChildExistenceEnum.CONFIRMED).length < values.length
           ? ChildConfirmation.CONFIRMED
           : ChildConfirmation.BOTH,
+      isMigrated: values.filter((v) => v !== ChildExistenceEnum.MIGRATED).length < values.length,
     });
   }, [values]);
 

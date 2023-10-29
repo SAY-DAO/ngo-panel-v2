@@ -4,7 +4,7 @@ import { Card, Grid } from '@mui/material';
 import AddStepper from '../../components/children/AddStepper';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 
-function ChildrenPreRegisterList() {
+function ChildrenPreRegisterUpdate() {
   const { t } = useTranslation();
   const BCrumb = [
     {
@@ -32,4 +32,4 @@ function ChildrenPreRegisterList() {
   );
 }
 
-export default ChildrenPreRegisterList;
+export default ChildrenPreRegisterUpdate;

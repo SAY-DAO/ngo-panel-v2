@@ -7,6 +7,16 @@
     "receipt": {
       "title": "Deleting Receipt",
       "content": "Are you sure you want to delete this receipt?"
+    },
+    "preRegister": {
+      "title": "Deleting Pre register",
+      "content": "Are you sure you want to delete this pre register?"
+    }
+  },
+  "approveModal": {
+    "preRegister": {
+      "title": "Confirming Pre register",
+      "content": "Are you sure you want to confirm this pre register?"
     }
   },
   "childStatusModal": {
@@ -139,6 +149,7 @@
     "add": "Add",
     "childrenEdit": "Edit Child",
     "childrenList": "Children List",
+    "childrenPreList": "Children Pre Register List",
     "swList": "Social Workers List",
     "swEdit": "Edit Need",
     "needsEdit": "Edit Need",
@@ -291,7 +302,6 @@
     "add": "Add",
     "preregister": "Pre Register",
     "preregisterList": "Pre Register List"
-
   },
   "socialWorker": {
     "title": "Social Worker",
@@ -544,6 +554,13 @@
     }
   },
   "child": {
+    "preRegister": {
+      "tabs": {
+        "notRegistered": "Not registered",
+        "preregistered": "Pre registered",
+        "confirmed": "Confirmed"
+      }
+    },
     "steps": {
       "first": "Introduction",
       "second": "Child information",
@@ -618,7 +635,14 @@
     "phoneNumber": "Phone Number",
     "address": "Address",
     "education": "Education",
-    "educationondition": {
+    "schoolType": "School Type",
+    "schoolTypeCondition": {
+      "blind": "School Of the Blind",
+      "deaf": "School Of the Deaf",
+      "down_syndrome": "Special Ed",
+      "public": "Public"
+    },
+    "educationCondition": {
       "deprived": "Deprived",
       "kinderGarten": "KinderGarten",
       "notAttending": "Not Attending",
@@ -640,6 +664,7 @@
     "confirmUser": "Confirm User",
     "confirmDate": "Confirm Date",
     "done_needs_count": "Done Count",
+    "people": "People",
     "familyCount": "Family Count",
     "generatedCode": "Code",
     "id_social_worker": "Social Worker",

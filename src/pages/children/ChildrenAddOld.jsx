@@ -847,7 +847,7 @@ const ChildAdd = () => {
                             >
                               {Object.keys(EducationEnum).map((name, index) => (
                                 <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
-                                  {t(`child.educationondition.${name}`)}
+                                  {t(`child.educationCondition.${name}`)}
                                 </MenuItem>
                               ))}
                             </CustomSelect>

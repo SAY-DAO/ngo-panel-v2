@@ -7,6 +7,16 @@
     "receipt": {
       "title": "حذف رسید",
       "content": "آیا مطمئن به حذف رسید هستید؟"
+    },
+    "preRegister": {
+      "title": "حذف پیش‌ثبت نام",
+      "content": "آیا مطمئن به حذف این پیش ثبت نام هستید؟"
+    }
+  },
+  "approveModal": {
+    "preRegister": {
+      "title": "تائید ثبت نام",
+      "content": "آیا مطمئن به تائید این پیش ثبت نام هستید؟"
     }
   },
   "childStatusModal": {
@@ -176,6 +186,7 @@
     "add": "اضافه کردن",
     "childEdit": "ویرایش کودک",
     "childrenList": "لیست کودکان",
+    "childrenPreList": "لیست ثبت نام کودکان",
     "swList": "لیست مددکاران",
     "swEdit": "ویرایش مددکار",
     "needEdit": "ویرایش نیاز",
@@ -334,8 +345,8 @@
     "dashboard": "داشبورد",
     "list": "لیست",
     "add": "اضافه کردن",
-    "preregister": "پیش‌ثبت‌نام",
-    "preregisterList": "لیست پیش‌ثبت‌نام"
+    "preregister": "ثبت‌نام",
+    "preregisterList": "لیست ثبت‌نام"
   },
   "socialWorker": {
     "title": "مددکار",
@@ -589,23 +600,31 @@
     }
   },
   "child": {
-    "steps":{
-      "first":"معرفی کودک",
-      "second":"اطلاعات کودک",
-      "third":"صدای کودک"
+    "preRegister": {
+      "tabs": {
+        "notRegistered": "ثبت نشده",
+        "preregistered": "پیش‌ثبت نام",
+        "confirmed": "تائید شده"
+      }
+    },
+    "steps": {
+      "first": "معرفی کودک",
+      "second": "اطلاعات کودک",
+      "third": "صدای کودک"
     },
     "title": "کودک",
     "all": "تمام کودکان",
     "id": "شناسه",
     "isConfirmed": "وضعیت تائید",
     "existence_status": "وضعیت کودک",
-    "updateStatus": "تغییر وصعیت",
+    "updateStatus": "تغییر وضعیت",
     "statuses": {
       "dead": "فوت شده",
-      "aliveAndPresent": "فعال",
+      "aliveAndPresent": "تحت پوشش",
       "aliveAndGone": "ترک کرده",
       "tempGone": "ترک موقت",
-      "confirmed":"تائید شده"
+      "confirmed": "تائید شده",
+      "migrated": "انتقال داده شده"
     },
     "isDeleted": "وضعیت حذف",
     "status": "وضعیت",
@@ -661,7 +680,14 @@
     "phoneNumber": "شماره تماس",
     "address": "آدرس",
     "education": "تحصیلات",
-    "educationondition": {
+    "schoolType": "نوع مدرسه",
+    "schoolTypeCondition": {
+      "deaf": "مدرسه ناشناوایان",
+      "blind": "مدرسه نابینایان",
+      "down_syndrome": " مدرسه کودکان کم‌توان ذهنی",
+      "public": "مدرسه عادی"
+    },
+    "educationCondition": {
       "deprived": "بازمانده از تحصیل",
       "kinderGarten": "مهد کودک",
       "notAttending": "عدم حضور در مدرسه",
@@ -683,6 +709,7 @@
     "confirmUser": "تائید کننده",
     "confirmDate": "تاریخ تائید",
     "done_needs_count": "تعداد نیازهای انجام شده",
+    "people": "نفر",
     "familyCount": "تعداد خانوار",
     "generatedCode": "کد کودک",
     "id_social_worker": "مددکار",

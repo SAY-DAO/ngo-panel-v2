@@ -29,7 +29,7 @@ import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { addReceiptToNeed, fetchNeedReceipts } from '../../redux/actions/reportAction';
 import ReportUploadImage from './ReportUploadImage';
-import DeleteDialog from '../dialogs/DeleteDialog';
+import GenericDialog from '../dialogs/GenericDialog';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 
 export default function ReportImage({ row, statusId }) {
@@ -302,7 +302,7 @@ export default function ReportImage({ row, statusId }) {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-      <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
+      <GenericDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
     </Stack>
   );
 }

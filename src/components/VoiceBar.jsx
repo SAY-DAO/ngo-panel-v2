@@ -46,7 +46,7 @@ export default function VoiceBar({ url }) {
   const [status, setStatus] = useState('STOPPED');
   const [autoLoad, setAutoLoad] = useState(false);
   const [sound, setSound] = useState();
-
+console.log(url);
   useEffect(() => {
     return () => {
       setStatus('STOPPED');

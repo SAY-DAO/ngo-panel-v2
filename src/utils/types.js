@@ -22,6 +22,13 @@ export const colorChoices = [
   },
 ];
 
+export const SchoolTypeEnum = {
+  DEAF: 6,
+  BLIND: 7,
+  DOWN_SYNDROME: 8,
+  PUBLIC: 9,
+};
+
 //  -3:Deprived of education | -2:Kindergarten | -1:Not attending | 0:Pre-school | 1:1st grade | 2:2nd grade | ... | 13:University
 export const EducationEnum = {
   deprived: -3,
@@ -48,6 +55,11 @@ export const HousingStatusEnum = {
   homeless: 0,
   Resident: 1,
   CareCenters: 2,
+};
+
+export const SexEnum = {
+  FEMALE: 1,
+  MALE: 2,
 };
 
 export const VirtualFamilyRole = {
@@ -143,6 +155,7 @@ export const ChildExistenceEnum = {
   ALIVE_GONE: 2,
   TEMP_GONE: 3,
   CONFIRMED: -1,
+  MIGRATED: -2,
 };
 
 export const ChildConfirmation = {

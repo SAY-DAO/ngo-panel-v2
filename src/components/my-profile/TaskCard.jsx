@@ -61,7 +61,7 @@ import {
 import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
 import signatureIcon from '../../resources/images/signature.svg';
-import DeleteDialog from '../dialogs/DeleteDialog';
+import GenericDialog from '../dialogs/GenericDialog';
 
 const TaskCard = ({
   need,
@@ -920,7 +920,7 @@ const TaskCard = ({
         />
       )}
       <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
-      <DeleteDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
+      <GenericDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
     </Box>
   );
 };

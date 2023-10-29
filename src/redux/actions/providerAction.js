@@ -120,7 +120,6 @@ export const updateProvider = (values) => async (dispatch, getState) => {
     if (values.logoFile) {
       formData.append('file', values.logoFile);
     }
-    console.log(values);
     const { data } = await daoApi.patch(`/providers/update/${values.id}`, formData, config);
     dispatch({
       type: UPDATE_PROVIDER_SUCCESS,

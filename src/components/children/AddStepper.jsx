@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   Autocomplete,
   Card,
   CircularProgress,
@@ -19,7 +20,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -28,7 +29,13 @@ import { LoadingButton } from '@mui/lab';
 import FeatherIcon from 'feather-icons-react';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
-import { EducationEnum, FlaskUserTypesEnum, HousingStatusEnum } from '../../utils/types';
+import {
+  EducationEnum,
+  FlaskUserTypesEnum,
+  HousingStatusEnum,
+  SchoolTypeEnum,
+  SexEnum,
+} from '../../utils/types';
 import { daysDifference, getAge } from '../../utils/helpers';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
@@ -36,15 +43,17 @@ import CustomTextField from '../forms/custom-elements/CustomTextField';
 import VoiceBar from '../VoiceBar';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import { updatePreRegisterChild } from '../../redux/actions/childrenAction';
+import { CHILDREN_PRE_REGISTER_LIST } from '../../routes/RouteConstants';
 
 const steps = ['child.steps.first', 'child.steps.second', 'child.steps.third'];
 
 export default function AddStepper() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
 
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [birthDate, setBirthDate] = useState(new Date());
   const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
   const [nextDisable, setNextDisable] = useState(true);
@@ -55,9 +64,6 @@ export default function AddStepper() {
   const [openNgo, setOpenNgo] = useState(false);
   const [optionsNgo, setOptionsNgo] = useState([]);
   const loadingNgo = openNgo && optionsNgo && optionsNgo.length === 0;
-
-  const childAdd = useSelector((state) => state.childAdd);
-  const { success: successAddChild, loading: loadingAddChild } = childAdd;
 
   const countryList = useSelector((state) => state.countryList);
   const { countries, states, cities, success: successCountryList } = countryList;
@@ -71,12 +77,15 @@ export default function AddStepper() {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
+  const { loading, updated, error } = useSelector((state) => state.childPreRegister);
+
   const validationSchema = Yup.object().shape({
     housingStatus: Yup.string().required('Please enter child housing'),
     address: Yup.string().required('Please enter child address'),
     phoneNumber: Yup.string().required('Please enter guardian phone number'),
     sex: Yup.string().required('Please enter the sex'),
     education: Yup.number().required('Please enter the education'),
+    schoolType: Yup.number().required('Please enter the school type'),
     familyCount: Yup.string().required('Please enter the familyCount'),
     birthPlace: Yup.string().required('Please enter the birthPlace'),
     city: Yup.string().required('Please enter the city'),
@@ -104,12 +113,6 @@ export default function AddStepper() {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
-
-  useEffect(() => {
-    if (successAddChild) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
-  }, [successAddChild]);
 
   // Autocomplete ngo
   useEffect(() => {
@@ -184,6 +187,7 @@ export default function AddStepper() {
         values.bio_translations_fa &&
         values.sex &&
         values.education &&
+        values.schoolType &&
         values.familyCount &&
         values.familyCount > 0
       ) {
@@ -224,6 +228,7 @@ export default function AddStepper() {
     watch('bio_translations_fa'),
     watch('sex'),
     watch('education'),
+    watch('schoolType'),
     watch('familyCount'),
     watch('birthPlace'),
     watch('city'),
@@ -235,6 +240,12 @@ export default function AddStepper() {
     birthDate,
     uploadVoice,
   ]);
+
+  useEffect(() => {
+    if (updated) {
+      navigate(CHILDREN_PRE_REGISTER_LIST);
+    }
+  }, [updated]);
 
   // country
   useEffect(() => {
@@ -276,7 +287,7 @@ export default function AddStepper() {
 
   const onVoiceChange = (e) => {
     if (e.target.files[0]) {
-      setUploadVoice(URL.createObjectURL(e.target.files[0]));
+      setUploadVoice(e.target.files[0]);
       console.log(e.target.files[0]);
       console.log(URL.createObjectURL(e.target.files[0]));
     }
@@ -290,18 +301,19 @@ export default function AddStepper() {
       updatePreRegisterChild({
         ngoId,
         swId,
-        bio_translations: data.bio_translations_fa,
-        sex: Number(data.sex), 
+        bio: data.bio_translations_fa,
+        sex: Number(data.sex),
         phoneNumber: data.phoneNumber,
         birthDate,
-        voiceUrl: uploadVoice,
+        voiceFile: uploadVoice,
         birthPlaceId: Number(data.birthPlace),
         address: data.address,
         familyCount: Number(data.familyCount),
-        education: Number(data.education),
+        educationLevel: Number(data.education),
+        schoolType: Number(data.schoolType),
         housingStatus: Number(data.housingStatus),
-        firstName_translations: data.firstName_translations_fa,
-        lastName_translations: data.lastName_translations_fa,
+        firstName: data.firstName_translations_fa,
+        lastName: data.lastName_translations_fa,
         country: Number(data.country),
         state: Number(data.state), // no state in flask server
         city: Number(data.city),
@@ -506,8 +518,8 @@ export default function AddStepper() {
                           register={{ ...register('sex') }}
                           error={!!errors.sex}
                         >
-                          <MenuItem value={1}>Female</MenuItem>
-                          <MenuItem value={2}>Male</MenuItem>
+                          <MenuItem value={SexEnum.FEMALE}>{t(`child.sexKind.female`)}</MenuItem>
+                          <MenuItem value={SexEnum.MALE}>{t(`child.sexKind.male`)}</MenuItem>
                         </CustomSelect>
                       </FormControl>
                     </Grid>
@@ -524,7 +536,26 @@ export default function AddStepper() {
                         >
                           {Object.keys(EducationEnum).map((name, index) => (
                             <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
-                              {t(`child.educationondition.${name}`)}
+                              {t(`child.educationCondition.${name}`)}
+                            </MenuItem>
+                          ))}
+                        </CustomSelect>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <FormControl sx={{ width: '100%' }}>
+                        <CustomFormLabel id="schoolType">{t('child.schoolType')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="schoolType-controlled-open-select-label"
+                          id="schoolType"
+                          control={control}
+                          value={watch('schoolType') || ''}
+                          register={{ ...register('schoolType') }}
+                          error={!!errors.schoolType}
+                        >
+                          {Object.keys(SchoolTypeEnum).map((name, index) => (
+                            <MenuItem key={name} value={Object.values(SchoolTypeEnum)[index]}>
+                              {t(`child.schoolTypeCondition.${name.toLowerCase()}`)}
                             </MenuItem>
                           ))}
                         </CustomSelect>
@@ -764,7 +795,7 @@ export default function AddStepper() {
                     <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
                       <Grid container sx={{ m: 'auto' }}>
                         <Grid item xs={12} sx={{ width: '100%' }}>
-                          <VoiceBar url={uploadVoice} />
+                          <VoiceBar url={uploadVoice && URL.createObjectURL(uploadVoice)} />
                         </Grid>
                         <Grid item xs={12} sx={{ m: 'auto', width: '100%' }}>
                           <label htmlFor="upload-voice">
@@ -809,13 +840,14 @@ export default function AddStepper() {
               </LoadingButton>
               <Box sx={{ flex: '1 1 auto' }} />
               {activeStep !== steps.length - 1 && (
-                <LoadingButton disabled={nextDisable} onClick={handleNext}>
+                <LoadingButton loading={loading} disabled={nextDisable} onClick={handleNext}>
                   {t('button.next')}
                 </LoadingButton>
               )}
               {activeStep === steps.length - 1 && (
                 <LoadingButton
-                  loading={loadingAddChild}
+                  disabled={!uploadVoice}
+                  loading={loading}
                   type="submit"
                   onClick={handleSubmit(onSubmit)}
                 >
@@ -826,6 +858,7 @@ export default function AddStepper() {
           </form>
         )}
       </>
+      {error && <Alert severity="error">{error}</Alert>}
     </Box>
   );
 }

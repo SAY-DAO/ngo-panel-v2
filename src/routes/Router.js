@@ -58,9 +58,9 @@ const NgoEdit = Loadable(lazy(() => import('../pages/ngos/NgoEdit')));
 const NgoAdd = Loadable(lazy(() => import('../pages/ngos/NgoAdd')));
 const ChildrenList = Loadable(lazy(() => import('../pages/children/ChildrenList')));
 const ChildrenEdit = Loadable(lazy(() => import('../pages/children/ChildrenEdit')));
-const ChildrenPreRegister = Loadable(lazy(() => import('../pages/children/ChildrenPreRegister')));
-const ChildrenPreRegisterList = Loadable(
-  lazy(() => import('../pages/children/ChildrenPreRegisterList')),
+const ChildrenPreRegisterUpdate = Loadable(lazy(() => import('../pages/children/ChildrenPreRegisterUpdate')));
+const ChildrenPreRegisterTabs = Loadable(
+  lazy(() => import('../pages/children/ChildrenPreRegisterTabs')),
 );
 const NeedList = Loadable(lazy(() => import('../pages/needs/NeedList')));
 const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
@@ -98,8 +98,8 @@ const Router = [
       { path: NGO_ADD, exact: true, element: <NgoAdd /> },
       { path: CHILDREN_LIST, exact: true, element: <ChildrenList /> },
       { path: CHILDREN_EDIT, exact: true, element: <ChildrenEdit /> },
-      { path: CHILDREN_PRE_REGISTER, exact: true, element: <ChildrenPreRegister /> },
-      { path: CHILDREN_PRE_REGISTER_LIST, exact: true, element: <ChildrenPreRegisterList /> },
+      { path: CHILDREN_PRE_REGISTER, exact: true, element: <ChildrenPreRegisterUpdate /> },
+      { path: CHILDREN_PRE_REGISTER_LIST, exact: true, element: <ChildrenPreRegisterTabs /> },
       { path: NEED_LIST, exact: true, element: <NeedList /> },
       { path: NEED_EDIT, exact: true, element: <NeedEdit /> },
       { path: NEED_ADD, exact: true, element: <NeedAdd /> },
