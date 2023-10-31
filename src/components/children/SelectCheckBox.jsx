@@ -5,33 +5,38 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { Chip } from '@mui/material';
 import PropTypes from 'prop-types';
-import { ChildExistenceEnum, ChildConfirmation } from '../../utils/types';
+import { useSelector } from 'react-redux';
+import { ChildExistenceEnum, ChildConfirmation, FlaskUserTypesEnum } from '../../utils/types';
 
 export default function SelectCheckBox({ setFilters }) {
   const { t } = useTranslation();
 
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+
   const existenceStatus = [
+    { title: t('child.statuses.confirmed'), status: ChildExistenceEnum.confirmed },
     { title: t('child.statuses.dead'), status: ChildExistenceEnum.DEAD },
     { title: t('child.statuses.aliveAndPresent'), status: ChildExistenceEnum.aliveAndPresent },
     { title: t('child.statuses.aliveAndGone'), status: ChildExistenceEnum.aliveAndGone },
     { title: t('child.statuses.tempGone'), status: ChildExistenceEnum.tempGone },
-    { title: t('child.statuses.confirmed'), status: ChildExistenceEnum.confirmed },
     { title: t('child.statuses.migrated'), status: ChildExistenceEnum.migrated },
   ];
 
-  const [values, setValues] = useState([existenceStatus[1].status, existenceStatus[4].status]);
+  const [values, setValues] = useState([existenceStatus[0].status, existenceStatus[2].status]);
 
   useEffect(() => {
-    console.log(values);
-    setFilters({
-      statuses: values.filter((v) => v !== ChildExistenceEnum.confirmed),
-      isConfirmed:
-        values.filter((v) => v !== ChildExistenceEnum.confirmed).length < values.length
-          ? ChildConfirmation.CONFIRMED
-          : ChildConfirmation.BOTH,
-      isMigrated: values.filter((v) => v !== ChildExistenceEnum.migrated).length < values.length,
-    });
-  }, [values]);
+    if (swInfo) {
+      setFilters({
+        statuses: values.filter((v) => v !== ChildExistenceEnum.confirmed),
+        isConfirmed:
+          values.filter((v) => v !== ChildExistenceEnum.confirmed).length < values.length
+            ? ChildConfirmation.CONFIRMED
+            : ChildConfirmation.BOTH,
+        isMigrated: values.filter((v) => v !== ChildExistenceEnum.migrated).length < values.length,
+      });
+    }
+  }, [values, swInfo]);
 
   return (
     <Autocomplete
@@ -54,6 +59,15 @@ export default function SelectCheckBox({ setFilters }) {
               option
             }
             {...getTagProps({ index })}
+            disabled={
+              (swInfo &&
+                swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
+                swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN &&
+                existenceStatus.find((s) => s.status === option) &&
+                existenceStatus.find((s) => s.status === option).status ===
+                  ChildExistenceEnum.confirmed) ||
+              !swInfo
+            }
           />
         ))
       }
