@@ -12,11 +12,11 @@ export default function SelectCheckBox({ setFilters }) {
 
   const existenceStatus = [
     { title: t('child.statuses.dead'), status: ChildExistenceEnum.DEAD },
-    { title: t('child.statuses.aliveAndPresent'), status: ChildExistenceEnum.ALIVE_PRESENT },
-    { title: t('child.statuses.aliveAndGone'), status: ChildExistenceEnum.ALIVE_GONE },
-    { title: t('child.statuses.tempGone'), status: ChildExistenceEnum.TEMP_GONE },
-    { title: t('child.statuses.confirmed'), status: ChildExistenceEnum.CONFIRMED },
-    { title: t('child.statuses.migrated'), status: ChildExistenceEnum.MIGRATED },
+    { title: t('child.statuses.aliveAndPresent'), status: ChildExistenceEnum.aliveAndPresent },
+    { title: t('child.statuses.aliveAndGone'), status: ChildExistenceEnum.aliveAndGone },
+    { title: t('child.statuses.tempGone'), status: ChildExistenceEnum.tempGone },
+    { title: t('child.statuses.confirmed'), status: ChildExistenceEnum.confirmed },
+    { title: t('child.statuses.migrated'), status: ChildExistenceEnum.migrated },
   ];
 
   const [values, setValues] = useState([existenceStatus[1].status, existenceStatus[4].status]);
@@ -24,12 +24,12 @@ export default function SelectCheckBox({ setFilters }) {
   useEffect(() => {
     console.log(values);
     setFilters({
-      statuses: values.filter((v) => v !== ChildExistenceEnum.CONFIRMED),
+      statuses: values.filter((v) => v !== ChildExistenceEnum.confirmed),
       isConfirmed:
-        values.filter((v) => v !== ChildExistenceEnum.CONFIRMED).length < values.length
+        values.filter((v) => v !== ChildExistenceEnum.confirmed).length < values.length
           ? ChildConfirmation.CONFIRMED
           : ChildConfirmation.BOTH,
-      isMigrated: values.filter((v) => v !== ChildExistenceEnum.MIGRATED).length < values.length,
+      isMigrated: values.filter((v) => v !== ChildExistenceEnum.migrated).length < values.length,
     });
   }, [values]);
 

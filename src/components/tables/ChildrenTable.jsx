@@ -352,6 +352,9 @@ const ChildrenTable = () => {
   const swById = useSelector((state) => state.swById);
   const { children, success: successChildren } = swById;
 
+  const ngoAll = useSelector((state) => state.ngoAll);
+  const { ngoList } = ngoAll;
+
   const BCrumb = [
     {
       to: '/',
@@ -528,13 +531,36 @@ const ChildrenTable = () => {
                               <Box display="flex" alignItems="center">
                                 <Box
                                   sx={{
+                                    borderRadius: '100%',
+                                    height: '10px',
+                                    width: '10px',
+                                  }}
+                                />
+                                <Typography
+                                  color="textSecondary"
+                                  variant="body1"
+                                  fontWeight="400"
+                                  sx={{
+                                    ml: 1,
+                                  }}
+                                >
+                                  {t(
+                                    `child.statuses.${Object.keys(ChildExistenceEnum).find(
+                                      (k) => ChildExistenceEnum[k] === row.existence_status,
+                                    )}`,
+                                  )}
+                                </Typography>
+                              </Box>
+                              <Box display="flex" alignItems="center">
+                                <Box
+                                  sx={{
                                     backgroundColor:
                                       row.isConfirmed === true
                                         ? (theme) => theme.palette.success.main
                                         : (theme) => theme.palette.error.main,
                                     borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
+                                    height: '5px',
+                                    width: '5px',
                                   }}
                                 />
                                 <Typography
@@ -548,29 +574,7 @@ const ChildrenTable = () => {
                                   {t('child.isConfirmed')}
                                 </Typography>
                               </Box>
-                              <Box display="flex" alignItems="center">
-                                <Box
-                                  sx={{
-                                    backgroundColor:
-                                      row.existence_status === ChildExistenceEnum.ALIVE_PRESENT
-                                        ? (theme) => theme.palette.success.main
-                                        : (theme) => theme.palette.error.main,
-                                    borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
-                                  }}
-                                />
-                                <Typography
-                                  color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
-                                  sx={{
-                                    ml: 1,
-                                  }}
-                                >
-                                  {`${t('child.existence_status')}=${row.existence_status}`}
-                                </Typography>
-                              </Box>
+
                               <Box display="flex" alignItems="center">
                                 <Box
                                   sx={{
@@ -579,42 +583,19 @@ const ChildrenTable = () => {
                                         ? (theme) => theme.palette.success.main
                                         : (theme) => theme.palette.error.main,
                                     borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
+                                    height: '5px',
+                                    width: '5px',
                                   }}
                                 />
                                 <Typography
                                   color="textSecondary"
                                   variant="body1"
-                                  fontWeight="400"
+                                  fontWeight="200"
                                   sx={{
                                     ml: 1,
                                   }}
                                 >
                                   {t('child.isDeleted')}
-                                </Typography>
-                              </Box>
-                              <Box display="flex" alignItems="center">
-                                <Box
-                                  sx={{
-                                    backgroundColor:
-                                      row.is_gone === false
-                                        ? (theme) => theme.palette.success.main
-                                        : (theme) => theme.palette.error.main,
-                                    borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
-                                  }}
-                                />
-                                <Typography
-                                  color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
-                                  sx={{
-                                    ml: 1,
-                                  }}
-                                >
-                                  {t('child.is_gone')}
                                 </Typography>
                               </Box>
                             </TableCell>
@@ -760,8 +741,21 @@ const ChildrenTable = () => {
                               </Typography>
                             </TableCell>
                             <TableCell align="center">
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.id_ngo}
+                              <Typography
+                                color="textSecondary"
+                                variant="body1"
+                                fontWeight="400"
+                                sx={{
+                                  maxWidth: '140px',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  height: '1.2em',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                {ngoList
+                                  ? ngoList.find((n) => n.id === row.id_ngo).name
+                                  : swInfo && swInfo.ngoName}
                               </Typography>
                             </TableCell>
 

@@ -51,17 +51,27 @@ export default function ChildrenPreRegisterTabs() {
       {/* end breadcrumb */}
       <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <Tabs value={value} onChange={handleChange} centered>
-          {swInfo &&
-            (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-              swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
-              <Tab label={t('child.preRegister.tabs.notRegistered')} />
-            )}
+          <Tab
+            label={
+              swInfo &&
+              (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) &&
+              t('child.preRegister.tabs.notRegistered')
+            }
+            disabled={
+              swInfo &&
+              !(
+                swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
+              )
+            }
+          />
           <Tab label={t('child.preRegister.tabs.preregistered')} />
           <Tab label={t('child.preRegister.tabs.confirmed')} />
         </Tabs>
-        {swInfo && value === 0 && <ChildrenPreRegisterList isApproved={false} tabNumber={value} />}
-        {value === 1 && <ChildrenPreRegisterList isApproved={false} tabNumber={value} />}
-        {value === 2 && <ChildrenPreRegisterList isApproved tabNumber={value} />}
+        {swInfo && value === 0 && <ChildrenPreRegisterList isConfirmed={false} tabNumber={value} />}
+        {value === 1 && <ChildrenPreRegisterList isConfirmed={false} tabNumber={value} />}
+        {value === 2 && <ChildrenPreRegisterList isConfirmed tabNumber={value} />}
       </Box>
     </Container>
   );

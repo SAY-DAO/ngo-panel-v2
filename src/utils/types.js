@@ -151,11 +151,11 @@ export const ServiceStatusEnum = {
 
 export const ChildExistenceEnum = {
   DEAD: 0,
-  ALIVE_PRESENT: 1,
-  ALIVE_GONE: 2,
-  TEMP_GONE: 3,
-  CONFIRMED: -1,
-  MIGRATED: -2,
+  aliveAndPresent: 1,
+  aliveAndGone: 2,
+  tempGone: 3,
+  confirmed: -1,
+  migrated: -2,
 };
 
 export const ChildConfirmation = {

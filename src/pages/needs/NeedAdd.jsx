@@ -374,7 +374,7 @@ const NeedAdd = () => {
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                   {option.isConfirmed &&
-                  option.existence_status === ChildExistenceEnum.ALIVE_PRESENT ? (
+                  option.existence_status === ChildExistenceEnum.aliveAndPresent ? (
                     <>
                       <FeatherIcon color="green" icon="check" width="18" />
                       <Typography variant="body1" sx={{ fontSize: 13 }}>

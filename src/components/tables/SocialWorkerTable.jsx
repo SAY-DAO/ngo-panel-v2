@@ -33,6 +33,7 @@ import CustomSwitch from '../forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
+import { prepareUrl } from '../../utils/helpers';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -83,6 +84,12 @@ function EnhancedTableHead(props) {
   };
 
   const headCells = [
+    {
+      id: 'swId',
+      numeric: false,
+      disablePadding: true,
+      label: t('socialWorker.id'),
+    },
     {
       id: 'isActive',
       numeric: false,
@@ -172,20 +179,6 @@ function EnhancedTableHead(props) {
       numeric: false,
       disablePadding: false,
       label: t('socialWorker.postalAddress'),
-    },
-    {
-      id: 'childCount',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.childCount'),
-      width: '150px',
-    },
-    {
-      id: 'needCount',
-      numeric: false,
-      disablePadding: false,
-      label: t('socialWorker.needCount'),
-      width: '150px',
     },
     {
       id: 'lastLoginDate',
@@ -393,173 +386,176 @@ const SocialWorkerTable = ({ swList }) => {
                     rowCount={swList.length}
                   />
                   <TableBody>
-                    {stableSort(swList, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row.id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                    {swList &&
+                      stableSort(swList, getComparator(order, orderBy))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row, index) => {
+                          const isItemSelected = isSelected(row.id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) => handleClick(event, row.id)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.id}
-                            selected={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <CustomCheckbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputprops={{
-                                  'aria-labelledby': labelId,
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Box
-                                  sx={{
-                                    backgroundColor:
-                                      row.isActive === true
-                                        ? (theme) => theme.palette.success.main
-                                        : (theme) => theme.palette.error.main,
-                                    borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
+                          return (
+                            <TableRow
+                              hover
+                              onClick={(event) => handleClick(event, row.id)}
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row.id}
+                              selected={isItemSelected}
+                            >
+                              <TableCell padding="checkbox">
+                                <CustomCheckbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputprops={{
+                                    'aria-labelledby': labelId,
                                   }}
                                 />
-                                <Typography
-                                  color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
-                                  sx={{
-                                    ml: 1,
-                                  }}
-                                >
-                                  {row.status}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={() => handleEdit(row)}
-                                color="primary"
-                                aria-label="update social worker"
-                              >
-                                <EditOutlinedIcon />
-                              </IconButton>
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Avatar
-                                  src={row.avatarUrl}
-                                  alt="sw photo"
-                                  width="35"
-                                  sx={{
-                                    borderRadius: '100%',
-                                  }}
-                                />
-                                <Box
-                                  sx={{
-                                    ml: 2,
-                                  }}
-                                >
-                                  <Typography variant="h6" fontWeight="600">
-                                    {row.firstName} {row.lastName}
-                                  </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                    {row.email}
+                              </TableCell>
+
+                              <TableCell>
+                                <Box display="flex" alignItems="center">
+                                  <Box
+                                    sx={{
+                                      backgroundColor:
+                                        row.is_active === true
+                                          ? (theme) => theme.palette.success.main
+                                          : (theme) => theme.palette.error.main,
+                                      borderRadius: '100%',
+                                      height: '10px',
+                                      width: '10px',
+                                    }}
+                                  />
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    fontWeight="400"
+                                    sx={{
+                                      ml: 1,
+                                    }}
+                                  >
+                                    {row.is_active}
                                   </Typography>
                                 </Box>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                {row.generatedCode}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.username}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.typeName}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.ngoName}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.idNumber}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.idCardUrl && <Link href={row.idCardUrl}>Link</Link>}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.birthDate}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.phoneNumber}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.emergencyPhoneNumber}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.telegramId}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Tooltip
-                                title={row.postalAddress ? row.postalAddress : ''}
-                                placement="top-end"
-                              >
-                                <Typography
-                                  color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
-                                  sx={{
-                                    maxWidth: '400px',
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden',
-                                    width: '160px',
-                                    height: '1.2em',
-                                    whiteSpace: 'nowrap',
-                                  }}
-                                >
-                                  {row.postalAddress}
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                  {row.id}
                                 </Typography>
-                              </Tooltip>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.childCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography variant="h6">{row.needCount}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.lastLoginDate}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                              </TableCell>
+                              <TableCell>
+                                <IconButton
+                                  onClick={() => handleEdit(row)}
+                                  color="primary"
+                                  aria-label="update social worker"
+                                >
+                                  <EditOutlinedIcon />
+                                </IconButton>
+                              </TableCell>
+                              <TableCell>
+                                <Box display="flex" alignItems="center">
+                                  <Avatar
+                                    src={prepareUrl(row.avatar_url)}
+                                    alt="sw photo"
+                                    width="35"
+                                    sx={{
+                                      borderRadius: '100%',
+                                    }}
+                                  />
+                                  <Box
+                                    sx={{
+                                      ml: 2,
+                                    }}
+                                  >
+                                    <Typography variant="h6" fontWeight="600">
+                                      {row.firstName} {row.lastName}
+                                    </Typography>
+                                    <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                      {row.email}
+                                    </Typography>
+                                  </Box>
+                                </Box>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                  {row.generated_code}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.userName}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography variant="h6">{row.type_id}</Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.ngo_id}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.id_number}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.id_card_url && (
+                                    <Link href={prepareUrl(row.id_card_url)}>Link</Link>
+                                  )}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.birth_date}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.phone_number}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.emergency_phone_number}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.telegram_id}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Tooltip
+                                  title={row.postal_address ? row.postal_address : ''}
+                                  placement="top-end"
+                                >
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    fontWeight="400"
+                                    sx={{
+                                      maxWidth: '400px',
+                                      textOverflow: 'ellipsis',
+                                      overflow: 'hidden',
+                                      width: '160px',
+                                      height: '1.2em',
+                                      whiteSpace: 'nowrap',
+                                    }}
+                                  >
+                                    {row.postal_address}
+                                  </Typography>
+                                </Tooltip>
+                              </TableCell>
+                              <TableCell>
+                                <Typography color="textSecondary" variant="body1" fontWeight="400">
+                                  {row.last_login_date}
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                     {emptyRows > 0 && (
                       <TableRow
                         style={{

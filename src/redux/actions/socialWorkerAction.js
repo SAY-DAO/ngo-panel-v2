@@ -90,7 +90,7 @@ export const fetchSocialWorkerById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const fetchSocialWorkersList = (flaskNgiId) => async (dispatch, getState) => {
+export const fetchSocialWorkersList = (flaskNgoId) => async (dispatch, getState) => {
   try {
     dispatch({ type: SW_LIST_REQUEST });
     const {
@@ -105,7 +105,7 @@ export const fetchSocialWorkersList = (flaskNgiId) => async (dispatch, getState)
       },
     };
 
-    const { data } = await daoApi.get(`ngo/socialworkers/${flaskNgiId}`, config);
+    const { data } = await daoApi.get(`ngo/socialworkers/${flaskNgoId}`, config);
 
     dispatch({
       type: SW_LIST_SUCCESS,

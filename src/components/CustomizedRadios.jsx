@@ -37,12 +37,12 @@ export default function CustomizedRadios({ values, setSelectedValue, selectedVal
     if (values) {
       if (values.currentStatus === ChildExistenceEnum.DEAD) {
         setSelectedValue(ChildExistenceEnum.DEAD);
-      } else if (values.currentStatus === ChildExistenceEnum.ALIVE_PRESENT) {
-        setSelectedValue(ChildExistenceEnum.ALIVE_PRESENT);
-      } else if (values.currentStatus === ChildExistenceEnum.ALIVE_GONE) {
-        setSelectedValue(ChildExistenceEnum.ALIVE_GONE);
-      } else if (values.currentStatus === ChildExistenceEnum.TEMP_GONE) {
-        setSelectedValue(ChildExistenceEnum.TEMP_GONE);
+      } else if (values.currentStatus === ChildExistenceEnum.aliveAndPresent) {
+        setSelectedValue(ChildExistenceEnum.aliveAndPresent);
+      } else if (values.currentStatus === ChildExistenceEnum.aliveAndGone) {
+        setSelectedValue(ChildExistenceEnum.aliveAndGone);
+      } else if (values.currentStatus === ChildExistenceEnum.tempGone) {
+        setSelectedValue(ChildExistenceEnum.tempGone);
       }
     }
   }, [values]);
@@ -62,18 +62,18 @@ export default function CustomizedRadios({ values, setSelectedValue, selectedVal
             control={<Radio />}
           />
           <MyFormControlLabel
-            value={ChildExistenceEnum.ALIVE_PRESENT}
-            label={`${ChildExistenceEnum.ALIVE_PRESENT} - ${t('child.statuses.aliveAndPresent')}`}
+            value={ChildExistenceEnum.aliveAndPresent}
+            label={`${ChildExistenceEnum.aliveAndPresent} - ${t('child.statuses.aliveAndPresent')}`}
             control={<Radio />}
           />
           <MyFormControlLabel
-            value={ChildExistenceEnum.ALIVE_GONE}
-            label={`${ChildExistenceEnum.ALIVE_GONE} - ${t('child.statuses.aliveAndGone')}`}
+            value={ChildExistenceEnum.aliveAndGone}
+            label={`${ChildExistenceEnum.aliveAndGone} - ${t('child.statuses.aliveAndGone')}`}
             control={<Radio />}
           />
           <MyFormControlLabel
-            value={ChildExistenceEnum.TEMP_GONE}
-            label={`${ChildExistenceEnum.TEMP_GONE} - ${t('child.statuses.tempGone')}`}
+            value={ChildExistenceEnum.tempGone}
+            label={`${ChildExistenceEnum.tempGone} - ${t('child.statuses.tempGone')}`}
             control={<Radio />}
           />
         </RadioGroup>

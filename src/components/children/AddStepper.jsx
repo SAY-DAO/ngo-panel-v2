@@ -197,10 +197,9 @@ export default function AddStepper() {
       }
     }
     if (activeStep === 1) {
-      console.log(daysDifference(birthDate, new Date()));
       if (
         birthDate &&
-        daysDifference(birthDate, new Date()) > 90 &&
+        daysDifference(birthDate, new Date()) > 5 &&
         values.birthPlace &&
         values.city &&
         values.state &&
@@ -277,10 +276,6 @@ export default function AddStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   const handleDateChange = (newValue) => {
     setBirthDate(newValue);
   };
@@ -294,7 +289,6 @@ export default function AddStepper() {
   };
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
@@ -336,296 +330,300 @@ export default function AddStepper() {
       </Stepper>
 
       <>
-        {activeStep === steps.length ? (
-          <>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>{t('button.reset')}</Button>
-            </Box>
-          </>
-        ) : (
-          <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ paddingBottom: '50px' }}>
-            <Card elevation={5} sx={{ minHeight: 410 }}>
-              {activeStep === 0 && (
-                <Grid container spacing={2} justifyContent="center" sx={{ pt: 4 }}>
-                  <Grid item md={6} xs={12}>
-                    {swInfo && (
-                      <Autocomplete
-                        id="asynchronous-ngo"
-                        sx={{ width: '100%' }}
-                        open={openNgo}
-                        onOpen={() => {
-                          setOpenNgo(true);
-                        }}
-                        onClose={() => {
-                          setOpenNgo(false);
-                        }}
-                        onChange={(e, value) => setNgoId(value && value.id)}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        getOptionLabel={(option) =>
-                          `${option > 0 ? option.id : ''} - ${option.name}`
-                        }
-                        options={optionsNgo}
-                        loading={loadingNgo}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label={t('ngo.title')}
-                            InputProps={{
-                              ...params.InputProps,
-                              endAdornment: (
-                                <>
-                                  {loadingNgo ? (
-                                    <CircularProgress color="inherit" size={20} />
-                                  ) : null}
-                                  {params.InputProps.endAdornment}
-                                </>
-                              ),
-                            }}
-                          />
-                        )}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item md={6} xs={12}>
-                    {ngoId >= 0 && (
-                      <Autocomplete
-                        id="asynchronous-social-worker"
-                        sx={{ width: '100%' }}
-                        open={open}
-                        onOpen={() => {
-                          setOpen(true);
-                        }}
-                        onClose={() => {
-                          setOpen(false);
-                        }}
-                        onChange={(e, value) => setSwId(value && value.is_active && value.id)}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        getOptionLabel={(option) =>
-                          option.is_active
-                            ? `${option.id} - ${option.firstName}`
-                            : `${option.id} - ${option.firstName}`
-                        }
-                        renderOption={(props, option) => (
-                          <Box
-                            component="li"
-                            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                            {...props}
-                          >
-                            {option.is_active ? (
+        <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ paddingBottom: '50px' }}>
+          <Card elevation={5} sx={{ minHeight: 410 }}>
+            {activeStep === 0 && (
+              <Grid container spacing={2} justifyContent="center" sx={{ pt: 4 }}>
+                <Grid item md={6} xs={12}>
+                  {swInfo && (
+                    <Autocomplete
+                      id="asynchronous-ngo"
+                      sx={{ width: '100%' }}
+                      open={openNgo}
+                      onOpen={() => {
+                        setOpenNgo(true);
+                      }}
+                      onClose={() => {
+                        setOpenNgo(false);
+                      }}
+                      onChange={(e, value) => setNgoId(value && value.id)}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      getOptionLabel={(option) => `${option > 0 ? option.id : ''} - ${option.name}`}
+                      options={optionsNgo}
+                      loading={loadingNgo}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={t('ngo.title')}
+                          InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
                               <>
-                                <FeatherIcon color="green" icon="check" width="18" />
-                                <Typography>{`${option.id} - ${option.firstName}`}</Typography>
+                                {loadingNgo ? <CircularProgress color="inherit" size={20} /> : null}
+                                {params.InputProps.endAdornment}
                               </>
-                            ) : (
-                              <>
-                                <FeatherIcon color="red" icon="x" width="18" />
-                                <Typography>{`${option.id} - ${option.firstName} `}</Typography>
-                              </>
-                            )}
-                          </Box>
-                        )}
-                        options={options || []}
-                        loading={loadingSwAll}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label={t('socialWorker.title')}
-                            InputProps={{
-                              ...params.InputProps,
-                              endAdornment: (
-                                <>
-                                  {loadingSwAll ? (
-                                    <CircularProgress color="inherit" size={20} />
-                                  ) : null}
-                                  {params.InputProps.endAdornment}
-                                </>
-                              ),
-                            }}
-                          />
-                        )}
-                      />
-                    )}
-                  </Grid>
-                </Grid>
-              )}
-
-              {swId && successCountryList && activeStep === 0 && (
-                <Grid container>
-                  {/* First Name */} {/* Last Name */}
-                  <Grid item container spacing={2} justifyContent="center" alignItems="center">
-                    <Grid item md={6} xs={12}>
-                      <CustomFormLabel htmlFor="firstName_translations_fa">
-                        {t('child.firstName_translations.fa')}
-                      </CustomFormLabel>
-                      <TextField
-                        required
-                        id="firstName_translations_fa"
-                        variant="outlined"
-                        size="large"
-                        control={control}
-                        {...register('firstName_translations_fa')}
-                        error={!!errors.firstName_translations_fa}
-                        sx={{ width: '100%' }}
-                      />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                      <CustomFormLabel htmlFor="lastName_translations_fa">
-                        {t('child.lastName_translations.fa')}
-                      </CustomFormLabel>
-                      <TextField
-                        id="lastName_translations_fa"
-                        variant="outlined"
-                        size="large"
-                        control={control}
-                        {...register('lastName_translations_fa')}
-                        error={!!errors.lastName_translations_fa}
-                        sx={{ width: '100%' }}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item container spacing={2} justifyContent="center">
-                    <Grid item xs={12}>
-                      <CustomFormLabel htmlFor="bio_translations_fa">
-                        {t('child.bio_translations.fa')}
-                      </CustomFormLabel>
-                      <TextField
-                        aria-label="minimum height"
-                        minRows={4}
-                        multiline
-                        id="bio_translations_fa"
-                        variant="outlined"
-                        control={control}
-                        {...register('bio_translations_fa')}
-                        style={{ width: '100%', background: 'transparent' }}
-                        error={!!errors.bio_translations_fa}
-                        sx={{ width: '100%' }}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item container spacing={2} justifyContent="center">
-                    <Grid item xs={12} md={6}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel id="sex">{t('child.sex')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="sex-controlled-open-select-label"
-                          id="sex"
-                          control={control}
-                          value={watch('sex') || ''}
-                          register={{ ...register('sex') }}
-                          error={!!errors.sex}
-                        >
-                          <MenuItem value={SexEnum.FEMALE}>{t(`child.sexKind.female`)}</MenuItem>
-                          <MenuItem value={SexEnum.MALE}>{t(`child.sexKind.male`)}</MenuItem>
-                        </CustomSelect>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel id="education">{t('child.education')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="education-controlled-open-select-label"
-                          id="education"
-                          control={control}
-                          value={watch('education') || ''}
-                          register={{ ...register('education') }}
-                          error={!!errors.education}
-                        >
-                          {Object.keys(EducationEnum).map((name, index) => (
-                            <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
-                              {t(`child.educationCondition.${name}`)}
-                            </MenuItem>
-                          ))}
-                        </CustomSelect>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel id="schoolType">{t('child.schoolType')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="schoolType-controlled-open-select-label"
-                          id="schoolType"
-                          control={control}
-                          value={watch('schoolType') || ''}
-                          register={{ ...register('schoolType') }}
-                          error={!!errors.schoolType}
-                        >
-                          {Object.keys(SchoolTypeEnum).map((name, index) => (
-                            <MenuItem key={name} value={Object.values(SchoolTypeEnum)[index]}>
-                              {t(`child.schoolTypeCondition.${name.toLowerCase()}`)}
-                            </MenuItem>
-                          ))}
-                        </CustomSelect>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                  <Grid item container justifyContent="center">
-                    <Grid item xs={6}>
-                      <CustomFormLabel htmlFor="familyCount">
-                        {t('child.familyCount')}
-                      </CustomFormLabel>
-                      <TextField
-                        id="familyCount"
-                        variant="outlined"
-                        type="number"
-                        size="small"
-                        sx={{ m: 'auto', width: '100%' }}
-                        control={control}
-                        {...register('familyCount')}
-                        error={!!errors.familyCount}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              )}
-              {swId && successCountryList && activeStep === 1 && (
-                <Grid container>
-                  <Grid item xs={12} container spacing={1} justifyContent="center">
-                    <Grid item md={4} xs={12}>
-                      <CustomFormLabel htmlFor="age">{t('child.age')}</CustomFormLabel>
-                      <Typography
-                        id="age"
-                        variant="body1"
-                        size="large"
-                        color="primary.light"
-                        sx={{
-                          textAlign: 'center',
-                          lineHeight: 3,
-                          opacity: '60%',
-                        }}
-                      >
-                        {getAge(birthDate)} {t('child.years')}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={4} xs={12}>
-                      <CustomFormLabel htmlFor="birthDate">{t('child.birthDate')}</CustomFormLabel>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DesktopDatePicker
-                          id="birthDate"
-                          inputFormat="MM/dd/yyyy"
-                          value={birthDate}
-                          onChange={handleDateChange}
-                          renderInput={(params) => <TextField {...params} />}
-                          error={!!errors.birthDate}
+                            ),
+                          }}
                         />
-                      </LocalizationProvider>
-                    </Grid>
+                      )}
+                    />
+                  )}
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  {ngoId >= 0 && (
+                    <Autocomplete
+                      id="asynchronous-social-worker"
+                      sx={{ width: '100%' }}
+                      open={open}
+                      onOpen={() => {
+                        setOpen(true);
+                      }}
+                      onClose={() => {
+                        setOpen(false);
+                      }}
+                      onChange={(e, value) => setSwId(value && value.is_active && value.id)}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      getOptionLabel={(option) =>
+                        option.is_active
+                          ? `${option.id} - ${option.firstName}`
+                          : `${option.id} - ${option.firstName}`
+                      }
+                      renderOption={(props, option) => (
+                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                          {option.is_active ? (
+                            <>
+                              <FeatherIcon color="green" icon="check" width="18" />
+                              <Typography>{`${option.id} - ${option.firstName}`}</Typography>
+                            </>
+                          ) : (
+                            <>
+                              <FeatherIcon color="red" icon="x" width="18" />
+                              <Typography>{`${option.id} - ${option.firstName} `}</Typography>
+                            </>
+                          )}
+                        </Box>
+                      )}
+                      options={options || []}
+                      loading={loadingSwAll}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={t('socialWorker.title')}
+                          InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
+                              <>
+                                {loadingSwAll ? (
+                                  <CircularProgress color="inherit" size={20} />
+                                ) : null}
+                                {params.InputProps.endAdornment}
+                              </>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            )}
 
-                    <Grid item md={4} xs={12}>
-                      <CustomFormLabel htmlFor="birthPlace">
-                        {t('child.birthPlace')}
-                      </CustomFormLabel>
+            {swId && successCountryList && activeStep === 0 && (
+              <Grid container>
+                {/* First Name */} {/* Last Name */}
+                <Grid item container spacing={2} justifyContent="center" alignItems="center">
+                  <Grid item md={6} xs={12}>
+                    <CustomFormLabel htmlFor="firstName_translations_fa">
+                      {t('child.firstName_translations.fa')}
+                    </CustomFormLabel>
+                    <TextField
+                      required
+                      id="firstName_translations_fa"
+                      variant="outlined"
+                      size="large"
+                      control={control}
+                      {...register('firstName_translations_fa')}
+                      error={!!errors.firstName_translations_fa}
+                      sx={{ width: '100%' }}
+                    />
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <CustomFormLabel htmlFor="lastName_translations_fa">
+                      {t('child.lastName_translations.fa')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="lastName_translations_fa"
+                      variant="outlined"
+                      size="large"
+                      control={control}
+                      {...register('lastName_translations_fa')}
+                      error={!!errors.lastName_translations_fa}
+                      sx={{ width: '100%' }}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item container spacing={2} justifyContent="center">
+                  <Grid item xs={12}>
+                    <CustomFormLabel htmlFor="bio_translations_fa">
+                      {t('child.bio_translations.fa')}
+                    </CustomFormLabel>
+                    <TextField
+                      aria-label="minimum height"
+                      minRows={4}
+                      multiline
+                      id="bio_translations_fa"
+                      variant="outlined"
+                      control={control}
+                      {...register('bio_translations_fa')}
+                      style={{ width: '100%', background: 'transparent' }}
+                      error={!!errors.bio_translations_fa}
+                      sx={{ width: '100%' }}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item container spacing={2} justifyContent="center">
+                  <Grid item xs={12} md={6}>
+                    <FormControl sx={{ width: '100%' }}>
+                      <CustomFormLabel id="sex">{t('child.sex')}</CustomFormLabel>
                       <CustomSelect
-                        labelId="birthPlace-controlled-open-select-label"
-                        id="birthPlace-controlled-open-select"
+                        labelId="sex-controlled-open-select-label"
+                        id="sex"
                         control={control}
-                        register={{ ...register('birthPlace') }}
-                        defaultValue=""
+                        value={watch('sex') || ''}
+                        register={{ ...register('sex') }}
+                        error={!!errors.sex}
+                      >
+                        <MenuItem value={SexEnum.FEMALE}>{t(`child.sexKind.female`)}</MenuItem>
+                        <MenuItem value={SexEnum.MALE}>{t(`child.sexKind.male`)}</MenuItem>
+                      </CustomSelect>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl sx={{ width: '100%' }}>
+                      <CustomFormLabel id="education">{t('child.education')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="education-controlled-open-select-label"
+                        id="education"
+                        control={control}
+                        value={watch('education') || ''}
+                        register={{ ...register('education') }}
+                        error={!!errors.education}
+                      >
+                        {Object.keys(EducationEnum).map((name, index) => (
+                          <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
+                            {t(`child.educationCondition.${name}`)}
+                          </MenuItem>
+                        ))}
+                      </CustomSelect>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl sx={{ width: '100%' }}>
+                      <CustomFormLabel id="schoolType">{t('child.schoolType')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="schoolType-controlled-open-select-label"
+                        id="schoolType"
+                        control={control}
+                        value={watch('schoolType') || ''}
+                        register={{ ...register('schoolType') }}
+                        error={!!errors.schoolType}
+                      >
+                        {Object.keys(SchoolTypeEnum).map((name, index) => (
+                          <MenuItem key={name} value={Object.values(SchoolTypeEnum)[index]}>
+                            {t(`child.schoolTypeCondition.${name.toLowerCase()}`)}
+                          </MenuItem>
+                        ))}
+                      </CustomSelect>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <Grid item xs={6}>
+                    <CustomFormLabel htmlFor="familyCount">
+                      {t('child.familyCount')}
+                    </CustomFormLabel>
+                    <TextField
+                      id="familyCount"
+                      variant="outlined"
+                      type="number"
+                      size="small"
+                      sx={{ m: 'auto', width: '100%' }}
+                      control={control}
+                      {...register('familyCount')}
+                      error={!!errors.familyCount}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+            {swId && successCountryList && activeStep === 1 && (
+              <Grid container>
+                <Grid item xs={12} container spacing={1} justifyContent="center">
+                  <Grid item md={4} xs={12}>
+                    <CustomFormLabel htmlFor="age">{t('child.age')}</CustomFormLabel>
+                    <Typography
+                      id="age"
+                      variant="body1"
+                      size="large"
+                      color="primary.light"
+                      sx={{
+                        textAlign: 'center',
+                        lineHeight: 3,
+                        opacity: '60%',
+                      }}
+                    >
+                      {getAge(birthDate) === 0 ? '--' : getAge(birthDate)} {t('child.years')}
+                    </Typography>
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    <CustomFormLabel htmlFor="birthDate">{t('child.birthDate')}</CustomFormLabel>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDatePicker
+                        id="birthDate"
+                        inputFormat="MM/dd/yyyy"
+                        value={birthDate}
+                        onChange={handleDateChange}
+                        renderInput={(params) => <TextField {...params} />}
+                        error={!!errors.birthDate}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+
+                  <Grid item md={4} xs={12}>
+                    <CustomFormLabel htmlFor="birthPlace">{t('child.birthPlace')}</CustomFormLabel>
+                    <CustomSelect
+                      labelId="birthPlace-controlled-open-select-label"
+                      id="birthPlace-controlled-open-select"
+                      control={control}
+                      register={{ ...register('birthPlace') }}
+                      defaultValue=""
+                      sx={{ width: '100%' }}
+                      error={!!errors.birthPlace}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      {countries &&
+                        countries.map((country) => (
+                          <MenuItem key={country.id} value={country.id}>
+                            {country.name}
+                          </MenuItem>
+                        ))}
+                    </CustomSelect>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} container spacing={1} justifyContent="center">
+                  <Grid item md={4} xs={12}>
+                    <FormControl sx={{ width: '100%' }}>
+                      <CustomFormLabel htmlFor="country">{t('child.country')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="country-controlled-open-select-label"
+                        id="country-controlled-open-select"
+                        control={control}
+                        register={{ ...register('country') }}
+                        defaultValue={watch('country') || ''}
                         sx={{ width: '100%' }}
-                        error={!!errors.birthPlace}
+                        error={!!errors.country}
                       >
                         <MenuItem value="">
                           <em>None</em>
@@ -637,226 +635,200 @@ export default function AddStepper() {
                             </MenuItem>
                           ))}
                       </CustomSelect>
-                    </Grid>
+                    </FormControl>
                   </Grid>
-                  <Grid item xs={12} container spacing={1} justifyContent="center">
-                    <Grid item md={4} xs={12}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel htmlFor="country">{t('child.country')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="country-controlled-open-select-label"
-                          id="country-controlled-open-select"
-                          control={control}
-                          register={{ ...register('country') }}
-                          defaultValue={watch('country') || ''}
-                          sx={{ width: '100%' }}
-                          error={!!errors.country}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          {countries &&
-                            countries.map((country) => (
-                              <MenuItem key={country.id} value={country.id}>
-                                {country.name}
-                              </MenuItem>
-                            ))}
-                        </CustomSelect>
-                      </FormControl>
-                    </Grid>
-                    <Grid item md={4} xs={12}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel htmlFor="state">{t('child.state')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="state-controlled-open-select-label"
-                          id="state-controlled-open-select"
-                          control={control}
-                          register={{ ...register('state') }}
-                          value={watch('state') || ''}
-                          sx={{ width: '100%' }}
-                          error={!!errors.state}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          {states &&
-                            states.map((state) => (
-                              <MenuItem key={state.id} value={state.id}>
-                                {state.name}
-                              </MenuItem>
-                            ))}
-                        </CustomSelect>
-                      </FormControl>
-                    </Grid>
-                    <Grid item md={4} xs={12}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel htmlFor="city">{t('child.city')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="city-controlled-open-select-label"
-                          id="city-controlled-open-select"
-                          control={control}
-                          register={{ ...register('city') }}
-                          value={watch('city') || ''}
-                          sx={{ width: '100%' }}
-                          error={!!errors.city}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          {cities &&
-                            cities.map((city) => (
-                              <MenuItem key={city.id} value={city.id}>
-                                {city.name}
-                              </MenuItem>
-                            ))}
-                        </CustomSelect>
-                      </FormControl>
-                    </Grid>
+                  <Grid item md={4} xs={12}>
+                    <FormControl sx={{ width: '100%' }}>
+                      <CustomFormLabel htmlFor="state">{t('child.state')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="state-controlled-open-select-label"
+                        id="state-controlled-open-select"
+                        control={control}
+                        register={{ ...register('state') }}
+                        value={watch('state') || ''}
+                        sx={{ width: '100%' }}
+                        error={!!errors.state}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {states &&
+                          states.map((state) => (
+                            <MenuItem key={state.id} value={state.id}>
+                              {state.name}
+                            </MenuItem>
+                          ))}
+                      </CustomSelect>
+                    </FormControl>
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    <FormControl sx={{ width: '100%' }}>
+                      <CustomFormLabel htmlFor="city">{t('child.city')}</CustomFormLabel>
+                      <CustomSelect
+                        labelId="city-controlled-open-select-label"
+                        id="city-controlled-open-select"
+                        control={control}
+                        register={{ ...register('city') }}
+                        value={watch('city') || ''}
+                        sx={{ width: '100%' }}
+                        error={!!errors.city}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {cities &&
+                          cities.map((city) => (
+                            <MenuItem key={city.id} value={city.id}>
+                              {city.name}
+                            </MenuItem>
+                          ))}
+                      </CustomSelect>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  container
+                  justifyContent="center"
+                  alignItems="flex-end"
+                  sx={{ mt: 4 }}
+                  spacing={1}
+                >
+                  <Grid item md={6} xs={12}>
+                    <CustomFormLabel htmlFor="address">{t('child.address')}</CustomFormLabel>
+                    <CustomTextField
+                      id="address"
+                      variant="outlined"
+                      multiline
+                      rows={6}
+                      size="small"
+                      fullWidth
+                      control={control}
+                      register={{ ...register('address') }}
+                      error={!!errors.address}
+                    />
                   </Grid>
 
-                  <Grid
-                    item
-                    xs={12}
-                    container
-                    justifyContent="center"
-                    alignItems="flex-end"
-                    sx={{ mt: 4 }}
-                    spacing={1}
-                  >
-                    <Grid item md={6} xs={12}>
-                      <CustomFormLabel htmlFor="address">{t('child.address')}</CustomFormLabel>
-                      <CustomTextField
-                        id="address"
+                  <Grid item md={6} xs={12}>
+                    <Grid item>
+                      <CustomFormLabel htmlFor="phoneNumber">
+                        {t('child.phoneNumber')}
+                      </CustomFormLabel>
+                      <TextField
+                        id="phoneNumber"
                         variant="outlined"
-                        multiline
-                        rows={6}
-                        size="small"
-                        fullWidth
+                        size="medium"
+                        sx={{ width: '100%' }}
                         control={control}
-                        register={{ ...register('address') }}
-                        error={!!errors.address}
+                        {...register('phoneNumber')}
                       />
                     </Grid>
 
-                    <Grid item md={6} xs={12}>
-                      <Grid item>
-                        <CustomFormLabel htmlFor="phoneNumber">
-                          {t('child.phoneNumber')}
+                    <Grid item>
+                      <FormControl sx={{ width: '100%' }}>
+                        <CustomFormLabel htmlFor="housingStatus">
+                          {t('child.housingStatus')}
                         </CustomFormLabel>
-                        <TextField
-                          id="phoneNumber"
-                          variant="outlined"
-                          size="medium"
-                          sx={{ width: '100%' }}
+                        <CustomSelect
+                          labelId="housingStatus"
+                          id="multiple-education"
+                          value={watch('housingStatus') || ''}
                           control={control}
-                          {...register('phoneNumber')}
-                        />
-                      </Grid>
-
-                      <Grid item>
-                        <FormControl sx={{ width: '100%' }}>
-                          <CustomFormLabel htmlFor="housingStatus">
-                            {t('child.housingStatus')}
-                          </CustomFormLabel>
-                          <CustomSelect
-                            labelId="housingStatus"
-                            id="multiple-education"
-                            value={watch('housingStatus') || ''}
-                            control={control}
-                            register={{ ...register('housingStatus') }}
-                            error={!!errors.housingStatus}
-                          >
-                            <MenuItem value="">
-                              <em>{t(`child.housingCondition.none`)}</em>
+                          register={{ ...register('housingStatus') }}
+                          error={!!errors.housingStatus}
+                        >
+                          <MenuItem value="">
+                            <em>{t(`child.housingCondition.none`)}</em>
+                          </MenuItem>
+                          {Object.keys(HousingStatusEnum).map((name, index) => (
+                            <MenuItem
+                              key={name}
+                              value={String(Object.values(HousingStatusEnum)[index])}
+                            >
+                              {t(`child.housingCondition.${name}`)}
                             </MenuItem>
-                            {Object.keys(HousingStatusEnum).map((name, index) => (
-                              <MenuItem
-                                key={name}
-                                value={String(Object.values(HousingStatusEnum)[index])}
-                              >
-                                {t(`child.housingCondition.${name}`)}
-                              </MenuItem>
-                            ))}
-                          </CustomSelect>
-                        </FormControl>
-                      </Grid>
+                          ))}
+                        </CustomSelect>
+                      </FormControl>
                     </Grid>
                   </Grid>
                 </Grid>
-              )}
-              {swId && successCountryList && activeStep === 2 && (
-                <Grid container sx={{ minHeight: 420 }}>
-                  <Grid item xs={10} sx={{ m: 'auto', mb: 0 }}>
-                    <Card sx={{ p: 3, m: 0, textAlign: 'center' }}>
-                      <Typography>hi</Typography>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={10} sx={{ m: 'auto', mt: 0 }}>
-                    <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
-                      <Grid container sx={{ m: 'auto' }}>
-                        <Grid item xs={12} sx={{ width: '100%' }}>
-                          <VoiceBar url={uploadVoice && URL.createObjectURL(uploadVoice)} />
-                        </Grid>
-                        <Grid item xs={12} sx={{ m: 'auto', width: '100%' }}>
-                          <label htmlFor="upload-voice">
-                            <input
-                              id="upload-voice"
-                              type="file"
-                              style={{ display: 'none' }}
-                              onChange={onVoiceChange}
-                            />
-
-                            <Button
-                              name="upload-voice"
-                              id="upload-voice"
-                              color="primary"
-                              component="div"
-                              variant="outlined"
-                              sx={{
-                                m: 2,
-                                bottom: '0px',
-                                right: '0px',
-                              }}
-                            >
-                              {t('child.uploadVoice')}
-                            </Button>
-                          </label>
-                        </Grid>
-                      </Grid>
-                    </Card>
-                  </Grid>
+              </Grid>
+            )}
+            {swId && successCountryList && activeStep === 2 && (
+              <Grid container sx={{ minHeight: 420 }}>
+                <Grid item xs={10} sx={{ m: 'auto', mb: 0 }}>
+                  <Card sx={{ p: 3, m: 0, textAlign: 'center' }}>
+                    <Typography>{t('child.voiceInfo')}</Typography>
+                  </Card>
                 </Grid>
-              )}
-            </Card>
+                <Grid item xs={10} sx={{ m: 'auto', mt: 0 }}>
+                  <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
+                    <Grid container sx={{ m: 'auto' }}>
+                      <Grid item xs={12} sx={{ width: '100%' }}>
+                        <VoiceBar url={uploadVoice && URL.createObjectURL(uploadVoice)} />
+                      </Grid>
+                      <Grid item xs={12} sx={{ m: 'auto', width: '100%' }}>
+                        <label htmlFor="upload-voice">
+                          <input
+                            id="upload-voice"
+                            type="file"
+                            style={{ display: 'none' }}
+                            onChange={onVoiceChange}
+                          />
 
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <LoadingButton
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                {t('button.back')}
+                          <Button
+                            name="upload-voice"
+                            id="upload-voice"
+                            color="primary"
+                            component="div"
+                            variant="outlined"
+                            sx={{
+                              m: 2,
+                              bottom: '0px',
+                              right: '0px',
+                            }}
+                          >
+                            {t('child.uploadVoice')}
+                          </Button>
+                        </label>
+                      </Grid>
+                    </Grid>
+                  </Card>
+                </Grid>
+              </Grid>
+            )}
+          </Card>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <LoadingButton
+              color="inherit"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              {t('button.back')}
+            </LoadingButton>
+            <Box sx={{ flex: '1 1 auto' }} />
+            {activeStep !== steps.length - 1 && (
+              <LoadingButton loading={loading} disabled={nextDisable} onClick={handleNext}>
+                {t('button.next')}
               </LoadingButton>
-              <Box sx={{ flex: '1 1 auto' }} />
-              {activeStep !== steps.length - 1 && (
-                <LoadingButton loading={loading} disabled={nextDisable} onClick={handleNext}>
-                  {t('button.next')}
-                </LoadingButton>
-              )}
-              {activeStep === steps.length - 1 && (
-                <LoadingButton
-                  disabled={!uploadVoice}
-                  loading={loading}
-                  type="submit"
-                  onClick={handleSubmit(onSubmit)}
-                >
-                  {t('button.finish')}
-                </LoadingButton>
-              )}
-            </Box>
-          </form>
-        )}
+            )}
+            {activeStep === steps.length - 1 && (
+              <LoadingButton
+                disabled={!uploadVoice}
+                loading={loading}
+                type="submit"
+                onClick={handleSubmit(onSubmit)}
+              >
+                {t('button.finish')}
+              </LoadingButton>
+            )}
+          </Box>
+        </form>
       </>
       {error && <Alert severity="error">{error}</Alert>}
     </Box>

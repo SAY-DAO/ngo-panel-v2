@@ -349,6 +349,7 @@
     "preregisterList": "لیست ثبت‌نام"
   },
   "socialWorker": {
+    "id": "شناسه",
     "title": "مددکار",
     "myChildren": "کودکان من",
     "noChildren": "کودکی ندارد",
@@ -600,6 +601,7 @@
     }
   },
   "child": {
+    "voiceInfo":"لطفا ۳۰ ثانیه از صدای کودک را اینجا بارگزاری کنید.  ",
     "preRegister": {
       "tabs": {
         "notRegistered": "ثبت نشده",

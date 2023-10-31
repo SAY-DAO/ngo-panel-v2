@@ -64,7 +64,6 @@ function PreRegisterCard({
     setOpenApprove(true);
     setApproveDialogValues({
       preRegisterId: id,
-      type: 'approvePreregister',
     });
   };
 
@@ -83,7 +82,8 @@ function PreRegisterCard({
         }}
       >
         {swInfo &&
-          (swInfo.typeId === FlaskUserTypesEnum.ADMIN || FlaskUserTypesEnum.SUPER_ADMIN) && (
+          (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+            swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
             <>
               <Tooltip title={t('myPage.taskCard.menu.more')}>
                 <IconButton
@@ -129,18 +129,29 @@ function PreRegisterCard({
           <Grid item xs={6}>
             <Avatar
               sx={{ width: 50, height: 50, m: 'auto' }}
-              src={`${apiDao}/children/images/${preRegistered.awakeUrl}`}
+              src={`${apiDao}/children/avatars/images/${preRegistered.awakeUrl}`}
             />
           </Grid>
           <Grid item xs={6}>
             <Avatar
               sx={{ width: 50, height: 50, m: 'auto' }}
-              src={`${apiDao}/children/images/${preRegistered.sleptUrl}`}
+              src={`${apiDao}/children/avatars/images/${preRegistered.sleptUrl}`}
             />
           </Grid>
         </Grid>
         <Grid item xs={6} sx={{ textAlign: 'center' }}>
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              maxWidth: '120px',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              height: '1.2em',
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              m: 'auto',
+            }}
+          >
             {preRegistered.firstName ? preRegistered.firstName.fa : '-'}{' '}
             {preRegistered.lastName ? preRegistered.lastName.fa : '-'}
           </Typography>
@@ -218,8 +229,20 @@ function PreRegisterCard({
           )}
         </Grid>
         <Grid item xs={12} sx={{ textAlign: 'center' }}>
-          <Typography>{preRegistered.ngo && preRegistered.ngo.name}</Typography>
-          <Typography sx={{ fontSize: 10 }}>
+          <Typography
+            sx={{
+              maxWidth: '200px !important',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              height: '1.2em',
+              whiteSpace: 'nowrap',
+              fontWeight: 600,
+              m: 'auto',
+            }}
+          >
+            {preRegistered.ngo && preRegistered.ngo.name}
+          </Typography>
+          <Typography sx={{ fontSize: 10, fontWeight: 200 }}>
             {preRegistered.socialWorker &&
               `${preRegistered.socialWorker.firstName} ${preRegistered.socialWorker.lastName}`}
           </Typography>
@@ -302,7 +325,7 @@ function PreRegisterCard({
                   typeof preRegistered.schoolType === 'number' &&
                   preRegistered.schoolType >= SchoolTypeEnum.DEAF
                     ? t(
-                        `child.schoolType.${Object.keys(SchoolTypeEnum)
+                        `child.schoolTypeCondition.${Object.keys(SchoolTypeEnum)
                           .find((k) => SchoolTypeEnum[k] === preRegistered.schoolType)
                           .toLowerCase()}`,
                       )

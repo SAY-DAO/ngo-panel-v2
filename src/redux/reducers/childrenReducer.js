@@ -191,7 +191,7 @@ export const childPreRegisterReducer = (state = { success: false }, action) => {
     case APPROVE_PRE_REGISTER_REQUEST:
       return { ...state, loading: true, success: false };
     case APPROVE_PRE_REGISTER_SUCCESS:
-      return { ...state, loading: false, success: true, deleted: action.payload };
+      return { ...state, loading: false, success: true, approved: action.payload };
     case APPROVE_PRE_REGISTER_FAIL:
       return { ...state, loading: false, error: action.payload };
     default:

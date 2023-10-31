@@ -823,6 +823,7 @@
     }
   },
   "roles": {
+    "id": "Id",
     "socialWorker": "Social Worker",
     "auditor": "Auditor",
     "purchaser": "Purchaser",

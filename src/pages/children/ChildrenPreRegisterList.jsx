@@ -13,7 +13,7 @@ import ApproveDialog from '../../components/dialogs/ApproveDialog';
 import PreRegisterCard from './PreRegisterCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 
-export default function ChildrenPreRegisterList({ isApproved, tabNumber }) {
+export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
@@ -35,7 +35,7 @@ export default function ChildrenPreRegisterList({ isApproved, tabNumber }) {
   );
 
   useEffect(() => {
-    dispatch(getPreRegisters(tabNumber, page, rowsPerPage, isApproved));
+    dispatch(getPreRegisters(tabNumber, page, rowsPerPage, isConfirmed));
   }, [deleted, updated, added, approved, tabNumber, page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
@@ -57,7 +57,7 @@ export default function ChildrenPreRegisterList({ isApproved, tabNumber }) {
 
   return (
     <Container>
-      {!isApproved &&
+      {!isConfirmed &&
         tabNumber === 0 &&
         swInfo &&
         (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
@@ -85,7 +85,7 @@ export default function ChildrenPreRegisterList({ isApproved, tabNumber }) {
                   ? preRegisterList.data.filter((p) => !p.voiceUrl)
                   : preRegisterList.data
                 )
-                  // .filter((pr) => !pr.isApproved)
+                  // .filter((pr) => !pr.isConfirmed)
                   .map((p) => (
                     <ImageListItem key={p.id}>
                       <PreRegisterCard
@@ -144,6 +144,6 @@ export default function ChildrenPreRegisterList({ isApproved, tabNumber }) {
 }
 
 ChildrenPreRegisterList.propTypes = {
-  isApproved: PropTypes.bool,
+  isConfirmed: PropTypes.bool,
   tabNumber: PropTypes.number,
 };

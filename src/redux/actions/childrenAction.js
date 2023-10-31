@@ -492,7 +492,7 @@ export const AddChild = (values) => async (dispatch, getState) => {
   }
 };
 
-export const approvePreRegister = (id) => async (dispatch, getState) => {
+export const approvePreRegister = (id, values) => async (dispatch, getState) => {
   try {
     dispatch({ type: APPROVE_PRE_REGISTER_REQUEST });
 
@@ -507,8 +507,8 @@ export const approvePreRegister = (id) => async (dispatch, getState) => {
         flaskId: userInfo && userInfo.id,
       },
     };
-
-    const { data } = await daoApi.post(`/children/preregister/approve/${id}`, config);
+    console.log(values);
+    const { data } = await daoApi.patch(`/children/preregister/approve/${id}`, values, config);
 
     dispatch({
       type: APPROVE_PRE_REGISTER_SUCCESS,
