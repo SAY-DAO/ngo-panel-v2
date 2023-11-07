@@ -152,7 +152,7 @@ export const childNameCheckReducer = (state = { success: false }, action) => {
     case CHECK_SIMILAR_NAMES_REQUEST:
       return { loading: true };
     case CHECK_SIMILAR_NAMES_SUCCESS:
-      return { loading: false, success: true, total: action.payload };
+      return { loading: false, success: true, result: action.payload };
     case CHECK_SIMILAR_NAMES_FAIL:
       return { loading: false, error: action.payload };
     default:

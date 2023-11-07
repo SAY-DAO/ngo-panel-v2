@@ -45,7 +45,6 @@ export default function UploadImage({
   setFinalImageFile,
   customBorderRadius,
 }) {
-
   const { t } = useTranslation();
   // const navigate = useNavigate();
   const location = useLocation();
@@ -109,11 +108,7 @@ export default function UploadImage({
 
     if (editor) {
       const canvas = editor.getImageScaledToCanvas().toDataURL('image/png');
-
-      // const i = canvas.indexOf("base64,");
-      // const buffer = Buffer.from(canvas.slice(i + 7), "base64");
       const name = `${Math.random().toString(36).slice(-5)}.png`;
-      // const file = new File(buffer, name);
 
       const theFile = dataURLtoFile(canvas, name);
 
@@ -200,7 +195,7 @@ export default function UploadImage({
 
           <Grid container sx={{ margin: 2 }}>
             <Typography variant="subtitle1" sx={{ margin: 'auto', marginLeft: 1, marginRight: 1 }}>
-            {t('image.scale')}
+              {t('image.scale')}
             </Typography>
             <div className="flex-row" style={{ width: '100%' }}>
               <PrettySlider
@@ -215,7 +210,7 @@ export default function UploadImage({
 
           <Grid container sx={{ margin: 2 }}>
             <Typography variant="subtitle1" sx={{ margin: 'auto', marginLeft: 1, marginRight: 1 }}>
-            {t('image.rotate')}
+              {t('image.rotate')}
             </Typography>
             <div className="flex-row" style={{ width: '100%' }}>
               <PrettySlider

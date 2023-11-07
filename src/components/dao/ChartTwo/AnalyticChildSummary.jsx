@@ -142,7 +142,7 @@ const AnalyticChildSummary = () => {
                   lineHeight: '1.2',
                 }}
               >
-                {childrenResult.alivePresent}
+                {childrenResult.noNeeds || '0'}/{childrenResult.alivePresent}
               </Typography>
               <Typography
                 color="textSecondary"
@@ -152,7 +152,7 @@ const AnalyticChildSummary = () => {
                   lineHeight: '1.2',
                 }}
               >
-                Present
+                No needs/ Present
               </Typography>
             </Grid>
             <Grid

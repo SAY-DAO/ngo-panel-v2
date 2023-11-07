@@ -867,7 +867,7 @@ const TaskCard = ({
                 )}
               </Grid>
             )}
-            {need.status === ProductStatusEnum.DELIVERED && (
+            {need.created_by_id === swInfo.id && need.status === ProductStatusEnum.DELIVERED && (
               <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
                 {(!needSignatures ||
                   !needSignatures[0] ||

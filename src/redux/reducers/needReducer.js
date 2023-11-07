@@ -247,7 +247,7 @@ export const deleteOldNeedsReducer = (state = {}, action) => {
     case DELETE_CANDIDATES_REQUEST:
       return { loading: true, success: false };
     case DELETE_CANDIDATES_SUCCESS:
-      return { loading: false, success: true, count: action.payload };
+      return { loading: false, success: true, candidates: action.payload };
     case DELETE_CANDIDATES_FAIL:
       return { loading: false, error: action.payload };
     default:

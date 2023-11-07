@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -29,15 +28,19 @@ import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import UploadImage from '../UploadImage';
-import { createPreRegisterChild } from '../../redux/actions/childrenAction';
+import { checkSimilarNames, createPreRegisterChild } from '../../redux/actions/childrenAction';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
 import { SexEnum } from '../../utils/types';
 
-export default function ChildPreRegisterDialog({ open, setOpen, dialogValues }) {
+export default function ChildPreRegisterDialog({ open, setOpen }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
 
+  const [similarError, setSimilarError] = useState({
+    fa: 0,
+    en: 0,
+  });
   const [finalAvatarFile, setFinalAvatarFile] = useState();
   const [finalSleptAvatarFile, setFinalSleptAvatarFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
@@ -48,6 +51,9 @@ export default function ChildPreRegisterDialog({ open, setOpen, dialogValues }) 
 
   const childPreRegister = useSelector((state) => state.childPreRegister);
   const { loading: loadingAdded, success: successAdded } = childPreRegister;
+
+  const childNameCheck = useSelector((state) => state.childNameCheck);
+  const { result } = childNameCheck;
 
   const validationSchema = Yup.object().shape({
     sayname_translations_fa: Yup.string().required('Please enter the name'),
@@ -60,10 +66,45 @@ export default function ChildPreRegisterDialog({ open, setOpen, dialogValues }) 
     control,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  useEffect(() => {
+    const values = getValues();
+    console.log(values);
+    if (values.sayname_translations_fa) {
+      setSimilarError({
+        en: 0,
+        fa: 0,
+      });
+      dispatch(checkSimilarNames(values.sayname_translations_fa, 'fa'));
+    }
+    if (values.sayname_translations_en) {
+      setSimilarError({
+        en: 0,
+        fa: 0,
+      });
+      dispatch(checkSimilarNames(values.sayname_translations_en, 'en'));
+    }
+  }, [watch('sayname_translations_en'), watch('sayname_translations_fa')]);
+
+  useEffect(() => {
+    if (watch('sayname_translations_fa') && result) {
+      setSimilarError({
+        en: similarError.en,
+        fa: result.total,
+      });
+    }
+    if (watch('sayname_translations_en') && result) {
+      setSimilarError({
+        en: result.total,
+        fa: similarError.fa,
+      });
+    }
+  }, [watch('sayname_translations_en'), watch('sayname_translations_fa'), result]);
 
   useEffect(() => {
     if (successAdded) {
@@ -79,6 +120,7 @@ export default function ChildPreRegisterDialog({ open, setOpen, dialogValues }) 
   const handleImageClickOpen = () => {
     setOpenImageDialog(true);
   };
+  
   const handleImageClose = () => {
     setOpenImageDialog(false);
   };
@@ -296,7 +338,8 @@ export default function ChildPreRegisterDialog({ open, setOpen, dialogValues }) 
                   size="large"
                   control={control}
                   {...register('sayname_translations_fa')}
-                  error={!!errors.sayname_translations_fa}
+                  error={!!errors.sayname_translations_fa || similarError.fa > 0}
+                  helperText={similarError.fa > 0 && t(`error.similarNames`)}
                 />
               </Grid>
               <Grid item md={6} xs={12}>
@@ -309,7 +352,8 @@ export default function ChildPreRegisterDialog({ open, setOpen, dialogValues }) 
                   size="large"
                   control={control}
                   {...register('sayname_translations_en')}
-                  error={!!errors.sayname_translations_en}
+                  error={!!errors.sayname_translations_en || similarError.en > 0}
+                  helperText={similarError.en > 0 && t(`error.similarNames`)}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -335,6 +379,7 @@ export default function ChildPreRegisterDialog({ open, setOpen, dialogValues }) 
               {t('button.cancel')}
             </Button>
             <LoadingButton
+              disabled={!!result && result.total}
               loading={loadingAdded}
               color="primary"
               type="submit"

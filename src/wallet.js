@@ -18,7 +18,8 @@ export const publicClient = createPublicClient({
   // batch: {
   //   multicall: true,
   // },
-  transport: webSocket(`wss://mainnet.infura.io/ws/v3/${process.env.REACT_APP_INFURA_KEY}`),
+  // transport: webSocket(`wss://mainnet.infura.io/ws/v3/${process.env.REACT_APP_INFURA_KEY}`),
+  transport: webSocket(`wss://eth.getblock.io/${process.env.REACT_APP_GET_BLOCK_KEY}/mainnet/`),
   chain: mainnet,
 });
 
@@ -35,5 +36,5 @@ export const config = createConfig({
     // }),
   ],
   publicClient,
-  webSocketPublicClient,
+  // webSocketPublicClient,
 });

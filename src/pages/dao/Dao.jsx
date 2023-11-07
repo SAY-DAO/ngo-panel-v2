@@ -16,7 +16,7 @@ import { deleteCandidates, deleteOldNeeds } from '../../redux/actions/needsActio
 const Dao = () => {
   const dispatch = useDispatch();
 
-  const { total, loading } = useSelector((state) => state.deletedOld);
+  const { candidates, loading } = useSelector((state) => state.deletedOld);
 
   useEffect(() => {
     dispatch(deleteCandidates());
@@ -27,7 +27,7 @@ const Dao = () => {
       <PageContainer>
         <Grid container direction="row">
           <Grid item sx={{ textAlign: 'center' }} xs={12}>
-            <Typography>total: {total || 0}</Typography>
+            <Typography>total: {(candidates && candidates.total) || 0}</Typography>
             <LoadingButton
               loading={loading}
               variant="outlined"

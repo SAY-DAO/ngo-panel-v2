@@ -13,7 +13,7 @@ import { PropTypes } from 'prop-types';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ChildCareIcon from '@mui/icons-material/ChildCare';
 import { useSelector } from 'react-redux';
-import { NeedTypeEnum } from '../../utils/types';
+import { NeedTypeEnum, PaymentStatusEnum } from '../../utils/types';
 import { dateConvertor } from '../../utils/persianToEnglish';
 
 export default function DurationTimeLine({ need, signature }) {
@@ -400,13 +400,75 @@ export default function DurationTimeLine({ need, signature }) {
           </TimelineOppositeContent>
           <TimelineSeparator>
             <Tooltip
-              title={<Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>}
+              title={
+                <>
+                  <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>
+                  <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
+                    UserIds:
+                    {theNeed.payments.map(
+                      (p) => p.verified && p.need_amount > 0 && ` ${p.id_user} `,
+                    )}
+                  </Typography>
+                </>
+              }
             >
               <TimelineDot variant="outlined" color="primary" />
             </Tooltip>
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent fontSize={12}>{t('myPage.taskCard.date.paid')}</TimelineContent>
+        </TimelineItem>
+      )}
+      {theNeed.status === PaymentStatusEnum.PARTIAL_PAY && (
+        <TimelineItem>
+          <TimelineOppositeContent color="text.secondary" fontSize={12}>
+            {parseInt(
+              moment(theNeed.payments.find((p) => p.verified && p.need_amount > 0).created).diff(
+                moment(theNeed.confirmDate),
+                'days',
+              ),
+              10,
+            ) > 1
+              ? `${moment(
+                  theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
+                ).diff(moment(theNeed.confirmDate), 'days')} ${t('myPage.taskCard.date.days')}`
+              : `${moment(
+                  theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
+                ).diff(moment(theNeed.confirmDate), 'hours')} ${t('myPage.taskCard.date.hours')}`}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <Tooltip
+              title={
+                <>
+                  <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>
+                  <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
+                    {theNeed.payments
+                      .find((p) => p.verified && p.need_amount > 0)
+                      .need_amount.toLocaleString()}
+                  </Typography>
+                  <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
+                    ~{' '}
+                    {Math.round(
+                      (theNeed.payments.find((p) => p.verified && p.need_amount > 0).need_amount /
+                        theNeed._cost) *
+                        100,
+                    )}
+                    %
+                  </Typography>
+                  <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
+                    UserIds:
+                    {theNeed.payments.map(
+                      (p) => p.verified && p.need_amount > 0 && ` ${p.id_user} `,
+                    )}
+                  </Typography>
+                </>
+              }
+            >
+              <TimelineDot variant="outlined" color="primary" />
+            </Tooltip>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent fontSize={12}>{t('myPage.taskCard.date.partialPay')}</TimelineContent>
         </TimelineItem>
       )}
       {theNeed.confirmDate && (
@@ -453,6 +515,9 @@ export default function DurationTimeLine({ need, signature }) {
                   <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.created)}</Typography>
                   <Typography sx={{ fontSize: 14, textAlign: 'center', fontWeight: 800 }}>
                     {theNeed.child && theNeed.child.ngo && theNeed.child.ngo.name}
+                  </Typography>
+                  <Typography sx={{ fontSize: 14, textAlign: 'center', fontWeight: 800 }}>
+                    SW:{theNeed.created_by_id}
                   </Typography>
                 </>
               }

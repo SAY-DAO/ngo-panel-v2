@@ -270,7 +270,7 @@ export const checkSimilarNames = (newName, lang) => async (dispatch, getState) =
       },
     };
 
-    const { data } = await daoApi.patch(`/children/check/names/${newName}/${lang}`, config);
+    const { data } = await daoApi.get(`/children/check/names/${newName}/${lang}`, config);
     dispatch({
       type: CHECK_SIMILAR_NAMES_SUCCESS,
       payload: data,

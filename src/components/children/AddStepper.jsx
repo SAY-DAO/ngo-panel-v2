@@ -20,7 +20,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -50,12 +50,11 @@ const steps = ['child.steps.first', 'child.steps.second', 'child.steps.third'];
 export default function AddStepper() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { t } = useTranslation();
 
   const [activeStep, setActiveStep] = useState(0);
   const [birthDate, setBirthDate] = useState(new Date());
-  const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
+  const [uploadVoice, setUploadVoice] = useState();
   const [nextDisable, setNextDisable] = useState(true);
   const [ngoId, setNgoId] = useState();
   const [swId, setSwId] = useState();

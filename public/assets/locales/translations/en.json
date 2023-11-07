@@ -59,6 +59,7 @@
     "confirmed": "Confirmed!"
   },
   "error": {
+    "similarNames": "Similar Names were found.",
     "nestDown": "Nest server is not running",
     "allRequired": "Please fill in all the required fields",
     "passwordMatch": "Password entries don’t match",
@@ -769,6 +770,7 @@
         "updated": "Updated at",
         "purchased": "Purchased",
         "confirmed": "Confirmed",
+        "partialPay": "Partial Pay",
         "paid": "Paid",
         "ngoDelivery": "Delivered to NGO",
         "expNgoDelivery": "Exp. Delivery to NGO",
