@@ -152,7 +152,7 @@ const AnalyticChildSummary = () => {
                   lineHeight: '1.2',
                 }}
               >
-                No needs/ Present
+                No needs / Present
               </Typography>
             </Grid>
             <Grid

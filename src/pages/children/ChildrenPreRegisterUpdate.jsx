@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Grid } from '@mui/material';
-import AddStepper from '../../components/children/AddStepper';
+import PreRegisterAddStepper from '../../components/children/PreRegisterAddStepper';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 
 function ChildrenPreRegisterUpdate() {
@@ -25,7 +25,7 @@ function ChildrenPreRegisterUpdate() {
       {/* end breadcrumb */}
       <Grid item xs={12}>
         <Card sx={{ minHeight: 600, m: 'auto', mt: 6, maxWidth: '80%' }}>
-          <AddStepper />
+          <PreRegisterAddStepper />
         </Card>
       </Grid>
     </Grid>

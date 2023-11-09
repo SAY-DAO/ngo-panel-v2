@@ -27,6 +27,9 @@ import {
   CHECK_SIMILAR_NAMES_REQUEST,
   CHECK_SIMILAR_NAMES_SUCCESS,
   CHECK_SIMILAR_NAMES_FAIL,
+  SAY_NAMES_REQUEST,
+  SAY_NAMES_SUCCESS,
+  SAY_NAMES_FAIL,
   PRE_REGISTER_CHILD_UPDATE_REQUEST,
   PRE_REGISTER_CHILD_UPDATE_SUCCESS,
   PRE_REGISTER_CHILD_UPDATE_FAIL,
@@ -43,6 +46,8 @@ import {
   APPROVE_PRE_REGISTER_SUCCESS,
   APPROVE_PRE_REGISTER_FAIL,
   PRE_REGISTER_CHILD_LIST_REST,
+  SAY_NAMES_RESET,
+  CHECK_SIMILAR_NAMES_RESET,
 } from '../constants/childrenConstants';
 
 export const childByIdReducer = (state = { success: false }, action) => {
@@ -155,6 +160,23 @@ export const childNameCheckReducer = (state = { success: false }, action) => {
       return { loading: false, success: true, result: action.payload };
     case CHECK_SIMILAR_NAMES_FAIL:
       return { loading: false, error: action.payload };
+    case CHECK_SIMILAR_NAMES_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const childSayNameReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case SAY_NAMES_REQUEST:
+      return { loading: true };
+    case SAY_NAMES_SUCCESS:
+      return { loading: false, success: true, result: action.payload };
+    case SAY_NAMES_FAIL:
+      return { loading: false, error: action.payload };
+    case SAY_NAMES_RESET:
+      return {};
     default:
       return state;
   }

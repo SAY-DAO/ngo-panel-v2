@@ -7,9 +7,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { LoadingButton } from '@mui/lab';
 import { PropTypes } from 'prop-types';
 import { getPreRegisters } from '../../redux/actions/childrenAction';
-import ChildPreRegisterDialog from '../../components/dialogs/ChildPreRegisterDialog';
-import GenericDialog from '../../components/dialogs/GenericDialog';
-import ApproveDialog from '../../components/dialogs/ApproveDialog';
+import ChildPreRegisterAddDialog from '../dialogs/ChildPreRegisterAddDialog';
+import GenericDialog from '../dialogs/GenericDialog';
+import ChildPreRegisterApproveDialog from '../dialogs/ChildPreRegisterApproveDialog';
 import PreRegisterCard from './PreRegisterCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 
@@ -118,7 +118,7 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
             />
           </Grid>
         )}
-        <ChildPreRegisterDialog
+        <ChildPreRegisterAddDialog
           open={dialogOpen}
           setOpen={setDialogOpen}
           dialogValues={dialogValues}
@@ -128,12 +128,8 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
           setOpen={setOpenDelete}
           dialogValues={deleteDialogValues}
         />
-        <GenericDialog
-          open={openReset}
-          setOpen={setOpenReset}
-          dialogValues={resetDialogValues}
-        />
-        <ApproveDialog
+        <GenericDialog open={openReset} setOpen={setOpenReset} dialogValues={resetDialogValues} />
+        <ChildPreRegisterApproveDialog
           open={openApprove}
           setOpen={setOpenApprove}
           dialogValues={approveDialogValues}

@@ -36,6 +36,9 @@ import {
   DELETE_PRE_REGISTER_REQUEST,
   DELETE_PRE_REGISTER_SUCCESS,
   DELETE_PRE_REGISTER_FAIL,
+  SAY_NAMES_REQUEST,
+  SAY_NAMES_SUCCESS,
+  SAY_NAMES_FAIL,
   APPROVE_PRE_REGISTER_REQUEST,
   APPROVE_PRE_REGISTER_SUCCESS,
   APPROVE_PRE_REGISTER_FAIL,
@@ -552,6 +555,41 @@ export const deletePreRegister = (id) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: DELETE_PRE_REGISTER_FAIL,
+      payload:
+        e.response && e.response.data.detail
+          ? e.response.data
+          : e.response && e.response.data
+          ? e.response.data.message
+          : e.response,
+    });
+  }
+};
+
+export const fetchChildrenSayNames = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: SAY_NAMES_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`children/generate/say/names`, config);
+
+    dispatch({
+      type: SAY_NAMES_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: SAY_NAMES_FAIL,
       payload:
         e.response && e.response.data.detail
           ? e.response.data

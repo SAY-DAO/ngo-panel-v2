@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
-import ChildrenPreRegisterList from './ChildrenPreRegisterList';
 import { FlaskUserTypesEnum } from '../../utils/types';
+import ChildrenPreRegisterList from '../../components/children/ChildrenPreRegisterList';
 
 export default function ChildrenPreRegisterTabs() {
   const { t } = useTranslation();

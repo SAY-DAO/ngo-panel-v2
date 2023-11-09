@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Alert,
+  Autocomplete,
   Avatar,
   Badge,
   Box,
   Button,
   Card,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -28,19 +31,21 @@ import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import UploadImage from '../UploadImage';
-import { checkSimilarNames, createPreRegisterChild } from '../../redux/actions/childrenAction';
+import {
+  checkSimilarNames,
+  createPreRegisterChild,
+  fetchChildrenSayNames,
+} from '../../redux/actions/childrenAction';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
 import { SexEnum } from '../../utils/types';
+import { shuffleArray } from '../../utils/helpers';
+import { CHECK_SIMILAR_NAMES_RESET } from '../../redux/constants/childrenConstants';
 
-export default function ChildPreRegisterDialog({ open, setOpen }) {
+export default function ChildPreRegisterAddDialog({ open, setOpen }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
 
-  const [similarError, setSimilarError] = useState({
-    fa: 0,
-    en: 0,
-  });
   const [finalAvatarFile, setFinalAvatarFile] = useState();
   const [finalSleptAvatarFile, setFinalSleptAvatarFile] = useState();
   const [openImageDialog, setOpenImageDialog] = useState(false);
@@ -48,15 +53,22 @@ export default function ChildPreRegisterDialog({ open, setOpen }) {
   const [uploadSleptAvatar, setUploadSleptAvatar] = useState(
     location.state && location.state.newImage,
   );
+  const [options, setOptions] = useState([]);
+  const [openNames, setOpenNames] = useState(false);
+  const [whatSex, setWhatSex] = useState(SexEnum.MALE);
+  const [selected, setSelected] = useState();
 
   const childPreRegister = useSelector((state) => state.childPreRegister);
   const { loading: loadingAdded, success: successAdded } = childPreRegister;
 
   const childNameCheck = useSelector((state) => state.childNameCheck);
-  const { result } = childNameCheck;
+  const { result, loading: loadingCheckName } = childNameCheck;
+
+  const { result: namesResult, loading: loadingNames } = useSelector(
+    (state) => state.childAllNames,
+  );
 
   const validationSchema = Yup.object().shape({
-    sayname_translations_fa: Yup.string().required('Please enter the name'),
     sayname_translations_en: Yup.string().required('Please enter the name'),
     sex: Yup.string().required('Please enter the sex'),
   });
@@ -67,44 +79,38 @@ export default function ChildPreRegisterDialog({ open, setOpen }) {
     handleSubmit,
     watch,
     getValues,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
   useEffect(() => {
-    const values = getValues();
-    console.log(values);
-    if (values.sayname_translations_fa) {
-      setSimilarError({
-        en: 0,
-        fa: 0,
-      });
-      dispatch(checkSimilarNames(values.sayname_translations_fa, 'fa'));
+    if (openNames) {
+      dispatch(fetchChildrenSayNames());
     }
-    if (values.sayname_translations_en) {
-      setSimilarError({
-        en: 0,
-        fa: 0,
-      });
-      dispatch(checkSimilarNames(values.sayname_translations_en, 'en'));
+  }, [openNames]);
+
+  // when say name selected if exists
+  useEffect(() => {
+    if (result && result.total > 0) {
+      setError('duplicate');
     }
-  }, [watch('sayname_translations_en'), watch('sayname_translations_fa')]);
+  }, [result]);
 
   useEffect(() => {
-    if (watch('sayname_translations_fa') && result) {
-      setSimilarError({
-        en: similarError.en,
-        fa: result.total,
-      });
+    const values = getValues();
+    if (selected) {
+      dispatch(checkSimilarNames(selected, 'fa'));
     }
-    if (watch('sayname_translations_en') && result) {
-      setSimilarError({
-        en: result.total,
-        fa: similarError.fa,
-      });
+    if (values.sayname_translations_en) {
+      // dispatch(checkSimilarNames(values.sayname_translations_en, 'en'));
     }
-  }, [watch('sayname_translations_en'), watch('sayname_translations_fa'), result]);
+    if (values.sex) {
+      setWhatSex(Number(values.sex));
+    }
+  }, [watch('sayname_translations_en'), selected, watch('sex')]);
 
   useEffect(() => {
     if (successAdded) {
@@ -112,15 +118,37 @@ export default function ChildPreRegisterDialog({ open, setOpen }) {
     }
   }, [successAdded]);
 
+  useEffect(() => {
+    let active = true;
+    if (loadingNames) {
+      return undefined;
+    }
+    if (namesResult) {
+      (async () => {
+        const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        await sleep(1e3);
+        if (active) {
+          setOptions([...namesResult]);
+        }
+      })();
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [loadingNames, namesResult && namesResult[0]]);
+
   const handleClose = () => {
     setOpen(false);
+    clearErrors();
+    dispatch({ type: CHECK_SIMILAR_NAMES_RESET });
   };
 
   // dialog image
   const handleImageClickOpen = () => {
     setOpenImageDialog(true);
   };
-  
+
   const handleImageClose = () => {
     setOpenImageDialog(false);
   };
@@ -144,17 +172,18 @@ export default function ChildPreRegisterDialog({ open, setOpen }) {
   const handleRemoveAvatar = () => {
     console.log('removed not implemented...');
   };
+
   const onSubmit = (data) => {
+    console.log(data);
     dispatch(
       createPreRegisterChild({
         awakeFile: finalAvatarFile,
         sleptFile: finalSleptAvatarFile,
-        sayName: { en: data.sayname_translations_en, fa: data.sayname_translations_fa },
+        sayName: { en: data.sayname_translations_en, fa: selected },
         sex: Number(data.sex),
       }),
     );
   };
-
   return (
     <Grid container>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -326,8 +355,25 @@ export default function ChildPreRegisterDialog({ open, setOpen }) {
                 </Card>
               </Grid>
             </Grid>
-            <Grid item xs={12} container spacing={1} justifyContent="center">
-              <Grid item md={6} xs={12}>
+            <Grid item xs={12} container spacing={4} justifyContent="center">
+              <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                <FormControl sx={{ minWidth: '60%' }}>
+                  <CustomFormLabel id="sex">{t('child.sex')}</CustomFormLabel>
+                  <CustomSelect
+                    labelId="sex-controlled-open-select-label"
+                    id="sex"
+                    control={control}
+                    value={watch('sex') || SexEnum.MALE}
+                    register={{ ...register('sex') }}
+                    error={!!errors.sex}
+                  >
+                    <MenuItem value={SexEnum.FEMALE}>{t(`child.sexKind.female`)}</MenuItem>
+                    <MenuItem value={SexEnum.MALE}>{t(`child.sexKind.male`)}</MenuItem>
+                  </CustomSelect>
+                </FormControl>
+              </Grid>
+
+              {/* <Grid item md={6} xs={12}>
                 <CustomFormLabel htmlFor="sayname_translations_fa">
                   {t('child.sayname_translations.fa')}
                 </CustomFormLabel>
@@ -341,46 +387,67 @@ export default function ChildPreRegisterDialog({ open, setOpen }) {
                   error={!!errors.sayname_translations_fa || similarError.fa > 0}
                   helperText={similarError.fa > 0 && t(`error.similarNames`)}
                 />
+              </Grid> */}
+              <Grid item md={6} xs={12}>
+                <Autocomplete
+                  id="asynchronous-names"
+                  sx={{ width: '100%' }}
+                  open={openNames}
+                  onOpen={() => {
+                    setOpenNames(true);
+                  }}
+                  onClose={() => {
+                    setOpenNames(false);
+                  }}
+                  isOptionEqualToValue={(option, value) => option[0] === value[0]}
+                  getOptionLabel={(option) => option[0]}
+                  onChange={(e, option) => option && setSelected(option[0])}
+                  options={shuffleArray(options.filter((o) => o[1] === whatSex))}
+                  loading={loadingNames}
+                  renderInput={(params) => (
+                    <TextField
+                      sx={{ width: '100%' }}
+                      {...params}
+                      label={t('child.sayname_translations.fa')}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loadingNames ? <CircularProgress color="inherit" size={15} /> : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
               </Grid>
               <Grid item md={6} xs={12}>
-                <CustomFormLabel htmlFor="sayname_translations_en">
-                  {t('child.sayname_translations.en')}
-                </CustomFormLabel>
                 <TextField
                   id="sayname_translations_en"
+                  placeholder={t('child.sayname_translations.en')}
                   variant="outlined"
                   size="large"
                   control={control}
                   {...register('sayname_translations_en')}
-                  error={!!errors.sayname_translations_en || similarError.en > 0}
-                  helperText={similarError.en > 0 && t(`error.similarNames`)}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
-                <FormControl sx={{ width: '100%' }}>
-                  <CustomFormLabel id="sex">{t('child.sex')}</CustomFormLabel>
-                  <CustomSelect
-                    labelId="sex-controlled-open-select-label"
-                    id="sex"
-                    control={control}
-                    value={watch('sex') || ''}
-                    register={{ ...register('sex') }}
-                    error={!!errors.sex}
-                  >
-                    <MenuItem value={SexEnum.FEMALE}>{t(`child.sexKind.female`)}</MenuItem>
-                    <MenuItem value={SexEnum.MALE}>{t(`child.sexKind.male`)}</MenuItem>
-                  </CustomSelect>
-                </FormControl>
-              </Grid>
             </Grid>
+            {result && result.total > 0 && errors && errors.duplicate && (
+              <Grid item xs={8} sx={{ m: 'auto' }}>
+                <Alert severity="warning" sx={{ mr: 4, ml: 4, mt: 2 }}>
+                  {result.total} نام تکراری ...
+                </Alert>
+              </Grid>
+            )}
           </DialogContent>
           <DialogActions>
             <Button color="secondary" onClick={handleClose}>
               {t('button.cancel')}
             </Button>
             <LoadingButton
-              disabled={!!result && result.total}
-              loading={loadingAdded}
+              disabled={!selected || !whatSex || (result && result.total > 0)}
+              loading={loadingAdded || loadingCheckName}
               color="primary"
               type="submit"
               onClick={handleSubmit(onSubmit)}
@@ -423,7 +490,7 @@ export default function ChildPreRegisterDialog({ open, setOpen }) {
   );
 }
 
-ChildPreRegisterDialog.propTypes = {
+ChildPreRegisterAddDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
   dialogValues: PropTypes.object,

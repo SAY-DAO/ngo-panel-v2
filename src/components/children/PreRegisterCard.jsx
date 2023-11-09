@@ -24,7 +24,7 @@ import {
   SchoolTypeEnum,
   SexEnum,
 } from '../../utils/types';
-import VoiceBar from '../../components/VoiceBar';
+import VoiceBar from '../VoiceBar';
 import { getAge } from '../../utils/helpers';
 
 function PreRegisterCard({
@@ -60,10 +60,11 @@ function PreRegisterCard({
     });
   };
 
-  const handleApprove = (id) => {
+  const handleApprove = (preRegister) => {
     setOpenApprove(true);
     setApproveDialogValues({
-      preRegisterId: id,
+      preRegisterId: preRegister.id,
+      originalVoice: preRegister.voiceUrl,
     });
   };
 
@@ -111,7 +112,7 @@ function PreRegisterCard({
                   horizontal: 'right',
                 }}
               >
-                <MenuItem onClick={() => handleApprove(preRegistered.id)}>
+                <MenuItem onClick={() => handleApprove(preRegistered)}>
                   {t('button.confirm')}
                 </MenuItem>
                 <MenuItem onClick={() => handleReset(preRegistered.id)}>

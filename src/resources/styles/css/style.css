@@ -38,6 +38,18 @@ body {
 }
 
 /* Child Voice */
+#edited-voice > div > .player {
+  height: 42px;
+  background: rgba(57, 192, 245, 0.8) !important;
+  border-radius: 132px;
+  padding: 4px;
+  padding-right: 9px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .player {
   height: 42px;
   background: rgba(245, 158, 57, 0.8);

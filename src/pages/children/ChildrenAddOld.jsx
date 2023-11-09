@@ -46,7 +46,7 @@ import VoiceBar from '../../components/VoiceBar';
 import { EducationEnum, FlaskUserTypesEnum, HousingStatusEnum } from '../../utils/types';
 import { getAge } from '../../utils/helpers';
 
-const ChildAdd = () => {
+const ChildrenAddOld = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
@@ -1149,4 +1149,4 @@ const ChildAdd = () => {
   );
 };
 
-export default ChildAdd;
+export default ChildrenAddOld;

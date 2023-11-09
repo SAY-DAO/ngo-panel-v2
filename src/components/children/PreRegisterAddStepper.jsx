@@ -47,7 +47,7 @@ import { CHILDREN_PRE_REGISTER_LIST } from '../../routes/RouteConstants';
 
 const steps = ['child.steps.first', 'child.steps.second', 'child.steps.third'];
 
-export default function AddStepper() {
+export default function PreRegisterAddStepper() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -384,20 +384,20 @@ export default function AddStepper() {
                       isOptionEqualToValue={(option, value) => option.id === value.id}
                       getOptionLabel={(option) =>
                         option.is_active
-                          ? `${option.id} - ${option.firstName}`
-                          : `${option.id} - ${option.firstName}`
+                          ? `${option.id} - ${option.firstName} - ${option.lastName}`
+                          : `${option.id} - ${option.firstName} - ${option.lastName}`
                       }
                       renderOption={(props, option) => (
                         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                           {option.is_active ? (
                             <>
                               <FeatherIcon color="green" icon="check" width="18" />
-                              <Typography>{`${option.id} - ${option.firstName}`}</Typography>
+                              <Typography>{`${option.id} - ${option.firstName} - ${option.lastName}`}</Typography>
                             </>
                           ) : (
                             <>
                               <FeatherIcon color="red" icon="x" width="18" />
-                              <Typography>{`${option.id} - ${option.firstName} `}</Typography>
+                              <Typography>{`${option.id} - ${option.firstName} - ${option.lastName} `}</Typography>
                             </>
                           )}
                         </Box>

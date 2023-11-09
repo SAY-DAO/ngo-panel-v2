@@ -108,9 +108,8 @@ export default function UploadImage({
 
     if (editor) {
       const canvas = editor.getImageScaledToCanvas().toDataURL('image/png');
-      const name = `${Math.random().toString(36).slice(-5)}.png`;
 
-      const theFile = dataURLtoFile(canvas, name);
+      const theFile = dataURLtoFile(canvas, file.name);
 
       console.warn('editor --> ', typeof editor);
       console.warn('converted png --> ', canvas);

@@ -29,6 +29,7 @@ import {
   childNameCheckReducer,
   childPreRegisterReducer,
   childrenByNgoReducer,
+  childSayNameReducer,
   childUpdateReducer,
   childUpdateStatusReducer,
 } from './childrenReducer';
@@ -131,6 +132,7 @@ export default combineReducers({
   childStatusUpdate: childUpdateStatusReducer,
   childNameCheck: childNameCheckReducer,
   childPreRegister: childPreRegisterReducer,
+  childAllNames: childSayNameReducer,
   allNeeds: allNeedsReducer,
   allReportNeeds: allReportNeedsReducer,
   needConfirm: needConfirmReducer,

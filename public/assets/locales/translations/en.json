@@ -610,6 +610,7 @@
     },
     "awakeAvatarUrl": "Awake",
     "sleptAvatarUrl": "Sleep",
+    "downloadVoice": "Download Voice",
     "uploadVoice": "Upload Voice",
     "bio": "Bio",
     "bioSummary": "Summary",

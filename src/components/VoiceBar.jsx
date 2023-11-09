@@ -46,7 +46,7 @@ export default function VoiceBar({ url }) {
   const [status, setStatus] = useState('STOPPED');
   const [autoLoad, setAutoLoad] = useState(false);
   const [sound, setSound] = useState();
-console.log(url);
+
   useEffect(() => {
     return () => {
       setStatus('STOPPED');
@@ -104,7 +104,6 @@ console.log(url);
   };
 
   const voiceChangeStatus = () => {
-    console.warn('hey!');
     if (status === 'PAUSED' || status === 'STOPPED') {
       setStatus('PLAYING');
       setAutoLoad(true);
@@ -121,7 +120,7 @@ console.log(url);
           <Sound
             url={url}
             playStatus={status}
-            // playFromPosition={from}
+            // playFromPosition={0}
             autoLoad={autoLoad}
             onLoad={handleChange}
             onBufferChange={handleChange}
