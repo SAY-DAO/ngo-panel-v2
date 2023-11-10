@@ -505,13 +505,19 @@ export const approvePreRegister = (id, values) => async (dispatch, getState) => 
 
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': `multipart/form-data`,
         Authorization: userInfo && userInfo.access_token,
         flaskId: userInfo && userInfo.id,
       },
     };
-    console.log(values);
-    const { data } = await daoApi.patch(`/children/preregister/approve/${id}`, values, config);
+
+    const formData = new FormData();
+    formData.append('voiceFile', values.voiceFile);
+    formData.append('firstNameEn', values.firstNameEn);
+    formData.append('lastNameEn', values.lastNameEn);
+    formData.append('bioEn', values.bioEn);
+
+    const { data } = await daoApi.patch(`/children/preregister/approve/${id}`, formData, config);
 
     dispatch({
       type: APPROVE_PRE_REGISTER_SUCCESS,

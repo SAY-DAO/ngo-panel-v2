@@ -15,8 +15,8 @@
   },
   "approveModal": {
     "preRegister": {
-      "title": "تائید ثبت نام",
-      "content": "آیا مطمئن به تائید این پیش ثبت نام هستید؟"
+      "title": "تأیید ثبت نام",
+      "content": "آیا مطمئن به تأیید این پیش ثبت نام هستید؟"
     }
   },
   "childStatusModal": {
@@ -62,7 +62,7 @@
     "forgotPassword": "فراموشی رمز عبور؟"
   },
   "success": {
-    "confirmed": "تائید شد!"
+    "confirmed": "تأیید شد!"
   },
   "error": {
     "similarNames": "نام مشابه یافت شد.",
@@ -96,7 +96,7 @@
     "phoneExists": "شماره تلفن وارد شده تکراری است",
     "emailExists": "نشانی ایمیل وارد شده تکراری است",
     "wrongUserOrPass": "نام کاربری یا گذرواژه اشتباه است",
-    "codeRequired": "برای ادامه استفاده از کد تائید ضروری است",
+    "codeRequired": "برای ادامه استفاده از کد تأیید ضروری است",
     "wrongCode": "کد وارد شده معتبر نیست",
     "codeExpired": "کد وارد شده دیگر معتبر نیست",
     "invalidNeed": "یکی از نیازها موجود نیست",
@@ -135,7 +135,7 @@
     "skip": "می‌دانم",
     "register": "ثبت نام",
     "login": "ورود",
-    "confirm": "تائید",
+    "confirm": "تأیید",
     "submit": "ارسال کد",
     "understand": "فهمیدم",
     "save": "ثبت",
@@ -463,7 +463,7 @@
     "pie": {
       "ok": "خوب",
       "unpayable": "غیر قابل پرداخت",
-      "unconfirmed": "تائید نشده"
+      "unconfirmed": "تأیید نشده"
     },
     "id": "شناسه",
     "titleEdit": "ویرایش نیاز",
@@ -526,10 +526,10 @@
       "product": "عکس از فروشگاه"
     },
     "created": "زمان ایجاد",
-    "isConfirmed": "وضعیت تائید",
+    "isConfirmed": "وضعیت تأیید",
     "socialWorker": "مددکار",
-    "confirmUser": "تائید کننده",
-    "confirmDate": "زمان تائید",
+    "confirmUser": "تأیید کننده",
+    "confirmDate": "زمان تأیید",
     "updated": "زمان آخرین ویرایش",
     "doneAt": "زمان اتمام",
     "child_delivery_date": "زمان انتقال به کودک",
@@ -543,7 +543,7 @@
     "today": "تاریخ امروز",
     "needStatusTitle": "تغییر وضعیت",
     "needStatus": {
-      "-1": "تائید نشده",
+      "-1": "تأیید نشده",
       "0": "پرداخت نشده",
       "1": "نیم‌پرداخت",
       "2": "پرداخت کامل",
@@ -607,7 +607,7 @@
       "tabs": {
         "notRegistered": "ثبت نشده",
         "preregistered": "پیش‌ثبت نام",
-        "confirmed": "تائید شده"
+        "confirmed": "تأیید شده"
       }
     },
     "steps": {
@@ -618,7 +618,7 @@
     "title": "کودک",
     "all": "تمام کودکان",
     "id": "شناسه",
-    "isConfirmed": "وضعیت تائید",
+    "isConfirmed": "وضعیت تأیید",
     "existence_status": "وضعیت کودک",
     "updateStatus": "تغییر وضعیت",
     "statuses": {
@@ -626,7 +626,7 @@
       "aliveAndPresent": "تحت پوشش",
       "aliveAndGone": "ترک کرده",
       "tempGone": "ترک موقت",
-      "confirmed": "تائید شده",
+      "confirmed": "تأیید شده",
       "migrated": "انتقال داده شده"
     },
     "isDeleted": "وضعیت حذف",
@@ -710,8 +710,8 @@
       "twelveGrade": "سال دوازدهم",
       "thirteenGrade": "سال سیزدهم"
     },
-    "confirmUser": "تائید کننده",
-    "confirmDate": "تاریخ تائید",
+    "confirmUser": "تأیید کننده",
+    "confirmDate": "تاریخ تأیید",
     "done_needs_count": "تعداد نیازهای انجام شده",
     "people": "نفر",
     "familyCount": "تعداد خانوار",
@@ -770,7 +770,7 @@
     },
     "countJobs": {
       "titleCreated": "اضافه شده",
-      "titleConfirmed": "تائید شده",
+      "titleConfirmed": "تأیید شده",
       "count": {
         "first": "در ۴۸ ساعت",
         "second": "در یک هفته",
@@ -781,8 +781,8 @@
     "myChildren": "کودکان من",
     "allChildren": "تمام کودکان",
     "createdNeeds": "نیازهای اضافه شده",
-    "confirmedNeeds": "نیازهای تائید شده",
-    "notConfirmedNeeds": "تائید نشده",
+    "confirmedNeeds": "نیازهای تأیید شده",
+    "notConfirmedNeeds": "تأیید نشده",
     "today": "امروز",
     "days": "روز",
     "ngoArrival": "نزدیکترین ارسال",
@@ -804,7 +804,7 @@
         "product": "کالا",
         "service": "خدمات",
         "notPaid": "پرداخت نشده",
-        "notConfirmed": "تائید نشده",
+        "notConfirmed": "تأیید نشده",
         "partialPay": "نیم پرداخت",
         "completePay": "پرداخت کامل",
         "delivered": "تحویل داده شد",
@@ -817,7 +817,7 @@
         "created": "تاریخ ایجاد",
         "updated": "تاریخ ویرایش",
         "purchased": "خرید کالا",
-        "confirmed": "تائید نیاز",
+        "confirmed": "تأیید نیاز",
         "partialPay": "نیم پرداخت",
         "paid": "پرداخت",
         "moneyToNgo": " پرداخت به سمن",

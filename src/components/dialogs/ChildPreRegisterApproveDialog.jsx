@@ -76,6 +76,7 @@ export default function ChildPreRegisterApproveDialog({ open, setOpen, dialogVal
         firstNameEn: data.firstName_translations_en,
         lastNameEn: data.lastName_translations_en,
         bioEn: data.bio_translations_en,
+        voiceFile: uploadVoice,
       }),
     );
   };
