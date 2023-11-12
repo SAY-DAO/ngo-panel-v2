@@ -170,3 +170,10 @@ export const NeedCategoryEnum = {
   HEALTH: 2,
   SURROUNDING: 3,
 };
+
+
+export const PreRegisterStatusEnum ={
+  NOT_REGISTERED : 0,
+  PRE_REGISTERED : 1,
+  CONFIRMED : 2,
+}

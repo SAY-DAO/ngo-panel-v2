@@ -21,6 +21,7 @@ import {
   EducationEnum,
   FlaskUserTypesEnum,
   HousingStatusEnum,
+  PreRegisterStatusEnum,
   SchoolTypeEnum,
   SexEnum,
 } from '../../utils/types';
@@ -112,15 +113,21 @@ function PreRegisterCard({
                   horizontal: 'right',
                 }}
               >
-                <MenuItem onClick={() => handleApprove(preRegistered)}>
-                  {t('button.confirm')}
-                </MenuItem>
-                <MenuItem onClick={() => handleReset(preRegistered.id)}>
-                  {t('button.reset')}
-                </MenuItem>
-                <MenuItem onClick={() => handleDelete(preRegistered.id)}>
-                  {t('button.delete')}
-                </MenuItem>
+                {preRegistered.status === PreRegisterStatusEnum.CONFIRMED ? (
+                  <>
+                    <MenuItem onClick={() => handleApprove(preRegistered)}>
+                      {t('button.confirm')}
+                    </MenuItem>
+                    <MenuItem onClick={() => handleReset(preRegistered.id)}>
+                      {t('button.reset')}
+                    </MenuItem>
+                    <MenuItem onClick={() => handleDelete(preRegistered.id)}>
+                      {t('button.delete')}
+                    </MenuItem>
+                  </>
+                ) : (
+                  preRegistered.null
+                )}
               </Menu>
             </>
           )}
