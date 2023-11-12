@@ -113,7 +113,7 @@ function PreRegisterCard({
                   horizontal: 'right',
                 }}
               >
-                {preRegistered.status === PreRegisterStatusEnum.CONFIRMED ? (
+                {preRegistered.status !== PreRegisterStatusEnum.CONFIRMED ? (
                   <>
                     <MenuItem onClick={() => handleApprove(preRegistered)}>
                       {t('button.confirm')}
