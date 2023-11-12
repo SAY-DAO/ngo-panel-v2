@@ -126,7 +126,7 @@ function PreRegisterCard({
                     </MenuItem>
                   </>
                 ) : (
-                  preRegistered.null
+                  <MenuItem>{preRegistered.flaskChildId}</MenuItem>
                 )}
               </Menu>
             </>
