@@ -195,8 +195,8 @@ const AnalyticNeedTimeLine = () => {
             <DashboardCard custompadding="1" title="Timeline" action={<AnalyticSelect />}>
               {/* chart */}
               <Chart
-                options={chartValues.optionsTimeLine}
-                series={chartValues.seriesTimeLine}
+                options={chartValues && chartValues.optionsTimeLine}
+                series={chartValues && chartValues.seriesTimeLine}
                 type="line"
                 height="300"
                 style={{ direction: 'ltr' }}
