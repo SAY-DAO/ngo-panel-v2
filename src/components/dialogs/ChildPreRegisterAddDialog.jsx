@@ -436,8 +436,16 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
             {result && result.total > 0 && errors && errors.duplicate && (
               <Grid item xs={8} sx={{ m: 'auto' }}>
                 <Alert severity="warning" sx={{ mr: 4, ml: 4, mt: 2 }}>
-                  {result.total} نام تکراری ...
+                  {result.total} نام مشابه ...
                 </Alert>
+                <Grid container sx={{ mt: 2 }}>
+                  {result.found &&
+                    result.found.map((name) => (
+                      <Typography key={name.en} component="li">
+                        {name.fa}
+                      </Typography>
+                    ))}
+                </Grid>
               </Grid>
             )}
           </DialogContent>
@@ -446,7 +454,9 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
               {t('button.cancel')}
             </Button>
             <LoadingButton
-              disabled={!selected || !whatSex || (result && result.total > 0)}
+              disabled={
+                !selected || !whatSex || (result && result.found.find((n) => n.fa === selected))
+              }
               loading={loadingAdded || loadingCheckName}
               color="primary"
               type="submit"
