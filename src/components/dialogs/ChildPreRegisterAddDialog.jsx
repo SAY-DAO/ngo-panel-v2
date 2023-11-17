@@ -439,12 +439,14 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
                   {result.total} نام مشابه ...
                 </Alert>
                 <Grid container sx={{ mt: 2 }}>
-                  {result.found &&
-                    result.found.map((name) => (
-                      <Typography key={name.en} component="li">
-                        {name.fa}
-                      </Typography>
-                    ))}
+                  <ul>
+                    {result.found &&
+                      result.found.map((name) => (
+                        <Typography key={name.en} component="li">
+                          {name.fa}
+                        </Typography>
+                      ))}
+                  </ul>
                 </Grid>
               </Grid>
             )}
