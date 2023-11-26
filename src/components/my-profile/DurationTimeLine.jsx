@@ -405,9 +405,10 @@ export default function DurationTimeLine({ need, signature }) {
                   <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>
                   <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
                     UserIds:
-                    {theNeed.payments.map(
-                      (p) => p.verified && p.need_amount > 0 && ` ${p.id_user} `,
-                    )}
+                    {theNeed.payments &&
+                      theNeed.payments.map(
+                        (p) => p.verified && p.need_amount > 0 && ` ${p.id_user} `,
+                      )}
                   </Typography>
                 </>
               }
