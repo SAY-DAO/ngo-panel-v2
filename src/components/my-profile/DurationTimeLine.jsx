@@ -441,7 +441,11 @@ export default function DurationTimeLine({ need, signature }) {
             <Tooltip
               title={
                 <>
-                  <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.doneAt)}</Typography>
+                  <Typography sx={{ fontSize: 12 }}>
+                    {dateConvertor(
+                      theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
+                    )}
+                  </Typography>
                   <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
                     {theNeed.payments
                       .find((p) => p.verified && p.need_amount > 0)
