@@ -12,6 +12,7 @@ import GenericDialog from '../dialogs/GenericDialog';
 import ChildPreRegisterApproveDialog from '../dialogs/ChildPreRegisterApproveDialog';
 import PreRegisterCard from './PreRegisterCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
+import ChildPreRegisterUpdateDialog from '../dialogs/ChildPreRegisterUpdateDialog ';
 
 export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
   const dispatch = useDispatch();
@@ -20,23 +21,23 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [dialogValues, setDialogValues] = useState();
   const [deleteDialogValues, setDeleteDialogValues] = useState();
-  const [resetDialogValues, setResetDialogValues] = useState();
   const [approveDialogValues, setApproveDialogValues] = useState();
+  const [updateDialogValues, setUpdateDialogValues] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [openReset, setOpenReset] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const { preRegisterList, updated, added, deleted, approved } = useSelector(
+  const { preRegisterList, prepared, updated, added, deleted, approved } = useSelector(
     (state) => state.childPreRegister,
   );
 
   useEffect(() => {
     dispatch(getPreRegisters(tabNumber, page, rowsPerPage, isConfirmed));
-  }, [deleted, updated, added, approved, tabNumber, page, rowsPerPage]);
+  }, [deleted, prepared, updated, added, approved, tabNumber, page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -91,11 +92,11 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
                       <PreRegisterCard
                         setDeleteDialogValues={setDeleteDialogValues}
                         setApproveDialogValues={setApproveDialogValues}
-                        setResetDialogValues={setResetDialogValues}
                         preRegistered={p}
                         setOpenDelete={setOpenDelete}
-                        setOpenReset={setOpenReset}
                         setOpenApprove={setOpenApprove}
+                        setOpenUpdate={setOpenUpdate}
+                        setUpdateDialogValues={setUpdateDialogValues}
                       />
                     </ImageListItem>
                   ))}
@@ -128,7 +129,11 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
           setOpen={setOpenDelete}
           dialogValues={deleteDialogValues}
         />
-        <GenericDialog open={openReset} setOpen={setOpenReset} dialogValues={resetDialogValues} />
+        <ChildPreRegisterUpdateDialog
+          open={openUpdate}
+          setOpen={setOpenUpdate}
+          dialogValues={updateDialogValues}
+        />
         <ChildPreRegisterApproveDialog
           open={openApprove}
           setOpen={setOpenApprove}

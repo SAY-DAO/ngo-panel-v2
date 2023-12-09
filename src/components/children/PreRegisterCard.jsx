@@ -31,11 +31,11 @@ import { getAge } from '../../utils/helpers';
 function PreRegisterCard({
   preRegistered,
   setDeleteDialogValues,
-  setResetDialogValues,
   setApproveDialogValues,
+  setUpdateDialogValues,
   setOpenDelete,
-  setOpenReset,
   setOpenApprove,
+  setOpenUpdate,
 }) {
   const { t } = useTranslation();
 
@@ -53,20 +53,17 @@ function PreRegisterCard({
     });
   };
 
-  const handleReset = (id) => {
-    setOpenReset(true);
-    setResetDialogValues({
-      preRegisterId: id,
-      type: 'resetPreregister',
-    });
-  };
-
   const handleApprove = (preRegister) => {
     setOpenApprove(true);
     setApproveDialogValues({
       preRegisterId: preRegister.id,
       originalVoice: preRegister.voiceUrl,
     });
+  };
+
+  const handleUpdate = (preRegister) => {
+    setOpenUpdate(true);
+    setUpdateDialogValues(preRegister);
   };
 
   const handleClose = () => {
@@ -83,54 +80,55 @@ function PreRegisterCard({
           position: 'absolute',
         }}
       >
-        {swInfo &&
-          (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-            swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
-            <>
-              <Tooltip title={t('myPage.taskCard.menu.more')}>
-                <IconButton
-                  aria-expanded={open ? 'true' : undefined}
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                >
-                  <FeatherIcon icon="more-vertical" width="18" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                id="long-menu"
-                MenuListProps={{
-                  'aria-labelledby': 'long-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                {preRegistered.status !== PreRegisterStatusEnum.CONFIRMED ? (
-                  <>
-                    <MenuItem onClick={() => handleApprove(preRegistered)}>
-                      {t('button.confirm')}
-                    </MenuItem>
-                    <MenuItem onClick={() => handleReset(preRegistered.id)}>
-                      {t('button.reset')}
-                    </MenuItem>
-                    <MenuItem onClick={() => handleDelete(preRegistered.id)}>
-                      {t('button.delete')}
-                    </MenuItem>
-                  </>
-                ) : (
-                  <MenuItem>Child Id:{preRegistered.flaskChildId}</MenuItem>
-                )}
-              </Menu>
-            </>
+        <Tooltip title={t('myPage.taskCard.menu.more')}>
+          <IconButton
+            aria-expanded={open ? 'true' : undefined}
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
+            <FeatherIcon icon="more-vertical" width="18" />
+          </IconButton>
+        </Tooltip>
+        <Menu
+          id="long-menu"
+          MenuListProps={{
+            'aria-labelledby': 'long-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          {swInfo &&
+            (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+              swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) &&
+            preRegistered.status !== PreRegisterStatusEnum.CONFIRMED && (
+              <div>
+                <MenuItem onClick={() => handleApprove(preRegistered)}>
+                  {t('button.confirm')}
+                </MenuItem>
+                <MenuItem onClick={() => handleDelete(preRegistered.id)}>
+                  {t('button.delete')}
+                </MenuItem>
+              </div>
+            )}
+          {preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED && (
+            <MenuItem onClick={() => handleUpdate(preRegistered)}>
+              {t('button.update')}
+              {preRegistered.flaskChildId}
+            </MenuItem>
           )}
+          {preRegistered.status === PreRegisterStatusEnum.CONFIRMED && (
+            <MenuItem>Child Id:{preRegistered.flaskChildId}</MenuItem>
+          )}
+        </Menu>
       </Box>
       <Grid container justifyContent="center" spacing={2}>
         <Grid container item xs={12}>
@@ -355,9 +353,9 @@ export default PreRegisterCard;
 PreRegisterCard.propTypes = {
   preRegistered: PropTypes.object,
   setDeleteDialogValues: PropTypes.func,
-  setResetDialogValues: PropTypes.func,
   setApproveDialogValues: PropTypes.func,
   setOpenDelete: PropTypes.func,
-  setOpenReset: PropTypes.func,
   setOpenApprove: PropTypes.func,
+  setOpenUpdate: PropTypes.func,
+  setUpdateDialogValues: PropTypes.func,
 };

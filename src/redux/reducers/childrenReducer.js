@@ -33,6 +33,9 @@ import {
   PRE_REGISTER_CHILD_UPDATE_REQUEST,
   PRE_REGISTER_CHILD_UPDATE_SUCCESS,
   PRE_REGISTER_CHILD_UPDATE_FAIL,
+  PRE_REGISTER_CHILD_PREPARE_REQUEST,
+  PRE_REGISTER_CHILD_PREPARE_SUCCESS,
+  PRE_REGISTER_CHILD_PREPARE_FAIL,
   PRE_REGISTER_CHILD_ADD_REQUEST,
   PRE_REGISTER_CHILD_ADD_SUCCESS,
   PRE_REGISTER_CHILD_ADD_FAIL,
@@ -198,12 +201,18 @@ export const childPreRegisterReducer = (state = { success: false }, action) => {
       return { loading: false, success: true, added: action.payload };
     case PRE_REGISTER_CHILD_ADD_FAIL:
       return { loading: false, error: action.payload };
-    case PRE_REGISTER_CHILD_UPDATE_REQUEST:
+    case PRE_REGISTER_CHILD_PREPARE_REQUEST:
       return { loading: true };
-    case PRE_REGISTER_CHILD_UPDATE_SUCCESS:
-      return { loading: false, success: true, updated: action.payload };
-    case PRE_REGISTER_CHILD_UPDATE_FAIL:
+    case PRE_REGISTER_CHILD_PREPARE_SUCCESS:
+      return { loading: false, success: true, prepared: action.payload };
+    case PRE_REGISTER_CHILD_PREPARE_FAIL:
       return { loading: false, error: action.payload };
+      case PRE_REGISTER_CHILD_UPDATE_REQUEST:
+        return { loading: true };
+      case PRE_REGISTER_CHILD_UPDATE_SUCCESS:
+        return { loading: false, success: true, updated: action.payload };
+      case PRE_REGISTER_CHILD_UPDATE_FAIL:
+        return { loading: false, error: action.payload };
     case DELETE_PRE_REGISTER_REQUEST:
       return { ...state, loading: true, success: false };
     case DELETE_PRE_REGISTER_SUCCESS:

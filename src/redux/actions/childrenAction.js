@@ -33,6 +33,9 @@ import {
   PRE_REGISTER_CHILD_UPDATE_REQUEST,
   PRE_REGISTER_CHILD_UPDATE_SUCCESS,
   PRE_REGISTER_CHILD_UPDATE_FAIL,
+  PRE_REGISTER_CHILD_PREPARE_REQUEST,
+  PRE_REGISTER_CHILD_PREPARE_SUCCESS,
+  PRE_REGISTER_CHILD_PREPARE_FAIL,
   DELETE_PRE_REGISTER_REQUEST,
   DELETE_PRE_REGISTER_SUCCESS,
   DELETE_PRE_REGISTER_FAIL,
@@ -70,8 +73,8 @@ export const fetchMyChildById = (childId) => async (dispatch, getState) => {
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -103,8 +106,8 @@ export const fetchActiveChildList = () => async (dispatch, getState) => {
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -137,45 +140,45 @@ export const fetchChildList = (take, limit, filters) => async (dispatch, getStat
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
 
 export const fetchChildrenByNgo =
   ({ ngoId }) =>
-  async (dispatch, getState) => {
-    try {
-      dispatch({ type: CHILDREN_BY_NGO_REQUEST });
-      const {
-        userLogin: { userInfo },
-      } = getState();
+    async (dispatch, getState) => {
+      try {
+        dispatch({ type: CHILDREN_BY_NGO_REQUEST });
+        const {
+          userLogin: { userInfo },
+        } = getState();
 
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: userInfo && userInfo.access_token,
-        },
-      };
-      // [0]for not confirmed children only, [1]for confirmed children only, [2]for both confirmed and not confirmed children
-      const { data } = await publicApi.get(`/child/all/confirm=${2}?ngo_id=${ngoId}`, config);
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: userInfo && userInfo.access_token,
+          },
+        };
+        // [0]for not confirmed children only, [1]for confirmed children only, [2]for both confirmed and not confirmed children
+        const { data } = await publicApi.get(`/child/all/confirm=${2}?ngo_id=${ngoId}`, config);
 
-      dispatch({
-        type: CHILDREN_BY_NGO_SUCCESS,
-        payload: data,
-      });
-    } catch (e) {
-      dispatch({
-        type: CHILDREN_BY_NGO_FAIL,
-        payload: e.response.message
-          ? e.response.message
-          : e.response.data
-          ? e.response.data.message
-          : e.response,
-      });
-    }
-  };
+        dispatch({
+          type: CHILDREN_BY_NGO_SUCCESS,
+          payload: data,
+        });
+      } catch (e) {
+        dispatch({
+          type: CHILDREN_BY_NGO_FAIL,
+          payload: e.response.message
+            ? e.response.message
+            : e.response.data
+              ? e.response.data.message
+              : e.response,
+        });
+      }
+    };
 
 export const updateChild = (values) => async (dispatch, getState) => {
   try {
@@ -218,8 +221,8 @@ export const updateChild = (values) => async (dispatch, getState) => {
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -252,8 +255,8 @@ export const updateChildExistenceStatus = (childId, status) => async (dispatch, 
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -284,8 +287,8 @@ export const checkSimilarNames = (newName, lang) => async (dispatch, getState) =
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -324,15 +327,15 @@ export const createPreRegisterChild = (values) => async (dispatch, getState) => 
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
 
-export const updatePreRegisterChild = (values) => async (dispatch, getState) => {
+export const preparePreRegisterChild = (values) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRE_REGISTER_CHILD_UPDATE_REQUEST });
+    dispatch({ type: PRE_REGISTER_CHILD_PREPARE_REQUEST });
     const {
       userLogin: { userInfo },
     } = getState();
@@ -365,7 +368,41 @@ export const updatePreRegisterChild = (values) => async (dispatch, getState) => 
     formData.append('state', values.state);
     formData.append('city', values.city);
 
-    const { data } = await daoApi.patch(`/children/preregister`, formData, config);
+    const { data } = await daoApi.patch(`/children/preregister/prepare`, formData, config);
+
+    dispatch({
+      type: PRE_REGISTER_CHILD_PREPARE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    console.log({ e });
+    dispatch({
+      type: PRE_REGISTER_CHILD_PREPARE_FAIL,
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+          ? e.response.data.message
+          : e.response,
+    });
+  }
+};
+
+export const updatePreRegisterChild = (values) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRE_REGISTER_CHILD_UPDATE_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.patch(`/children/preregister/update`, values, config);
 
     dispatch({
       type: PRE_REGISTER_CHILD_UPDATE_SUCCESS,
@@ -378,8 +415,8 @@ export const updatePreRegisterChild = (values) => async (dispatch, getState) => 
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -413,8 +450,8 @@ export const getPreRegisters = (tabNumber, take, limit) => async (dispatch, getS
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -489,8 +526,8 @@ export const AddChild = (values) => async (dispatch, getState) => {
       payload: e.response.message
         ? e.response.message
         : e.response.data
-        ? e.response.data.message
-        : e.response,
+          ? e.response.data.message
+          : e.response,
     });
   }
 };
@@ -530,8 +567,8 @@ export const approvePreRegister = (id, values) => async (dispatch, getState) => 
         e.response && e.response.data.detail
           ? e.response.data
           : e.response && e.response.data
-          ? e.response.data.message
-          : e.response,
+            ? e.response.data.message
+            : e.response,
     });
   }
 };
@@ -565,8 +602,8 @@ export const deletePreRegister = (id) => async (dispatch, getState) => {
         e.response && e.response.data.detail
           ? e.response.data
           : e.response && e.response.data
-          ? e.response.data.message
-          : e.response,
+            ? e.response.data.message
+            : e.response,
     });
   }
 };
@@ -600,8 +637,8 @@ export const fetchChildrenSayNames = () => async (dispatch, getState) => {
         e.response && e.response.data.detail
           ? e.response.data
           : e.response && e.response.data
-          ? e.response.data.message
-          : e.response,
+            ? e.response.data.message
+            : e.response,
     });
   }
 };

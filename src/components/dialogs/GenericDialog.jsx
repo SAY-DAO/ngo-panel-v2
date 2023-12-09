@@ -30,9 +30,6 @@ export default function GenericDialog({ open, setOpen, dialogValues }) {
     if (dialogValues.type === 'deletePreregister') {
       dispatch(deletePreRegister(dialogValues.preRegisterId));
     }
-    if (dialogValues.type === 'resetPreregister') {
-      // dispatch(deletePreRegister(dialogValues.preRegisterId));
-    }
     setOpen(false);
   };
 

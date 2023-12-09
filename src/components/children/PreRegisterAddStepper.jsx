@@ -42,7 +42,7 @@ import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import VoiceBar from '../VoiceBar';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
-import { updatePreRegisterChild } from '../../redux/actions/childrenAction';
+import { preparePreRegisterChild } from '../../redux/actions/childrenAction';
 import { CHILDREN_PRE_REGISTER_LIST } from '../../routes/RouteConstants';
 
 const steps = ['child.steps.first', 'child.steps.second', 'child.steps.third'];
@@ -76,7 +76,7 @@ export default function PreRegisterAddStepper() {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const { loading, updated, error } = useSelector((state) => state.childPreRegister);
+  const { loading, prepared, error } = useSelector((state) => state.childPreRegister);
 
   const validationSchema = Yup.object().shape({
     housingStatus: Yup.string().required('Please enter child housing'),
@@ -240,10 +240,10 @@ export default function PreRegisterAddStepper() {
   ]);
 
   useEffect(() => {
-    if (updated) {
+    if (prepared) {
       navigate(CHILDREN_PRE_REGISTER_LIST);
     }
-  }, [updated]);
+  }, [prepared]);
 
   // country
   useEffect(() => {
@@ -291,7 +291,7 @@ export default function PreRegisterAddStepper() {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     dispatch(
-      updatePreRegisterChild({
+      preparePreRegisterChild({
         ngoId,
         swId,
         bio: data.bio_translations_fa,
