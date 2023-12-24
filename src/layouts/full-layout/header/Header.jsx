@@ -327,11 +327,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           <Typography>
             <strong>{t('alert.title')}</strong>
           </Typography>
-          <Typography variant="body2" component="ul">
-            <li>{t('alert.body4')}</li>
-            <li>{t('alert.body5')}</li>
-            <li>{t('alert.body6')}</li>
-          </Typography>
+          <Typography variant="body2">{t('alert.body7')}</Typography>
         </Alert>
       )}
       <Toolbar>
@@ -384,11 +380,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             <Typography>
               <strong>{t('alert.title')}</strong>
             </Typography>
-            <Typography variant="body2" component="ul">
-              <li>{t('alert.body4')}</li>
-              <li>{t('alert.body5')}</li>
-              <li>{t('alert.body6')}</li>
-            </Typography>
+            <Typography variant="body2">{t('alert.body7')}</Typography>
           </Alert>
         )}
         <Drawer
