@@ -14,7 +14,6 @@ import {
   Drawer,
   Badge,
   Chip,
-  Alert,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 // Dropdown Component
@@ -318,18 +317,18 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     dispatch(openTicketing(true));
   };
 
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   return (
     <AppBar sx={sx} elevation={0} className={customClass}>
-      {!lgUp && (
+      {/* {!lgUp && (
         <Alert severity="warning">
           <Typography>
             <strong>{t('alert.title')}</strong>
           </Typography>
           <Typography variant="body2">{t('alert.body7')}</Typography>
         </Alert>
-      )}
+      )} */}
       <Toolbar>
         {mdUp ? <LogoIcon /> : ''}
         <IconButton
@@ -375,14 +374,14 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="search" width="20" height="20" />
         </IconButton> */}
-        {lgUp && (
+        {/* {lgUp && (
           <Alert severity="warning">
             <Typography>
               <strong>{t('alert.title')}</strong>
             </Typography>
             <Typography variant="body2">{t('alert.body7')}</Typography>
           </Alert>
-        )}
+        )} */}
         <Drawer
           anchor="top"
           open={showSearchDrawer}
