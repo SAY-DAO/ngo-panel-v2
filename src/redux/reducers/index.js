@@ -48,6 +48,7 @@ import {
   needUpdateReducer,
   swNeedListReducer,
   unconfirmedReducer,
+  updateArrivalsReducer,
 } from './needReducer';
 import { receiptAddReducer, receiptDeleteReducer, receiptsListReducer } from './reportReducer';
 import {
@@ -159,4 +160,5 @@ export default combineReducers({
   mileStone: milestoneReducer,
   midjourney: midjourneyReducer,
   deletedOld: deleteOldNeedsReducer,
+  updateArrivals: updateArrivalsReducer,
 });

@@ -185,7 +185,7 @@ const AnalyticNeedTimeLine = () => {
   }, [needsResult]);
   return (
     <>
-      {!needsResult || loadingSwDetails ? (
+      {!needsResult || !chartValues || loadingSwDetails ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -195,8 +195,8 @@ const AnalyticNeedTimeLine = () => {
             <DashboardCard custompadding="1" title="Timeline" action={<AnalyticSelect />}>
               {/* chart */}
               <Chart
-                options={chartValues && chartValues.optionsTimeLine}
-                series={chartValues && chartValues.seriesTimeLine}
+                options={chartValues.optionsTimeLine}
+                series={chartValues.seriesTimeLine}
                 type="line"
                 height="300"
                 style={{ direction: 'ltr' }}

@@ -48,9 +48,15 @@ import {
   DELETE_OLD_NEEDS_REQUEST,
   DELETE_OLD_NEEDS_SUCCESS,
   DELETE_OLD_NEEDS_FAIL,
+  UPDATE_ARRIVALS_REQUEST,
+  UPDATE_ARRIVALS_SUCCESS,
+  UPDATE_ARRIVALS_FAIL,
   DELETE_CANDIDATES_REQUEST,
   DELETE_CANDIDATES_SUCCESS,
   DELETE_CANDIDATES_FAIL,
+  UPDATE_CANDIDATES_REQUEST,
+  UPDATE_CANDIDATES_SUCCESS,
+  UPDATE_CANDIDATES_FAIL,
 } from '../constants/needConstant';
 
 export const fetchAllNeeds = (ngoId, take) => async (dispatch, getState) => {
@@ -594,6 +600,37 @@ export const deleteOldNeeds = () => async (dispatch, getState) => {
 };
 
 
+export const updateArrivedNeeds = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_ARRIVALS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/needs/update/arrivals`, config);
+
+    dispatch({
+      type: UPDATE_ARRIVALS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_ARRIVALS_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+    });
+  }
+};
+
 export const deleteCandidates = () => async (dispatch, getState) => {
   try {
     dispatch({ type: DELETE_CANDIDATES_REQUEST });
@@ -619,6 +656,35 @@ export const deleteCandidates = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: DELETE_CANDIDATES_FAIL,
+      payload:
+        e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
+    });
+  }
+};
+
+export const updateCandidates = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_CANDIDATES_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+    const { data } = await daoApi.get(`/needs/update/candidates`, config);
+    dispatch({
+      type: UPDATE_CANDIDATES_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_CANDIDATES_FAIL,
       payload:
         e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });

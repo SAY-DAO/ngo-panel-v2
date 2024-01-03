@@ -51,6 +51,12 @@ import {
   DELETE_OLD_NEEDS_REQUEST,
   DELETE_OLD_NEEDS_SUCCESS,
   DELETE_OLD_NEEDS_FAIL,
+  UPDATE_ARRIVALS_REQUEST,
+  UPDATE_ARRIVALS_SUCCESS,
+  UPDATE_ARRIVALS_FAIL,
+  UPDATE_CANDIDATES_REQUEST,
+  UPDATE_CANDIDATES_SUCCESS,
+  UPDATE_CANDIDATES_FAIL,
   DELETE_CANDIDATES_REQUEST,
   DELETE_CANDIDATES_SUCCESS,
   DELETE_CANDIDATES_FAIL,
@@ -249,6 +255,25 @@ export const deleteOldNeedsReducer = (state = {}, action) => {
     case DELETE_CANDIDATES_SUCCESS:
       return { loading: false, success: true, candidates: action.payload };
     case DELETE_CANDIDATES_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const updateArrivalsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_ARRIVALS_REQUEST:
+      return { count: state.count, loading: true, success: false };
+    case UPDATE_ARRIVALS_SUCCESS:
+      return { count: state.count, loading: false, success: true, result: action.payload };
+    case UPDATE_ARRIVALS_FAIL:
+      return { count: state.count, loading: false, error: action.payload };
+    case UPDATE_CANDIDATES_REQUEST:
+      return { loading: true, success: false };
+    case UPDATE_CANDIDATES_SUCCESS:
+      return { loading: false, success: true, arrivedCandidates: action.payload };
+    case UPDATE_CANDIDATES_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
