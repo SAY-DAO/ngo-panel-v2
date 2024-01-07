@@ -36,6 +36,7 @@ export default function ChildPreRegisterUpdateDialog({
     register,
     control,
     watch,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -51,6 +52,7 @@ export default function ChildPreRegisterUpdateDialog({
   const handleClose = () => {
     setOpen(false);
     setUpdateDialogValues();
+    reset();
   };
 
   const onSubmit = async (data) => {
