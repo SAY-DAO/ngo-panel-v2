@@ -324,7 +324,6 @@ export const signTransaction =
         payload: { transaction, ipfs, signature },
       });
     } catch (e) {
-      console.log(e.response.data);
       dispatch({
         type: SIGNATURE_FAIL,
         payload:

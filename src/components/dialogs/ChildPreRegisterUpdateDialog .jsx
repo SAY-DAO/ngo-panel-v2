@@ -19,7 +19,7 @@ export default function ChildPreRegisterUpdateDialog({
   open,
   setOpen,
   setUpdateDialogValues,
-  dialogValues,
+  updateDialogValues,
 }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -58,7 +58,7 @@ export default function ChildPreRegisterUpdateDialog({
     await sleep(300);
     dispatch(
       updatePreRegisterChild({
-        id: dialogValues.id,
+        id: updateDialogValues.id,
         bio: data.bio_translations_fa,
         educationLevel: Number(data.education),
         schoolType: Number(data.schoolType),
@@ -71,7 +71,7 @@ export default function ChildPreRegisterUpdateDialog({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      {dialogValues && (
+      {updateDialogValues && (
         <Dialog
           open={open}
           onClose={handleClose}
@@ -90,7 +90,7 @@ export default function ChildPreRegisterUpdateDialog({
                   id="firstName_translations_fa"
                   variant="outlined"
                   size="large"
-                  defaultValue={dialogValues.firstName.fa}
+                  defaultValue={updateDialogValues.firstName.fa}
                   sx={{ width: '100%' }}
                   control={control}
                   {...register('firstName_translations_fa')}
@@ -104,7 +104,7 @@ export default function ChildPreRegisterUpdateDialog({
                 <TextField
                   id="lastName_translations_fa"
                   variant="outlined"
-                  defaultValue={dialogValues.lastName.fa}
+                  defaultValue={updateDialogValues.lastName.fa}
                   size="large"
                   control={control}
                   sx={{ width: '100%' }}
@@ -120,7 +120,7 @@ export default function ChildPreRegisterUpdateDialog({
                   minRows={4}
                   multiline
                   id="bio_translations_fa"
-                  defaultValue={dialogValues.bio.fa}
+                  defaultValue={updateDialogValues.bio.fa}
                   variant="outlined"
                   size="small"
                   control={control}
@@ -138,7 +138,7 @@ export default function ChildPreRegisterUpdateDialog({
                   <CustomSelect
                     labelId="housingStatus"
                     id="multiple-education"
-                    value={watch('housingStatus') || dialogValues.housingStatus}
+                    value={watch('housingStatus') || updateDialogValues.housingStatus}
                     control={control}
                     register={{ ...register('housingStatus') }}
                     error={!!errors.housingStatus}
@@ -161,7 +161,7 @@ export default function ChildPreRegisterUpdateDialog({
                     labelId="education-controlled-open-select-label"
                     id="education"
                     control={control}
-                    value={watch('education') || dialogValues.educationLevel}
+                    value={watch('education') || updateDialogValues.educationLevel}
                     register={{ ...register('education') }}
                     error={!!errors.education}
                   >
@@ -180,7 +180,7 @@ export default function ChildPreRegisterUpdateDialog({
                     labelId="schoolType-controlled-open-select-label"
                     id="schoolType"
                     control={control}
-                    value={watch('schoolType') || dialogValues.schoolType}
+                    value={watch('schoolType') || updateDialogValues.schoolType}
                     register={{ ...register('schoolType') }}
                     error={!!errors.schoolType}
                   >
@@ -217,6 +217,6 @@ export default function ChildPreRegisterUpdateDialog({
 ChildPreRegisterUpdateDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
-  dialogValues: PropTypes.object,
+  updateDialogValues: PropTypes.object,
   setUpdateDialogValues: PropTypes.func,
 };
