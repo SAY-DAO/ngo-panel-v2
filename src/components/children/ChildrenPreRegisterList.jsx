@@ -132,6 +132,7 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
         <ChildPreRegisterUpdateDialog
           open={openUpdate}
           setOpen={setOpenUpdate}
+          setDialogValues={setUpdateDialogValues}
           dialogValues={updateDialogValues}
         />
         <ChildPreRegisterApproveDialog

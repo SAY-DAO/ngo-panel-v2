@@ -15,7 +15,12 @@ import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { EducationEnum, HousingStatusEnum, SchoolTypeEnum } from '../../utils/types';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
 
-export default function ChildPreRegisterUpdateDialog({ open, setOpen, dialogValues }) {
+export default function ChildPreRegisterUpdateDialog({
+  open,
+  setOpen,
+  setUpdateDialogValues,
+  dialogValues,
+}) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -45,6 +50,7 @@ export default function ChildPreRegisterUpdateDialog({ open, setOpen, dialogValu
 
   const handleClose = () => {
     setOpen(false);
+    setUpdateDialogValues();
   };
 
   const onSubmit = async (data) => {
@@ -212,4 +218,5 @@ ChildPreRegisterUpdateDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
   dialogValues: PropTypes.object,
+  setUpdateDialogValues: PropTypes.func,
 };

@@ -380,7 +380,6 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
         Authorization: userInfo && userInfo.access_token,
       },
     };
-    console.log(values);
     const formData = new FormData();
     formData.append('status', values.statusId);
 
