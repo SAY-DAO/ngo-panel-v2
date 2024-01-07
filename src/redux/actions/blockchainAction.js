@@ -113,10 +113,10 @@ export const walletVerify = (message, signature) => async (dispatch, getState) =
         e.response && e.response.data.detail
           ? e.response.data.detail
           : e.response && e.response.data.message
-          ? e.response.data.message
-          : e.response && e.response.statusText
-          ? e.response.statusText
-          : { reason: e.reason, code: e.code }, // metamask signature
+            ? e.response.data.message
+            : e.response && e.response.statusText
+              ? e.response.statusText
+              : { reason: e.reason, code: e.code }, // metamask signature
     });
   }
 };
@@ -151,8 +151,8 @@ export const fetchWalletInformation = () => async (dispatch, getState) => {
         e.response && e.response.data.detail
           ? e.response.data.detail
           : e.response && e.response.data.message
-          ? e.response.data.message
-          : { reason: e.reason, code: e.code }, // metamask signature
+            ? e.response.data.message
+            : { reason: e.reason, code: e.code }, // metamask signature
     });
   }
 };
@@ -324,15 +324,15 @@ export const signTransaction =
         payload: { transaction, ipfs, signature },
       });
     } catch (e) {
-      console.log(e);
+      console.log(e.response.data);
       dispatch({
         type: SIGNATURE_FAIL,
         payload:
           e.response && e.response.data.detail
             ? e.response.data.detail
             : e.response && e.response.data.message
-            ? { message: e.response.data.message, status: e.response.data.status }
-            : { reason: e.reason, code: e.code }, // metamask signature
+              ? { message: e.response.data.message, status: e.response.data.statusCode }
+              : { reason: e.reason, code: e.code }, // metamask signature
       });
     }
   };
@@ -512,8 +512,8 @@ export const deleteContribution = (contributionId) => async (dispatch, getState)
         e.response && e.response.data.detail
           ? e.response.data
           : e.response && e.response.data
-          ? e.response.data.message
-          : e.response,
+            ? e.response.data.message
+            : e.response,
     });
   }
 };
@@ -547,8 +547,8 @@ export const deleteSignature = (signatureHash) => async (dispatch, getState) => 
         e.response && e.response.data.detail
           ? e.response.data
           : e.response && e.response.data
-          ? e.response.data.message
-          : e.response,
+            ? e.response.data.message
+            : e.response,
     });
   }
 };
