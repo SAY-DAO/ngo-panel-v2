@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { alpha, styled } from '@mui/material/styles';
-import TreeView from '@mui/lab/TreeView';
-import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { animated, useSpring } from 'react-spring';
 import { Card, CircularProgress, Collapse, Grid, Typography } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
