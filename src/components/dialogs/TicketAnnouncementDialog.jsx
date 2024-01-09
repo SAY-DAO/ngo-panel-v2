@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import { useDispatch, useSelector } from 'react-redux';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import AdapterJalaali from '@date-io/jalaali';
+import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -126,7 +126,7 @@ export default function TicketAnnouncementDialog({
                 )
               )}
 
-              <LocalizationProvider dateAdapter={AdapterJalaali} adapterLocale="fa-IR">
+              <LocalizationProvider dateAdapter={AdapterMomentJalaali} adapterLocale="fa-IR">
                 <DateTimePicker
                   id="deliveredToNgo"
                   value={arrivalDate}

@@ -25,7 +25,7 @@ import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
 import { format } from 'date-fns';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import AdapterJalaali from '@date-io/jalaali';
+import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/types';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
@@ -286,7 +286,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
                             {t('report.statusChange.expectedDeliveryToNgo')}
                           </CustomFormLabel>
-                          <LocalizationProvider dateAdapter={AdapterJalaali} adapterLocale="fa-IR">
+                          <LocalizationProvider dateAdapter={AdapterMomentJalaali} adapterLocale="fa-IR">
                             <DateTimePicker
                               id="expProductToNgo"
                               value={productExpDelivery}
@@ -365,7 +365,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <CustomFormLabel htmlFor="product-delivery-to-ngo">
                             {t('report.statusChange.deliveredToNgo')}
                           </CustomFormLabel>
-                          <LocalizationProvider dateAdapter={AdapterJalaali} adapterLocale="fa-IR">
+                          <LocalizationProvider dateAdapter={AdapterMomentJalaali} adapterLocale="fa-IR">
                             <DateTimePicker
                               id="productDeliveredToNgo"
                               value={productDelivered}
