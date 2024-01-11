@@ -623,7 +623,10 @@ const ReportStatusTable = () => {
           {typeId === NeedTypeEnum.PRODUCT && <TableCell align="center">{row.title}</TableCell>}
           {typeId === NeedTypeEnum.PRODUCT && (
             <TableCell>
-              <Tooltip title={row.informations ? row.informations : ''} placement="top-end">
+              <Tooltip
+                title={row.informations ? row.informations : row.details ? row.details : ''}
+                placement="top-end"
+              >
                 <Typography
                   color="textSecondary"
                   variant="body1"
@@ -637,7 +640,7 @@ const ReportStatusTable = () => {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {row.informations}
+                  {row.informations ? row.informations : row.details ? row.details : ''}
                 </Typography>
               </Tooltip>
             </TableCell>
@@ -898,6 +901,7 @@ const ReportStatusTable = () => {
       name: PropTypes.string,
       title: PropTypes.string,
       informations: PropTypes.string,
+      details: PropTypes.string,
       paid: PropTypes.number,
       expected_delivery_date: PropTypes.string,
       purchase_cost: PropTypes.number,

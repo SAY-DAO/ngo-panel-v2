@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, Grid, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import PageContainer from '../../components/container/PageContainer';
@@ -62,7 +62,7 @@ const DaoMileStoneForm = ({ handleDateChange, dueDate, register, control, errors
             </Grid>
             <Grid item xs>
               <CustomFormLabel htmlFor="dueDate">{t('dao.milestone.duetime')}</CustomFormLabel>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
                 <DesktopDatePicker
                   id="dueDate"
                   inputFormat="MM/dd/yyyy"

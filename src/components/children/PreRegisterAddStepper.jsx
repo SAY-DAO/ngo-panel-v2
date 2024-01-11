@@ -23,7 +23,7 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import FeatherIcon from 'feather-icons-react';
@@ -576,7 +576,7 @@ export default function PreRegisterAddStepper() {
                   </Grid>
                   <Grid item md={4} xs={12}>
                     <CustomFormLabel htmlFor="birthDate">{t('child.birthDate')}</CustomFormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
                       <DesktopDatePicker
                         id="birthDate"
                         inputFormat="MM/dd/yyyy"

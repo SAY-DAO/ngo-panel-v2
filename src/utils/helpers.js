@@ -122,7 +122,6 @@ export function getSAYRoleInteger(sayRole) {
 
 export function getSAYRoleString(sayRole) {
   let roleString;
-  console.log(sayRole);
   if (sayRole === SAYPlatformRoles.AUDITOR) {
     roleString = 'auditor';
   } else if (sayRole === SAYPlatformRoles.SOCIAL_WORKER) {

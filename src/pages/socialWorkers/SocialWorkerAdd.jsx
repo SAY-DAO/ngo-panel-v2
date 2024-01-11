@@ -26,7 +26,7 @@ import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -446,7 +446,7 @@ const SocialWorkerAdd = () => {
                     <CustomFormLabel htmlFor="birthDate">
                       {t('socialWorker.birthDate')}
                     </CustomFormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
                       <DesktopDatePicker
                         id="birthDate"
                         inputFormat="MM/dd/yyyy"

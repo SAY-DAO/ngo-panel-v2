@@ -11,6 +11,7 @@ import {
   Autocomplete,
   Box,
   Card,
+  FormHelperText,
   Grid,
   InputAdornment,
   OutlinedInput,
@@ -23,9 +24,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
-import { format } from 'date-fns';
+import { format } from 'date-fns-jalali';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/types';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { updateNeedStatus } from '../../redux/actions/needsAction';
@@ -83,7 +84,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (need) {
       setValue('paid', need.cost);
       // setValue('purchasedCost', need.cost);
-      setProductDelivered(need.expected_delivery_date);
+      setProductDelivered(new Date(need.expected_delivery_date));
     }
   }, [need]);
 
@@ -286,7 +287,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <CustomFormLabel htmlFor="exp-product-delivery-to-ngo">
                             {t('report.statusChange.expectedDeliveryToNgo')}
                           </CustomFormLabel>
-                          <LocalizationProvider dateAdapter={AdapterMomentJalaali} adapterLocale="fa-IR">
+                          <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
                             <DateTimePicker
                               id="expProductToNgo"
                               value={productExpDelivery}
@@ -330,13 +331,13 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                             control={control}
                             {...register('retailerPaid', { required: true })}
                             error={!!errors.retailerPaid}
-                            helperText={
-                              errors && errors.retailerPaid && errors.retailerPaid.message
-                            }
                             endAdornment={
                               <InputAdornment position="end">{t('currency.toman')}</InputAdornment>
                             }
                           />
+                          <FormHelperText id="standard-weight-helper-text">
+                            {errors && errors.retailerPaid && errors.retailerPaid.message}
+                          </FormHelperText>
                         </Grid>
 
                         <Grid item lg={6} md={12} xs={12}>
@@ -365,7 +366,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <CustomFormLabel htmlFor="product-delivery-to-ngo">
                             {t('report.statusChange.deliveredToNgo')}
                           </CustomFormLabel>
-                          <LocalizationProvider dateAdapter={AdapterMomentJalaali} adapterLocale="fa-IR">
+                          <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
                             <DateTimePicker
                               id="productDeliveredToNgo"
                               value={productDelivered}
