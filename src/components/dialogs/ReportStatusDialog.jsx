@@ -24,7 +24,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
-import { format } from 'date-fns-jalali';
+import { format } from 'date-fns';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { NeedTypeEnum, ProductStatusEnum, ServiceStatusEnum } from '../../utils/types';
@@ -84,7 +84,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (need) {
       setValue('paid', need.cost);
       // setValue('purchasedCost', need.cost);
-      setProductDelivered(need.expected_delivery_date);
+      setProductDelivered(new Date(need.expected_delivery_date));
     }
   }, [need]);
 

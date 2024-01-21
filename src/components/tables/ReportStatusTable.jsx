@@ -414,7 +414,6 @@ const ReportStatusTable = () => {
     }
 
     if (active && swInfo) {
-      console.log(swInfo.typeId);
       // super admin & admin
       if (
         (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
