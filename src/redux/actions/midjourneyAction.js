@@ -92,7 +92,7 @@ export const deleteMidjourneyFolder = (needFlaskId) => async (dispatch, getState
         flaskId: userInfo && userInfo.id,
       },
     };
-    const { data } = await daoApi.delete(`/midjourney/images/${needFlaskId}`, config);
+    const { data } = await daoApi.delete(`/midjourney/bad/images/${needFlaskId}`, config);
 
     dispatch({
       type: DELETE_MIDJOURNEY_FOLDER_SUCCESS,

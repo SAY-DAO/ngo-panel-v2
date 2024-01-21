@@ -96,7 +96,7 @@ export default function TicketAnnouncementDialog({
       need.type === NeedTypeEnum.PRODUCT &&
       need.status === ProductStatusEnum.PURCHASED_PRODUCT
     ) {
-      setArrivalDate(new Date(need.expected_delivery_date));
+      setArrivalDate(need.expected_delivery_date);
     }
   }, [need]);
 

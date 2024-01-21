@@ -661,13 +661,15 @@ const ReportStatusTable = () => {
             </Typography>
           </TableCell>
           <TableCell align="center">
-            <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
-              {NeedTypeEnum.PRODUCT && row.status > ProductStatusEnum.COMPLETE_PAY
-                ? activeDir === 'rtl'
-                  ? dateConvertor(row.expected_delivery_date)
-                  : row.expected_delivery_date
-                : '-'}
-            </Typography>
+            {row.type === NeedTypeEnum.PRODUCT && (
+              <Typography sx={{ color: 'gray' }} variant="h6" fontWeight="400">
+                {row.status > ProductStatusEnum.COMPLETE_PAY
+                  ? activeDir === 'rtl'
+                    ? dateConvertor(row.expected_delivery_date)
+                    : row.expected_delivery_date
+                  : '-'}
+              </Typography>
+            )}
           </TableCell>
         </TableRow>
         <TableRow>

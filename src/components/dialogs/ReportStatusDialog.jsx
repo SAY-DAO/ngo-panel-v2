@@ -84,7 +84,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (need) {
       setValue('paid', need.cost);
       // setValue('purchasedCost', need.cost);
-      setProductDelivered(new Date(need.expected_delivery_date));
+      setProductDelivered(need.expected_delivery_date);
     }
   }, [need]);
 
