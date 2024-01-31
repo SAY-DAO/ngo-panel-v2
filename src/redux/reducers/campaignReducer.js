@@ -1,0 +1,31 @@
+/* eslint-disable import/prefer-default-export */
+import {
+  LIST_CAMPAIGN_REQUEST,
+  LIST_CAMPAIGN_FAIL,
+  LIST_CAMPAIGN_SUCCESS,
+  CREATE_CAMPAIGN_REQUEST,
+  CREATE_CAMPAIGN_FAIL,
+  CREATE_CAMPAIGN_SUCCESS,
+  CREATE_CAMPAIGN_RESET,
+} from '../constants/campaignConstants';
+
+export const campaignsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CREATE_CAMPAIGN_REQUEST:
+      return { ...state, loading: true, success: false };
+    case CREATE_CAMPAIGN_SUCCESS:
+      return { ...state, loading: false, success: true, created: action.payload };
+    case CREATE_CAMPAIGN_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case CREATE_CAMPAIGN_RESET:
+      return {};
+    case LIST_CAMPAIGN_REQUEST:
+      return { ...state, loading: true, success: false };
+    case LIST_CAMPAIGN_SUCCESS:
+      return { ...state, loading: false, success: true, campaigns: action.payload };
+    case LIST_CAMPAIGN_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};

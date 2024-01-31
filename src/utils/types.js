@@ -172,8 +172,18 @@ export const NeedCategoryEnum = {
 };
 
 
-export const PreRegisterStatusEnum ={
-  NOT_REGISTERED : 0,
-  PRE_REGISTERED : 1,
-  CONFIRMED : 2,
+export const PreRegisterStatusEnum = {
+  NOT_REGISTERED: 0,
+  PRE_REGISTERED: 1,
+  CONFIRMED: 2,
+}
+
+export const CampaignNameEnum = {
+  MONTHLY_CAMPAIGNS: 'MONTHLY_CAMPAIGNS',
+  CHILD_CONFIRMATION: 'CHILD_CONFIRMATION'
+}
+
+export const CampaignTypeEnum = {
+  EMAIL: 1,
+  SMS: 2
 }

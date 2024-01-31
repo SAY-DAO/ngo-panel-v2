@@ -85,10 +85,10 @@ import {
 } from './analyticReducer';
 import { midjourneyReducer } from './midjourneyReducer';
 import { commentsReducer } from './commentReducer';
+import { campaignsReducer } from './campaignReducer';
 
 export default combineReducers({
   CustomizerReducer,
-  commentResult: commentsReducer,
   ecoContribution: contributionReducer,
   familyAnalyitics: analyticsFamilyReducer,
   childNeedsAnalytics: AnalyticChildNeedsReducer,
@@ -161,4 +161,6 @@ export default combineReducers({
   midjourney: midjourneyReducer,
   deletedOld: deleteOldNeedsReducer,
   updateArrivals: updateArrivalsReducer,
+  commentResult: commentsReducer,
+  campaignResult: campaignsReducer,
 });

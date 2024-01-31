@@ -292,10 +292,13 @@
       "title": "Midjourney AI"
     },
     "comment": {
-      "title": "Comment"
+      "title": "Comments"
     },
     "contribution": {
-      "title": "Contribution"
+      "title": "Contributions"
+    },
+    "campaign": {
+      "title": "Campaigns"
     },
     "daoHeader": "DAO",
     "dashboard": "Dashboard",

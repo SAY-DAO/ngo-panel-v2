@@ -271,90 +271,100 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                 >
                   {theTicket &&
                     theTicket.ticketHistories &&
-                    theTicket.ticketHistories.map((h) =>
-                      h.from !== swInfo.id ? (
-                        <Box display="flex" alignItems="start" flexDirection="row" key={h.id}>
-                          <ListItemAvatar>
-                            <Avatar
-                              alt="user"
-                              src={
-                                theTicket.contributors.find((p) => p.flaskId === h.from) &&
-                                prepareUrl(
-                                  theTicket.contributors.find((p) => p.flaskId === h.from)
-                                    .avatarUrl,
-                                )
-                              }
-                              sx={{ backgroundColor: (theme) => theme.palette.grey[600] }}
-                            />
-                          </ListItemAvatar>
-                          <div className="pl-3">
+                    theTicket.ticketHistories
+                      .sort((a, b) => {
+                        return b.createdAt - a.createdAt;
+                      })
+                      .map((h) =>
+                        h.from !== swInfo.id ? (
+                          <Box display="flex" alignItems="start" flexDirection="row" key={h.id}>
+                            <ListItemAvatar>
+                              <Avatar
+                                alt="user"
+                                src={
+                                  theTicket.contributors.find((p) => p.flaskId === h.from) &&
+                                  prepareUrl(
+                                    theTicket.contributors.find((p) => p.flaskId === h.from)
+                                      .avatarUrl,
+                                  )
+                                }
+                                sx={{ backgroundColor: (theme) => theme.palette.grey[600] }}
+                              />
+                            </ListItemAvatar>
+                            <div className="pl-3">
+                              <Box
+                                mb={1}
+                                sx={{
+                                  p: 2,
+                                  backgroundColor: 'primary.light',
+                                  borderRadius: '6px',
+                                  color: (theme) =>
+                                    `${
+                                      theme.palette.mode === 'dark'
+                                        ? 'rgba(0, 0, 0, 0.87)'
+                                        : 'rgba(0, 0, 0, 0.87)'
+                                    }`,
+                                }}
+                              >
+                                {h.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                                  <CampaignIcon sx={{ mb: 0, mr: 1 }} />
+                                )}
+                                {h.message}
+
+                                <Typography
+                                  variant="subtitle2"
+                                  sx={{ color: 'gray', fontSize: 12 }}
+                                >
+                                  {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
+                                  {dateTimeConvertor(h.createdAt)}
+                                </Typography>
+                              </Box>
+                            </div>
+                          </Box>
+                        ) : (
+                          <Box key={h.id + 1}>
                             <Box
                               mb={1}
-                              sx={{
-                                p: 2,
-                                backgroundColor: 'primary.light',
-                                borderRadius: '6px',
-                                color: (theme) =>
-                                  `${
-                                    theme.palette.mode === 'dark'
-                                      ? 'rgba(0, 0, 0, 0.87)'
-                                      : 'rgba(0, 0, 0, 0.87)'
-                                  }`,
-                              }}
+                              display="flex"
+                              alignItems="flex-end"
+                              flexDirection="row-reverse"
+                              className="chat-socketContent"
+                              key={h.id}
                             >
-                              {h.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
-                                <CampaignIcon sx={{ mb: 0, mr: 1 }} />
-                              )}
-                              {h.message}
+                              <Box
+                                sx={{
+                                  p: 2,
+                                  backgroundColor: 'secondary.light',
+                                  ml: 'auto',
+                                  borderRadius: '6px',
+                                  color: (theme) =>
+                                    `${
+                                      theme.palette.mode === 'dark'
+                                        ? 'rgba(0, 0, 0, 0.87)'
+                                        : 'rgba(0, 0, 0, 0.87)'
+                                    }`,
+                                }}
+                              >
+                                {h.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
+                                  <CampaignIcon sx={{ mb: 0, mr: 1 }} />
+                                )}
+                                {h.announcement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
+                                  <CampaignIcon sx={{ mb: 0, mr: 1 }} />
+                                )}
+                                {h.message}
 
-                              <Typography variant="subtitle2" sx={{ color: 'gray', fontSize: 12 }}>
-                                {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
-                                {dateTimeConvertor(h.createdAt)}
-                              </Typography>
-                            </Box>
-                          </div>
-                        </Box>
-                      ) : (
-                        <Box key={h.id + 1}>
-                          <Box
-                            mb={1}
-                            display="flex"
-                            alignItems="flex-end"
-                            flexDirection="row-reverse"
-                            className="chat-socketContent"
-                            key={h.id}
-                          >
-                            <Box
-                              sx={{
-                                p: 2,
-                                backgroundColor: 'secondary.light',
-                                ml: 'auto',
-                                borderRadius: '6px',
-                                color: (theme) =>
-                                  `${
-                                    theme.palette.mode === 'dark'
-                                      ? 'rgba(0, 0, 0, 0.87)'
-                                      : 'rgba(0, 0, 0, 0.87)'
-                                  }`,
-                              }}
-                            >
-                              {h.announcement === AnnouncementEnum.ARRIVED_AT_NGO && (
-                                <CampaignIcon sx={{ mb: 0, mr: 1 }} />
-                              )}
-                              {h.announcement === AnnouncementEnum.NGO_RECEIVED_MONEY && (
-                                <CampaignIcon sx={{ mb: 0, mr: 1 }} />
-                              )}
-                              {h.message}
-
-                              <Typography variant="subtitle2" sx={{ color: 'gray', fontSize: 12 }}>
-                                {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
-                                {dateTimeConvertor(h.createdAt)}
-                              </Typography>
+                                <Typography
+                                  variant="subtitle2"
+                                  sx={{ color: 'gray', fontSize: 12 }}
+                                >
+                                  {/* {moment().diff(moment(h.createdAt), 'minutes')} */}
+                                  {dateTimeConvertor(h.createdAt)}
+                                </Typography>
+                              </Box>
                             </Box>
                           </Box>
-                        </Box>
-                      ),
-                    )}
+                        ),
+                      )}
                 </Box>
                 {statusNeed && (
                   <StatusDialog

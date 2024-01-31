@@ -343,6 +343,9 @@
     "contribution": {
       "title": "مشارکت‌ها"
     },
+    "campaign": {
+      "title": "کمپین‌ها"
+    },
     "daoHeader": "DAO",
     "dashboard": "داشبورد",
     "list": "لیست",

@@ -14,6 +14,7 @@ import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import {
   PROFILE_VIEW,
   SW_LIST,
@@ -37,6 +38,7 @@ import {
   MY_SIGNATURES,
   DAO_HOME,
   CHILDREN_PRE_REGISTER_LIST,
+  CAMPAIGN_LIST,
 } from '../../../routes/RouteConstants';
 
 const Menuitems = [
@@ -291,6 +293,21 @@ const Menuitems = [
         title: 'sidebar.list',
         icon: 'list',
         href: CONTRIBUTION,
+        admin: true,
+      },
+    ],
+  },
+  {
+    title: 'sidebar.campaign.title',
+    icon: <MailOutlineIcon />,
+    href: '/admin/campaign',
+    collapse: true,
+    admin: true,
+    children: [
+      {
+        title: 'sidebar.list',
+        icon: 'list',
+        href: CAMPAIGN_LIST,
         admin: true,
       },
     ],
