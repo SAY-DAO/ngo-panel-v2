@@ -54,7 +54,7 @@ export const forceSendCampaign = () => async (dispatch, getState) => {
     };
 
     const { data } = await daoApi.get(
-      `/campaign/send`,
+      `/campaign/send/force`,
       config,
     );
 
