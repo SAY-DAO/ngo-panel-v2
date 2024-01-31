@@ -3,9 +3,9 @@ import {
   LIST_CAMPAIGN_FAIL,
   LIST_CAMPAIGN_REQUEST,
   LIST_CAMPAIGN_SUCCESS,
-  CREATE_CAMPAIGN_REQUEST,
-  CREATE_CAMPAIGN_SUCCESS,
-  CREATE_CAMPAIGN_FAIL,
+  FORCE_SEND_CAMPAIGN_REQUEST,
+  FORCE_SEND_CAMPAIGN_SUCCESS,
+  FORCE_SEND_CAMPAIGN_FAIL,
 } from '../constants/campaignConstants';
 
 import { VirtualFamilyRole } from '../../utils/types';
@@ -39,9 +39,9 @@ export const fetchCampaigns = () => async (dispatch, getState) => {
   }
 };
 
-export const createCampaign = (flaskNeedId, needNestId, message) => async (dispatch, getState) => {
+export const forceSendCampaign = (flaskNeedId, needNestId, message) => async (dispatch, getState) => {
   try {
-    dispatch({ type: CREATE_CAMPAIGN_REQUEST });
+    dispatch({ type: FORCE_SEND_CAMPAIGN_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -56,18 +56,18 @@ export const createCampaign = (flaskNeedId, needNestId, message) => async (dispa
     };
 
     const { data } = await daoApi.post(
-      `/campaign/create`,
+      `/campaign/send`,
       { flaskNeedId, needNestId, vRole: VirtualFamilyRole.SAY, message },
       config,
     );
 
     dispatch({
-      type: CREATE_CAMPAIGN_SUCCESS,
+      type: FORCE_SEND_CAMPAIGN_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: CREATE_CAMPAIGN_FAIL,
+      type: FORCE_SEND_CAMPAIGN_FAIL,
       payload: e.response && e.response.data ? e.response.data.message : e.message,
     });
   }

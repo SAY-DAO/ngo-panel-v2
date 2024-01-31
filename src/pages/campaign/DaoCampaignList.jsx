@@ -15,7 +15,8 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { fetchCampaigns } from '../../redux/actions/campaignAction';
+import { LoadingButton } from '@mui/lab';
+import { fetchCampaigns, forceSendCampaign } from '../../redux/actions/campaignAction';
 import { CampaignTypeEnum } from '../../utils/types';
 import { dateConvertor } from '../../utils/persianToEnglish';
 
@@ -101,61 +102,66 @@ export default function DaoCampaignList() {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 25 }}>
-      {campaigns && (
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Created At</TableCell>
-              <TableCell align="center">Title</TableCell>
-              <TableCell align="center">Type</TableCell>
-              <TableCell align="center">Code</TableCell>
-              <TableCell align="center">Receivers</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? campaigns.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : campaigns
-            ).map((c) => (
-              <TableRow key={c.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell align="center">{dateConvertor(c.createdAt)}</TableCell>
-                <TableCell align="center">{c.title}</TableCell>
-                <TableCell align="center">
-                  {c.type === CampaignTypeEnum.EMAIL ? 'Email' : 'SMS'}
-                </TableCell>
-                <TableCell align="center">{c.campaignCode}</TableCell>
-                <TableCell align="center">{c.receivers.length}</TableCell>
+    <>
+      <LoadingButton variant="outlined" onClick={() => dispatch(forceSendCampaign())}>
+        Force Send Campaign
+      </LoadingButton>
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
+        {campaigns && (
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Created At</TableCell>
+                <TableCell align="center">Title</TableCell>
+                <TableCell align="center">Type</TableCell>
+                <TableCell align="center">Code</TableCell>
+                <TableCell align="center">Receivers</TableCell>
               </TableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? campaigns.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : campaigns
+              ).map((c) => (
+                <TableRow key={c.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell align="center">{dateConvertor(c.createdAt)}</TableCell>
+                  <TableCell align="center">{c.title}</TableCell>
+                  <TableCell align="center">
+                    {c.type === CampaignTypeEnum.EMAIL ? 'Email' : 'SMS'}
+                  </TableCell>
+                  <TableCell align="center">{c.campaignCode}</TableCell>
+                  <TableCell align="center">{c.receivers.length}</TableCell>
+                </TableRow>
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                  colSpan={3}
+                  count={campaigns.meta.totalItems}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
-                count={campaigns.meta.totalItems}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      )}
-    </TableContainer>
+            </TableFooter>
+          </Table>
+        )}
+      </TableContainer>
+    </>
   );
 }
