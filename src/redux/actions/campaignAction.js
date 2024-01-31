@@ -39,7 +39,7 @@ export const fetchCampaigns = () => async (dispatch, getState) => {
   }
 };
 
-export const forceSendCampaign = (flaskNeedId, needNestId, message) => async (dispatch, getState) => {
+export const forceSendCampaign = () => async (dispatch, getState) => {
   try {
     dispatch({ type: FORCE_SEND_CAMPAIGN_REQUEST });
 
@@ -55,9 +55,8 @@ export const forceSendCampaign = (flaskNeedId, needNestId, message) => async (di
       },
     };
 
-    const { data } = await daoApi.post(
+    const { data } = await daoApi.get(
       `/campaign/send`,
-      { flaskNeedId, needNestId, vRole: VirtualFamilyRole.SAY, message },
       config,
     );
 
