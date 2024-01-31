@@ -115,7 +115,7 @@ export default function DaoCampaignList() {
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? campaigns.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              ? campaigns.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : campaigns
             ).map((c) => (
               <TableRow key={c.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -139,7 +139,7 @@ export default function DaoCampaignList() {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={campaigns.length}
+                count={campaigns.meta.totalItems}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
