@@ -8,8 +8,6 @@ import {
   FORCE_SEND_CAMPAIGN_FAIL,
 } from '../constants/campaignConstants';
 
-import { VirtualFamilyRole } from '../../utils/types';
-
 export const fetchCampaigns = () => async (dispatch, getState) => {
   try {
     dispatch({ type: LIST_CAMPAIGN_REQUEST });
