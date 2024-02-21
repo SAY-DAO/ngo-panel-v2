@@ -48,6 +48,10 @@ import {
   DUPLICATES_NEEDS_SUCCESS,
   DUPLICATES_NEEDS_FAIL,
   DUPLICATES_NEEDS_RESET,
+  AUTO_CONFIRM_NEEDS_REQUEST,
+  AUTO_CONFIRM_NEEDS_SUCCESS,
+  AUTO_CONFIRM_NEEDS_FAIL,
+  AUTO_CONFIRM_NEEDS_RESET,
   DELETE_OLD_NEEDS_REQUEST,
   DELETE_OLD_NEEDS_SUCCESS,
   DELETE_OLD_NEEDS_FAIL,
@@ -237,6 +241,21 @@ export const duplicatesReducer = (state = { success: false }, action) => {
     case DUPLICATES_NEEDS_FAIL:
       return { loading: false, error: action.payload };
     case DUPLICATES_NEEDS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const autoConfirmReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case AUTO_CONFIRM_NEEDS_REQUEST:
+      return { loading: true };
+    case AUTO_CONFIRM_NEEDS_SUCCESS:
+      return { loading: false, success: true, result: action.payload };
+    case AUTO_CONFIRM_NEEDS_FAIL:
+      return { loading: false, error: action.payload };
+    case AUTO_CONFIRM_NEEDS_RESET:
       return {};
     default:
       return state;

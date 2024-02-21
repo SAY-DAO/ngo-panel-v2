@@ -19,6 +19,14 @@ import {
   MY_PAGE_SUCCESS,
   MY_PAGE_FAIL,
   MY_PAGE_RESET,
+  USER_SEARCH_REQUEST,
+  USER_SEARCH_SUCCESS,
+  USER_SEARCH_FAIL,
+  USER_SEARCH_RESET,
+  USER_CHILDREN_REQUEST,
+  USER_CHILDREN_SUCCESS,
+  USER_CHILDREN_FAIL,
+  USER_CHILDREN_RESET,
   USER_CHANGE_PASSWORD_REQUEST,
   USER_CHANGE_PASSWORD_SUCCESS,
   USER_CHANGE_PASSWORD_FAIL,
@@ -118,3 +126,33 @@ export const userChangePasswordReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const userSearchReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_SEARCH_REQUEST:
+      return { loading: true };
+    case USER_SEARCH_SUCCESS:
+      return { loading: false, success: true, result: action.payload };
+    case USER_SEARCH_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_SEARCH_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const userChildrenReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_CHILDREN_REQUEST:
+      return { loading: true };
+    case USER_CHILDREN_SUCCESS:
+      return { loading: false, success: true, userChildren: action.payload };
+    case USER_CHILDREN_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_CHILDREN_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+

@@ -23,7 +23,7 @@ export const fetchCampaigns = () => async (dispatch, getState) => {
       },
     };
 
-    const response = await daoApi.get(`/campaign/all`, config);
+    const response = await daoApi.get(`/campaign/all/sent`, config);
     dispatch({
       type: LIST_CAMPAIGN_SUCCESS,
       payload: response.data,

@@ -281,6 +281,9 @@
     "providers": {
       "title": "Providers"
     },
+    "users": {
+      "title": "Users"
+    },
     "socialWorkers": {
       "title": "Social Workers",
       "migrate": "Migrate"
@@ -303,6 +306,7 @@
     "daoHeader": "DAO",
     "dashboard": "Dashboard",
     "list": "List",
+    "confirm": "Confirm",
     "add": "Add",
     "preregister": "Pre Register",
     "preregisterList": "Pre Register List"

@@ -18,6 +18,9 @@ import {
   DUPLICATES_NEEDS_FAIL,
   DUPLICATES_NEEDS_REQUEST,
   DUPLICATES_NEEDS_SUCCESS,
+  AUTO_CONFIRM_NEEDS_FAIL,
+  AUTO_CONFIRM_NEEDS_REQUEST,
+  AUTO_CONFIRM_NEEDS_SUCCESS,
   CHILD_ONE_NEED_REQUEST,
   CHILD_ONE_NEED_SUCCESS,
   CHILD_ONE_NEED_FAIL,
@@ -162,35 +165,35 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
 
 export const fetchChildNeeds =
   (childId, take = 500) =>
-  async (dispatch, getState) => {
-    try {
-      dispatch({ type: CHILD_NEEDS_REQUEST });
+    async (dispatch, getState) => {
+      try {
+        dispatch({ type: CHILD_NEEDS_REQUEST });
 
-      const {
-        userLogin: { userInfo },
-      } = getState();
+        const {
+          userLogin: { userInfo },
+        } = getState();
 
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: userInfo && userInfo.access_token,
-          'X-TAKE': take,
-        },
-      };
-      const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: userInfo && userInfo.access_token,
+            'X-TAKE': take,
+          },
+        };
+        const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
 
-      dispatch({
-        type: CHILD_NEEDS_SUCCESS,
-        payload: data,
-      });
-    } catch (e) {
-      // check for generic and custom message to return using ternary statement
-      dispatch({
-        type: CHILD_NEEDS_FAIL,
-        payload: e.response && (e.response.status ? e.response : e.response.data.message),
-      });
-    }
-  };
+        dispatch({
+          type: CHILD_NEEDS_SUCCESS,
+          payload: data,
+        });
+      } catch (e) {
+        // check for generic and custom message to return using ternary statement
+        dispatch({
+          type: CHILD_NEEDS_FAIL,
+          payload: e.response && (e.response.status ? e.response : e.response.data.message),
+        });
+      }
+    };
 
 export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
   try {
@@ -500,6 +503,38 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: ADD_ONE_NEED_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+
+export const autoConfirmNeeds = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: AUTO_CONFIRM_NEEDS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/needs/auto/confirm`, config);
+
+    dispatch({
+      type: AUTO_CONFIRM_NEEDS_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    // check for generic and custom message to return using ternary statement
+    dispatch({
+      type: AUTO_CONFIRM_NEEDS_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }

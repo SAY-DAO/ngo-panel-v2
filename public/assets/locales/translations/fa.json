@@ -327,6 +327,9 @@
     "providers": {
       "title": "تامین کننده‌ها"
     },
+    "users": {
+      "title": "کاربران"
+    },
     "socialWorkers": {
       "title": "مددکارها",
       "migrate": "انتقال"
@@ -349,6 +352,7 @@
     "daoHeader": "DAO",
     "dashboard": "داشبورد",
     "list": "لیست",
+    "confirm": "تایید",
     "add": "اضافه کردن",
     "preregister": "ثبت‌نام",
     "preregisterList": "لیست ثبت‌نام"

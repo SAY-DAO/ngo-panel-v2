@@ -33,6 +33,8 @@ import {
   CHILDREN_PRE_REGISTER,
   CHILDREN_PRE_REGISTER_LIST,
   CAMPAIGN_LIST,
+  USERS_PAGE,
+  NEED_CONFIRM,
 } from './RouteConstants';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
@@ -43,6 +45,7 @@ const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 const ChangePass = Loadable(lazy(() => import('../pages/authentication/ChangePass')));
 
 /* ****Pages***** */
+const USERS = Loadable(lazy(() => import('../pages/users/UserMain')));
 const SocialWorkerList = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerList')));
 const SocialWorkerEdit = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerEdit')));
 const SocialWorkerAdd = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerAdd')));
@@ -63,6 +66,7 @@ const ChildrenPreRegisterUpdate = Loadable(lazy(() => import('../pages/children/
 const ChildrenPreRegisterTabs = Loadable(
   lazy(() => import('../pages/children/ChildrenPreRegisterTabs')),
 );
+const NeedConfirm = Loadable(lazy(() => import('../pages/needs/NeedConfirm')));
 const NeedList = Loadable(lazy(() => import('../pages/needs/NeedList')));
 const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
 const NeedAdd = Loadable(lazy(() => import('../pages/needs/NeedAdd')));
@@ -88,6 +92,7 @@ const Router = [
       { path: PROFILE_VIEW, exact: true, element: <SocialWorkerProfile /> },
       { path: MY_SIGNATURES, exact: true, element: <MySignatures /> },
       { path: CHANGE_PASS, exac: true, element: <ChangePass /> },
+      { path: USERS_PAGE, exact: true, element: <USERS /> },
       { path: SW_LIST, exact: true, element: <SocialWorkerList /> },
       { path: SW_EDIT, exact: true, element: <SocialWorkerEdit /> },
       { path: SW_ADD, exact: true, element: <SocialWorkerAdd /> },
@@ -104,6 +109,7 @@ const Router = [
       { path: CHILDREN_PRE_REGISTER_LIST, exact: true, element: <ChildrenPreRegisterTabs /> },
       { path: NEED_LIST, exact: true, element: <NeedList /> },
       { path: NEED_EDIT, exact: true, element: <NeedEdit /> },
+      { path: NEED_CONFIRM, exact: true, element: <NeedConfirm /> },
       { path: NEED_ADD, exact: true, element: <NeedAdd /> },
       { path: NGO_ARRIVALS, exact: true, element: <NgoArrival /> },
       { path: REPORTS, exact: true, element: <ReportList /> },

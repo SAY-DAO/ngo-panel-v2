@@ -33,10 +33,11 @@ import {
   childUpdateReducer,
   childUpdateStatusReducer,
 } from './childrenReducer';
-import { userLoginReducer, myPageReducer, userChangePasswordReducer } from './userReducer';
+import { userLoginReducer, myPageReducer, userChangePasswordReducer, userSearchReducer, userChildrenReducer } from './userReducer';
 import {
   allNeedsReducer,
   allReportNeedsReducer,
+  autoConfirmReducer,
   childNeedsReducer,
   childOneNeedReducer,
   deleteOldNeedsReducer,
@@ -106,6 +107,8 @@ export default combineReducers({
   countryList: countryListReducer,
   myPage: myPageReducer,
   userLogin: userLoginReducer,
+  userSearch: userSearchReducer,
+  userChildrenList: userChildrenReducer,
   signature: signatureReducer,
   signaturesVerification: signatureVerificationReducer,
   signatures: userSignaturesReducer,
@@ -136,6 +139,7 @@ export default combineReducers({
   childAllNames: childSayNameReducer,
   allNeeds: allNeedsReducer,
   allReportNeeds: allReportNeedsReducer,
+  needAutoConfirm: autoConfirmReducer,
   needConfirm: needConfirmReducer,
   needUnConfirmCount: unconfirmedReducer,
   needUpdate: needUpdateReducer,

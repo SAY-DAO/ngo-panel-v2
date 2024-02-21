@@ -14,7 +14,9 @@ import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
+import EscalatorWarningIcon from '@mui/icons-material/EscalatorWarning';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import {
   PROFILE_VIEW,
   SW_LIST,
@@ -39,6 +41,8 @@ import {
   DAO_HOME,
   CHILDREN_PRE_REGISTER_LIST,
   CAMPAIGN_LIST,
+  USERS_PAGE,
+  NEED_CONFIRM,
 } from '../../../routes/RouteConstants';
 
 const Menuitems = [
@@ -118,6 +122,12 @@ const Menuitems = [
         title: 'sidebar.add',
         icon: 'plus-square',
         href: NEED_ADD,
+      },
+      {
+        title: 'sidebar.confirm',
+        icon: <CheckCircleOutlineIcon />,
+        href: NEED_CONFIRM,
+        admin: true,
       },
     ],
   },
@@ -230,6 +240,12 @@ const Menuitems = [
         admin: true,
       },
     ],
+  },
+  {
+    title: 'sidebar.users.title',
+    icon: <EscalatorWarningIcon />,
+    href: USERS_PAGE,
+    admin: true,
   },
   {
     title: 'sidebar.categories.title',
