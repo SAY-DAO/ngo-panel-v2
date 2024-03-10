@@ -64,7 +64,7 @@ const MyPage = () => {
   const [height, setHeight] = useState(306.8); // cover scrolling
   const [toastOpen, setToastOpen] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [cardSelected, setCardSelected] = useState(0);
   const [swNewDetails, setSwNewDetails] = useState({});
   const [modifiedNeeds, setModifiedNeeds] = useState();
