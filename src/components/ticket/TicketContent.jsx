@@ -21,6 +21,8 @@ import FeatherIcon from 'feather-icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import { Link as RouterLink } from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
 import Scrollbar from '../custom-scroll/Scrollbar';
 import { convertFlaskToSayRoles, getSAYRoleString, prepareUrl } from '../../utils/helpers';
 import { socketHttp, WebsocketProvider } from '../../contexts/WebsocketContext';
@@ -162,6 +164,16 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                             primary={<Typography variant="h6">{theTicket.need.name}</Typography>}
                             secondary={theTicket.need.child.sayNameTranslations.fa}
                           />
+                          <RouterLink
+                            style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex` }}
+                            to={`/need/edit/${theTicket.need.child.flaskId}/${theTicket.need.flaskId}`}
+                            target="_blank"
+                          >
+                            <EditIcon sx={{ width: 20, height: 20, mr: 1 }} />
+                            <Typography color="primary">
+                              {t('myPage.taskCard.menu.updateٔNeed')}
+                            </Typography>
+                          </RouterLink>
                         </Grid>
                         <Grid item xs={6} sx={{ m: 'auto' }}>
                           {loadingTicket || loadingOneNeed || !theNeed ? (
@@ -188,8 +200,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                               `roles.${getSAYRoleString(
                                 theTicket.need.socialWorker.flaskUserId === c.flaskUserId
                                   ? PanelContributors.SOCIAL_WORKER
-                                  : theTicket.need.auditor &&
-                                    theTicket.need.auditor.flaskUserId === c.flaskUserId
+                                  : (theTicket.need.auditor &&
+                                      theTicket.need.auditor.flaskUserId === c.flaskUserId) ||
+                                    !theTicket.need.auditor
                                   ? PanelContributors.AUDITOR
                                   : theTicket.need.purchaser &&
                                     theTicket.need.purchaser.flaskUserId === c.flaskUserId &&

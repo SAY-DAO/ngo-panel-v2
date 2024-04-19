@@ -18,9 +18,9 @@ import {
   DUPLICATES_NEEDS_FAIL,
   DUPLICATES_NEEDS_REQUEST,
   DUPLICATES_NEEDS_SUCCESS,
-  AUTO_CONFIRM_NEEDS_FAIL,
-  AUTO_CONFIRM_NEEDS_REQUEST,
-  AUTO_CONFIRM_NEEDS_SUCCESS,
+  PREPARE_CONFIRM_NEEDS_FAIL,
+  PREPARE_CONFIRM_NEEDS_REQUEST,
+  PREPARE_CONFIRM_NEEDS_SUCCESS,
   CHILD_ONE_NEED_REQUEST,
   CHILD_ONE_NEED_SUCCESS,
   CHILD_ONE_NEED_FAIL,
@@ -39,6 +39,9 @@ import {
   UPDATE_NEED_CONFIRM_REQUEST,
   UPDATE_NEED_CONFIRM_SUCCESS,
   UPDATE_NEED_CONFIRM_FAIL,
+  MASS_NEED_CONFIRM_REQUEST,
+  MASS_NEED_CONFIRM_SUCCESS,
+  MASS_NEED_CONFIRM_FAIL,
   ALL_NEEDS_REQUEST,
   ALL_NEEDS_SUCCESS,
   ALL_NEEDS_FAIL,
@@ -511,7 +514,7 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
 
 export const autoConfirmNeeds = () => async (dispatch, getState) => {
   try {
-    dispatch({ type: AUTO_CONFIRM_NEEDS_REQUEST });
+    dispatch({ type: PREPARE_CONFIRM_NEEDS_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -525,16 +528,43 @@ export const autoConfirmNeeds = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await daoApi.get(`/needs/auto/confirm`, config);
+    const { data } = await daoApi.get(`/needs/confirm/prepare`, config);
 
     dispatch({
-      type: AUTO_CONFIRM_NEEDS_SUCCESS,
+      type: PREPARE_CONFIRM_NEEDS_SUCCESS,
       payload: data,
     });
   } catch (e) {
-    // check for generic and custom message to return using ternary statement
     dispatch({
-      type: AUTO_CONFIRM_NEEDS_FAIL,
+      type: PREPARE_CONFIRM_NEEDS_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+
+export const massNeedConfirm = (needIds) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: MASS_NEED_CONFIRM_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+    const { data } = await daoApi.post(`/needs/confirm/mass`, { needIds }, config);
+
+    dispatch({
+      type: MASS_NEED_CONFIRM_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: MASS_NEED_CONFIRM_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }

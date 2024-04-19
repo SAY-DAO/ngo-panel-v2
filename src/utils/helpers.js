@@ -307,8 +307,6 @@ export function urlSimilarityPercentage(url1, url2) {
   // Convert URLs to lowercase to make the comparison case-insensitive
   url1 = url1.toLowerCase();
   url2 = url2.toLowerCase();
-  console.log(url1);
-  console.log(url2);
 
   // Calculate Levenshtein distance
   function levenshteinDistance(s1, s2) {
@@ -348,5 +346,12 @@ export function urlSimilarityPercentage(url1, url2) {
   const similarityPercentage = ((maxLength - distance) / maxLength) * 100;
 
   return similarityPercentage.toFixed(2);
+}
+
+export function categoryToString(category) {
+  if (category === 0) { return ('need.categories.growth') }
+  if (category === 1) { return ('need.categories.joy') }
+  if (category === 2) { return ('need.categories.health') }
+  return ('need.categories.surroundings')
 }
 
