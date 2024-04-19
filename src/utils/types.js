@@ -128,6 +128,7 @@ export const PaymentStatusEnum = {
 };
 
 export const AnnouncementEnum = {
+  ERROR: -1,
   NONE: 0,
   ARRIVED_AT_NGO: 1,
   NGO_RECEIVED_MONEY: 2,

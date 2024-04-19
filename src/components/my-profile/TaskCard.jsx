@@ -530,8 +530,8 @@ const TaskCard = ({
                   {need.tickets && need.tickets[0] && (
                     <>
                       {/* flag Icon- ticketHistory has one item in it due to announcement */}
-                      {((need.tickets[0].lastAnnouncement && need.tickets[0].ticketHistories[1]) ||
-                        !need.tickets[0].lastAnnouncement) && (
+                      {(need.tickets[0].lastAnnouncement === AnnouncementEnum.NONE ||
+                        need.tickets[0].lastAnnouncement === AnnouncementEnum.ERROR) && (
                         <Box
                           sx={{
                             textAlign: 'center',
