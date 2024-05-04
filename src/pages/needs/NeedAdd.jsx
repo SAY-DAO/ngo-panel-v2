@@ -240,11 +240,13 @@ const NeedAdd = () => {
   }, [childId, successChildrenNeeds]);
 
   const validationSchema = Yup.object().shape({
-    // name_fa: Yup.string().required('Please enter needs name'),
-    // name_en: Yup.string().required('Please enter needs name'),
+    name_fa: Yup.string().required('Please enter needs name'),
+    name_en: Yup.string().required('Please enter needs name'),
     cost: Yup.number().required('Please enter needs cost').moreThan(0, 'Cost can not be zero'),
     type: Yup.string().required('Please enter type'),
-    // doing_duration: Yup.number().required('Please enter estimated finishing time'),
+    doing_duration: Yup.number()
+      .required('Please enter estimated finishing time')
+      .moreThan(0, 'Cost can not be zero'),
     category: Yup.string().required('Please enter needs category'),
     // link: Yup.string().url().required('Please enter needs link'),
     // imageUrl: Yup.string().required('Please choose an icon'),
@@ -256,6 +258,7 @@ const NeedAdd = () => {
     control,
     watch,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -272,7 +275,7 @@ const NeedAdd = () => {
       setValue('informations', oneNeed.informations);
       setValue('details', oneNeed.details); // social worker note on app
       setValue('link', oneNeed.link);
-      setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
+      // setValue('affiliateLinkUrl', oneNeed.affiliateLinkUrl);
       setValue('cost', oneNeed.cost);
       setValue('doing_duration', oneNeed.doing_duration);
     }
@@ -292,27 +295,37 @@ const NeedAdd = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
-    dispatch(
-      AddNeed(
-        {
-          name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
-          description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
-          isUrgent: isUrgentChecked,
-          cost: data.cost,
-          type: data.type,
-          category: data.category,
-          imageUrl: finalImageFile || (oneNeed && oneNeed.imageUrl.split('company/')[1]),
-          details: data.details,
-          information: data.informations,
-          doing_duration: data.doing_duration,
-          link: data.link,
-          affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
-          childId,
-        },
-        data.provider,
-      ),
-    );
-    dispatch({ type: CHILD_ONE_NEED_RESET });
+    if (
+      (!finalImageFile || finalImageFile.length < 3) &&
+      (!oneNeed || (oneNeed.imageUrl && oneNeed.imageUrl.split('company/')[1].length < 3))
+    ) {
+      setError('imageUrl', {
+        message: 'We need an icon',
+        type: 'required',
+      });
+    } else {
+      dispatch(
+        AddNeed(
+          {
+            name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
+            description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
+            isUrgent: isUrgentChecked,
+            cost: data.cost,
+            type: data.type,
+            category: data.category,
+            imageUrl: finalImageFile || (oneNeed && oneNeed.imageUrl.split('company/')[1]),
+            details: data.details,
+            information: data.informations,
+            doing_duration: data.doing_duration,
+            link: data.link,
+            affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
+            childId,
+          },
+          data.provider,
+        ),
+      );
+      dispatch({ type: CHILD_ONE_NEED_RESET });
+    }
   };
 
   // dialog image
@@ -465,6 +478,7 @@ const NeedAdd = () => {
                           >
                             {!finalImageFile && oneNeed ? (
                               <Avatar
+                                id="imageUrl"
                                 variant="circle"
                                 alt="user photo"
                                 sx={{
@@ -553,7 +567,7 @@ const NeedAdd = () => {
                         onChange={(e, value) => setTheNeed(value)}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={(option) =>
-                          option.type === 1
+                          option.type === NeedTypeEnum.PRODUCT
                             ? `${option.id} - ${option.title} - ${option.name}`
                             : `${option.id} - ${option.name}`
                         }
@@ -623,6 +637,7 @@ const NeedAdd = () => {
                               size="small"
                               control={control}
                               {...register('name_fa', { required: true })}
+                              error={!!errors.name_fa}
                             />
                           </Grid>
                           <Grid item xs={6}>
@@ -891,6 +906,7 @@ const NeedAdd = () => {
                         </CustomFormLabel>
                         <TextField
                           id="doing_duration"
+                          defaultValue={5}
                           variant="outlined"
                           fullWidth
                           type="number"
