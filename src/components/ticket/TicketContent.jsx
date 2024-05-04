@@ -156,7 +156,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                           <ListItemAvatar>
                             {theNeed && (
                               <Tooltip title={<DurationTimeLine need={theNeed} />}>
-                                <Avatar alt="Icon" src={prepareUrl(theTicket.need.imageUrl)} />
+                                <Avatar alt="Icon" src={theNeed.imageUrl} />
                               </Tooltip>
                             )}
                           </ListItemAvatar>

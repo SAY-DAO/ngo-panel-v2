@@ -280,7 +280,7 @@ const TaskCard = ({
     : ipfsMetaData.properties.needDetails.socialWorkerNotes;
 
   const theIpfs = ipfs && ipfs.need && ipfs.need.flaskId === need.id && ipfs;
-  console.log(theIpfs || '');
+  if (ipfs) console.log(theIpfs || '');
   const category = getCategoryString(need.category, need.isUrgent);
   const cost = need._cost && need._cost.toLocaleString();
   const affiliateLinkUrl = need.affiliateLinkUrl && need.affiliateLinkUrl;

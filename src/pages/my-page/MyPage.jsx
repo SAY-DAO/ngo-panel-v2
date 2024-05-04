@@ -35,9 +35,9 @@ function getModifiedNeeds(updatedTicket, addedTicket, need) {
   if (!updatedTicket && need.id === addedTicket.need.flaskId) {
     theNeed = need;
     theNeed.tickets = [...theNeed.tickets, addedTicket];
-    if (theNeed.tickets) {
-      console.log(theNeed);
-    }
+    // if (theNeed.tickets) {
+    //   console.log(theNeed);
+    // }
     return theNeed;
   }
 
