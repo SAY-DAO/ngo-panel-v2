@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Table,
@@ -18,6 +18,9 @@ import {
   Collapse,
   Avatar,
   Link,
+  Switch,
+  FormControlLabel,
+  FormGroup,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +45,8 @@ const NeedConfirmTable = () => {
   const { t } = useTranslation();
 
   const { result, loading } = useSelector((state) => state.needAutoConfirm);
-
+  const [checked, setChecked] = useState(false);
+  const [totalMissMatch, setTotalMissMatch] = useState(0);
   const BCrumb = [
     {
       to: '/',
@@ -54,7 +58,9 @@ const NeedConfirmTable = () => {
   ];
 
   useEffect(() => {
-    dispatch(autoConfirmNeeds());
+    if (!loading) {
+      dispatch(autoConfirmNeeds());
+    }
   }, []);
 
   function Row(props) {
@@ -67,7 +73,9 @@ const NeedConfirmTable = () => {
           sx={{
             '& > *': {
               borderBottom: 'unset',
-              opacity: row.errorMsg && 0.45,
+              opacity: row.errorMsg ? 0.45 : row.possibleMissMatch.length ? 0.5 : 1,
+              backgroundColor:
+                row.possibleMissMatch.length > 0 ? '#7f5c1b' : row.errorMsg && '#8f4646',
             },
           }}
         >
@@ -92,8 +100,11 @@ const NeedConfirmTable = () => {
           <TableCell align="justify">
             <Grid container direction="column">
               <Avatar sx={{ border: '1px solid grey' }} src={prepareUrl(row.need.imageUrl)} />
-              <Typography sx={{ fontSize: 12 }}>
+              <Typography sx={{ fontSize: 10 }}>
                 Valid Dups: {row.duplicates ? `${row.validCount} / ${row.duplicates.length}` : 0}
+              </Typography>
+              <Typography sx={{ fontSize: 10 }}>
+                MissMatch: {(row.possibleMissMatch && row.possibleMissMatch.length) || 0}
               </Typography>
             </Grid>
           </TableCell>
@@ -139,12 +150,45 @@ const NeedConfirmTable = () => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1, mb: 8 }}>
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography variant="h5" gutterBottom component="div">
                   Duplicates Validation
                 </Typography>
-                <Typography variant="h6" gutterBottom component="div" sx={{ color: '#8f4646' }}>
-                  {row.errorMsg}
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  component="div"
+                  sx={{ color: row.errorMsg ? '#8f4646' : '#557d55' }}
+                >
+                  {row.errorMsg || 'All good!'}
                 </Typography>
+                <br />
+                <Typography variant="h6" gutterBottom component="div">
+                  Possible MissMatch
+                </Typography>
+                {row.possibleMissMatch &&
+                  row.possibleMissMatch.map((o) => (
+                    <div key={o.needId}>
+                      <RouterLink
+                        style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex` }}
+                        to={`/need/edit/${o.childId}/${o.needId}`}
+                        target="_blank"
+                      >
+                        Need
+                      </RouterLink>
+                      <Typography
+                        variant="li"
+                        gutterBottom
+                        component="div"
+                        sx={{ color: '#8f4646' }}
+                      >
+                        Child: {`${o.childId}`}
+                        Need: {`${o.needId}`}
+                        Need Cat: {`${o.category}`}
+                        Need Status: {`${o.status}`}
+                      </Typography>
+                    </div>
+                  ))}
+
                 {row && row.duplicates && row.duplicates.length > 0 && (
                   <Table size="small" aria-label="purchases">
                     <TableHead>
@@ -254,12 +298,34 @@ const NeedConfirmTable = () => {
 
   const handleMassConfirm = () => {
     if (process.env.REACT_APP_NODE_ENV === 'production') {
-      const needIds = result.filter((n) => !n.errorMsg).map((r) => r.need.id);
-      dispatch(massNeedConfirm(needIds));
+      if (checked) {
+        const needIds = result.list.filter((n) => !n.errorMsg).map((r) => r.need.id);
+        dispatch(massNeedConfirm(needIds));
+      } else {
+        const needs = result.list.filter((n) => !n.errorMsg);
+        const needIds = needs.filter((n) => n.possibleMissMatch.length < 1).map((r) => r.need.id);
+        dispatch(massNeedConfirm(needIds));
+      }
     } else {
       console.log('only confirm in production');
     }
   };
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+
+  useEffect(() => {
+    let counter = 0;
+    if (result) {
+      for (let i = 0; i < result.list.length; i++) {
+        if (result.list[i].possibleMissMatch.length > 0 && !result.list[i].errorMsg) {
+          counter += 1;
+          setTotalMissMatch(counter);
+        }
+      }
+    }
+  }, [result]);
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
@@ -276,8 +342,34 @@ const NeedConfirmTable = () => {
             <CardContent>
               <Box>
                 <LoadingButton variant="outlined" onClick={handleMassConfirm}>
-                  Confirm {result.filter((n) => !n.errorMsg).length} of {result.length} Needs
+                  Confirm{' '}
+                  {result.list.filter((n) => !n.errorMsg).length - (!checked ? totalMissMatch : 0)}{' '}
+                  of {result.list.length} Needs
                 </LoadingButton>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={checked}
+                        color="warning"
+                        onChange={handleChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    }
+                    label="include MissMatch"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        defaultChecked
+                        color="error"
+                        disabled
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    }
+                    label="exclude Error"
+                  />
+                </FormGroup>
                 <Paper sx={{ mb: 2 }}>
                   <TableContainer sx={{ maxHeight: 850 }}>
                     <Table aria-label="collapsible table">
@@ -297,7 +389,7 @@ const NeedConfirmTable = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {result && result.map((n) => <Row key={n.need.id} row={n} />)}
+                        {result && result.list.map((r) => <Row key={r.need.id} row={r} />)}
                       </TableBody>
                     </Table>
                   </TableContainer>

@@ -925,7 +925,7 @@ const NeedAdd = () => {
                           <Grid item xs={6}>
                             <CustomFormLabel htmlFor="details">{t('need.details')}</CustomFormLabel>
                             <CustomTextField
-                              id="details"
+                              id="details" // یادداشت مددکار
                               variant="outlined"
                               multiline
                               rows={4}
@@ -941,7 +941,7 @@ const NeedAdd = () => {
                               {t('need.informations')}
                             </CustomFormLabel>
                             <CustomTextField
-                              id="informations"
+                              id="informations" // اطلاعات بیشتر
                               variant="outlined"
                               multiline
                               rows={4}
