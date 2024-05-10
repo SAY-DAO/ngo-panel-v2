@@ -365,7 +365,7 @@ const NeedConfirmTable = () => {
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>
-                <LoadingButton variant="outlined" onClick={handleMassConfirm}>
+                <LoadingButton loading={loading} variant="outlined" onClick={handleMassConfirm}>
                   Confirm{' '}
                   {result.list.filter((n) => !n.errorMsg).length -
                     (!checked ? totalMissMatch : 0) +
