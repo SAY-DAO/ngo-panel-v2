@@ -74,7 +74,11 @@ const NeedConfirmTable = () => {
     const [open, setOpen] = React.useState(false);
 
     const handleManualConfirm = (id) => {
-      const newList = manualIds.find((i) => id === i) ? manualIds : [...manualIds, id];
+      const newList = manualIds.find((i) => id === i)
+        ? manualIds
+        : manualIds && manualIds[0]
+        ? [...manualIds, id]
+        : [id];
       setManualIds(newList);
     };
     const handleManualRemove = (id) => {
