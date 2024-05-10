@@ -21,6 +21,7 @@ import {
   Switch,
   FormControlLabel,
   FormGroup,
+  Tooltip,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -29,11 +30,14 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import { Link as RouterLink } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { autoConfirmNeeds, massNeedConfirm } from '../../redux/actions/needsAction';
 import {
   categoryToString,
+  getCurrentStatusString,
   getSimilarityPercentage,
   prepareUrl,
   urlSimilarityPercentage,
@@ -46,6 +50,7 @@ const NeedConfirmTable = () => {
 
   const { result, loading } = useSelector((state) => state.needAutoConfirm);
   const [checked, setChecked] = useState(false);
+  const [manualIds, setManualIds] = useState([]);
   const [totalMissMatch, setTotalMissMatch] = useState(0);
   const BCrumb = [
     {
@@ -67,6 +72,15 @@ const NeedConfirmTable = () => {
     const { row } = props;
 
     const [open, setOpen] = React.useState(false);
+
+    const handleManualConfirm = (id) => {
+      const newList = manualIds.find((i) => id === i) ? manualIds : [...manualIds, id];
+      setManualIds(newList);
+    };
+    const handleManualRemove = (id) => {
+      const newList = manualIds.filter((i) => i !== id);
+      setManualIds(newList);
+    };
     return (
       <>
         <TableRow
@@ -75,7 +89,11 @@ const NeedConfirmTable = () => {
               borderBottom: 'unset',
               opacity: row.errorMsg ? 0.45 : row.possibleMissMatch.length ? 0.5 : 1,
               backgroundColor:
-                row.possibleMissMatch.length > 0 ? '#7f5c1b' : row.errorMsg && '#8f4646',
+                !manualIds.find((i) => i === row.need.id) && row.possibleMissMatch.length > 0
+                  ? '#7f5c1b'
+                  : !manualIds.find((i) => i === row.need.id) && row.errorMsg
+                  ? '#8f4646'
+                  : manualIds.find((i) => i === row.need.id) && '#235053',
             },
           }}
         >
@@ -83,6 +101,21 @@ const NeedConfirmTable = () => {
             <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
+          </TableCell>
+          <TableCell>
+            {(row.errorMsg || row.possibleMissMatch.length > 0) && (
+              <Tooltip title="Manually add to to be confirmed list">
+                {!manualIds.find((i) => i === row.need.id) ? (
+                  <IconButton onClick={() => handleManualConfirm(row.need.id)}>
+                    <AddCircleRoundedIcon color="success" />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={() => handleManualRemove(row.need.id)}>
+                    <RemoveCircleIcon color="danger" />
+                  </IconButton>
+                )}
+              </Tooltip>
+            )}
           </TableCell>
           <TableCell component="th" scope="row">
             <RouterLink
@@ -173,19 +206,9 @@ const NeedConfirmTable = () => {
                         to={`/need/edit/${o.childId}/${o.needId}`}
                         target="_blank"
                       >
-                        Need
+                        Need - {t(categoryToString(o.category))} -{' '}
+                        {t(`need.needStatus.${getCurrentStatusString(o)}`)}
                       </RouterLink>
-                      <Typography
-                        variant="li"
-                        gutterBottom
-                        component="div"
-                        sx={{ color: '#8f4646' }}
-                      >
-                        Child: {`${o.childId}`}
-                        Need: {`${o.needId}`}
-                        Need Cat: {`${o.category}`}
-                        Need Status: {`${o.status}`}
-                      </Typography>
                     </div>
                   ))}
 
@@ -304,10 +327,11 @@ const NeedConfirmTable = () => {
       } else {
         const needs = result.list.filter((n) => !n.errorMsg);
         const needIds = needs.filter((n) => n.possibleMissMatch.length < 1).map((r) => r.need.id);
-        dispatch(massNeedConfirm(needIds));
+        dispatch(massNeedConfirm([...needIds, manualIds]));
       }
     } else {
       console.log('only confirm in production');
+      console.log(manualIds);
     }
   };
 
@@ -343,7 +367,9 @@ const NeedConfirmTable = () => {
               <Box>
                 <LoadingButton variant="outlined" onClick={handleMassConfirm}>
                   Confirm{' '}
-                  {result.list.filter((n) => !n.errorMsg).length - (!checked ? totalMissMatch : 0)}{' '}
+                  {result.list.filter((n) => !n.errorMsg).length -
+                    (!checked ? totalMissMatch : 0) +
+                    manualIds.length}{' '}
                   of {result.list.length} Needs
                 </LoadingButton>
                 <FormGroup>
