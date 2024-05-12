@@ -20,6 +20,10 @@ export const colorChoices = [
     code: '#ffeb3b',
     color: Colors.YELLOW,
   },
+  {
+    code: '#dd3976',
+    color: Colors.RED,
+  },
 ];
 
 export const SchoolTypeEnum = {

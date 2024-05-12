@@ -79,10 +79,17 @@ export default function ProviderForm() {
     control,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  useEffect(() => {
+    if (successAddProvider) {
+      reset();
+    }
+  }, [successAddProvider]);
 
   // for validation
   useEffect(() => {

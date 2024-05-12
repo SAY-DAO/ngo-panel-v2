@@ -295,9 +295,9 @@ const TicketContent = ({ toggleTicketSidebar }) => {
                               <Avatar
                                 alt="user"
                                 src={
-                                  theTicket.contributors.find((p) => p.flaskId === h.from) &&
+                                  theTicket.contributors.find((p) => p.flaskUserId === h.from) &&
                                   prepareUrl(
-                                    theTicket.contributors.find((p) => p.flaskId === h.from)
+                                    theTicket.contributors.find((p) => p.flaskUserId === h.from)
                                       .avatarUrl,
                                   )
                                 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -15,10 +16,8 @@ import {
   IconButton,
   Autocomplete,
   FormControlLabel,
-  MenuItem,
   InputAdornment,
   OutlinedInput,
-  InputLabel,
   FormControl,
   Tooltip,
 } from '@mui/material';
@@ -92,6 +91,9 @@ const NeedAdd = () => {
   const [optionsPreNeed, setOptionsPreNeed] = useState([]);
   const [theNeed, setTheNeed] = useState();
 
+  const [openProviderSelect, setOpenProviderSelect] = useState(false);
+  const [theProvider, setTheProvider] = useState();
+
   const [openChildren, setOpenChildren] = useState(false);
   const [optionsChildren, setOptionsChildren] = useState([]);
   const isLoadingChildren = openChildren && optionsChildren.length === 0;
@@ -119,7 +121,7 @@ const NeedAdd = () => {
   } = childAllActives;
 
   const providerAll = useSelector((state) => state.providerAll);
-  const { providerList } = providerAll;
+  const { providerList, loading: loadingProviderAll } = providerAll;
 
   const childExampleNeeds = useSelector((state) => state.childExampleNeeds);
   const { exampleNeeds, loading: loadingNeedEx, success: successNeedEx } = childExampleNeeds;
@@ -283,16 +285,19 @@ const NeedAdd = () => {
 
   // set type when provider is changed
   useEffect(() => {
-    setValue(
-      'type',
-      providerList && providerList.filter((p) => p.id === watch('provider'))[0]
-        ? providerList.filter((p) => p.id === watch('provider'))[0].type
-        : '',
-    );
-  }, [watch('provider')]);
+    if (theProvider) {
+      setValue('type', theProvider.type);
+    }
+  }, [theProvider]);
+
+  useEffect(() => {
+    if (successAddProvider) {
+      setOpenProvider(false);
+    }
+  }, [successAddProvider]);
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     if (
@@ -321,7 +326,7 @@ const NeedAdd = () => {
             affiliateLinkUrl: isAffChecked ? data.affiliateLinkUrl : '',
             childId,
           },
-          data.provider,
+          theProvider.id,
         ),
       );
       dispatch({ type: CHILD_ONE_NEED_RESET });
@@ -772,72 +777,85 @@ const NeedAdd = () => {
                                 </IconButton>
                               </Tooltip>
                               <FormControl sx={{ m: 1, width: '100%' }}>
-                                <InputLabel htmlFor="provider" id="provider-controlled-open-select">
-                                  {t('need.provider')}
-                                </InputLabel>
-                                <CustomSelect
-                                  sx={{ width: '100%', color: 'gray' }}
-                                  labelId="provider-controlled-open-select-label"
-                                  id="provider-controlled-open-select"
-                                  defaultValue={oneNeed && oneNeed.type}
-                                  control={control}
-                                  register={{ ...register('provider', { required: true }) }}
-                                >
-                                  {providerList ? (
-                                    providerList
-                                      .filter((p) => p.isActive === true)
-                                      .map((p) => (
-                                        <MenuItem key={p.id} value={p.id}>
-                                          <Grid container>
-                                            <Grid
-                                              item
-                                              xs={2}
-                                              sx={{
-                                                m: 'auto',
-                                              }}
-                                            >
-                                              <Avatar
-                                                alt={p.name}
-                                                src={`${apiDao}/providers/images/${p.logoUrl}`}
-                                                sx={{
-                                                  width: 25,
-                                                  height: 25,
-                                                }}
-                                              />
-                                            </Grid>
-                                            <Grid item xs={4}>
-                                              <Typography variant="body1" sx={{ p: 1 }}>
-                                                {p.name}
-                                              </Typography>
-                                            </Grid>
-                                            <Grid
-                                              item
-                                              sx={{
-                                                m: 'auto',
-                                                fontSize: 12,
-                                              }}
-                                            >
-                                              (
-                                              {p.type === NeedTypeEnum.PRODUCT
-                                                ? t('need.providers.product')
-                                                : t('need.providers.service')}
-                                              )
-                                            </Grid>
-                                          </Grid>
-                                        </MenuItem>
-                                      ))
-                                  ) : (
-                                    <MenuItem>
-                                      <Grid container spacing={2}>
-                                        <Grid item>
-                                          <Typography color="error" variant="body1" sx={{ p: 1 }}>
-                                            {t('error.nestDown')}
-                                          </Typography>
+                                <Autocomplete
+                                  sx={{ width: '100%', m: 'auto' }}
+                                  id="asynchronous-provider"
+                                  open={openProviderSelect}
+                                  onOpen={() => {
+                                    setOpenProviderSelect(true);
+                                  }}
+                                  onClose={() => {
+                                    setOpenProviderSelect(false);
+                                  }}
+                                  onChange={(e, value) => setTheProvider(value)}
+                                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                                  getOptionLabel={(option) => `${option.name}`}
+                                  options={providerList || []}
+                                  loading={loadingProviderAll}
+                                  renderOption={(props, option) => (
+                                    <Box
+                                      component="li"
+                                      sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                                      {...props}
+                                      key={option.id}
+                                    >
+                                      <Grid container>
+                                        <Grid
+                                          item
+                                          xs={2}
+                                          sx={{
+                                            m: 'auto',
+                                          }}
+                                        >
+                                          <Avatar
+                                            alt={option.name}
+                                            src={
+                                              option.logoUrl &&
+                                              `${apiDao}/providers/images/${option.logoUrl}`
+                                            }
+                                            sx={{
+                                              width: 25,
+                                              height: 25,
+                                            }}
+                                          />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                          <Typography variant="body2">{option.name}</Typography>
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          sx={{
+                                            m: 'auto',
+                                            fontSize: 12,
+                                          }}
+                                        >
+                                          (
+                                          {option.type === NeedTypeEnum.PRODUCT
+                                            ? t('need.providers.product')
+                                            : t('need.providers.service')}
+                                          )
                                         </Grid>
                                       </Grid>
-                                    </MenuItem>
+                                    </Box>
                                   )}
-                                </CustomSelect>
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      label={t('need.provider')}
+                                      InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                          <>
+                                            {isLoadingPreNeed ? (
+                                              <CircularProgress color="inherit" size={20} />
+                                            ) : null}
+                                            {params.InputProps.endAdornment}
+                                          </>
+                                        ),
+                                      }}
+                                    />
+                                  )}
+                                />
                               </FormControl>
                             </Stack>
                           </Grid>

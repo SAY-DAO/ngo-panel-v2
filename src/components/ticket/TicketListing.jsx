@@ -111,7 +111,9 @@ const TicketListing = () => {
                       backgroundColor:
                         parseInt(ticket.color, 10) === Colors.BLUE
                           ? colorChoices[0].code
-                          : colorChoices[1].code,
+                          : parseInt(ticket.color, 10) === Colors.YELLOW
+                          ? colorChoices[1].code
+                          : colorChoices[2].code,
                     }}
                   />
                   <Typography variant="h5" sx={{ width: '240px' }} noWrap>

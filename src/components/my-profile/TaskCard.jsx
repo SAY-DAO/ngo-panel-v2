@@ -15,6 +15,7 @@ import {
   AvatarGroup,
   CardActions,
   CardActionArea,
+  CircularProgress,
 } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
@@ -53,6 +54,7 @@ import WalletButton from '../wallet/WalletButton';
 import TicketAnnouncementDialog from '../dialogs/TicketAnnouncementDialog';
 import {
   convertFlaskToSayRoles,
+  daysDifference,
   getCategoryString,
   isUnpayable,
   prepareUrl,
@@ -62,6 +64,76 @@ import WaterWaveText from '../WaterWaveText';
 import fetchIpfsMetaData from '../../utils/ipfsHelper';
 import signatureIcon from '../../resources/images/signature.svg';
 import GenericDialog from '../dialogs/GenericDialog';
+import { NEST_GRACE_PERIOD } from '../../utils/configs';
+import { deleteNeed } from '../../redux/actions/needsAction';
+
+function CircularProgressWithLabel(props) {
+  const { t } = useTranslation();
+  return (
+    <Tooltip
+      arrow
+      title={
+        <Typography sx={{ fontSize: 12 }}>
+          {t('need.tooltip.deleteTimer')}
+          {'  '}
+          {(
+            NEST_GRACE_PERIOD - daysDifference(props.need.tickets[0].updatedAt, new Date())
+          ).toFixed(2)}{' '}
+          {t('myPage.days')}
+        </Typography>
+      }
+      placement="right-end"
+      sx={{ width: '100%' }}
+    >
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress
+          variant="determinate"
+          sx={{
+            width: '40px !important',
+            height: '40px !important',
+            color: '#dd3976',
+            borderRadius: 50,
+            border: '1px solid gray',
+          }}
+          {...props}
+        />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <FlagOutlinedIcon
+            sx={{
+              color:
+                props.need.tickets[0].color === Colors.YELLOW
+                  ? colorChoices[1].code
+                  : props.need.tickets[0].color === Colors.BLUE
+                  ? colorChoices[0].code
+                  : colorChoices[2].code,
+            }}
+          />
+        </Box>
+      </Box>
+    </Tooltip>
+  );
+}
+
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
+  need: PropTypes.any.isRequired,
+};
 
 const TaskCard = ({
   need,
@@ -75,6 +147,7 @@ const TaskCard = ({
   const { t } = useTranslation();
   const theme = useTheme();
 
+  const [progress, setProgress] = useState(0);
   const [dialogValues, setDialogValues] = useState();
   const [openDelete, setOpenDelete] = useState(false);
   const [deletedId, setDeletedId] = useState();
@@ -238,6 +311,33 @@ const TaskCard = ({
     }
   }, [ipfsMetaData]);
 
+  useEffect(() => {
+    if (deleted && deleted.id === need.id) {
+      setDeletedId(deleted.id);
+    }
+  }, [deleted]);
+
+  useEffect(() => {
+    if (need.tickets[0]) {
+      setProgress(() =>
+        daysDifference(need.tickets[0].updatedAt, new Date()) > NEST_GRACE_PERIOD
+          ? 100
+          : (daysDifference(need.tickets[0].updatedAt, new Date()) * 100) / NEST_GRACE_PERIOD,
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (
+      process.env === 'production' &&
+      need.tickets[0] &&
+      daysDifference(need.tickets[0].updatedAt, new Date()) > NEST_GRACE_PERIOD
+    ) {
+      console.log(`deleting need: ${need.id}`);
+      dispatch(deleteNeed(need.id));
+    }
+  }, []);
+
   const handleDeleteDialog = (needId) => {
     setOpenDelete(true);
     setDialogValues({
@@ -292,12 +392,6 @@ const TaskCard = ({
     needSignatures && needSignatures.find((s) => s.flaskUserId === need.created_by_id);
   const auditorSignature =
     needSignatures && needSignatures.find((s) => s.flaskUserId === need.confirmUser);
-
-  useEffect(() => {
-    if (deleted && deleted.id === need.id) {
-      setDeletedId(deleted.id);
-    }
-  }, [deleted]);
 
   return (
     <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
@@ -561,14 +655,25 @@ const TaskCard = ({
                             paddingTop: '7px',
                           }}
                         >
-                          <FlagOutlinedIcon
-                            sx={{
-                              color:
-                                need.tickets[0].color === Colors.YELLOW
-                                  ? colorChoices[1].code
-                                  : colorChoices[0].code,
-                            }}
-                          />
+                          {need.tickets[0].color === Colors.RED && (
+                            <>
+                              <CircularProgressWithLabel value={progress} need={need} />
+                              <Typography sx={{ fontSize: 10, color: '#dd3976' }}>
+                                {`${Math.round(progress)}%`}
+                              </Typography>
+                            </>
+                          )}
+                          {(need.tickets[0].color === Colors.YELLOW ||
+                            need.tickets[0].color === Colors.BLUE) && (
+                            <FlagOutlinedIcon
+                              sx={{
+                                color:
+                                  need.tickets[0].color === Colors.YELLOW
+                                    ? colorChoices[1].code
+                                    : need.tickets[0].color === Colors.BLUE && colorChoices[0].code,
+                              }}
+                            />
+                          )}
                         </Box>
                       )}
                       {/* Announcement Icon */}
@@ -712,25 +817,27 @@ const TaskCard = ({
                   isUnpayable(need) && (
                     <Chip
                       sx={{
+                        color: '#ff0000',
                         zIndex: 10,
                         opacity: 0.8,
-                        color: '#000000',
-                        backgroundColor: '#ff0000',
+                        borderColor: '#ff0000',
                       }}
                       label={t('myPage.taskCard.tags.unpayable')}
                       size="small"
+                      variant="outlined"
                     />
                   )}
                 {!need.isConfirmed && (
                   <Chip
                     sx={{
+                      color: '#ff0000',
                       zIndex: 10,
                       opacity: 0.8,
-                      color: '#000000',
-                      backgroundColor: '#ff0000',
+                      borderColor: '#ff0000',
                     }}
                     label={t('myPage.taskCard.tags.notConfirmed')}
                     size="small"
+                    variant="outlined"
                   />
                 )}
               </ListItem>
@@ -741,10 +848,10 @@ const TaskCard = ({
               >
                 <Chip
                   sx={{
+                    color: need.type === NeedTypeEnum.PRODUCT ? '#e66cf2' : '#5888e3',
                     zIndex: 10,
                     opacity: 0.8,
-                    color: '#000000',
-                    backgroundColor: need.type === NeedTypeEnum.PRODUCT ? '#9d59a8' : '#5888e3',
+                    borderColor: need.type === NeedTypeEnum.PRODUCT ? '#e66cf2' : '#5888e3',
                   }}
                   label={
                     need.type === NeedTypeEnum.PRODUCT
@@ -752,31 +859,60 @@ const TaskCard = ({
                       : t('myPage.taskCard.tags.service')
                   }
                   size="small"
+                  variant="outlined"
                 />
-                <Chip
-                  sx={{
-                    zIndex: 10,
-                    opacity: 0.8,
-                    m: 1,
-                    color: '#000000',
-                    backgroundColor:
+                {((need.type === NeedTypeEnum.PRODUCT &&
+                  need.status <= ProductStatusEnum.PURCHASED_PRODUCT) ||
+                  (need.type === NeedTypeEnum.SERVICE &&
+                    need.status <= ProductStatusEnum.MONEY_TO_NGO)) && (
+                  <Chip
+                    sx={{
+                      color:
+                        need.status === PaymentStatusEnum.PARTIAL_PAY
+                          ? '#ddf96a'
+                          : need.status === PaymentStatusEnum.COMPLETE_PAY
+                          ? '#00ffb8'
+                          : need.status === PaymentStatusEnum.NOT_PAID
+                          ? '#f331a6'
+                          : ((need.type === NeedTypeEnum.PRODUCT &&
+                              need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
+                              (need.type === NeedTypeEnum.SERVICE &&
+                                need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
+                            '#ffb100',
+                      zIndex: 10,
+                      opacity: 0.8,
+                      m: 1,
+                      borderColor:
+                        need.status === PaymentStatusEnum.PARTIAL_PAY
+                          ? '#ddf96a'
+                          : need.status === PaymentStatusEnum.COMPLETE_PAY
+                          ? '#00ffb8'
+                          : need.status === PaymentStatusEnum.NOT_PAID
+                          ? '#f331a6'
+                          : ((need.type === NeedTypeEnum.PRODUCT &&
+                              need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
+                              (need.type === NeedTypeEnum.SERVICE &&
+                                need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
+                            '#ffb100',
+                    }}
+                    label={
                       need.status === PaymentStatusEnum.PARTIAL_PAY
-                        ? '#ddf96a'
-                        : need.status === PaymentStatusEnum.COMPLETE_PAY
-                        ? '#00ffb8'
+                        ? t('myPage.taskCard.tags.partialPay')
                         : need.status === PaymentStatusEnum.NOT_PAID
-                        ? '#f331a6'
-                        : '#00ffb8',
-                  }}
-                  label={
-                    need.status === PaymentStatusEnum.PARTIAL_PAY
-                      ? t('myPage.taskCard.tags.partialPay')
-                      : need.status === PaymentStatusEnum.NOT_PAID
-                      ? t('myPage.taskCard.tags.notPaid')
-                      : t('myPage.taskCard.tags.completePay')
-                  }
-                  size="small"
-                />
+                        ? t('myPage.taskCard.tags.notPaid')
+                        : need.status === PaymentStatusEnum.COMPLETE_PAY
+                        ? t('myPage.taskCard.tags.completePay')
+                        : need.type === NeedTypeEnum.PRODUCT &&
+                          need.status === ProductStatusEnum.PURCHASED_PRODUCT
+                        ? t('myPage.taskCard.tags.purchased')
+                        : need.type === NeedTypeEnum.SERVICE &&
+                          need.status === ProductStatusEnum.MONEY_TO_NGO &&
+                          t('myPage.taskCard.tags.moneyToNgo')
+                    }
+                    size="small"
+                    variant="outlined"
+                  />
+                )}
               </ListItem>
               {((need.type === NeedTypeEnum.PRODUCT &&
                 need.status === ProductStatusEnum.DELIVERED) ||
@@ -790,13 +926,14 @@ const TaskCard = ({
                 >
                   <Chip
                     sx={{
+                      color: '#1bf500',
                       zIndex: 10,
                       opacity: 0.8,
-                      color: '#000000',
-                      backgroundColor: '#1bf500',
+                      borderColor: '#1bf500',
                     }}
                     label={t('myPage.taskCard.tags.delivered')}
                     size="small"
+                    variant="outlined"
                   />
                 </ListItem>
               )}
@@ -810,13 +947,14 @@ const TaskCard = ({
                   >
                     <Chip
                       sx={{
+                        color: '#ff9800',
                         zIndex: 10,
                         opacity: 0.8,
-                        color: '#000000',
-                        backgroundColor: '#ff9800',
+                        borderColor: '#ff9800',
                       }}
                       label={t('myPage.taskCard.tags.moneyToNgo')}
                       size="small"
+                      variant="outlined"
                     />
                   </ListItem>
                 )}

@@ -415,7 +415,8 @@
   "need": {
     "noDuplicates": "No duplicates :)",
     "tooltip": {
-      "addIcon": "add Icon"
+      "addIcon": "add Icon",
+      "deleteTimer": "Time left to delete"
     },
     "title": "Needs",
     "updatedNeed": "Successfully Updated!",
