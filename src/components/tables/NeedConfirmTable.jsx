@@ -34,7 +34,7 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
-import { autoConfirmNeeds, massNeedConfirm } from '../../redux/actions/needsAction';
+import { prepareConfirmNeeds, massNeedConfirm } from '../../redux/actions/needsAction';
 import {
   categoryToString,
   getCurrentStatusString,
@@ -64,7 +64,7 @@ const NeedConfirmTable = () => {
 
   useEffect(() => {
     if (!loading) {
-      dispatch(autoConfirmNeeds());
+      dispatch(prepareConfirmNeeds());
     }
   }, []);
 
@@ -124,7 +124,7 @@ const NeedConfirmTable = () => {
           <TableCell component="th" scope="row">
             <RouterLink
               style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex` }}
-              to={`/need/edit/${row.need.child_id}/${row.need.id}`}
+              to={`/need/edit/${row.need.child.flaskId}/${row.need.flaskId}`}
               target="_blank"
             >
               <EditIcon sx={{ width: 20, height: 20, mr: 1 }} />
@@ -132,7 +132,7 @@ const NeedConfirmTable = () => {
           </TableCell>
 
           <TableCell component="th" scope="row">
-            {row.need.id}
+            {row.need.flaskId}
           </TableCell>
           <TableCell align="justify">
             <Grid container direction="column">
@@ -156,15 +156,16 @@ const NeedConfirmTable = () => {
             }}
             align="justify"
           >
-            {row.need.name_translations.en}
+            {row.need.nameTranslations.en}
             <br />
             {row.need.title}
           </TableCell>
           <TableCell align="justify" sx={{ fontWeight: 200 }}>
-            {row.need.child.sayname_translations.en}
+            {row.need.child.sayNameTranslations.en}
           </TableCell>
           <TableCell align="justify">
-            <Link href={row.need.link}>{row.need.link ? 'Link' : '-'} </Link>
+            {row.need.link && <Link href={row.need.link}>Link </Link>}
+            <Typography sx={{ fontSize: 10 }}>{row.need.provider.name}</Typography>
           </TableCell>
           <TableCell align="justify">{t(categoryToString(row.need.category))}</TableCell>
           <TableCell
@@ -178,9 +179,9 @@ const NeedConfirmTable = () => {
             }}
             align="justify"
           >
-            {row.need.description_translations.en}
+            {row.need.descriptionTranslations.en}
           </TableCell>
-          <TableCell>{row.need._cost.toLocaleString()}</TableCell>
+          <TableCell>{row.need.cost.toLocaleString()}</TableCell>
           <TableCell>{dateConvertor(row.need.created)}</TableCell>
         </TableRow>
         <TableRow>
@@ -272,7 +273,7 @@ const NeedConfirmTable = () => {
                             >
                               {getSimilarityPercentage(
                                 `${d.name_translations.en}`,
-                                `${row.need.name_translations.en}`,
+                                `${row.need.nameTranslations.en}`,
                               )}
                               % - {d.name_translations.en}
                               <br />
@@ -280,7 +281,7 @@ const NeedConfirmTable = () => {
                             </Typography>
                           </TableCell>
                           <TableCell align="justify" sx={{ fontWeight: 200 }}>
-                            {d.child.sayname_translations.en}{' '}
+                            {/* {d.child.sayNameTranslations.en}{' '} */}
                           </TableCell>
                           <TableCell align="justify">
                             <Link href={d.link}>Link</Link>
@@ -300,7 +301,7 @@ const NeedConfirmTable = () => {
                             {d.description_translations.en} {' - '}
                             {getSimilarityPercentage(
                               `${d.description_translations.en}`,
-                              `${row.need.description_translations.en}`,
+                              `${row.need.descriptionTranslations.en}`,
                             )}
                             %
                           </TableCell>
@@ -407,11 +408,12 @@ const NeedConfirmTable = () => {
                         <TableRow>
                           <TableCell />
                           <TableCell align="justify">Edit</TableCell>
+                          <TableCell align="justify">Add</TableCell>
                           <TableCell align="justify">Id</TableCell>
                           <TableCell align="justify">Icon</TableCell>
                           <TableCell align="justify">Title</TableCell>
                           <TableCell align="justify">Child</TableCell>
-                          <TableCell align="justify">Link</TableCell>
+                          <TableCell align="justify">Provider</TableCell>
                           <TableCell align="justify">Category</TableCell>
                           <TableCell align="justify">Description</TableCell>
                           <TableCell align="justify">Price (T)</TableCell>

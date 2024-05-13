@@ -512,7 +512,7 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
 };
 
 
-export const autoConfirmNeeds = () => async (dispatch, getState) => {
+export const prepareConfirmNeeds = () => async (dispatch, getState) => {
   try {
     dispatch({ type: PREPARE_CONFIRM_NEEDS_REQUEST });
 
