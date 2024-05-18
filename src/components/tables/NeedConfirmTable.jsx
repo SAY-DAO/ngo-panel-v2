@@ -134,14 +134,29 @@ const NeedConfirmTable = () => {
           <TableCell component="th" scope="row">
             {row.need.flaskId}
           </TableCell>
-          <TableCell align="justify">
+          <TableCell align="center">
             <Grid container direction="column">
-              <Avatar sx={{ border: '1px solid grey' }} src={prepareUrl(row.need.imageUrl)} />
+              <Avatar
+                sx={{ border: '1px solid grey', m: 'auto' }}
+                src={prepareUrl(row.need.imageUrl)}
+              />
               <Typography sx={{ fontSize: 10 }}>
                 Valid Dups: {row.duplicates ? `${row.validCount} / ${row.duplicates.length}` : 0}
               </Typography>
               <Typography sx={{ fontSize: 10 }}>
                 MissMatch: {(row.possibleMissMatch && row.possibleMissMatch.length) || 0}
+              </Typography>
+              <Typography
+                sx={{
+                  maxWidth: '120px !important',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  height: '1.2em',
+                  whiteSpace: 'nowrap',
+                  // fontWeight: 200,
+                }}
+              >
+                {row.need.child.ngo && row.need.child.ngo.name}
               </Typography>
             </Grid>
           </TableCell>
@@ -154,20 +169,20 @@ const NeedConfirmTable = () => {
               whiteSpace: 'nowrap',
               fontWeight: 200,
             }}
-            align="justify"
+            align="center"
           >
             {row.need.nameTranslations.en}
             <br />
             {row.need.title}
           </TableCell>
-          <TableCell align="justify" sx={{ fontWeight: 200 }}>
+          <TableCell align="center" sx={{ fontWeight: 200 }}>
             {row.need.child.sayNameTranslations.en}
           </TableCell>
-          <TableCell align="justify">
+          <TableCell align="center">
             {row.need.link && <Link href={row.need.link}>Link </Link>}
             <Typography sx={{ fontSize: 10 }}>{row.need.provider.name}</Typography>
           </TableCell>
-          <TableCell align="justify">{t(categoryToString(row.need.category))}</TableCell>
+          <TableCell align="center">{t(categoryToString(row.need.category))}</TableCell>
           <TableCell
             sx={{
               maxWidth: '200px !important',
@@ -177,7 +192,7 @@ const NeedConfirmTable = () => {
               whiteSpace: 'nowrap',
               fontWeight: 150,
             }}
-            align="justify"
+            align="center"
           >
             {row.need.descriptionTranslations.en}
           </TableCell>
@@ -221,17 +236,17 @@ const NeedConfirmTable = () => {
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        <TableCell align="justify">Id</TableCell>
-                        <TableCell align="justify">Icon</TableCell>
-                        <TableCell align="justify">Title</TableCell>
-                        <TableCell align="justify">Child</TableCell>
-                        <TableCell align="justify">Link</TableCell>
-                        <TableCell align="justify">Category</TableCell>
-                        <TableCell align="justify">Description</TableCell>
-                        <TableCell align="justify">Price (T)</TableCell>
-                        <TableCell align="justify">Created</TableCell>
-                        <TableCell align="justify">Confirmed</TableCell>
-                        <TableCell align="justify">Validation</TableCell>
+                        <TableCell align="center">Id</TableCell>
+                        <TableCell align="center">Icon</TableCell>
+                        <TableCell align="center">Title</TableCell>
+                        <TableCell align="center">Child</TableCell>
+                        <TableCell align="center">Link</TableCell>
+                        <TableCell align="center">Category</TableCell>
+                        <TableCell align="center">Description</TableCell>
+                        <TableCell align="center">Price (T)</TableCell>
+                        <TableCell align="center">Created</TableCell>
+                        <TableCell align="center">Confirmed</TableCell>
+                        <TableCell align="center">Validation</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -260,7 +275,7 @@ const NeedConfirmTable = () => {
                               )}
                             %
                           </TableCell>
-                          <TableCell align="justify">
+                          <TableCell align="center">
                             <Typography
                               sx={{
                                 maxWidth: '140px !important',
@@ -280,13 +295,13 @@ const NeedConfirmTable = () => {
                               {d.validation.titleResult}% - {d.title}
                             </Typography>
                           </TableCell>
-                          <TableCell align="justify" sx={{ fontWeight: 200 }}>
+                          <TableCell align="center" sx={{ fontWeight: 200 }}>
                             {/* {d.child.sayNameTranslations.en}{' '} */}
                           </TableCell>
-                          <TableCell align="justify">
+                          <TableCell align="center">
                             <Link href={d.link}>Link</Link>
                           </TableCell>
-                          <TableCell align="justify">{t(categoryToString(d.category))}</TableCell>
+                          <TableCell align="center">{t(categoryToString(d.category))}</TableCell>
                           <TableCell
                             sx={{
                               maxWidth: '200px !important',
@@ -296,7 +311,7 @@ const NeedConfirmTable = () => {
                               whiteSpace: 'nowrap',
                               fontWeight: 200,
                             }}
-                            align="justify"
+                            align="center"
                           >
                             {d.description_translations.en} {' - '}
                             {getSimilarityPercentage(
@@ -407,17 +422,19 @@ const NeedConfirmTable = () => {
                       <TableHead>
                         <TableRow>
                           <TableCell />
-                          <TableCell align="justify">Edit</TableCell>
-                          <TableCell align="justify">Add</TableCell>
-                          <TableCell align="justify">Id</TableCell>
-                          <TableCell align="justify">Icon</TableCell>
-                          <TableCell align="justify">Title</TableCell>
-                          <TableCell align="justify">Child</TableCell>
-                          <TableCell align="justify">Provider</TableCell>
-                          <TableCell align="justify">Category</TableCell>
-                          <TableCell align="justify">Description</TableCell>
-                          <TableCell align="justify">Price (T)</TableCell>
-                          <TableCell align="justify">Created</TableCell>
+                          <TableCell align="center">Edit</TableCell>
+                          <TableCell align="center">Add</TableCell>
+                          <TableCell align="center">Id</TableCell>
+                          <TableCell sx={{ minWidth: 150 }} align="center">
+                            Icon
+                          </TableCell>
+                          <TableCell align="center">Title</TableCell>
+                          <TableCell align="center">Child</TableCell>
+                          <TableCell align="center">Provider</TableCell>
+                          <TableCell align="center">Category</TableCell>
+                          <TableCell align="center">Description</TableCell>
+                          <TableCell align="center">Price (T)</TableCell>
+                          <TableCell align="center">Created</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
