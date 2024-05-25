@@ -93,11 +93,11 @@ const NeedConfirmTable = () => {
               borderBottom: 'unset',
               opacity: row.errorMsg ? 0.45 : row.possibleMissMatch.length ? 0.5 : 1,
               backgroundColor:
-                !manualIds.find((i) => i === row.need.id) && row.possibleMissMatch.length > 0
+                !manualIds.find((i) => i === row.need.flaskId) && row.possibleMissMatch.length > 0
                   ? '#7f5c1b'
-                  : !manualIds.find((i) => i === row.need.id) && row.errorMsg
+                  : !manualIds.find((i) => i === row.need.flaskId) && row.errorMsg
                   ? '#8f4646'
-                  : manualIds.find((i) => i === row.need.id) && '#235053',
+                  : manualIds.find((i) => i === row.need.flaskId) && '#235053',
             },
           }}
         >
@@ -109,12 +109,12 @@ const NeedConfirmTable = () => {
           <TableCell>
             {(row.errorMsg || row.possibleMissMatch.length > 0) && (
               <Tooltip title="Manually add to to be confirmed list">
-                {!manualIds.find((i) => i === row.need.id) ? (
-                  <IconButton onClick={() => handleManualConfirm(row.need.id)}>
+                {!manualIds.find((i) => i === row.need.flaskId) ? (
+                  <IconButton onClick={() => handleManualConfirm(row.need.flaskId)}>
                     <AddCircleRoundedIcon color="success" />
                   </IconButton>
                 ) : (
-                  <IconButton onClick={() => handleManualRemove(row.need.id)}>
+                  <IconButton onClick={() => handleManualRemove(row.need.flaskId)}>
                     <RemoveCircleIcon color="danger" />
                   </IconButton>
                 )}
@@ -342,11 +342,11 @@ const NeedConfirmTable = () => {
   const handleMassConfirm = () => {
     if (process.env.REACT_APP_NODE_ENV === 'production') {
       if (checked) {
-        const needIds = result.list.filter((n) => !n.errorMsg).map((r) => r.need.id);
+        const needIds = result.list.filter((n) => !n.errorMsg).map((r) => r.need.flaskId);
         dispatch(massNeedConfirm(needIds));
       } else {
         const needs = result.list.filter((n) => !n.errorMsg);
-        const needIds = needs.filter((n) => n.possibleMissMatch.length < 1).map((r) => r.need.id);
+        const needIds = needs.filter((n) => n.possibleMissMatch.length < 1).map((r) => r.need.flaskId);
         dispatch(massNeedConfirm([...needIds, manualIds]));
       }
     } else {
@@ -430,7 +430,9 @@ const NeedConfirmTable = () => {
                           </TableCell>
                           <TableCell align="center">Title</TableCell>
                           <TableCell align="center">Child</TableCell>
-                          <TableCell align="center">Provider</TableCell>
+                          <TableCell sx={{ minWidth: 150 }} align="center">
+                            Provider
+                          </TableCell>
                           <TableCell align="center">Category</TableCell>
                           <TableCell align="center">Description</TableCell>
                           <TableCell align="center">Price (T)</TableCell>
@@ -438,7 +440,7 @@ const NeedConfirmTable = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {result && result.list.map((r) => <Row key={r.need.id} row={r} />)}
+                        {result && result.list.map((r) => <Row key={r.need.flaskId} row={r} />)}
                       </TableBody>
                     </Table>
                   </TableContainer>
