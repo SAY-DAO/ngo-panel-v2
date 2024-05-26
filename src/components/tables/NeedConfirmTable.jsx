@@ -113,7 +113,7 @@ const NeedConfirmTable = () => {
               <Tooltip title="Manually add to to be confirmed list">
                 {!manualIds.find((i) => i === row.need.flaskId) ? (
                   <Grid>
-                    {row.ticket && (
+                    {row.ticket ? (
                       <FlagOutlinedIcon
                         sx={{
                           m: 'auto',
@@ -125,11 +125,11 @@ const NeedConfirmTable = () => {
                               : row.ticket.color === Colors.RED && colorChoices[2].code,
                         }}
                       />
+                    ) : (
+                      <IconButton onClick={() => handleManualConfirm(row.need.flaskId)}>
+                        <AddCircleRoundedIcon color="success" />
+                      </IconButton>
                     )}
-
-                    <IconButton onClick={() => handleManualConfirm(row.need.flaskId)}>
-                      <AddCircleRoundedIcon color="success" />
-                    </IconButton>
                   </Grid>
                 ) : (
                   <IconButton onClick={() => handleManualRemove(row.need.flaskId)}>
@@ -371,11 +371,11 @@ const NeedConfirmTable = () => {
       }
     } else {
       console.log('only confirm in production');
-        const needs = result.list.filter((n) => !n.errorMsg);
-        const needIds = needs
+      const needs = result.list.filter((n) => !n.errorMsg);
+      const needIds = needs
         .filter((n) => n.possibleMissMatch.length < 1)
         .map((r) => r.need.flaskId);
-        console.log([...needIds, manualIds]);
+      console.log([...needIds, manualIds]);
     }
   };
 
