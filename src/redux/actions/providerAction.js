@@ -12,6 +12,9 @@ import {
   PROVIDER_LIST_FAIL,
   PROVIDER_LIST_REQUEST,
   PROVIDER_LIST_SUCCESS,
+  PROVIDER_BY_NEED_FAIL,
+  PROVIDER_BY_NEED_REQUEST,
+  PROVIDER_BY_NEED_SUCCESS,
   UPDATE_PROVIDER_FAIL,
   UPDATE_PROVIDER_REQUEST,
   UPDATE_PROVIDER_SUCCESS,
@@ -72,6 +75,36 @@ export const fetchProviderList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: PROVIDER_LIST_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const fetchProviderByNeed = (flaskNeedId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PROVIDER_BY_NEED_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/providers/need/${flaskNeedId}`, config);
+
+    dispatch({
+      type: PROVIDER_BY_NEED_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: PROVIDER_BY_NEED_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }

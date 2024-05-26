@@ -175,9 +175,33 @@ const ProviderEdit = () => {
 
   const handleChangeActive = () => {
     if (activeChecked && result.isActive) {
-      dispatch(updateProvider({ id: result.id, isActive: false }));
+      dispatch(
+        updateProvider({
+          id: result.id,
+          isActive: false,
+          name: result.name,
+          website: result.website,
+          type: result.type,
+          country: result.country,
+          city: result.city,
+          description: result.description,
+          logoUrl: result.logoUrl,
+        }),
+      );
     } else {
-      dispatch(updateProvider({ id: result.id, isActive: true }));
+      dispatch(
+        updateProvider({
+          id: result.id,
+          isActive: true,
+          name: result.name,
+          website: result.website,
+          type: result.type,
+          country: result.country,
+          city: result.city,
+          description: result.description,
+          logoUrl: result.logoUrl,
+        }),
+      );
     }
   };
 
@@ -231,12 +255,12 @@ const ProviderEdit = () => {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
       {!id ||
-        loadingProviderById ||
-        loadingProviderUpdate ||
-        !result ||
-        !countries ||
-        !states ||
-        !cities ? (
+      loadingProviderById ||
+      loadingProviderUpdate ||
+      !result ||
+      !countries ||
+      !states ||
+      !cities ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>

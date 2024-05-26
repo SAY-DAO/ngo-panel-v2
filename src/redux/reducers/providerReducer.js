@@ -14,6 +14,10 @@ import {
   PROVIDER_LIST_REQUEST,
   PROVIDER_LIST_RESET,
   PROVIDER_LIST_SUCCESS,
+  PROVIDER_BY_NEED_FAIL,
+  PROVIDER_BY_NEED_REQUEST,
+  PROVIDER_BY_NEED_RESET,
+  PROVIDER_BY_NEED_SUCCESS,
   UPDATE_PROVIDER_FAIL,
   UPDATE_PROVIDER_IS_ACTIVE_FAIL,
   UPDATE_PROVIDER_IS_ACTIVE_REQUEST,
@@ -37,6 +41,20 @@ export const providerByIdReducer = (state = { success: false }, action) => {
   }
 };
 
+export const providerByNeedReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case PROVIDER_BY_NEED_REQUEST:
+      return { loading: true };
+    case PROVIDER_BY_NEED_SUCCESS:
+      return { loading: false, success: true, provider: action.payload };
+    case PROVIDER_BY_NEED_FAIL:
+      return { loading: false, error: action.payload };
+    case PROVIDER_BY_NEED_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
 export const providerListReducer = (state = { success: false }, action) => {
   switch (action.type) {
     case PROVIDER_LIST_REQUEST:

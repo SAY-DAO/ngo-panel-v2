@@ -320,7 +320,7 @@ export const deleteNeed = (needId) => async (dispatch, getState) => {
   }
 };
 
-export const updateNeed = (values) => async (dispatch, getState) => {
+export const updateNeed = (justProvider, values) => async (dispatch, getState) => {
   try {
     dispatch({ type: UPDATE_ONE_NEED_REQUEST });
     const {
@@ -361,6 +361,19 @@ export const updateNeed = (values) => async (dispatch, getState) => {
       formData,
       config,
     );
+
+    // create relation between nest provider and flask need if not available
+      const config2 = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+          flaskId: userInfo && userInfo.id,
+        },
+      };
+
+      const request = { flaskNeedId: data.id, nestProviderId: justProvider.id };
+      await daoApi.post(`/providers/join`, request, config2);
+
     dispatch({
       type: UPDATE_ONE_NEED_SUCCESS,
       payload: data,

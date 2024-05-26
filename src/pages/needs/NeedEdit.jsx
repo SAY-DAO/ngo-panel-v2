@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -34,7 +35,7 @@ import { fetchMyChildById } from '../../redux/actions/childrenAction';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-import { fetchProviderList } from '../../redux/actions/providerAction';
+import { fetchProviderByNeed, fetchProviderList } from '../../redux/actions/providerAction';
 import Message from '../../components/Message';
 import { apiDao } from '../../env';
 import { getAge } from '../../utils/helpers';
@@ -66,8 +67,12 @@ const NeedEdit = () => {
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
 
+  const [justProvider, setJustProvider] = useState();
   const providerAll = useSelector((state) => state.providerAll);
   const { providerList } = providerAll;
+
+  const providerByNeed = useSelector((state) => state.providerByNeed);
+  const { provider: fetchedProvider } = providerByNeed;
 
   const childById = useSelector((state) => state.childById);
   const { result, loading: loadingChild, success: successChild } = childById;
@@ -85,9 +90,17 @@ const NeedEdit = () => {
   // one need
   useEffect(() => {
     dispatch(fetchProviderList());
+    dispatch(fetchProviderByNeed(needId));
     dispatch(fetchChildOneNeed(needId));
     dispatch({ type: CHILD_ONE_NEED_RESET });
   }, []);
+
+  // one need
+  useEffect(() => {
+    if (needId) {
+      dispatch(fetchProviderByNeed(needId));
+    }
+  }, [needId]);
 
   // theChild
   useEffect(() => {
@@ -100,12 +113,14 @@ const NeedEdit = () => {
     name_fa: Yup.string().required('Please enter needs name (fa)'),
     name_en: Yup.string().required('Please enter needs name (en)'),
     cost: Yup.number().required('Please enter needs cost'),
-    type: Yup.number().required('Please enter needs type/provider'),
+    provider: Yup.string().required('Please enter needs type/provider'),
     doing_duration: Yup.number().required('Please enter estimated finishing time'),
     category: Yup.string().required('Please enter needs category'),
     link:
       oneNeed &&
+      justProvider &&
       oneNeed.type === NeedTypeEnum.PRODUCT &&
+      justProvider.type === NeedTypeEnum.PRODUCT &&
       Yup.string().url().required('Please enter needs link'),
     imageUrl: Yup.string().required('Please choose an icon'),
   });
@@ -113,7 +128,9 @@ const NeedEdit = () => {
   const {
     setValue,
     register,
+    setError,
     control,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -124,7 +141,6 @@ const NeedEdit = () => {
     if (oneNeed) {
       setValue('name_fa', oneNeed.name_translations.fa);
       setValue('name_en', oneNeed.name_translations.en);
-      setValue('type', oneNeed.type);
       setValue('category', oneNeed.category);
       setValue('isUrgent', oneNeed.isUrgent);
       setValue('desc_fa', oneNeed.description_translations.fa);
@@ -142,7 +158,7 @@ const NeedEdit = () => {
         setIsUrgentChecked(false);
       }
     }
-  }, [oneNeed]);
+  }, [oneNeed, justProvider]);
 
   useEffect(() => {
     if (successUpdateNeed) {
@@ -151,28 +167,35 @@ const NeedEdit = () => {
   }, [successUpdateNeed]);
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data, null, 2));
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    await sleep(300);
-    dispatch(
-      updateNeed({
-        needId: oneNeed.id,
-        name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
-        description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
-        isUrgent: data.isUrgent,
-        cost: data.cost,
-        type: data.type,
-        category: data.category,
-        imageUrl: finalImageFile,
-        details: data.details,
-        information: data.informations,
-        doing_duration: data.doing_duration,
-        link: data.link,
-        isUrgentDesc: data.isUrgentDesc,
-        affiliateLinkUrl: isAffChecked && data.affiliateLinkUrl,
-        childId,
-      }),
-    );
+    if (!justProvider) {
+      setError('provider', {
+        message: 'We need the provider',
+        type: 'required',
+      });
+    } else {
+      const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      await sleep(300);
+      console.log(justProvider);
+      dispatch(
+        updateNeed(justProvider, {
+          needId: oneNeed.id,
+          name: JSON.stringify({ en: data.name_en, fa: data.name_fa }),
+          description: JSON.stringify({ en: data.desc_en, fa: data.desc_fa }),
+          isUrgent: data.isUrgent,
+          cost: data.cost,
+          type: justProvider.type,
+          category: data.category,
+          imageUrl: finalImageFile,
+          details: data.details,
+          information: data.informations,
+          doing_duration: data.doing_duration,
+          link: data.link,
+          isUrgentDesc: data.isUrgentDesc,
+          affiliateLinkUrl: isAffChecked && data.affiliateLinkUrl,
+          childId,
+        }),
+      );
+    }
   };
 
   // dialog image
@@ -202,6 +225,16 @@ const NeedEdit = () => {
     console.log(e.target.checked);
     setValue('isUrgent', e.target.checked);
   };
+
+  useEffect(() => {
+    const selected = watch('provider');
+    if (selected && providerList) {
+      console.log('hi');
+      setJustProvider(providerList.find((p) => p.id === selected));
+    } else if (fetchedProvider && providerList) {
+      setJustProvider(fetchedProvider);
+    }
+  }, [fetchedProvider, providerList, watch('provider')]);
 
   return (
     <PageContainer title="Need Edit" description="this is Need Edit page">
@@ -467,20 +500,22 @@ const NeedEdit = () => {
                           mb={2}
                         >
                           <Grid item xs={6}>
-                            <CustomFormLabel htmlFor="type">{t('need.provider')}</CustomFormLabel>
+                            <CustomFormLabel htmlFor="provider">
+                              {t('need.provider')}
+                            </CustomFormLabel>
                             <CustomSelect
                               sx={{ width: '100%', color: 'gray' }}
                               labelId="provider-controlled-open-select-label"
                               id="provider-controlled-open-select"
-                              defaultValue={parseInt(oneNeed.type, 10)}
+                              defaultValue={fetchedProvider ? fetchedProvider.id : 0}
                               control={control}
-                              register={{ ...register('type', { required: true }) }}
+                              register={{ ...register('provider', { required: true }) }}
                             >
                               {oneNeed ? (
                                 providerList
                                   .filter((p) => p.isActive === true)
                                   .map((p) => (
-                                    <MenuItem key={p.id} value={p.type}>
+                                    <MenuItem key={p.id} value={p.id}>
                                       <Grid container spacing={2}>
                                         <Grid item>
                                           <Avatar
@@ -519,8 +554,10 @@ const NeedEdit = () => {
                               sx={{ width: '100%', color: 'gray' }}
                               id="type-controlled-open-select"
                             >
-                              {providerList.filter((p) => p.type === oneNeed.type)[0]
-                                ? providerList.filter((p) => p.type === oneNeed.type)[0].typeName
+                              {justProvider && justProvider.type === 0
+                                ? t('need.providers.service')
+                                : justProvider && justProvider.type === 1
+                                ? t('need.providers.product')
                                 : t('need.providerSelect')}
                             </Typography>
                           </Grid>
@@ -684,6 +721,13 @@ const NeedEdit = () => {
                           <li>
                             <Typography color="error" variant="span">
                               {errors && errors.doing_duration?.message}
+                            </Typography>
+                          </li>
+                        )}
+                        {errors && errors.provider && (
+                          <li>
+                            <Typography color="error" variant="span">
+                              {errors && errors.provider?.message}
                             </Typography>
                           </li>
                         )}

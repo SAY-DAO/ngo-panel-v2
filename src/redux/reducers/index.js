@@ -64,6 +64,7 @@ import {
 import {
   providerAddReducer,
   providerByIdReducer,
+  providerByNeedReducer,
   providerDeleteReducer,
   providerListReducer,
   providerUpdateIsActiveReducer,
@@ -157,6 +158,7 @@ export default combineReducers({
   receiptAdd: receiptAddReducer,
   providerStatusUpdate: providerUpdateIsActiveReducer,
   providerById: providerByIdReducer,
+  providerByNeed: providerByNeedReducer,
   providerAll: providerListReducer,
   providerUpdate: providerUpdateReducer,
   providerAdd: providerAddReducer,
