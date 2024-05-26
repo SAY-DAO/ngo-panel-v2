@@ -158,7 +158,7 @@ const NeedEdit = () => {
         setIsUrgentChecked(false);
       }
     }
-  }, [oneNeed, justProvider]);
+  }, [oneNeed]);
 
   useEffect(() => {
     if (successUpdateNeed) {
