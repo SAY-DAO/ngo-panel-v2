@@ -91,7 +91,7 @@ const NeedConfirmTable = () => {
           sx={{
             '& > *': {
               borderBottom: 'unset',
-              opacity: row.errorMsg ? 0.45 : row.possibleMissMatch.length ? 0.5 : 1,
+              // opacity: row.errorMsg ? 0.45 : row.possibleMissMatch.length ? 0.5 : 1,
               backgroundColor:
                 !manualIds.find((i) => i === row.need.flaskId) && row.possibleMissMatch.length > 0
                   ? '#7f5c1b'
