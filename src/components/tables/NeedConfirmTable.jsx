@@ -23,6 +23,7 @@ import {
   FormGroup,
   Tooltip,
 } from '@mui/material';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -43,6 +44,7 @@ import {
   urlSimilarityPercentage,
 } from '../../utils/helpers';
 import { dateConvertor } from '../../utils/persianToEnglish';
+import { colorChoices, Colors } from '../../utils/types';
 
 const NeedConfirmTable = () => {
   const dispatch = useDispatch();
@@ -110,9 +112,25 @@ const NeedConfirmTable = () => {
             {(row.errorMsg || row.possibleMissMatch.length > 0) && (
               <Tooltip title="Manually add to to be confirmed list">
                 {!manualIds.find((i) => i === row.need.flaskId) ? (
-                  <IconButton onClick={() => handleManualConfirm(row.need.flaskId)}>
-                    <AddCircleRoundedIcon color="success" />
-                  </IconButton>
+                  <Grid>
+                    {row.ticket && (
+                      <FlagOutlinedIcon
+                        sx={{
+                          m: 'auto',
+                          color:
+                            row.ticket.color === Colors.YELLOW
+                              ? colorChoices[1].code
+                              : row.ticket.color === Colors.BLUE
+                              ? colorChoices[0].code
+                              : row.ticket.color === Colors.RED && colorChoices[2].code,
+                        }}
+                      />
+                    )}
+
+                    <IconButton onClick={() => handleManualConfirm(row.need.flaskId)}>
+                      <AddCircleRoundedIcon color="success" />
+                    </IconButton>
+                  </Grid>
                 ) : (
                   <IconButton onClick={() => handleManualRemove(row.need.flaskId)}>
                     <RemoveCircleIcon color="danger" />
@@ -346,7 +364,9 @@ const NeedConfirmTable = () => {
         dispatch(massNeedConfirm(needIds));
       } else {
         const needs = result.list.filter((n) => !n.errorMsg);
-        const needIds = needs.filter((n) => n.possibleMissMatch.length < 1).map((r) => r.need.flaskId);
+        const needIds = needs
+          .filter((n) => n.possibleMissMatch.length < 1)
+          .map((r) => r.need.flaskId);
         dispatch(massNeedConfirm([...needIds, manualIds]));
       }
     } else {
