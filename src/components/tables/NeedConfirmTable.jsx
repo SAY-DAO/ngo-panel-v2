@@ -50,7 +50,8 @@ const NeedConfirmTable = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { result, loading } = useSelector((state) => state.needAutoConfirm);
+  const { result, loading } = useSelector((state) => state.needPrepareConfirm);
+  const { loading: loadingMassConfirm } = useSelector((state) => state.needMassConfirm);
   const [checked, setChecked] = useState(false);
   const [manualIds, setManualIds] = useState([]);
   const [totalMissMatch, setTotalMissMatch] = useState(0);
@@ -400,7 +401,7 @@ const NeedConfirmTable = () => {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
 
-      {!result ? (
+      {loading? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -409,7 +410,7 @@ const NeedConfirmTable = () => {
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>
-                <LoadingButton loading={loading} variant="outlined" onClick={handleMassConfirm}>
+                <LoadingButton loading={loadingMassConfirm} variant="outlined" onClick={handleMassConfirm}>
                   Confirm{' '}
                   {result.list.filter((n) => !n.errorMsg).length -
                     (!checked ? totalMissMatch : 0) +

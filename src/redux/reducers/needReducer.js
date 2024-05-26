@@ -251,7 +251,7 @@ export const duplicatesReducer = (state = { success: false }, action) => {
   }
 };
 
-export const autoConfirmReducer = (state = { success: false }, action) => {
+export const prepareConfirmReducer = (state = { success: false }, action) => {
   switch (action.type) {
     case PREPARE_CONFIRM_NEEDS_REQUEST:
       return { loading: true };
@@ -261,18 +261,27 @@ export const autoConfirmReducer = (state = { success: false }, action) => {
       return { loading: false, error: action.payload };
     case PREPARE_CONFIRM_NEEDS_RESET:
       return {};
-      case MASS_NEED_CONFIRM_REQUEST:
-        return { loading: true };
-      case MASS_NEED_CONFIRM_SUCCESS:
-        return { loading: false, success: true, confirmed: action.payload };
-      case MASS_NEED_CONFIRM_FAIL:
-        return { loading: false, error: action.payload };
-      case MASS_NEED_CONFIRM_RESET:
-        return {};
     default:
       return state;
   }
 };
+
+
+export const massConfirmReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case MASS_NEED_CONFIRM_REQUEST:
+      return { loading: true };
+    case MASS_NEED_CONFIRM_SUCCESS:
+      return { loading: false, success: true, confirmed: action.payload };
+    case MASS_NEED_CONFIRM_FAIL:
+      return { loading: false, error: action.payload };
+    case MASS_NEED_CONFIRM_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
 export const deleteOldNeedsReducer = (state = {}, action) => {
   switch (action.type) {
     case DELETE_OLD_NEEDS_REQUEST:
