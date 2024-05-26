@@ -371,7 +371,11 @@ const NeedConfirmTable = () => {
       }
     } else {
       console.log('only confirm in production');
-      console.log(manualIds);
+        const needs = result.list.filter((n) => !n.errorMsg);
+        const needIds = needs
+        .filter((n) => n.possibleMissMatch.length < 1)
+        .map((r) => r.need.flaskId);
+        console.log([...needIds, manualIds]);
     }
   };
 
@@ -396,7 +400,7 @@ const NeedConfirmTable = () => {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
 
-      {loading ? (
+      {!result ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
