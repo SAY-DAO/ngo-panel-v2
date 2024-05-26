@@ -52,6 +52,10 @@ import {
   PREPARE_CONFIRM_NEEDS_SUCCESS,
   PREPARE_CONFIRM_NEEDS_FAIL,
   PREPARE_CONFIRM_NEEDS_RESET,
+  MASS_NEED_CONFIRM_REQUEST,
+  MASS_NEED_CONFIRM_SUCCESS,
+  MASS_NEED_CONFIRM_FAIL,
+  MASS_NEED_CONFIRM_RESET,
   DELETE_OLD_NEEDS_REQUEST,
   DELETE_OLD_NEEDS_SUCCESS,
   DELETE_OLD_NEEDS_FAIL,
@@ -257,6 +261,14 @@ export const autoConfirmReducer = (state = { success: false }, action) => {
       return { loading: false, error: action.payload };
     case PREPARE_CONFIRM_NEEDS_RESET:
       return {};
+      case MASS_NEED_CONFIRM_REQUEST:
+        return { loading: true };
+      case MASS_NEED_CONFIRM_SUCCESS:
+        return { loading: false, success: true, confirmed: action.payload };
+      case MASS_NEED_CONFIRM_FAIL:
+        return { loading: false, error: action.payload };
+      case MASS_NEED_CONFIRM_RESET:
+        return {};
     default:
       return state;
   }
