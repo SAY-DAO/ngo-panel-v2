@@ -322,7 +322,7 @@ const Menuitems = [
     admin: true,
     children: [
       {
-        title: 'sidebar.campaign.type.monthly',
+        title: 'sidebar.campaign.type.report',
         icon: 'list',
         href: CAMPAIGN_MONTHLY,
         admin: true,

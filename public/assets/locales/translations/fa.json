@@ -362,7 +362,7 @@
     "campaign": {
       "title": "کمپین‌ها",
       "type": {
-        "monthly": "ماهانه",
+        "report": "گزارش",
         "newsletter": "خبرنامه"
       }
     },

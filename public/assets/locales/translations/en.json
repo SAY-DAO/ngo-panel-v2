@@ -316,7 +316,7 @@
     "campaign": {
       "title": "Campaigns",
       "type": {
-        "monthly": "Monthly",
+        "report": "Report",
         "newsletter": "News Letter"
       }
     },
