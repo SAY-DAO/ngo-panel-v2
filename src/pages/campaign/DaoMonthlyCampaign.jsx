@@ -77,11 +77,11 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function DaoCampaignList() {
+export default function DaoMonthlyCampaign() {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const campaignResult = useSelector((state) => state.campaignResult);
   const { campaigns } = campaignResult;
 
@@ -142,7 +142,7 @@ export default function DaoCampaignList() {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                  rowsPerPageOptions={[5, 10, 25]}
                   colSpan={3}
                   count={campaigns.meta.totalItems}
                   rowsPerPage={rowsPerPage}

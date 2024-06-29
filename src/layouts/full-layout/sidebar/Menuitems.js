@@ -40,9 +40,10 @@ import {
   MY_SIGNATURES,
   DAO_HOME,
   CHILDREN_PRE_REGISTER_LIST,
-  CAMPAIGN_LIST,
+  CAMPAIGN_MONTHLY,
   USERS_PAGE,
   NEED_CONFIRM,
+  CAMPAIGN_NEWSLETTER
 } from '../../../routes/RouteConstants';
 
 const Menuitems = [
@@ -321,9 +322,15 @@ const Menuitems = [
     admin: true,
     children: [
       {
-        title: 'sidebar.list',
+        title: 'sidebar.campaign.type.monthly',
         icon: 'list',
-        href: CAMPAIGN_LIST,
+        href: CAMPAIGN_MONTHLY,
+        admin: true,
+      },
+      {
+        title: 'sidebar.campaign.type.newsletter',
+        icon: 'plus-square',
+        href: CAMPAIGN_NEWSLETTER,
         admin: true,
       },
     ],

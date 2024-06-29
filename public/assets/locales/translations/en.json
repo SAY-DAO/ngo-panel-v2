@@ -1,4 +1,16 @@
 {
+  "campaigns": {
+      "title":"Email title",
+      "newsletterContext": {
+      "title":"News Letter",
+      "nestName": "Email file name",
+      "smsLink": "SMS link",
+      "smsContent": "SMS content",
+      "titles": "Titles",
+      "descriptions": "Descriptions",
+      "images": "Images"
+    }
+  },
   "deleteModal": {
     "need": {
       "title": "Deleting Need",
@@ -92,6 +104,7 @@
   "button": {
     "reset": "Reset",
     "finish": "Finish",
+    "finish-test": "Send Test",
     "next": "Next",
     "back": "Back",
     "update": "Update",
@@ -301,7 +314,11 @@
       "title": "Contributions"
     },
     "campaign": {
-      "title": "Campaigns"
+      "title": "Campaigns",
+      "type": {
+        "monthly": "Monthly",
+        "newsletter": "News Letter"
+      }
     },
     "daoHeader": "DAO",
     "dashboard": "Dashboard",

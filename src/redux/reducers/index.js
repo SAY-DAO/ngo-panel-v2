@@ -88,7 +88,7 @@ import {
 } from './analyticReducer';
 import { midjourneyReducer } from './midjourneyReducer';
 import { commentsReducer } from './commentReducer';
-import { campaignsReducer } from './campaignReducer';
+import { campaignsReducer, newsLetterReducer } from './campaignReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -171,4 +171,5 @@ export default combineReducers({
   updateArrivals: updateArrivalsReducer,
   commentResult: commentsReducer,
   campaignResult: campaignsReducer,
+  campaignNewsLetter: newsLetterReducer
 });

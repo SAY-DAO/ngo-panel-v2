@@ -31,4 +31,5 @@ export const MILESTONE_LIST = '/dao/milestone/list';
 export const NEED_MIDJOURNEY = '/midjourney/list';
 export const NEED_COMMENT = '/comment/list';
 export const CONTRIBUTION = '/contribution/list';
-export const CAMPAIGN_LIST = '/campaign/list'
+export const CAMPAIGN_MONTHLY = '/campaign/list'
+export const CAMPAIGN_NEWSLETTER = '/newsletter/add'

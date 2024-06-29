@@ -6,6 +6,9 @@ import {
   FORCE_SEND_CAMPAIGN_REQUEST,
   FORCE_SEND_CAMPAIGN_SUCCESS,
   FORCE_SEND_CAMPAIGN_FAIL,
+  SEND_NEWSLETTER_CAMPAIGN_REQUEST,
+  SEND_NEWSLETTER_CAMPAIGN_SUCCESS,
+  SEND_NEWSLETTER_CAMPAIGN_FAIL,
 } from '../constants/campaignConstants';
 
 export const fetchCampaigns = () => async (dispatch, getState) => {
@@ -68,4 +71,41 @@ export const forceSendCampaign = () => async (dispatch, getState) => {
       payload: e.response && e.response.data ? e.response.data.message : e.message,
     });
   }
+
+};
+
+
+export const sendNewsLetter = (details) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: SEND_NEWSLETTER_CAMPAIGN_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.post(
+      `/campaign/send/newsLetter`,
+      details,
+      config,
+    );
+
+    dispatch({
+      type: SEND_NEWSLETTER_CAMPAIGN_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: SEND_NEWSLETTER_CAMPAIGN_FAIL,
+      payload: e.response && e.response.data ? e.response.data.message : e.message,
+    });
+  }
+
 };

@@ -1,4 +1,16 @@
 {
+  "campaigns": {
+      "title":" عنوان ایمیل",
+      "newsletterContext": {
+      "title":"خبرنامه",
+      "nestName": "نام فایل ایمیل",
+      "smsLink": "لینک پیامک",
+      "smsContent": "متن پیامک",
+      "titles": "عناوین",
+      "descriptions": "پاراگراف‌ها",
+      "images": "عکس‌ها"
+    }
+  },
   "deleteModal": {
     "need": {
       "title": "حذف نیاز",
@@ -130,6 +142,7 @@
   "button": {
     "reset": "بازنشانی",
     "finish": "ارسال",
+    "finish-test": "ارسال تست",
     "next": "صفحه بعد",
     "back": "صفحه قبل",
     "update": "ویرایش",
@@ -347,7 +360,11 @@
       "title": "مشارکت‌ها"
     },
     "campaign": {
-      "title": "کمپین‌ها"
+      "title": "کمپین‌ها",
+      "type": {
+        "monthly": "ماهانه",
+        "newsletter": "خبرنامه"
+      }
     },
     "daoHeader": "DAO",
     "dashboard": "داشبورد",
