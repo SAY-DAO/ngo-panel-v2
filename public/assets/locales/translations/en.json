@@ -1,8 +1,8 @@
 {
   "campaigns": {
-      "title":"Email title",
-      "newsletterContext": {
-      "title":"News Letter",
+    "title": "Email title",
+    "newsletterContext": {
+      "title": "News Letter",
       "nestName": "Email file name",
       "smsLink": "SMS link",
       "smsContent": "SMS content",
@@ -580,6 +580,8 @@
     }
   },
   "child": {
+    "voiceIntro": "Please have a recorded voice ready. Make sure the child introduce themselves and agree to be recorded.",
+    "voiceInfo": "Please add up to 5 minutes recorded voice of the child.",
     "preRegister": {
       "tabs": {
         "notRegistered": "Not registered",

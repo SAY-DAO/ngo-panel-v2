@@ -123,13 +123,10 @@ function PreRegisterCard({
             (preRegistered.status === PreRegisterStatusEnum.CONFIRMED &&
               (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
                 swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN))) && (
-            <MenuItem onClick={() => handleUpdate(preRegistered)}>
-              {t('button.update')}
-              {preRegistered.flaskChildId}
-            </MenuItem>
+            <MenuItem onClick={() => handleUpdate(preRegistered)}>{t('button.update')}</MenuItem>
           )}
           {preRegistered.status === PreRegisterStatusEnum.CONFIRMED && (
-            <MenuItem>Child Id:{preRegistered.flaskChildId}</MenuItem>
+            <MenuItem>Child Id: {preRegistered.flaskChildId}</MenuItem>
           )}
         </Menu>
       </Box>

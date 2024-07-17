@@ -10,6 +10,16 @@ import {
 } from './types';
 import { PRODUCT_UNPAYABLE_PERIOD } from './configs';
 
+export function truncateString(str, num) {
+  // If the length of str is less than or equal to num
+  // just return str--don't truncate it.
+  if (str.length <= num) {
+    return str;
+  }
+  // Return str truncated with '...' concatenated to the end of str.
+  return `${str.slice(0, num)}...`;
+}
+
 export function shortenWallet(address) {
   return `${address.slice(0, 5)}...${address.slice(-4)}`;
 }

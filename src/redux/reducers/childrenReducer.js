@@ -42,15 +42,20 @@ import {
   PRE_REGISTER_CHILD_LIST_REQUEST,
   PRE_REGISTER_CHILD_LIST_SUCCESS,
   PRE_REGISTER_CHILD_LIST_FAIL,
+  PRE_REGISTER_CHILD_REQUEST,
+  PRE_REGISTER_CHILD_SUCCESS,
+  PRE_REGISTER_CHILD_FAIL,
   DELETE_PRE_REGISTER_REQUEST,
   DELETE_PRE_REGISTER_SUCCESS,
   DELETE_PRE_REGISTER_FAIL,
   APPROVE_PRE_REGISTER_REQUEST,
   APPROVE_PRE_REGISTER_SUCCESS,
   APPROVE_PRE_REGISTER_FAIL,
+  PRE_REGISTER_CHILD_REST,
   PRE_REGISTER_CHILD_LIST_REST,
   SAY_NAMES_RESET,
   CHECK_SIMILAR_NAMES_RESET,
+  UPDATE_CHILD_PREREGISTER_SUCCESS,
 } from '../constants/childrenConstants';
 
 export const childByIdReducer = (state = { success: false }, action) => {
@@ -135,6 +140,8 @@ export const childUpdateReducer = (state = { success: false }, action) => {
       return { loading: true };
     case UPDATE_CHILD_SUCCESS:
       return { loading: false, success: true, updated: action.payload };
+    case UPDATE_CHILD_PREREGISTER_SUCCESS:
+      return { loading: false, success: true, updatedPreRegister: action.payload };
     case UPDATE_CHILD_FAIL:
       return { loading: false, error: action.payload };
     default:
@@ -185,6 +192,21 @@ export const childSayNameReducer = (state = { success: false }, action) => {
   }
 };
 
+export const oneChildPreRegisterReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case PRE_REGISTER_CHILD_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_CHILD_SUCCESS:
+      return { loading: false, success: true, childPreRegister: action.payload };
+    case PRE_REGISTER_CHILD_FAIL:
+      return { loading: false, error: action.payload };
+    case PRE_REGISTER_CHILD_REST:
+      return {};
+    default:
+      return state;
+  }
+};
+
 export const childPreRegisterReducer = (state = { success: false }, action) => {
   switch (action.type) {
     case PRE_REGISTER_CHILD_LIST_REQUEST:
@@ -207,12 +229,12 @@ export const childPreRegisterReducer = (state = { success: false }, action) => {
       return { loading: false, success: true, prepared: action.payload };
     case PRE_REGISTER_CHILD_PREPARE_FAIL:
       return { loading: false, error: action.payload };
-      case PRE_REGISTER_CHILD_UPDATE_REQUEST:
-        return { loading: true };
-      case PRE_REGISTER_CHILD_UPDATE_SUCCESS:
-        return { loading: false, success: true, updated: action.payload };
-      case PRE_REGISTER_CHILD_UPDATE_FAIL:
-        return { loading: false, error: action.payload };
+    case PRE_REGISTER_CHILD_UPDATE_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_CHILD_UPDATE_SUCCESS:
+      return { loading: false, success: true, updated: action.payload };
+    case PRE_REGISTER_CHILD_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
     case DELETE_PRE_REGISTER_REQUEST:
       return { ...state, loading: true, success: false };
     case DELETE_PRE_REGISTER_SUCCESS:

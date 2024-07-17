@@ -60,6 +60,7 @@ export default function ChildPreRegisterUpdateDialog({
     await sleep(300);
     dispatch(
       updatePreRegisterChild({
+        flaskChildId: updateDialogValues.flaskChildId,
         id: updateDialogValues.id,
         bio: data.bio_translations_fa,
         educationLevel: Number(data.education),

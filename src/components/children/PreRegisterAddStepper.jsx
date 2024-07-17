@@ -239,6 +239,7 @@ export default function PreRegisterAddStepper() {
     uploadVoice,
   ]);
 
+
   useEffect(() => {
     if (prepared) {
       navigate(CHILDREN_PRE_REGISTER_LIST);
@@ -333,6 +334,11 @@ export default function PreRegisterAddStepper() {
           <Card elevation={5} sx={{ minHeight: 410 }}>
             {activeStep === 0 && (
               <Grid container spacing={2} justifyContent="center" sx={{ pt: 4 }}>
+                <Card sx={{ p: 3, m: 0, textAlign: 'center' }}>
+                  <Typography sx={{ fontSize: 12 }} color="secondary">
+                    {t('child.voiceIntro')}
+                  </Typography>
+                </Card>
                 <Grid item md={6} xs={12}>
                   {swInfo && (
                     <Autocomplete

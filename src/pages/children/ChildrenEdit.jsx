@@ -27,22 +27,25 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import PageContainer from '../../components/container/PageContainer';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
-import Message from '../../components/Message';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
-import { AddChild, fetchMyChildById } from '../../redux/actions/childrenAction';
+import {
+  updateChild,
+  fetchMyChildById,
+  getChildPreRegister,
+} from '../../redux/actions/childrenAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import { EducationEnum, HousingStatusEnum } from '../../utils/types';
-import { getAge } from '../../utils/helpers';
+import { EducationEnum, HousingStatusEnum, SexEnum } from '../../utils/types';
+import { getAge, truncateString } from '../../utils/helpers';
 
 const ChildEdit = () => {
   const dispatch = useDispatch();
@@ -74,7 +77,9 @@ const ChildEdit = () => {
 
   const childById = useSelector((state) => state.childById);
   const { result, success: successChild } = childById;
-  console.log(result);
+
+  const oneChildPreRegister = useSelector((state) => state.oneChildPreRegister);
+  const { childPreRegister } = oneChildPreRegister;
 
   const countryList = useSelector((state) => state.countryList);
   const { countries, states, cities, success: successCountryList } = countryList;
@@ -83,6 +88,7 @@ const ChildEdit = () => {
   useEffect(() => {
     if (childId) {
       dispatch(fetchMyChildById(childId));
+      dispatch(getChildPreRegister(childId));
     }
   }, [childId]);
 
@@ -93,9 +99,9 @@ const ChildEdit = () => {
     education: Yup.number().required(''),
     familyCount: Yup.string().required(''),
     nationality: Yup.string().required('Please enter your nationality'),
-    city: Yup.string().required(''),
-    state: Yup.string().required(''),
-    country: Yup.string().required(''),
+    // city: Yup.string().required('Please enter your city'),
+    // state: Yup.string().required('Please enter your state'),
+    country: Yup.string().required('Please enter your country'),
     lastName_translations_en: Yup.string().required(''),
     lastName_translations_fa: Yup.string().required(''),
     firstName_translations_fa: Yup.string().required(''),
@@ -121,9 +127,7 @@ const ChildEdit = () => {
 
   useEffect(() => {
     if (result) {
-      console.log(result);
-      setBirthDate(result.birthDate);
-      setValue('awakeAvatarUrl', result.awakeAvatarUrl);
+      setBirthDate(new Date(result.birthDate));
       setValue('sayname_translations_en', result.sayname_translations.en);
       setValue('sayname_translations_fa', result.sayname_translations.fa);
       setValue('firstName_translations_en', result.firstName_translations.en);
@@ -132,21 +136,32 @@ const ChildEdit = () => {
       setValue('lastName_translations_fa', result.lastName_translations.fa);
       setValue('bio_translations_en', result.bio_translations.en);
       setValue('bio_translations_fa', result.bio_translations.fa);
-      setValue('bio_summary_translations_en', result.bio_summary_translations.en);
-      setValue('bio_summary_translations_fa', result.bio_summary_translations.fa);
+      setValue('bio_summary_translations_en', truncateString(result.bio_translations.en, 120));
+      setValue('bio_summary_translations_fa', truncateString(result.bio_translations.fa, 120));
       setValue('sex', result.gender === true ? 2 : 1);
       setValue('education', result.education);
       setValue('familyCount', parseInt(result.familyCount, 10));
-      // setValue('country', result.country);
-      // setValue('state', result.state);
-      // setValue('city', result.city);
-      setValue('nationality', result.nationality);
+      setValue(
+        'country',
+        (childPreRegister && childPreRegister.country) || Number(result.country) || '',
+      );
+      setValue(
+        'state',
+        (childPreRegister && childPreRegister.state) ||
+          Number(result.state) ||
+          (Number(result.city) === 134664 && 3929), // 3929 is Alborz and 134664 is Karaj
+      );
+      setValue('city', (childPreRegister && childPreRegister.city) || Number(result.city) || '');
+      setValue(
+        'nationality',
+        (childPreRegister && childPreRegister.country) || Number(result.country) || '',
+      );
       setValue('birthPlace', result.birthPlace);
       setValue('address', result.address);
       setValue('phoneNumber', result.phoneNumber);
       setValue('housingStatus', result.housingStatus);
     }
-  }, [result]);
+  }, [result, childPreRegister]);
 
   // country
   useEffect(() => {
@@ -158,12 +173,9 @@ const ChildEdit = () => {
 
   // state
   useEffect(() => {
-    if (countries && watch('country')) {
-      const theCountry = countries.filter((c) => c.phoneCode === `${watch('country')}`);
-      console.log('theCountry');
-      console.log(theCountry);
-      console.log(theCountry[0].id || countries[0]);
-      dispatch(fetchStateList(theCountry[0].id));
+    if (countries && result) {
+      const theCountry = countries.find((c) => Number(c.id) === Number(result.country));
+      dispatch(fetchStateList(theCountry.id));
     }
   }, [watch('country'), countries]);
 
@@ -178,46 +190,48 @@ const ChildEdit = () => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
+
+    const formData = new FormData();
+
     dispatch(
-      AddChild({
+      updateChild({
+        childId: result.id,
         awakeAvatarUrl: finalAvatarFile,
         sleptAvatarUrl: finalSleptAvatarFile,
         voiceUrl: uploadVoice,
-        sayName: JSON.stringify({
+        gender: sex !== SexEnum.FEMALE, // backend: true:male | false:female
+        city: parseInt(data.city, 10),
+        country: parseInt(data.country, 10),
+        phoneNumber: data.phoneNumber,
+        birthDate,
+        sayname_translations: {
           en: data.sayname_translations_en,
           fa: data.sayname_translations_fa,
-        }),
-        firstName: JSON.stringify({
+        },
+        firstName_translations: {
           en: data.firstName_translations_en,
           fa: data.firstName_translations_fa,
-        }),
-        lastName: JSON.stringify({
+        },
+        lastName_translations: {
           en: data.lastName_translations_en,
           fa: data.lastName_translations_fa,
-        }),
-        address: data.address,
-        // country: parseInt(data.country, 10),
-        country: 98,
-        // state: parseInt(data.state, 10),  no state in flask server
-        // city: parseInt(data.city, 10),
-        city: 1,
-        birthDate,
-        nationality: data.nationality,
-        birthPlace: data.nationality,
-        education: parseInt(education, 10),
-        sex: sex !== 1, // backend: true:male | false:female
-        // school_type: data.school_type,
-        phoneNumber: data.phoneNumber,
-        familyCount: parseInt(data.familyCount, 10),
-        housingStatus: parseInt(data.housingStatus, 10),
-        bio_translations: JSON.stringify({
+        },
+        bio_translations: {
           en: data.bio_translations_en,
           fa: data.bio_translations_fa,
-        }),
-        bio_summary_translations: JSON.stringify({
+        },
+        bio_summary_translations: {
           en: data.bio_summary_translations_en,
           fa: data.bio_summary_translations_fa,
-        }),
+        },
+        nationality: parseInt(data.nationality, 10),
+        birthPlace: childPreRegister.birthPlaceName,
+        familyCount: parseInt(data.familyCount, 10),
+        education: parseInt(education, 10),
+        housingStatus: parseInt(data.housingStatus, 10),
+        address: data.address,
+        state: parseInt(data.state, 10),
+        // school_type: data.school_type, We only save school time in nest server
       }),
     );
   };
@@ -270,13 +284,12 @@ const ChildEdit = () => {
   const handleChangeSex = (event) => {
     setSex(event.target.value);
   };
-
   return (
     <PageContainer title="Child Add" description="this is Child Add page">
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
-      {!successChild || !successCountryList ? (
+      {!successChild || !successCountryList || !birthDate ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -514,7 +527,7 @@ const ChildEdit = () => {
                     {/* First Name */}
                     {/* Last Name */}
                     <Grid item md={6} container spacing={1} justifyContent="center">
-                      <Grid item lg={5} xs={12}>
+                      <Grid item lg={6} xs={12}>
                         <CustomFormLabel htmlFor="firstName_translations_en">
                           {t('child.firstName_translations.en')}
                         </CustomFormLabel>
@@ -528,7 +541,7 @@ const ChildEdit = () => {
                           error={!!errors.firstName_translations_en}
                         />
                       </Grid>
-                      <Grid item lg={5} xs={12}>
+                      <Grid item lg={6} xs={12}>
                         <CustomFormLabel htmlFor="lastName_translations_en">
                           {t('child.lastName_translations.en')}
                         </CustomFormLabel>
@@ -543,7 +556,7 @@ const ChildEdit = () => {
                       </Grid>
                     </Grid>
                     <Grid item md={6} container spacing={1} justifyContent="center">
-                      <Grid item md={5} xs={12}>
+                      <Grid item md={6} xs={12}>
                         <CustomFormLabel htmlFor="firstName_translations_fa">
                           {t('child.firstName_translations.fa')}
                         </CustomFormLabel>
@@ -557,7 +570,7 @@ const ChildEdit = () => {
                           error={!!errors.firstName_translations_fa}
                         />
                       </Grid>
-                      <Grid item md={5} xs={12}>
+                      <Grid item md={6} xs={12}>
                         <CustomFormLabel htmlFor="lastName_translations_fa">
                           {t('child.lastName_translations.fa')}
                         </CustomFormLabel>
@@ -613,6 +626,7 @@ const ChildEdit = () => {
                           {t('child.bio_summary_translations.en')}
                         </CustomFormLabel>
                         <TextField
+                          disabled
                           aria-label="minimum height"
                           minRows={4}
                           multiline
@@ -632,6 +646,7 @@ const ChildEdit = () => {
                           {t('child.bio_summary_translations.fa')}
                         </CustomFormLabel>
                         <TextField
+                          disabled
                           aria-label="minimum height"
                           minRows={4}
                           multiline
@@ -656,8 +671,8 @@ const ChildEdit = () => {
                           register={{ ...register('sex') }}
                           error={!!errors.sex}
                         >
-                          <MenuItem value={1}>{t('child.sexKind.female')}</MenuItem>
-                          <MenuItem value={2}>{t('child.sexKind.male')}</MenuItem>
+                          <MenuItem value={SexEnum.FEMALE}>{t('child.sexKind.female')}</MenuItem>
+                          <MenuItem value={SexEnum.MALE}>{t('child.sexKind.male')}</MenuItem>
                         </CustomSelect>
                       </FormControl>
                     </Grid>
@@ -732,7 +747,6 @@ const ChildEdit = () => {
                             value={birthDate}
                             onChange={handleDateChange}
                             renderInput={(params) => <TextField {...params} />}
-                            register={{ ...register('birthDate') }}
                             error={!!errors.birthDate}
                           />
                         </LocalizationProvider>
@@ -746,8 +760,10 @@ const ChildEdit = () => {
                           labelId="nationality-controlled-open-select-label"
                           id="nationality-controlled-open-select"
                           control={control}
+                          defaultValue={
+                            (childPreRegister && childPreRegister.country) || result.country || ''
+                          }
                           register={{ ...register('nationality') }}
-                          defaultValue={watch('nationality') || ''}
                           sx={{ width: '100%' }}
                           error={!!errors.nationality}
                         >
@@ -756,7 +772,7 @@ const ChildEdit = () => {
                           </MenuItem>
                           {countries &&
                             countries.map((country) => (
-                              <MenuItem key={country.id} value={country.phoneCode}>
+                              <MenuItem key={country.id} value={country.id}>
                                 {country.name}
                               </MenuItem>
                             ))}
@@ -781,7 +797,11 @@ const ChildEdit = () => {
                           id="country-controlled-open-select"
                           control={control}
                           register={{ ...register('country') }}
-                          defaultValue={watch('country') || ''}
+                          defaultValue={
+                            (childPreRegister && childPreRegister.country) ||
+                            Number(result.country) ||
+                            ''
+                          }
                           sx={{ width: '100%' }}
                           error={!!errors.country}
                         >
@@ -790,7 +810,7 @@ const ChildEdit = () => {
                           </MenuItem>
                           {countries &&
                             countries.map((country) => (
-                              <MenuItem key={country.id} value={country.phoneCode}>
+                              <MenuItem key={country.id} value={country.id}>
                                 {country.name}
                               </MenuItem>
                             ))}
@@ -805,7 +825,9 @@ const ChildEdit = () => {
                           id="state-controlled-open-select"
                           control={control}
                           register={{ ...register('state') }}
-                          value={watch('state') || ''}
+                          defaultValue={
+                            (childPreRegister && childPreRegister.state) || result.state || 3929 // 3929 is Alborz and 134664 is Karaj
+                          }
                           sx={{ width: '100%' }}
                           error={!!errors.state}
                         >
@@ -814,7 +836,7 @@ const ChildEdit = () => {
                           </MenuItem>
                           {states &&
                             states.map((state) => (
-                              <MenuItem key={state.id} value={state.phoneCode}>
+                              <MenuItem key={state.id} value={state.id}>
                                 {state.name}
                               </MenuItem>
                             ))}
@@ -829,7 +851,9 @@ const ChildEdit = () => {
                           id="city-controlled-open-select"
                           control={control}
                           register={{ ...register('city') }}
-                          value={watch('city') || ''}
+                          defaultValue={
+                            (childPreRegister && childPreRegister.city) || result.city || ''
+                          }
                           sx={{ width: '100%' }}
                           error={!!errors.city}
                         >

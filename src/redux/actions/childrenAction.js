@@ -45,6 +45,10 @@ import {
   APPROVE_PRE_REGISTER_REQUEST,
   APPROVE_PRE_REGISTER_SUCCESS,
   APPROVE_PRE_REGISTER_FAIL,
+  PRE_REGISTER_CHILD_REQUEST,
+  PRE_REGISTER_CHILD_SUCCESS,
+  PRE_REGISTER_CHILD_FAIL,
+  UPDATE_CHILD_PREREGISTER_SUCCESS,
 } from '../constants/childrenConstants';
 
 export const fetchMyChildById = (childId) => async (dispatch, getState) => {
@@ -191,6 +195,7 @@ export const updateChild = (values) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id, // nest server needs this for auth
       },
     };
 
@@ -205,7 +210,7 @@ export const updateChild = (values) => async (dispatch, getState) => {
     if (values.nationality) {
       formData.append('nationality', values.nationality);
     }
-
+    console.log(values);
     const { data } = await publicApi.patch(
       `/child/update/childId=${values.childId}`,
       formData,
@@ -214,6 +219,16 @@ export const updateChild = (values) => async (dispatch, getState) => {
     dispatch({
       type: UPDATE_CHILD_SUCCESS,
       payload: data,
+    });
+
+    const { data2 } = await daoApi.patch(
+      `/children/preregister/update-approved/${data.id}`,
+      data,
+      config,
+    );
+    dispatch({
+      type: UPDATE_CHILD_PREREGISTER_SUCCESS,
+      payload: data2,
     });
   } catch (e) {
     dispatch({
@@ -420,6 +435,40 @@ export const updatePreRegisterChild = (values) => async (dispatch, getState) => 
     });
   }
 };
+
+export const getChildPreRegister = (flaskChildId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRE_REGISTER_CHILD_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/children/preregister/${flaskChildId}`, config);
+
+    dispatch({
+      type: PRE_REGISTER_CHILD_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: PRE_REGISTER_CHILD_FAIL,
+      payload: e.response.message
+        ? e.response.message
+        : e.response.data
+          ? e.response.data.message
+          : e.response,
+    });
+  }
+};
+
 
 export const getPreRegisters = (tabNumber, take, limit) => async (dispatch, getState) => {
   try {
