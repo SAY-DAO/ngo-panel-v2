@@ -237,7 +237,13 @@ function PreRegisterCard({
         </Grid>
         <Grid item xs={12} sx={{ textAlign: 'center' }}>
           {preRegistered.voiceUrl ? (
-            <VoiceBar url={`${apiDao}/children/voices/${preRegistered.voiceUrl}`} />
+            <VoiceBar
+              url={
+                preRegistered.voiceUrl.includes('files')
+                  ? prepareUrl(preRegistered.voiceUrl)
+                  : `${apiDao}/children/voices/${preRegistered.voiceUrl}`
+              }
+            />
           ) : (
             <Card sx={{ minHeight: 40, mt: 0, mb: 0 }} elevation={2} />
           )}
