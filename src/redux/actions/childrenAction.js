@@ -223,7 +223,7 @@ export const updateChild = (values) => async (dispatch, getState) => {
 
     const { data2 } = await daoApi.patch(
       `/children/preregister/update-approved/${data.id}`,
-      data,
+      { schoolType: values.schoolType, addedState: values.state },
       config,
     );
     dispatch({

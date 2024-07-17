@@ -44,7 +44,7 @@ import {
 } from '../../redux/actions/childrenAction';
 import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
-import { EducationEnum, HousingStatusEnum, SexEnum } from '../../utils/types';
+import { EducationEnum, HousingStatusEnum, SchoolTypeEnum, SexEnum } from '../../utils/types';
 import { getAge, truncateString } from '../../utils/helpers';
 
 const ChildEdit = () => {
@@ -99,9 +99,10 @@ const ChildEdit = () => {
     education: Yup.number().required(''),
     familyCount: Yup.string().required(''),
     nationality: Yup.string().required('Please enter your nationality'),
-    // city: Yup.string().required('Please enter your city'),
-    // state: Yup.string().required('Please enter your state'),
+    city: Yup.string().required('Please enter your city'),
+    state: Yup.string().required('Please enter your state'),
     country: Yup.string().required('Please enter your country'),
+    schoolType: Yup.number().required('Please enter the school type'),
     lastName_translations_en: Yup.string().required(''),
     lastName_translations_fa: Yup.string().required(''),
     firstName_translations_fa: Yup.string().required(''),
@@ -147,9 +148,7 @@ const ChildEdit = () => {
       );
       setValue(
         'state',
-        (childPreRegister && childPreRegister.state) ||
-          Number(result.state) ||
-          (Number(result.city) === 134664 && 3929), // 3929 is Alborz and 134664 is Karaj
+        (childPreRegister && childPreRegister.state) || (Number(result.city) === 134664 && 3929), // 3929 is Alborz and 134664 is Karaj
       );
       setValue('city', (childPreRegister && childPreRegister.city) || Number(result.city) || '');
       setValue(
@@ -231,7 +230,7 @@ const ChildEdit = () => {
         housingStatus: parseInt(data.housingStatus, 10),
         address: data.address,
         state: parseInt(data.state, 10),
-        // school_type: data.school_type, We only save school time in nest server
+        schoolType: data.schoolType, // We only save school time in nest server
       }),
     );
   };
@@ -788,6 +787,85 @@ const ChildEdit = () => {
                       {t('child.divider.housing')}
                     </Typography>
                   </Divider>
+
+                  <Grid item xs={12} container spacing={1} justifyContent="center">
+                    <Grid item xs={3}>
+                      <CustomFormLabel htmlFor="phoneNumber">
+                        {t('child.phoneNumber')}
+                      </CustomFormLabel>
+                      <TextField
+                        id="phoneNumber"
+                        variant="outlined"
+                        size="medium"
+                        sx={{ width: '100%' }}
+                        control={control}
+                        {...register('phoneNumber')}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControl sx={{ width: '100%' }}>
+                        <CustomFormLabel id="education">{t('child.education')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="education-controlled-open-select-label"
+                          id="education"
+                          control={control}
+                          value={watch('education') || ''}
+                          register={{ ...register('education') }}
+                          error={!!errors.education}
+                        >
+                          {Object.keys(EducationEnum).map((name, index) => (
+                            <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
+                              {t(`child.educationCondition.${name}`)}
+                            </MenuItem>
+                          ))}
+                        </CustomSelect>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                      <FormControl sx={{ width: '100%' }}>
+                        <CustomFormLabel id="schoolType">{t('child.schoolType')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="schoolType-controlled-open-select-label"
+                          id="schoolType"
+                          control={control}
+                          value={watch('schoolType') || ''}
+                          register={{ ...register('schoolType') }}
+                          error={!!errors.schoolType}
+                        >
+                          {Object.keys(SchoolTypeEnum).map((name, index) => (
+                            <MenuItem key={name} value={Object.values(SchoolTypeEnum)[index]}>
+                              {t(`child.schoolTypeCondition.${name.toLowerCase()}`)}
+                            </MenuItem>
+                          ))}
+                        </CustomSelect>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <FormControl sx={{ width: '100%' }}>
+                        <CustomFormLabel htmlFor="housingStatus">
+                          {t('child.housingStatus')}
+                        </CustomFormLabel>
+                        <CustomSelect
+                          labelId="housingStatus"
+                          id="multiple-education"
+                          value={watch('housingStatus') || ''}
+                          control={control}
+                          register={{ ...register('housingStatus') }}
+                          error={!!errors.housingStatus}
+                        >
+                          <MenuItem value="">
+                            <em>{t(`child.housingCondition.none`)}</em>
+                          </MenuItem>
+                          {Object.keys(HousingStatusEnum).map((name, index) => (
+                            <MenuItem key={name} value={Object.values(HousingStatusEnum)[index]}>
+                              {t(`child.housingCondition.${name}`)}
+                            </MenuItem>
+                          ))}
+                        </CustomSelect>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
                   <Grid item xs={12} container spacing={1} justifyContent="center">
                     <Grid item md={4} xs={12}>
                       <FormControl sx={{ width: '100%' }}>
@@ -871,16 +949,8 @@ const ChildEdit = () => {
                     </Grid>
                   </Grid>
 
-                  <Grid
-                    item
-                    xs={12}
-                    container
-                    justifyContent="center"
-                    alignItems="flex-end"
-                    sx={{ mt: 4 }}
-                    spacing={1}
-                  >
-                    <Grid item md={6} xs={12}>
+                  <Grid container justifyContent="center">
+                    <Grid item xs={6}>
                       <CustomFormLabel htmlFor="address">{t('child.address')}</CustomFormLabel>
                       <CustomTextField
                         id="address"
@@ -894,48 +964,8 @@ const ChildEdit = () => {
                         error={!!errors.address}
                       />
                     </Grid>
-
-                    <Grid item md={6} xs={12}>
-                      <Grid item>
-                        <CustomFormLabel htmlFor="phoneNumber">
-                          {t('child.phoneNumber')}
-                        </CustomFormLabel>
-                        <TextField
-                          id="phoneNumber"
-                          variant="outlined"
-                          size="medium"
-                          sx={{ width: '100%' }}
-                          control={control}
-                          {...register('phoneNumber')}
-                        />
-                      </Grid>
-
-                      <Grid item>
-                        <FormControl sx={{ width: '100%' }}>
-                          <CustomFormLabel htmlFor="housingStatus">
-                            {t('child.housingStatus')}
-                          </CustomFormLabel>
-                          <CustomSelect
-                            labelId="housingStatus"
-                            id="multiple-education"
-                            value={watch('housingStatus') || ''}
-                            control={control}
-                            register={{ ...register('housingStatus') }}
-                            error={!!errors.housingStatus}
-                          >
-                            <MenuItem value="">
-                              <em>{t(`child.housingCondition.none`)}</em>
-                            </MenuItem>
-                            {Object.keys(HousingStatusEnum).map((name, index) => (
-                              <MenuItem key={name} value={Object.values(HousingStatusEnum)[index]}>
-                                {t(`child.housingCondition.${name}`)}
-                              </MenuItem>
-                            ))}
-                          </CustomSelect>
-                        </FormControl>
-                      </Grid>
-                    </Grid>
                   </Grid>
+
                   <LoadingButton
                     // loading={loadingAddChild}
                     color="primary"

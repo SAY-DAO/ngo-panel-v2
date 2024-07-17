@@ -26,7 +26,7 @@ import {
   SexEnum,
 } from '../../utils/types';
 import VoiceBar from '../VoiceBar';
-import { getAge } from '../../utils/helpers';
+import { getAge, prepareUrl } from '../../utils/helpers';
 
 function PreRegisterCard({
   preRegistered,
@@ -135,13 +135,21 @@ function PreRegisterCard({
           <Grid item xs={6}>
             <Avatar
               sx={{ width: 50, height: 50, m: 'auto' }}
-              src={`${apiDao}/children/avatars/images/${preRegistered.awakeUrl}`}
+              src={
+                preRegistered.awakeUrl.includes('files')
+                  ? prepareUrl(preRegistered.awakeUrl)
+                  : `${apiDao}/children/avatars/images/${preRegistered.awakeUrl}`
+              }
             />
           </Grid>
           <Grid item xs={6}>
             <Avatar
               sx={{ width: 50, height: 50, m: 'auto' }}
-              src={`${apiDao}/children/avatars/images/${preRegistered.sleptUrl}`}
+              src={
+                preRegistered.sleptUrl.includes('files')
+                  ? prepareUrl(preRegistered.sleptUrl)
+                  : `${apiDao}/children/avatars/images/${preRegistered.sleptUrl}`
+              }
             />
           </Grid>
         </Grid>
