@@ -1,4 +1,5 @@
 import { daoApi, publicApi } from '../../apis/sayBase';
+import { formatDate } from '../../utils/helpers';
 import {
   ADD_CHILD_FAIL,
   ADD_CHILD_REQUEST,
@@ -48,7 +49,7 @@ import {
   PRE_REGISTER_CHILD_REQUEST,
   PRE_REGISTER_CHILD_SUCCESS,
   PRE_REGISTER_CHILD_FAIL,
-  UPDATE_CHILD_PREREGISTER_SUCCESS,
+  // UPDATE_CHILD_PREREGISTER_SUCCESS,
 } from '../constants/childrenConstants';
 
 export const fetchMyChildById = (childId) => async (dispatch, getState) => {
@@ -199,37 +200,52 @@ export const updateChild = (values) => async (dispatch, getState) => {
       },
     };
 
-    const formData = new FormData();
 
-    if (values.country) {
-      formData.append('country', values.country);
-    }
-    if (values.city) {
-      formData.append('city', values.city);
-    }
-    if (values.nationality) {
-      formData.append('nationality', values.nationality);
-    }
+    const formData = new FormData();
+    // formData.append('awakeAvatarUrl', values.awakeAvatarUrl);
+    // formData.append('sleptAvatarUrl', values.sleptAvatarUrl);
+    // formData.append('voiceUrl', values.voiceUrl);
+    formData.append('gender', values.gender);
+    formData.append('cityId', values.city);
+    formData.append('country', values.country);
+    formData.append('nationality', values.nationality);
+    formData.append('phoneNumber', values.phoneNumber);
+    formData.append('birthDate', formatDate(values.birthDate));
+    formData.append('birthPlace', values.birthPlace);
+    // Start values.translation fields
+    formData.append('sayname_translations', values.sayname_translations);
+    formData.append('bio_translations', values.bio_translations);
+    formData.append('bio_summary_translations', values.bio_summary_translations);
+    formData.append('firstName_translations', values.firstName_translations);
+    formData.append('lastName_translations', values.lastName_translations);
+    formData.append('address', values.address);
+    formData.append('familyCount', Number(values.familyCount));
+    formData.append('education', Number(values.education));
+    formData.append('housingStatus', Number(values.housingStatus));
     console.log(values);
+
+
     const { data } = await publicApi.patch(
-      `/child/update/childId=${values.childId}`,
+      `/child/update/childId=${values.child_id}`,
       formData,
       config,
     );
+    console.log(data);
+
     dispatch({
       type: UPDATE_CHILD_SUCCESS,
       payload: data,
     });
 
-    const { data2 } = await daoApi.patch(
-      `/children/preregister/update-approved/${data.id}`,
-      { schoolType: values.schoolType, addedState: values.state },
-      config,
-    );
-    dispatch({
-      type: UPDATE_CHILD_PREREGISTER_SUCCESS,
-      payload: data2,
-    });
+    // const { data2 } = await daoApi.patch(
+    //   `/children/preregister/update-approved/${data.id}`,
+    //   { schoolType: values.schoolType, addedState: values.state },
+    //   config,
+    // );
+    // dispatch({
+    //   type: UPDATE_CHILD_PREREGISTER_SUCCESS,
+    //   payload: data2,
+    // });
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_FAIL,

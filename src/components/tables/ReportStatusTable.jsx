@@ -46,6 +46,7 @@ import {
   ProductStatusEnum,
   FlaskUserTypesEnum,
   ServiceStatusEnum,
+  PaymentStatusEnum,
 } from '../../utils/types';
 import { UPDATE_NEED_STATUS_RESET } from '../../redux/constants/needConstant';
 import ReportStatusChange from '../report/ReportStatusChange';
@@ -476,16 +477,37 @@ const ReportStatusTable = () => {
           swInfo.typeId === FlaskUserTypesEnum.ADMIN
         ) {
           if (ngoId) {
-            dispatch(fetchReportNeeds(true, ngoId, typeId, statusId));
+            dispatch(
+              fetchReportNeeds(
+                statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+                ngoId,
+                typeId,
+                statusId,
+              ),
+            );
           } else {
-            dispatch(fetchReportNeeds(true, null, typeId, statusId));
+            dispatch(
+              fetchReportNeeds(
+                statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+                null,
+                typeId,
+                statusId,
+              ),
+            );
           }
         }
       } else if (
         swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
         swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
-        dispatch(fetchReportNeeds(true, swInfo.ngoId, typeId, statusId));
+        dispatch(
+          fetchReportNeeds(
+            statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+            swInfo.ngoId,
+            typeId,
+            statusId,
+          ),
+        );
       }
     }
   }, [ngoId, typeId, statusId, swInfo, successNgoList]);
@@ -499,15 +521,36 @@ const ReportStatusTable = () => {
         swInfo.typeId === FlaskUserTypesEnum.ADMIN
       ) {
         if (ngoId) {
-          dispatch(fetchReportNeeds(true, ngoId, typeId, statusId));
+          dispatch(
+            fetchReportNeeds(
+              statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+              ngoId,
+              typeId,
+              statusId,
+            ),
+          );
         } else {
-          dispatch(fetchReportNeeds(true, null, typeId, statusId));
+          dispatch(
+            fetchReportNeeds(
+              statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+              null,
+              typeId,
+              statusId,
+            ),
+          );
         }
       } else if (
         swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
         swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
       ) {
-        dispatch(fetchReportNeeds(true, swInfo.ngoId, typeId, statusId));
+        dispatch(
+          fetchReportNeeds(
+            statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+            swInfo.ngoId,
+            typeId,
+            statusId,
+          ),
+        );
       }
       dispatch({ type: UPDATE_NEED_STATUS_RESET });
     }

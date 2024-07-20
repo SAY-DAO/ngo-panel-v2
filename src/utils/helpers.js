@@ -232,6 +232,19 @@ export function timeDifference(time1, time2) {
   return { hh, mm, ss, diff };
 }
 
+// format to yyyy-mm-dd
+export function formatDate(date) {
+  const d = new Date(date);
+  let month = `${d.getMonth() + 1}`;
+  let day = `${d.getDate()}`;
+  const year = d.getFullYear();
+
+  if (month.length < 2) month = `0${month}`;
+  if (day.length < 2) day = `0${day}`;
+
+  return [year, month, day].join('-');
+}
+
 export function prepareUrl(imageUrl) {
   let url;
   if (imageUrl && imageUrl.startsWith('/')) {

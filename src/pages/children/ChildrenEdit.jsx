@@ -141,6 +141,7 @@ const ChildEdit = () => {
       setValue('bio_summary_translations_fa', truncateString(result.bio_translations.fa, 120));
       setValue('sex', result.gender === true ? 2 : 1);
       setValue('education', result.education);
+      setValue('schoolType', childPreRegister.schoolType);
       setValue('familyCount', parseInt(result.familyCount, 10));
       setValue(
         'country',
@@ -194,43 +195,43 @@ const ChildEdit = () => {
 
     dispatch(
       updateChild({
-        childId: result.id,
+        child_id: result.id,
         awakeAvatarUrl: finalAvatarFile,
         sleptAvatarUrl: finalSleptAvatarFile,
         voiceUrl: uploadVoice,
-        gender: sex !== SexEnum.FEMALE, // backend: true:male | false:female
+        gender: Number(data.sex) !== SexEnum.FEMALE, // backend: true:male | false:female
         city: parseInt(data.city, 10),
         country: parseInt(data.country, 10),
         phoneNumber: data.phoneNumber,
         birthDate,
-        sayname_translations: {
-          en: data.sayname_translations_en,
-          fa: data.sayname_translations_fa,
-        },
-        firstName_translations: {
-          en: data.firstName_translations_en,
-          fa: data.firstName_translations_fa,
-        },
-        lastName_translations: {
-          en: data.lastName_translations_en,
-          fa: data.lastName_translations_fa,
-        },
-        bio_translations: {
-          en: data.bio_translations_en,
-          fa: data.bio_translations_fa,
-        },
-        bio_summary_translations: {
-          en: data.bio_summary_translations_en,
-          fa: data.bio_summary_translations_fa,
-        },
         nationality: parseInt(data.nationality, 10),
         birthPlace: childPreRegister.birthPlaceName,
         familyCount: parseInt(data.familyCount, 10),
-        education: parseInt(education, 10),
         housingStatus: parseInt(data.housingStatus, 10),
         address: data.address,
         state: parseInt(data.state, 10),
+        education: data.education,
         schoolType: data.schoolType, // We only save school time in nest server
+        sayname_translations: JSON.stringify({
+          en: data.sayname_translations_en,
+          fa: data.sayname_translations_fa,
+        }),
+        firstName_translations: JSON.stringify({
+          en: data.firstName_translations_en,
+          fa: data.firstName_translations_fa,
+        }),
+        lastName_translations: JSON.stringify({
+          en: data.lastName_translations_en,
+          fa: data.lastName_translations_fa,
+        }),
+        bio_translations: JSON.stringify({
+          en: data.bio_translations_en,
+          fa: data.bio_translations_fa,
+        }),
+        bio_summary_translations: JSON.stringify({
+          en: data.bio_summary_translations_en,
+          fa: data.bio_summary_translations_fa,
+        }),
       }),
     );
   };
@@ -695,6 +696,25 @@ const ChildEdit = () => {
                         </CustomSelect>
                       </FormControl>
                     </Grid>
+                    <Grid item xs={12} container justifyContent="center">
+                      <FormControl sx={{ minWidth: 300 }}>
+                        <CustomFormLabel id="schoolType">{t('child.schoolType')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="schoolType-controlled-open-select-label"
+                          id="schoolType"
+                          control={control}
+                          value={watch('schoolType') || ''}
+                          register={{ ...register('schoolType') }}
+                          error={!!errors.schoolType}
+                        >
+                          {Object.keys(SchoolTypeEnum).map((name, index) => (
+                            <MenuItem key={name} value={Object.values(SchoolTypeEnum)[index]}>
+                              {t(`child.schoolTypeCondition.${name.toLowerCase()}`)}
+                            </MenuItem>
+                          ))}
+                        </CustomSelect>
+                      </FormControl>
+                    </Grid>
                     <Grid item md={12} sx={{ width: '100%' }}>
                       <CustomFormLabel htmlFor="familyCount">
                         {t('child.familyCount')}
@@ -801,45 +821,6 @@ const ChildEdit = () => {
                         control={control}
                         {...register('phoneNumber')}
                       />
-                    </Grid>
-                    <Grid item xs={3}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel id="education">{t('child.education')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="education-controlled-open-select-label"
-                          id="education"
-                          control={control}
-                          value={watch('education') || ''}
-                          register={{ ...register('education') }}
-                          error={!!errors.education}
-                        >
-                          {Object.keys(EducationEnum).map((name, index) => (
-                            <MenuItem key={name} value={Object.values(EducationEnum)[index]}>
-                              {t(`child.educationCondition.${name}`)}
-                            </MenuItem>
-                          ))}
-                        </CustomSelect>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={3}>
-                      <FormControl sx={{ width: '100%' }}>
-                        <CustomFormLabel id="schoolType">{t('child.schoolType')}</CustomFormLabel>
-                        <CustomSelect
-                          labelId="schoolType-controlled-open-select-label"
-                          id="schoolType"
-                          control={control}
-                          value={watch('schoolType') || ''}
-                          register={{ ...register('schoolType') }}
-                          error={!!errors.schoolType}
-                        >
-                          {Object.keys(SchoolTypeEnum).map((name, index) => (
-                            <MenuItem key={name} value={Object.values(SchoolTypeEnum)[index]}>
-                              {t(`child.schoolTypeCondition.${name.toLowerCase()}`)}
-                            </MenuItem>
-                          ))}
-                        </CustomSelect>
-                      </FormControl>
                     </Grid>
                     <Grid item xs={3}>
                       <FormControl sx={{ width: '100%' }}>
