@@ -244,7 +244,7 @@ const NeedConfirmTable = () => {
                 <Typography variant="h6" gutterBottom component="div">
                   Possible MissMatch
                 </Typography>
-                {row.possibleMissMatch &&
+                {row.possibleMissMatch.length > 0 ? (
                   row.possibleMissMatch.map((o) => (
                     <div key={o.needId}>
                       <RouterLink
@@ -256,7 +256,12 @@ const NeedConfirmTable = () => {
                         {t(`need.needStatus.${getCurrentStatusString(o)}`)}
                       </RouterLink>
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <Typography variant="subtitle2" gutterBottom color="secondary">
+                    None
+                  </Typography>
+                )}
 
                 {row && row.duplicates && row.duplicates.length > 0 && (
                   <Table size="small" aria-label="purchases">
