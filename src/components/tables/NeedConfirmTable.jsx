@@ -407,9 +407,9 @@ const NeedConfirmTable = () => {
     if (result && result.list) {
       console.log('----------------');
       console.log(`result length:${result.list.length}`);
-      console.log(`result no errors1:${result.list.filter((n) => !n.errorMsg).length}`);
+      console.log(`result no errors:${result.list.filter((n) => !n.errorMsg).length}`);
       console.log(
-        `result no errors2:${
+        `result no errors - missMatch:${
           result.list.filter((n) => !n.errorMsg).length - (!checked ? totalMissMatch : 0)
         }`,
       );
@@ -425,12 +425,12 @@ const NeedConfirmTable = () => {
         } of ${result.list.length} Needs`,
       );
       setConfirmCandidate(
-        result.list.filter((n) => !n.errorMsg).length +
-          (checked && totalMissMatch) +
+        result.list.filter((n) => !n.errorMsg).length -
+          (!checked ? totalMissMatch : 0) +
           manualIds.length,
       );
     }
-  }, [result, checked, manualIds]);
+  }, [result, checked, manualIds, totalMissMatch]);
   console.log('----------------\n');
 
   return (
@@ -449,6 +449,7 @@ const NeedConfirmTable = () => {
             <CardContent>
               <Box>
                 <LoadingButton
+                  disabled={confirmCandidate < 1}
                   loading={loadingMassConfirm}
                   variant="outlined"
                   onClick={handleMassConfirm}
