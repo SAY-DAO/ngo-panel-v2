@@ -55,6 +55,8 @@ const NeedConfirmTable = () => {
   const [checked, setChecked] = useState(false);
   const [manualIds, setManualIds] = useState([]);
   const [totalMissMatch, setTotalMissMatch] = useState(0);
+  const [confirmCandidate, setConfirmCandidate] = useState();
+
   const BCrumb = [
     {
       to: '/',
@@ -96,7 +98,9 @@ const NeedConfirmTable = () => {
               borderBottom: 'unset',
               // opacity: row.errorMsg ? 0.45 : row.possibleMissMatch.length ? 0.5 : 1,
               backgroundColor:
-                !manualIds.find((i) => i === row.need.flaskId) && row.possibleMissMatch.length > 0
+                !manualIds.find((i) => i === row.need.flaskId) &&
+                row.possibleMissMatch.length > 0 &&
+                !row.errorMsg
                   ? '#7f5c1b'
                   : !manualIds.find((i) => i === row.need.flaskId) && row.errorMsg
                   ? '#8f4646'
@@ -127,8 +131,11 @@ const NeedConfirmTable = () => {
                         }}
                       />
                     ) : (
-                      <IconButton onClick={() => handleManualConfirm(row.need.flaskId)}>
-                        <AddCircleRoundedIcon color="success" />
+                      <IconButton
+                        disabled={checked}
+                        onClick={() => handleManualConfirm(row.need.flaskId)}
+                      >
+                        <AddCircleRoundedIcon color="success" sx={{ display: checked && 'none' }} />
                       </IconButton>
                     )}
                   </Grid>
@@ -395,13 +402,44 @@ const NeedConfirmTable = () => {
       }
     }
   }, [result]);
+
+  useEffect(() => {
+    if (result && result.list) {
+      console.log('----------------');
+      console.log(`result length:${result.list.length}`);
+      console.log(`result no errors1:${result.list.filter((n) => !n.errorMsg).length}`);
+      console.log(
+        `result no errors2:${
+          result.list.filter((n) => !n.errorMsg).length - (!checked ? totalMissMatch : 0)
+        }`,
+      );
+      console.log(`checked:${checked}`);
+      console.log(`totalMissMatch:${totalMissMatch}`);
+      console.log(`manualIds:${manualIds}`);
+
+      console.log(
+        `Confirm ${
+          result.list.filter((n) => !n.errorMsg).length -
+          (!checked ? totalMissMatch : 0) +
+          manualIds.length
+        } of ${result.list.length} Needs`,
+      );
+      setConfirmCandidate(
+        result.list.filter((n) => !n.errorMsg).length +
+          (checked && totalMissMatch) +
+          manualIds.length,
+      );
+    }
+  }, [result, checked, manualIds]);
+  console.log('----------------\n');
+
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
 
-      {loading? (
+      {loading ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -410,12 +448,12 @@ const NeedConfirmTable = () => {
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
               <Box>
-                <LoadingButton loading={loadingMassConfirm} variant="outlined" onClick={handleMassConfirm}>
-                  Confirm{' '}
-                  {result.list.filter((n) => !n.errorMsg).length -
-                    (!checked ? totalMissMatch : 0) +
-                    manualIds.length}{' '}
-                  of {result.list.length} Needs
+                <LoadingButton
+                  loading={loadingMassConfirm}
+                  variant="outlined"
+                  onClick={handleMassConfirm}
+                >
+                  Confirm {confirmCandidate} of {result.list.length} Needs
                 </LoadingButton>
                 <FormGroup>
                   <FormControlLabel

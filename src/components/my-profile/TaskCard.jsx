@@ -864,7 +864,7 @@ const TaskCard = ({
                 {((need.type === NeedTypeEnum.PRODUCT &&
                   need.status <= ProductStatusEnum.PURCHASED_PRODUCT) ||
                   (need.type === NeedTypeEnum.SERVICE &&
-                    need.status <= ProductStatusEnum.MONEY_TO_NGO)) && (
+                    need.status <= ServiceStatusEnum.MONEY_TO_NGO)) && (
                   <Chip
                     sx={{
                       color:
