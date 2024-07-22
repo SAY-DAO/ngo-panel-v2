@@ -380,7 +380,7 @@ const NeedConfirmTable = () => {
         const needIds = needs
           .filter((n) => n.possibleMissMatch.length < 1)
           .map((r) => r.need.flaskId);
-        dispatch(massNeedConfirm([...needIds, manualIds]));
+        dispatch(massNeedConfirm([...needIds, ...manualIds]));
       }
     } else {
       console.log('only confirm in production');
