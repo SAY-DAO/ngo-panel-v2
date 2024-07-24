@@ -434,7 +434,19 @@ export const updatePreRegisterChild = (values) => async (dispatch, getState) => 
       },
     };
 
-    const { data } = await daoApi.patch(`/children/preregister/update`, values, config);
+    const formData = new FormData();
+    formData.append('flaskChildId', values.flaskChildId);
+    formData.append('id', values.id);
+    formData.append('bio', values.bio);
+    formData.append('educationLevel', values.educationLevel);
+    formData.append('schoolType', values.schoolType);
+    formData.append('housingStatus', values.housingStatus);
+    formData.append('firstName', values.firstName);
+    formData.append('lastName', values.lastName);
+    formData.append('voiceFile', values.voiceFile);
+
+
+    const { data } = await daoApi.patch(`/children/preregister/update`, formData, config);
 
     dispatch({
       type: PRE_REGISTER_CHILD_UPDATE_SUCCESS,
