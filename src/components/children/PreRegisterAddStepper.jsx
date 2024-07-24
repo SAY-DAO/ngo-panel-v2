@@ -44,6 +44,7 @@ import VoiceBar from '../VoiceBar';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import { preparePreRegisterChild } from '../../redux/actions/childrenAction';
 import { CHILDREN_PRE_REGISTER_LIST } from '../../routes/RouteConstants';
+import { PRE_REGISTER_CHILD_LIST_REST } from '../../redux/constants/childrenConstants';
 
 const steps = ['child.steps.first', 'child.steps.second', 'child.steps.third'];
 
@@ -112,6 +113,12 @@ export default function PreRegisterAddStepper() {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  useEffect(() => {
+    if (activeStep === 0) {
+      dispatch({ type: PRE_REGISTER_CHILD_LIST_REST });
+    }
+  }, [activeStep]);
 
   // Autocomplete ngo
   useEffect(() => {
@@ -238,7 +245,6 @@ export default function PreRegisterAddStepper() {
     birthDate,
     uploadVoice,
   ]);
-
 
   useEffect(() => {
     if (prepared) {
