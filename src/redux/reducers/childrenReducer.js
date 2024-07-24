@@ -192,7 +192,7 @@ export const childSayNameReducer = (state = { success: false }, action) => {
   }
 };
 
-export const oneChildPreRegisterReducer = (state = { success: false }, action) => {
+export const oneChildPreRegisterReducer = (state = {}, action) => {
   switch (action.type) {
     case PRE_REGISTER_CHILD_REQUEST:
       return { loading: true };

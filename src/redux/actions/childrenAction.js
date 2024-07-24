@@ -49,6 +49,7 @@ import {
   PRE_REGISTER_CHILD_REQUEST,
   PRE_REGISTER_CHILD_SUCCESS,
   PRE_REGISTER_CHILD_FAIL,
+  UPDATE_CHILD_PREREGISTER_SUCCESS,
   // UPDATE_CHILD_PREREGISTER_SUCCESS,
 } from '../constants/childrenConstants';
 
@@ -237,15 +238,15 @@ export const updateChild = (values) => async (dispatch, getState) => {
       payload: data,
     });
 
-    // const { data2 } = await daoApi.patch(
-    //   `/children/preregister/update-approved/${data.id}`,
-    //   { schoolType: values.schoolType, addedState: values.state },
-    //   config,
-    // );
-    // dispatch({
-    //   type: UPDATE_CHILD_PREREGISTER_SUCCESS,
-    //   payload: data2,
-    // });
+    const { data2 } = await daoApi.patch(
+      `/children/preregister/update-approved/${data.id}`,
+      { schoolType: values.schoolType, addedState: values.state },
+      config,
+    );
+    dispatch({
+      type: UPDATE_CHILD_PREREGISTER_SUCCESS,
+      payload: data2,
+    });
   } catch (e) {
     dispatch({
       type: UPDATE_CHILD_FAIL,

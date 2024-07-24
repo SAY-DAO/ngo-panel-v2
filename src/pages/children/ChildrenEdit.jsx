@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Avatar,
@@ -72,11 +71,12 @@ const ChildEdit = () => {
   );
   const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
   const [birthDate, setBirthDate] = useState(new Date());
-  const [education, setEducation] = useState('');
-  const [sex, setSex] = useState('');
 
   const childById = useSelector((state) => state.childById);
   const { result, success: successChild } = childById;
+
+  const childUpdate = useSelector((state) => state.childUpdate);
+  const { loadingUpdate } = childUpdate;
 
   const oneChildPreRegister = useSelector((state) => state.oneChildPreRegister);
   const { childPreRegister } = oneChildPreRegister;
@@ -191,8 +191,6 @@ const ChildEdit = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
 
-    const formData = new FormData();
-
     dispatch(
       updateChild({
         child_id: result.id,
@@ -277,13 +275,6 @@ const ChildEdit = () => {
     console.log('uploadVoice');
   };
 
-  const handleChangeEducation = (event) => {
-    setEducation(event.target.value);
-  };
-
-  const handleChangeSex = (event) => {
-    setSex(event.target.value);
-  };
   return (
     <PageContainer title="Child Add" description="this is Child Add page">
       {/* breadcrumb */}
@@ -665,7 +656,6 @@ const ChildEdit = () => {
                         <CustomSelect
                           labelId="sex-controlled-open-select-label"
                           id="sex"
-                          onChange={handleChangeSex}
                           control={control}
                           value={watch('sex') || ''}
                           register={{ ...register('sex') }}
@@ -682,7 +672,6 @@ const ChildEdit = () => {
                         <CustomSelect
                           labelId="education-controlled-open-select-label"
                           id="education"
-                          onChange={handleChangeEducation}
                           control={control}
                           value={watch('education') || ''}
                           register={{ ...register('education') }}
@@ -948,7 +937,7 @@ const ChildEdit = () => {
                   </Grid>
 
                   <LoadingButton
-                    // loading={loadingAddChild}
+                    loading={loadingUpdate}
                     color="primary"
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
