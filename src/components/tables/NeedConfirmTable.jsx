@@ -114,7 +114,9 @@ const NeedConfirmTable = () => {
             </IconButton>
           </TableCell>
           <TableCell>
-            {(row.errorMsg || row.possibleMissMatch.length > 0) && (
+            {(row.errorMsg ||
+              (row.validCount && row.validCount > 0) ||
+              row.possibleMissMatch.length > 0) && (
               <Tooltip title="Manually add to to be confirmed list">
                 {!manualIds.find((i) => i === row.need.flaskId) ? (
                   <Grid>
@@ -238,7 +240,9 @@ const NeedConfirmTable = () => {
                   component="div"
                   sx={{ color: row.errorMsg ? '#8f4646' : '#557d55' }}
                 >
-                  {row.errorMsg || 'All good!'}
+                  {row.errorMsg ||
+                    (row.validCount && row.validCount > 0 && `${row.validCount} Valid Dup(s)`) ||
+                    'All good!'}
                 </Typography>
                 <br />
                 <Typography variant="h6" gutterBottom component="div">
@@ -430,7 +434,7 @@ const NeedConfirmTable = () => {
         } of ${result.list.length} Needs`,
       );
       setConfirmCandidate(
-        result.list.filter((n) => !n.errorMsg).length -
+        result.list.filter((n) => !n.errorMsg && !n.validCount).length -
           (!checked ? totalMissMatch : 0) +
           manualIds.length,
       );
