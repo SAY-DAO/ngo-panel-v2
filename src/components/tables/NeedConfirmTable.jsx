@@ -381,12 +381,16 @@ const NeedConfirmTable = () => {
   const handleMassConfirm = () => {
     if (process.env.REACT_APP_NODE_ENV === 'production') {
       if (checked) {
-        const needIds = result.list.filter((n) => !n.errorMsg).map((r) => r.need.flaskId);
+        const needIds = result.list
+          .filter((n) => !n.errorMsg)
+          .filter((n) => !n.validCount)
+          .map((r) => r.need.flaskId);
         dispatch(massNeedConfirm(needIds));
       } else {
         const needs = result.list.filter((n) => !n.errorMsg);
         const needIds = needs
           .filter((n) => n.possibleMissMatch.length < 1)
+          .filter((n) => !n.validCount)
           .map((r) => r.need.flaskId);
         dispatch(massNeedConfirm([...needIds, ...manualIds]));
       }
@@ -395,6 +399,7 @@ const NeedConfirmTable = () => {
       const needs = result.list.filter((n) => !n.errorMsg);
       const needIds = needs
         .filter((n) => n.possibleMissMatch.length < 1)
+        .filter((n) => !n.validCount)
         .map((r) => r.need.flaskId);
       console.log([...needIds, manualIds]);
     }
@@ -418,25 +423,6 @@ const NeedConfirmTable = () => {
 
   useEffect(() => {
     if (result && result.list) {
-      console.log('----------------');
-      console.log(`result length:${result.list.length}`);
-      console.log(`result no errors:${result.list.filter((n) => !n.errorMsg).length}`);
-      console.log(
-        `result no errors - missMatch:${
-          result.list.filter((n) => !n.errorMsg).length - (!checked ? totalMissMatch : 0)
-        }`,
-      );
-      console.log(`checked:${checked}`);
-      console.log(`totalMissMatch:${totalMissMatch}`);
-      console.log(`manualIds:${manualIds}`);
-
-      console.log(
-        `Confirm ${
-          result.list.filter((n) => !n.errorMsg).length -
-          (!checked ? totalMissMatch : 0) +
-          manualIds.length
-        } of ${result.list.length} Needs`,
-      );
       setConfirmCandidate(
         result.list.filter((n) => !n.errorMsg && !n.validCount).length -
           (!checked ? totalMissMatch : 0) +
@@ -444,7 +430,6 @@ const NeedConfirmTable = () => {
       );
     }
   }, [result, checked, manualIds, totalMissMatch]);
-  console.log('----------------\n');
 
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
