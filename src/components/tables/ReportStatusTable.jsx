@@ -479,7 +479,7 @@ const ReportStatusTable = () => {
           if (ngoId) {
             dispatch(
               fetchReportNeeds(
-                statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+                statusId >= PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
                 ngoId,
                 typeId,
                 statusId,
@@ -488,7 +488,7 @@ const ReportStatusTable = () => {
           } else {
             dispatch(
               fetchReportNeeds(
-                statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+                statusId >= PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
                 null,
                 typeId,
                 statusId,
@@ -502,7 +502,7 @@ const ReportStatusTable = () => {
       ) {
         dispatch(
           fetchReportNeeds(
-            statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+            statusId >= PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
             swInfo.ngoId,
             typeId,
             statusId,
@@ -523,7 +523,7 @@ const ReportStatusTable = () => {
         if (ngoId) {
           dispatch(
             fetchReportNeeds(
-              statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+              statusId >= PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
               ngoId,
               typeId,
               statusId,
@@ -532,7 +532,7 @@ const ReportStatusTable = () => {
         } else {
           dispatch(
             fetchReportNeeds(
-              statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+              statusId >= PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
               null,
               typeId,
               statusId,
@@ -545,7 +545,7 @@ const ReportStatusTable = () => {
       ) {
         dispatch(
           fetchReportNeeds(
-            statusId === PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
+            statusId >= PaymentStatusEnum.COMPLETE_PAY, // isDone when complete payment
             swInfo.ngoId,
             typeId,
             statusId,
