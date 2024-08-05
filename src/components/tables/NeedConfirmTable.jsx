@@ -104,6 +104,8 @@ const NeedConfirmTable = () => {
                   ? '#7f5c1b'
                   : !manualIds.find((i) => i === row.need.flaskId) && row.errorMsg
                   ? '#8f4646'
+                  : !manualIds.find((i) => i === row.need.flaskId) && row.validCount
+                  ? '#695b19'
                   : manualIds.find((i) => i === row.need.flaskId) && '#235053',
             },
           }}
@@ -238,7 +240,7 @@ const NeedConfirmTable = () => {
                   variant="h6"
                   gutterBottom
                   component="div"
-                  sx={{ color: row.errorMsg ? '#8f4646' : '#557d55' }}
+                  sx={{ color: row.errorMsg ? '#8f4646' : row.validCount ? '#695b19' : '#557d55' }}
                 >
                   {row.errorMsg ||
                     (row.validCount && row.validCount > 0 && `${row.validCount} Valid Dup(s)`) ||
