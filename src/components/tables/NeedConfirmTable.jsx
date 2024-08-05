@@ -104,7 +104,9 @@ const NeedConfirmTable = () => {
                   ? '#7f5c1b'
                   : !manualIds.find((i) => i === row.need.flaskId) && row.errorMsg
                   ? '#8f4646'
-                  : !manualIds.find((i) => i === row.need.flaskId) && row.validCount
+                  : !manualIds.find((i) => i === row.need.flaskId) &&
+                    !row.errorMsg &&
+                    row.validCount
                   ? '#695b19'
                   : manualIds.find((i) => i === row.need.flaskId) && '#235053',
             },
