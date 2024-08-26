@@ -30,9 +30,9 @@ export default function ChildPreRegisterUpdateDialog({
   const { loading, approved, updated } = useSelector((state) => state.childPreRegister);
 
   const validationSchema = Yup.object().shape({
-    lastName_translations_fa: Yup.string().required('Please enter your address'),
-    firstName_translations_fa: Yup.string().required('Please enter your address'),
-    bio_translations_fa: Yup.string().required('Please enter your address'),
+    lastName_translations_fa: Yup.string().required('Please enter last name'),
+    firstName_translations_fa: Yup.string().required('Please enter first name'),
+    bio_translations_fa: Yup.string().required('Please enter bio'),
   });
 
   const {
@@ -49,6 +49,8 @@ export default function ChildPreRegisterUpdateDialog({
   useEffect(() => {
     if (approved || updated) {
       setOpen(false);
+      setUpdateDialogValues();
+      reset();
     }
   }, [approved, updated]);
 
