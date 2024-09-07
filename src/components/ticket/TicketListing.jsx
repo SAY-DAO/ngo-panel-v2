@@ -117,7 +117,7 @@ const TicketListing = () => {
                     }}
                   />
                   <Typography variant="h5" sx={{ width: '240px' }} noWrap>
-                    {ticket.flaskNeedId} - {ticket.need.name}
+                    {ticket.flaskNeedId} - {ticket.title}
                   </Typography>
                   <Stack
                     direction="row"

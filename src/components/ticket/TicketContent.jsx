@@ -52,7 +52,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const { swInfo } = swDetails;
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { currentTicket, tickets } = myTickets;
+  const { currentTicket } = myTickets;
 
   const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
   const { socketContent } = ticketMsgAdd;
@@ -74,11 +74,10 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   // set ticket
   useEffect(() => {
-    if (tickets) {
-      const thisTicket = tickets.find((tik) => tik.id === currentTicket);
-      setTheTicket(thisTicket);
+    if (fetchedTicket) {
+      setTheTicket(fetchedTicket);
     }
-  }, [currentTicket, addedTicket, tickets]);
+  }, [currentTicket, addedTicket]);
 
   // get recently updated need for status change
   useEffect(() => {
@@ -107,18 +106,16 @@ const TicketContent = ({ toggleTicketSidebar }) => {
 
   // set ticket when socket msg received
   useEffect(() => {
-    if (socketContent && tickets) {
-      const modifiedTickets = tickets.map((ticket) =>
-        ticket.id === socketContent.content.ticket.id
-          ? {
-              ...ticket,
-              ...(ticket.ticketHistories && ticket.ticketHistories.push(socketContent.content)),
-            }
-          : ticket,
-      );
-      setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
+    if (socketContent) {
+      if (theTicket.id === socketContent.content.ticket.id) {
+        const modifiedTickets = {
+          ...theTicket,
+          ...(theTicket.ticketHistories && theTicket.ticketHistories.push(socketContent.content)),
+        };
+        setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
+      }
     }
-  }, [socketContent, tickets]);
+  }, [socketContent, theTicket]);
 
   const handleTicketUpdate = (choice) => {
     socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
@@ -255,7 +252,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
               </Grid>
             </Box>
             <Divider />
-            {!tickets || !theTicket ? (
+            {!theTicket ? (
               <Grid container>
                 <CircularProgress sx={{ textAlign: 'center', m: 'auto' }} />
               </Grid>
