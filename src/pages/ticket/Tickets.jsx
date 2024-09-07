@@ -8,11 +8,7 @@ import TicketContent from '../../components/ticket/TicketContent';
 import TicketMsgSent from '../../components/ticket/TicketMsgSent';
 import TicketSidebar from '../../components/ticket/TicketSidebar';
 import { WebsocketContext } from '../../contexts/WebsocketContext';
-import {
-  socketRefreshNotifications,
-  socketJoinRoom,
-  socketLeaveRoom,
-} from '../../utils/socketHelpers';
+import { socketJoinRoom, socketRefreshNotifications } from '../../utils/socketHelpers';
 import {
   ADD_TICKET_CONTENT_RESET,
   UPDATE_TICKET_COLOR_RESET,
@@ -91,17 +87,17 @@ const Tickets = () => {
       //   // 2- receive the msg which was just saved in db
       //   setSocketData(data);
       // });
-      socket.on(`onViewMessage${swInfo.id}`, (data) => {
-        console.log(`user ${data.flaskUserId} Viewed ticket ${data.ticketId}!`);
+      // socket.on(`onViewMessage${swInfo.id}`, (data) => {
+      //   console.log(`user ${data.flaskUserId} Viewed ticket ${data.ticketId}!`);
         socketRefreshNotifications(swInfo);
-      });
+      // });
     }
     return () => {
-      if (currentTicketId) {
-        socketLeaveRoom(currentTicketId, swInfo.id);
-        console.log('\x1b[31m%s\x1b[0m', 'NOT listening for new messages');
-        socket.off(`onTicketMessage${currentTicketId}`);
-      }
+      // if (currentTicketId) {
+      //   socketLeaveRoom(currentTicketId, swInfo.id);
+      //   console.log('\x1b[31m%s\x1b[0m', 'NOT listening for new messages');
+      //   socket.off(`onTicketMessage${currentTicketId}`);
+      // }
       dispatch({ type: ADD_TICKET_CONTENT_RESET });
     };
   }, [currentTicketId, swInfo]);

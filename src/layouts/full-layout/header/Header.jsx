@@ -99,7 +99,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const myTickets = useSelector((state) => state.myTickets);
   const {
-    currentTicketId,
+    currentTicket,
     tickets,
     isTicketingOpen,
     loading: loadingTicketList,
@@ -311,7 +311,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     socketRefreshNotifications(swInfo); // refresh notifications since we viewed a ticket
   };
   const handleOpenTicketing = () => {
-    dispatch(selectTicket(currentTicketId || tickets[0].id));
+    dispatch(selectTicket(currentTicket || tickets[0].id));
     handleCloseNotifies();
     dispatch({ type: UPDATE_TICKET_COLOR_RESET });
     dispatch(openTicketing(true));

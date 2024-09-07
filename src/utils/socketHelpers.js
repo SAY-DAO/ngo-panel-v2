@@ -38,9 +38,9 @@ export const socketJoinRoom = (ticketId, userId) => {
   }
 };
 
-export const socketLeaveRoom = (ticketId, userId) => {
-  if (ticketId) {
-    socketHttp.emit('leave:room', { ticketId, flaskUserId: userId });
-    console.log('\x1b[33m%s\x1b[0m', 'Leaving room!');
-  }
-};
+// export const socketLeaveRoom = (ticketId, userId) => {
+//   if (ticketId) {
+//     socketHttp.emit('leave:room', { ticketId, flaskUserId: userId });
+//     console.log('\x1b[33m%s\x1b[0m', 'Leaving room!');
+//   }
+// };
