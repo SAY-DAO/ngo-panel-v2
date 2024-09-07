@@ -71,7 +71,7 @@ const NotificationDropdown = ({ unReads }) => {
                         width: '240px',
                       }}
                     >
-                      {ticket.need.name}
+                      {ticket.title}
                     </Typography>
                     <Typography
                       color="textSecondary"
