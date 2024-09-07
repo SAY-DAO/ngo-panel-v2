@@ -15,13 +15,13 @@ export const socketRefreshNotifications = (swInfo) => {
 //   }
 // };
 
-export const socketNewTicketView = (ticketId, userId) => {
-  // socket emits
-  if (userId) {
-    socketHttp.emit('new:ticket:view', { ticketId, flaskUserId: userId });
-    console.log('\x1b[33m%s\x1b[0m', 'emitted ticket view update!');
-  }
-};
+// export const socketNewTicketView = (ticketId, userId) => {
+//   // socket emits
+//   if (userId) {
+//     socketHttp.emit('new:ticket:view', { ticketId, flaskUserId: userId });
+//     console.log('\x1b[33m%s\x1b[0m', 'emitted ticket view update!');
+//   }
+// };
 
 export const socketChangeTicketColor = (ticketId, userId, color) => {
   // socket emits
