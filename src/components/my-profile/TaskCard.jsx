@@ -318,7 +318,7 @@ const TaskCard = ({
   }, [deleted]);
 
   useEffect(() => {
-    if (need.tickets[0]) {
+    if (need.tickets && need.tickets[0]) {
       setProgress(() =>
         daysDifference(need.tickets[0].updatedAt, new Date()) > NEST_GRACE_PERIOD
           ? 100
