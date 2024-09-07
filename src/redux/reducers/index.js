@@ -75,7 +75,7 @@ import {
 import {
   ticketListReducer,
   ticketAddReducer,
-  ticketAddMsgReducer,
+  ticketAddContentReducer,
   ticketByIdReducer,
   ticketUpdateReducer,
 } from './ticketReducer';
@@ -100,7 +100,7 @@ export default combineReducers({
   contributionAnalytics: analyticsContributionReducer,
   ecosystemAnalytics: analyticsEcosystemReducer,
   myTickets: ticketListReducer,
-  ticketMsgAdd: ticketAddMsgReducer,
+  ticketContentAdd: ticketAddContentReducer,
   ticketAdd: ticketAddReducer,
   ticketUpdate: ticketUpdateReducer,
   ticketById: ticketByIdReducer,

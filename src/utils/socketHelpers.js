@@ -7,13 +7,13 @@ export const socketRefreshNotifications = (swInfo) => {
   }
 };
 
-export const socketNewTicketMessage = (ticketId, msg, swInfo) => {
-  // socket emits
-  if (swInfo) {
-    socketHttp.emit('new:ticket:message', { ticketId, message: msg, from: swInfo.id });
-    console.log('\x1b[33m%s\x1b[0m', 'emitted ticket msg update!');
-  }
-};
+// export const socketNewTicketMessage = (ticketId, msg, swInfo) => {
+//   // socket emits
+//   if (swInfo) {
+//     socketHttp.emit('new:ticket:message', { ticketId, message: msg, from: swInfo.id });
+//     console.log('\x1b[33m%s\x1b[0m', 'emitted ticket msg update!');
+//   }
+// };
 
 export const socketNewTicketView = (ticketId, userId) => {
   // socket emits

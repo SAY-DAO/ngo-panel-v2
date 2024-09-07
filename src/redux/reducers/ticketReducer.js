@@ -7,9 +7,9 @@ import {
   USER_TICKET_LIST_REQUEST,
   USER_TICKET_LIST_SUCCESS,
   USER_TICKET_LIST_FAIL,
-  ADD_TICKET_MSG_REQUEST,
-  ADD_TICKET_MSG_SUCCESS,
-  ADD_TICKET_MSG_FAIL,
+  ADD_TICKET_CONTENT_REQUEST,
+  ADD_TICKET_CONTENT_SUCCESS,
+  ADD_TICKET_CONTENT_FAIL,
   TICKET_BY_ID_RESET,
   TICKET_BY_ID_REQUEST,
   TICKET_BY_ID_SUCCESS,
@@ -19,12 +19,12 @@ import {
   UPDATE_TICKET_COLOR_FAIL,
   UPDATE_TICKET_COLOR_RESET,
   OPEN_TICKETING,
-  ADD_TICKET_MSG_RESET,
+  ADD_TICKET_CONTENT_RESET,
   ADD_TICKET_RESET,
 } from '../constants/ticketConstants';
 
 const INIT_STATE = {
-  currentTicket: null,
+  currentTicketId: null,
   ticketSearch: '',
   tickets: [],
   isTicketingOpen: false,
@@ -100,7 +100,7 @@ export const ticketListReducer = (state = INIT_STATE, action) => {
     case SELECTED_TICKET:
       return {
         ...state,
-        currentTicket: action.id,
+        currentTicketId: action.id,
       };
     case SEARCH_USER:
       return {
@@ -112,20 +112,20 @@ export const ticketListReducer = (state = INIT_STATE, action) => {
   }
 };
 
-export const ticketAddMsgReducer = (state = {}, action) => {
+export const ticketAddContentReducer = (state = {}, action) => {
   switch (action.type) {
-    case ADD_TICKET_MSG_REQUEST:
+    case ADD_TICKET_CONTENT_REQUEST:
       return { ...state, loading: true };
-    case ADD_TICKET_MSG_SUCCESS:
+    case ADD_TICKET_CONTENT_SUCCESS:
       return {
         ...state,
         loading: false,
         success: true,
-        socketContent: action.payload,
+        result: action.payload,
       };
-    case ADD_TICKET_MSG_FAIL:
+    case ADD_TICKET_CONTENT_FAIL:
       return { ...state, loading: false, error: action.payload };
-    case ADD_TICKET_MSG_RESET:
+    case ADD_TICKET_CONTENT_RESET:
       return {};
     default:
       return state;

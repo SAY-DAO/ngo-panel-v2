@@ -34,10 +34,10 @@ const TicketListing = () => {
   const [sortedTickets, setSortedTickets] = useState();
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { currentTicket: activeTicket, tickets, ticketSearch } = myTickets;
+  const { currentTicketId: activeTicket, tickets, ticketSearch } = myTickets;
 
-  const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
-  const { socketContent } = ticketMsgAdd;
+  const ticketContentAdd = useSelector((state) => state.ticketContentAdd);
+  const { result } = ticketContentAdd;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { updatedTicket } = ticketUpdate;
@@ -58,7 +58,7 @@ const TicketListing = () => {
         filteredTickets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
       );
     }
-  }, [ticketSearch, socketContent, tickets, updatedTicket]);
+  }, [ticketSearch, result, tickets, updatedTicket]);
 
   const handleTicketSelect = (ticketId) => {
     dispatch({ type: UPDATE_NEED_STATUS_RESET });

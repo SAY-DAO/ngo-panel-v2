@@ -8,9 +8,9 @@ import {
   USER_TICKET_LIST_REQUEST,
   USER_TICKET_LIST_SUCCESS,
   USER_TICKET_LIST_FAIL,
-  ADD_TICKET_MSG_REQUEST,
-  ADD_TICKET_MSG_SUCCESS,
-  ADD_TICKET_MSG_FAIL,
+  ADD_TICKET_CONTENT_REQUEST,
+  ADD_TICKET_CONTENT_SUCCESS,
+  ADD_TICKET_CONTENT_FAIL,
   TICKET_BY_ID_REQUEST,
   TICKET_BY_ID_SUCCESS,
   TICKET_BY_ID_FAIL,
@@ -160,16 +160,31 @@ export const updateTicketColor = (socketData) => async (dispatch) => {
   }
 };
 
-export const addTicketMsg = (socketData) => async (dispatch) => {
+export const newTicketContent = (ticketId, msg) => async (dispatch, getState) => {
   try {
-    dispatch({ type: ADD_TICKET_MSG_REQUEST });
+    dispatch({ type: ADD_TICKET_CONTENT_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.post(
+      `/tickets/content/add`, { ticketId, message: msg}, config,
+    );
     dispatch({
-      type: ADD_TICKET_MSG_SUCCESS,
-      payload: { ...socketData },
+      type: ADD_TICKET_CONTENT_SUCCESS,
+      payload: data,
     });
   } catch (e) {
     dispatch({
-      type: ADD_TICKET_MSG_FAIL,
+      type: ADD_TICKET_CONTENT_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }

@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IconButton, Box, CircularProgress } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
-import { socketNewTicketMessage } from '../../utils/socketHelpers';
-import { ADD_TICKET_MSG_REQUEST } from '../../redux/constants/ticketConstants';
 import { Colors } from '../../utils/types';
+import { newTicketContent } from '../../redux/actions/ticketAction';
 
 const TicketMsgSent = () => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const [msg, setMsg] = useState('');
-
-  const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo } = swDetails;
 
   const ticketById = useSelector((state) => state.ticketById);
   const { ticket: fetchedTicket } = ticketById;
@@ -23,15 +19,17 @@ const TicketMsgSent = () => {
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { updatedTicket } = ticketUpdate;
 
-  const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
-  const { loading: loadingMsgAdd } = ticketMsgAdd;
+  const ticketContentAdd = useSelector((state) => state.ticketContentAdd);
+  const { loading: loadingMsgAdd } = ticketContentAdd;
 
-  const ticketId = useSelector((state) => state.myTickets.currentTicket);
+  const ticketId = useSelector((state) => state.myTickets.currentTicketId);
   const handleTicketMsgChange = (e) => {
     setMsg(e.target.value);
   };
 
   const onTicketMsgSubmit = (e) => {
+    console.log(e);
+
     e.preventDefault();
     e.stopPropagation();
     if (
@@ -40,8 +38,8 @@ const TicketMsgSent = () => {
     ) {
       console.log(!updatedTicket && fetchedTicket.color === Colors.YELLOW);
       // 1- new message is sent to server via sockets and update DB
-      socketNewTicketMessage(ticketId, msg, swInfo);
-      dispatch({ type: ADD_TICKET_MSG_REQUEST });
+      // socketNewTicketMessage(ticketId, msg, swInfo);
+      dispatch(newTicketContent(ticketId, msg));
       setMsg('');
     }
   };
@@ -70,6 +68,7 @@ const TicketMsgSent = () => {
               (!updatedTicket && fetchedTicket.color === Colors.BLUE) ||
               (updatedTicket && updatedTicket.color === Colors.BLUE)
             }
+            type="submit"
           >
             <FeatherIcon icon="send" width="18" />
           </IconButton>

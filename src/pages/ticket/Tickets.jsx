@@ -14,10 +14,10 @@ import {
   socketLeaveRoom,
 } from '../../utils/socketHelpers';
 import {
-  ADD_TICKET_MSG_RESET,
+  ADD_TICKET_CONTENT_RESET,
   UPDATE_TICKET_COLOR_RESET,
 } from '../../redux/constants/ticketConstants';
-import { addTicketMsg, fetchTicketById, updateTicketColor } from '../../redux/actions/ticketAction';
+import { fetchTicketById, updateTicketColor } from '../../redux/actions/ticketAction';
 
 const Tickets = () => {
   const dispatch = useDispatch();
@@ -25,17 +25,17 @@ const Tickets = () => {
 
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(true);
   const [toastOpen, setToastOpen] = useState(false);
-  const [socketData, setSocketData] = useState();
+  // const [socketData, setSocketData] = useState();
   const [socketColor, setSocketColor] = useState();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { currentTicket } = myTickets;
+  const { currentTicketId } = myTickets;
 
-  const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
-  const { error: errorTicketMsg } = ticketMsgAdd;
+  const ticketContentAdd = useSelector((state) => state.ticketContentAdd);
+  const { error: errorTicketAddContent, success: successAddContent } = ticketContentAdd;
 
   const ticketUpdate = useSelector((state) => state.ticketUpdate);
   const { success: successTicketUpdate } = ticketUpdate;
@@ -46,12 +46,12 @@ const Tickets = () => {
   const socket = useContext(WebsocketContext);
 
   // dispatch add when socket receives data
-  useEffect(() => {
-    if (socketData) {
-      // 3- update reducers to display
-      dispatch(addTicketMsg(socketData));
-    }
-  }, [socketData]);
+  // useEffect(() => {
+  //   if (socketData) {
+  //     // 3- update reducers to display
+  //     dispatch(addTicketMsg(socketData));
+  //   }
+  // }, [socketData]);
 
   // dispatch add when socket receives data
   useEffect(() => {
@@ -65,13 +65,15 @@ const Tickets = () => {
 
   // fetch ticket when selected
   useEffect(() => {
-    dispatch(fetchTicketById(currentTicket));
-  }, [currentTicket, successTicketUpdate]);
+    if (currentTicketId) {
+      dispatch(fetchTicketById(currentTicketId));
+    }
+  }, [currentTicketId, successTicketUpdate, successAddContent]);
 
   // socket receiver
   useEffect(() => {
-    if (currentTicket && swInfo) {
-      socketJoinRoom(currentTicket, swInfo.id);
+    if (currentTicketId && swInfo) {
+      socketJoinRoom(currentTicketId, swInfo.id);
 
       // clear previously buffered data when reconnecting
       socket.on(`onColorChange${swInfo.id}`, () => {
@@ -83,33 +85,33 @@ const Tickets = () => {
         setSocketColor(data);
       });
 
-      socket.on(`onTicketMessage${currentTicket}`, (data) => {
-        console.log('listening for new messages');
-        console.log('message received!');
-        // 2- receive the msg which was just saved in db
-        setSocketData(data);
-      });
+      // socket.on(`onTicketMessage${currentTicketId}`, (data) => {
+      //   console.log('listening for new messages');
+      //   console.log('message received!');
+      //   // 2- receive the msg which was just saved in db
+      //   setSocketData(data);
+      // });
       socket.on(`onViewMessage${swInfo.id}`, (data) => {
         console.log(`user ${data.flaskUserId} Viewed ticket ${data.ticketId}!`);
         socketRefreshNotifications(swInfo);
       });
     }
     return () => {
-      if (currentTicket) {
-        socketLeaveRoom(currentTicket, swInfo.id);
+      if (currentTicketId) {
+        socketLeaveRoom(currentTicketId, swInfo.id);
         console.log('\x1b[31m%s\x1b[0m', 'NOT listening for new messages');
-        socket.off(`onTicketMessage${currentTicket}`);
+        socket.off(`onTicketMessage${currentTicketId}`);
       }
-      dispatch({ type: ADD_TICKET_MSG_RESET });
+      dispatch({ type: ADD_TICKET_CONTENT_RESET });
     };
-  }, [currentTicket, swInfo]);
+  }, [currentTicketId, swInfo]);
 
   // toast
   useEffect(() => {
-    if (errorTicketMsg) {
+    if (errorTicketAddContent) {
       setToastOpen(true);
     }
-  }, [errorTicketMsg]);
+  }, [errorTicketAddContent]);
 
   // close toast
   const handleCloseToast = (event, reason) => {
@@ -145,7 +147,7 @@ const Tickets = () => {
             severity="error"
             sx={{ width: '100%' }}
           >
-            {errorTicketMsg && errorTicketMsg.data.message}
+            {errorTicketAddContent && errorTicketAddContent.data.message}
           </Alert>
         </Snackbar>
       </Stack>

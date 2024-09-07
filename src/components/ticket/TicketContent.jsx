@@ -52,10 +52,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
   const { swInfo } = swDetails;
 
   const myTickets = useSelector((state) => state.myTickets);
-  const { currentTicket } = myTickets;
-
-  const ticketMsgAdd = useSelector((state) => state.ticketMsgAdd);
-  const { socketContent } = ticketMsgAdd;
+  const { currentTicketId } = myTickets;
 
   const ticketById = useSelector((state) => state.ticketById);
   const { ticket: fetchedTicket, loading: loadingTicket } = ticketById;
@@ -77,7 +74,7 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     if (fetchedTicket) {
       setTheTicket(fetchedTicket);
     }
-  }, [currentTicket, addedTicket]);
+  }, [currentTicketId, addedTicket, fetchedTicket]);
 
   // get recently updated need for status change
   useEffect(() => {
@@ -104,24 +101,12 @@ const TicketContent = ({ toggleTicketSidebar }) => {
     }
   }, [SuccessStatusUpdate]);
 
-  // set ticket when socket msg received
-  useEffect(() => {
-    if (socketContent) {
-      if (theTicket.id === socketContent.content.ticket.id) {
-        const modifiedTickets = {
-          ...theTicket,
-          ...(theTicket.ticketHistories && theTicket.ticketHistories.push(socketContent.content)),
-        };
-        setTheTicket(modifiedTickets.find((tik) => tik.id === currentTicket));
-      }
-    }
-  }, [socketContent, theTicket]);
-
   const handleTicketUpdate = (choice) => {
     socketChangeTicketColor(theTicket.id, swInfo.id, choice.color);
   };
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+
   return (
     <WebsocketProvider value={socketHttp}>
       <Box>
@@ -260,12 +245,12 @@ const TicketContent = ({ toggleTicketSidebar }) => {
               <Scrollbar
                 style={{
                   // for keeping scroll down
-                  height: 'calc(100vh - 445px)',
-                  transform: 'rotateX(180deg)',
-                  MozTransform: 'rotateX(180deg)' /* Mozilla */,
-                  WebkitTransform: 'rotateX(180deg)' /* Safari and Chrome */,
-                  msTransform: 'rotateX(180deg)' /* IE 9+ */,
-                  OTransform: 'rotateX(180deg)' /* Opera */,
+                  height: lgUp && 'calc(100vh - 445px)',
+                  transform: lgUp && 'rotateX(180deg)',
+                  MozTransform: lgUp && 'rotateX(180deg)' /* Mozilla */,
+                  WebkitTransform: lgUp && 'rotateX(180deg)' /* Safari and Chrome */,
+                  MsTransform: lgUp && 'rotateX(180deg)' /* IE 9+ */,
+                  OTransform: lgUp && 'rotateX(180deg)' /* Opera */,
                 }}
               >
                 <Box
