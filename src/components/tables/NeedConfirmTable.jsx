@@ -90,6 +90,8 @@ const NeedConfirmTable = () => {
       const newList = manualIds.filter((i) => i !== id);
       setManualIds(newList);
     };
+
+    
     return (
       <>
         <TableRow
@@ -205,7 +207,7 @@ const NeedConfirmTable = () => {
           >
             {row.need.nameTranslations.en}
             <br />
-            {row.need.title}
+            {row.need.title || row.need.name}
           </TableCell>
           <TableCell align="center" sx={{ fontWeight: 200 }}>
             {row.need.child.sayNameTranslations.en}

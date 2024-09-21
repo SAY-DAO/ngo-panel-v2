@@ -65,6 +65,21 @@ const AnalyticChildrenNeeds = () => {
     legend: {
       show: false,
     },
+
+    // {
+    //   name: 'ConfirmedNotPaid',
+    //   data:
+    //     ecosystemChildrenResult &&
+    //     ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.confirmedNotPaidCount),
+    // },
+    // {
+    //   name: 'UnConfirmed',
+    //   data:
+    //     ecosystemChildrenResult &&
+    //     ecosystemChildrenResult.childrenList.map((c) => c.childNeedsStats.unConfirmedCount),
+    // },
+
+
     xaxis: {
       type: 'category',
       categories: ecosystemChildrenResult.childrenList.map(
