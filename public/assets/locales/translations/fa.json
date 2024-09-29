@@ -855,7 +855,7 @@
         "ipfs": "ذخیره غیر متمرکز شاهد",
         "purchaserSignature": " امضا میانجی",
         "familySignature": " امضا خانواده مجازی",
-        "minted": " تولید سهام خویش‌آوند",
+        "minted": " تولید سهام خویشاوند",
         "daysAgo": "روز پیش",
         "hoursAgo": "ساعت پیش",
         "days": "روز",
@@ -907,7 +907,7 @@
     "ngoSupervisor": "سرپرست انجمن",
     "noRole": "بدون نقش :(",
     "familyMember": "عضو خانواده",
-    "relative": "خویش‌آوند"
+    "relative": "خویشاوند"
   },
   "wallet": {
     "download": "باربرداری...",
