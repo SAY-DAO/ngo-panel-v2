@@ -422,21 +422,26 @@ export default function DurationTimeLine({ need, signature }) {
       )}
       {theNeed.status === PaymentStatusEnum.PARTIAL_PAY && (
         <TimelineItem>
-          <TimelineOppositeContent color="text.secondary" fontSize={12}>
-            {parseInt(
-              moment(theNeed.payments.find((p) => p.verified && p.need_amount > 0).created).diff(
-                moment(theNeed.confirmDate),
-                'days',
-              ),
-              10,
-            ) > 1
-              ? `${moment(
-                  theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
-                ).diff(moment(theNeed.confirmDate), 'days')} ${t('myPage.taskCard.date.days')}`
-              : `${moment(
-                  theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
-                ).diff(moment(theNeed.confirmDate), 'hours')} ${t('myPage.taskCard.date.hours')}`}
-          </TimelineOppositeContent>
+          {
+            theNeed.payments && (
+              <TimelineOppositeContent color="text.secondary" fontSize={12}>
+              {parseInt(
+                moment(theNeed.payments.find((p) => p.verified && p.need_amount > 0).created).diff(
+                  moment(theNeed.confirmDate),
+                  'days',
+                ),
+                10,
+              ) > 1
+                ? `${moment(
+                    theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
+                  ).diff(moment(theNeed.confirmDate), 'days')} ${t('myPage.taskCard.date.days')}`
+                : `${moment(
+                    theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
+                  ).diff(moment(theNeed.confirmDate), 'hours')} ${t('myPage.taskCard.date.hours')}`}
+            </TimelineOppositeContent>
+            )
+          }
+  
           <TimelineSeparator>
             <Tooltip
               title={
