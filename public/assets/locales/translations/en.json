@@ -326,7 +326,8 @@
     "confirm": "Confirm",
     "add": "Add",
     "preregister": "Pre Register",
-    "preregisterList": "Pre Register List"
+    "preregisterList": "Pre Register List",
+    "listConfirmedChildren": "Confirmed Children"
   },
   "socialWorker": {
     "title": "Social Worker",

@@ -7,14 +7,15 @@ import AddIcon from '@mui/icons-material/Add';
 import { LoadingButton } from '@mui/lab';
 import { PropTypes } from 'prop-types';
 import { getPreRegisters } from '../../redux/actions/childrenAction';
-import ChildPreRegisterAddDialog from '../dialogs/ChildPreRegisterAddDialog';
+import ChildPreRegisterCreateDialog from '../dialogs/ChildPreRegisterCreateDialog';
 import GenericDialog from '../dialogs/GenericDialog';
 import ChildPreRegisterApproveDialog from '../dialogs/ChildPreRegisterApproveDialog';
 import PreRegisterCard from './PreRegisterCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 import ChildPreRegisterUpdateDialog from '../dialogs/ChildPreRegisterUpdateDialog ';
+import { CHECK_SIMILAR_NAMES_RESET } from '../../redux/constants/childrenConstants';
 
-export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
+export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
@@ -27,17 +28,18 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
+  const [selected, setSelected] = useState();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const { preRegisterList, prepared, updated, added, deleted, approved } = useSelector(
+  const { preRegisterList, assigned, updated, added, deleted, approved } = useSelector(
     (state) => state.childPreRegister,
   );
 
   useEffect(() => {
     dispatch(getPreRegisters(tabNumber, page, rowsPerPage, isConfirmed));
-  }, [deleted, prepared, updated, added, approved, tabNumber, page, rowsPerPage]);
+  }, [deleted, assigned, updated, added, approved, tabNumber, page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -49,6 +51,8 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
   };
 
   const handleDialog = (childId, currentStatus) => {
+    dispatch({ type: CHECK_SIMILAR_NAMES_RESET });
+    setSelected();
     setDialogOpen(true);
     setDialogValues({
       childId,
@@ -119,10 +123,12 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
             />
           </Grid>
         )}
-        <ChildPreRegisterAddDialog
+        <ChildPreRegisterCreateDialog
           open={dialogOpen}
           setOpen={setDialogOpen}
           dialogValues={dialogValues}
+          selected={selected}
+          setSelected={setSelected}
         />
         <GenericDialog
           open={openDelete}
@@ -145,7 +151,7 @@ export default function ChildrenPreRegisterList({ isConfirmed, tabNumber }) {
   );
 }
 
-ChildrenPreRegisterList.propTypes = {
+ChildrenPreRegisterTabList.propTypes = {
   isConfirmed: PropTypes.bool,
   tabNumber: PropTypes.number,
 };

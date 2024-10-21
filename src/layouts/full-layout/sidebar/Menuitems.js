@@ -86,7 +86,7 @@ const Menuitems = [
     admin: false,
     children: [
       {
-        title: 'sidebar.list',
+        title: 'sidebar.listConfirmedChildren',
         icon: 'list',
         href: CHILDREN_LIST,
       },

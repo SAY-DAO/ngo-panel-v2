@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import { FlaskUserTypesEnum } from '../../utils/types';
-import ChildrenPreRegisterList from '../../components/children/ChildrenPreRegisterList';
+import ChildrenPreRegisterTabList from '../../components/children/ChildrenPreRegisterTabList';
 
 export default function ChildrenPreRegisterTabs() {
   const { t } = useTranslation();
@@ -69,9 +69,9 @@ export default function ChildrenPreRegisterTabs() {
           <Tab label={t('child.preRegister.tabs.preregistered')} />
           <Tab label={t('child.preRegister.tabs.confirmed')} />
         </Tabs>
-        {swInfo && value === 0 && <ChildrenPreRegisterList isConfirmed={false} tabNumber={value} />}
-        {value === 1 && <ChildrenPreRegisterList isConfirmed={false} tabNumber={value} />}
-        {value === 2 && <ChildrenPreRegisterList isConfirmed tabNumber={value} />}
+        {swInfo && value === 0 && <ChildrenPreRegisterTabList isConfirmed={false} tabNumber={value} />}
+        {value === 1 && <ChildrenPreRegisterTabList isConfirmed={false} tabNumber={value} />}
+        {value === 2 && <ChildrenPreRegisterTabList isConfirmed tabNumber={value} />}
       </Box>
     </Container>
   );

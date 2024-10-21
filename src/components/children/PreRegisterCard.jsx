@@ -108,12 +108,14 @@ function PreRegisterCard({
         >
           {swInfo &&
             (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-              swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) &&
-            preRegistered.status !== PreRegisterStatusEnum.CONFIRMED && (
+              swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
               <div>
-                <MenuItem onClick={() => handleApprove(preRegistered)}>
-                  {t('button.confirm')}
-                </MenuItem>
+                {preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED && (
+                  <MenuItem onClick={() => handleApprove(preRegistered)}>
+                    {t('button.confirm')}
+                  </MenuItem>
+                )}
+
                 <MenuItem onClick={() => handleDelete(preRegistered.id)}>
                   {t('button.delete')}
                 </MenuItem>

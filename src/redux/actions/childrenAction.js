@@ -18,9 +18,9 @@ import {
   UPDATE_CHILD_STATUS_FAIL,
   UPDATE_CHILD_STATUS_REQUEST,
   UPDATE_CHILD_STATUS_SUCCESS,
-  PRE_REGISTER_CHILD_ADD_FAIL,
-  PRE_REGISTER_CHILD_ADD_REQUEST,
-  PRE_REGISTER_CHILD_ADD_SUCCESS,
+  PRE_REGISTER_CHILD_CREATE_FAIL,
+  PRE_REGISTER_CHILD_CREATE_REQUEST,
+  PRE_REGISTER_CHILD_CREATE_SUCCESS,
   CHECK_SIMILAR_NAMES_FAIL,
   CHECK_SIMILAR_NAMES_REQUEST,
   CHECK_SIMILAR_NAMES_SUCCESS,
@@ -34,18 +34,18 @@ import {
   PRE_REGISTER_CHILD_UPDATE_REQUEST,
   PRE_REGISTER_CHILD_UPDATE_SUCCESS,
   PRE_REGISTER_CHILD_UPDATE_FAIL,
-  PRE_REGISTER_CHILD_PREPARE_REQUEST,
-  PRE_REGISTER_CHILD_PREPARE_SUCCESS,
-  PRE_REGISTER_CHILD_PREPARE_FAIL,
-  DELETE_PRE_REGISTER_REQUEST,
-  DELETE_PRE_REGISTER_SUCCESS,
-  DELETE_PRE_REGISTER_FAIL,
+  PRE_REGISTER_CHILD_ASSIGN_REQUEST,
+  PRE_REGISTER_CHILD_ASSIGN_SUCCESS,
+  PRE_REGISTER_CHILD_ASSIGN_FAIL,
+  PRE_REGISTER_DELETE_REQUEST,
+  PRE_REGISTER_DELETE_SUCCESS,
+  PRE_REGISTER_DELETE_FAIL,
   SAY_NAMES_REQUEST,
   SAY_NAMES_SUCCESS,
   SAY_NAMES_FAIL,
-  APPROVE_PRE_REGISTER_REQUEST,
-  APPROVE_PRE_REGISTER_SUCCESS,
-  APPROVE_PRE_REGISTER_FAIL,
+  PRE_REGISTER_APPROVE_REQUEST,
+  PRE_REGISTER_APPROVE_SUCCESS,
+  PRE_REGISTER_APPROVE_FAIL,
   PRE_REGISTER_CHILD_REQUEST,
   PRE_REGISTER_CHILD_SUCCESS,
   PRE_REGISTER_CHILD_FAIL,
@@ -325,9 +325,9 @@ export const checkSimilarNames = (newName, lang) => async (dispatch, getState) =
   }
 };
 
-export const createPreRegisterChild = (values) => async (dispatch, getState) => {
+export const adminCreatePreRegisterChild = (values) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRE_REGISTER_CHILD_ADD_REQUEST });
+    dispatch({ type: PRE_REGISTER_CHILD_CREATE_REQUEST });
     const {
       userLogin: { userInfo },
     } = getState();
@@ -350,12 +350,12 @@ export const createPreRegisterChild = (values) => async (dispatch, getState) => 
     const { data } = await daoApi.post(`/children/preregister`, formData, config);
 
     dispatch({
-      type: PRE_REGISTER_CHILD_ADD_SUCCESS,
+      type: PRE_REGISTER_CHILD_CREATE_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: PRE_REGISTER_CHILD_ADD_FAIL,
+      type: PRE_REGISTER_CHILD_CREATE_FAIL,
       payload: e.response.message
         ? e.response.message
         : e.response.data
@@ -365,9 +365,9 @@ export const createPreRegisterChild = (values) => async (dispatch, getState) => 
   }
 };
 
-export const preparePreRegisterChild = (values) => async (dispatch, getState) => {
+export const assignPreRegisterChild = (values) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRE_REGISTER_CHILD_PREPARE_REQUEST });
+    dispatch({ type: PRE_REGISTER_CHILD_ASSIGN_REQUEST });
     const {
       userLogin: { userInfo },
     } = getState();
@@ -400,16 +400,16 @@ export const preparePreRegisterChild = (values) => async (dispatch, getState) =>
     formData.append('state', values.state);
     formData.append('city', values.city);
 
-    const { data } = await daoApi.patch(`/children/preregister/prepare`, formData, config);
+    const { data } = await daoApi.patch(`/children/preregister/assign`, formData, config);
 
     dispatch({
-      type: PRE_REGISTER_CHILD_PREPARE_SUCCESS,
+      type: PRE_REGISTER_CHILD_ASSIGN_SUCCESS,
       payload: data,
     });
   } catch (e) {
     console.log({ e });
     dispatch({
-      type: PRE_REGISTER_CHILD_PREPARE_FAIL,
+      type: PRE_REGISTER_CHILD_ASSIGN_FAIL,
       payload: e.response.message
         ? e.response.message
         : e.response.data
@@ -612,7 +612,7 @@ export const AddChild = (values) => async (dispatch, getState) => {
 
 export const approvePreRegister = (id, values) => async (dispatch, getState) => {
   try {
-    dispatch({ type: APPROVE_PRE_REGISTER_REQUEST });
+    dispatch({ type: PRE_REGISTER_APPROVE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -635,12 +635,12 @@ export const approvePreRegister = (id, values) => async (dispatch, getState) => 
     const { data } = await daoApi.patch(`/children/preregister/approve/${id}`, formData, config);
 
     dispatch({
-      type: APPROVE_PRE_REGISTER_SUCCESS,
+      type: PRE_REGISTER_APPROVE_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: APPROVE_PRE_REGISTER_FAIL,
+      type: PRE_REGISTER_APPROVE_FAIL,
       payload:
         e.response && e.response.data.detail
           ? e.response.data
@@ -653,7 +653,7 @@ export const approvePreRegister = (id, values) => async (dispatch, getState) => 
 
 export const deletePreRegister = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: DELETE_PRE_REGISTER_REQUEST });
+    dispatch({ type: PRE_REGISTER_DELETE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -670,12 +670,12 @@ export const deletePreRegister = (id) => async (dispatch, getState) => {
     const { data } = await daoApi.delete(`/children/preregister/${id}`, config);
 
     dispatch({
-      type: DELETE_PRE_REGISTER_SUCCESS,
+      type: PRE_REGISTER_DELETE_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: DELETE_PRE_REGISTER_FAIL,
+      type: PRE_REGISTER_DELETE_FAIL,
       payload:
         e.response && e.response.data.detail
           ? e.response.data

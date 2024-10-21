@@ -372,7 +372,8 @@
     "confirm": "تایید",
     "add": "اضافه کردن",
     "preregister": "ثبت‌نام",
-    "preregisterList": "لیست ثبت‌نام"
+    "preregisterList": "لیست ثبت‌نام",
+    "listConfirmedChildren": "لیست تایید شده"
   },
   "socialWorker": {
     "id": "شناسه",

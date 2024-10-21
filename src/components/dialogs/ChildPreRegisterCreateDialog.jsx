@@ -33,7 +33,7 @@ import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import UploadImage from '../UploadImage';
 import {
   checkSimilarNames,
-  createPreRegisterChild,
+  adminCreatePreRegisterChild,
   fetchChildrenSayNames,
 } from '../../redux/actions/childrenAction';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
@@ -41,7 +41,7 @@ import { SexEnum } from '../../utils/types';
 import { shuffleArray } from '../../utils/helpers';
 import { CHECK_SIMILAR_NAMES_RESET } from '../../redux/constants/childrenConstants';
 
-export default function ChildPreRegisterAddDialog({ open, setOpen }) {
+export default function ChildPreRegisterCreateDialog({ open, setOpen, selected, setSelected }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { t } = useTranslation();
@@ -56,10 +56,13 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
   const [options, setOptions] = useState([]);
   const [openNames, setOpenNames] = useState(false);
   const [whatSex, setWhatSex] = useState(SexEnum.MALE);
-  const [selected, setSelected] = useState();
 
   const childPreRegister = useSelector((state) => state.childPreRegister);
-  const { loading: loadingAdded, success: successAdded } = childPreRegister;
+  const {
+    loading: loadingAdded,
+    success: successAdded,
+    error: errorPreRegister,
+  } = childPreRegister;
 
   const childNameCheck = useSelector((state) => state.childNameCheck);
   const { result, loading: loadingCheckName } = childNameCheck;
@@ -139,10 +142,12 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
   }, [loadingNames, namesResult && namesResult[0]]);
 
   const handleClose = () => {
+    setSelected();
     setOpen(false);
     clearErrors();
     dispatch({ type: CHECK_SIMILAR_NAMES_RESET });
   };
+  console.log(errorPreRegister);
 
   // dialog image
   const handleImageClickOpen = () => {
@@ -174,9 +179,8 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
     dispatch(
-      createPreRegisterChild({
+      adminCreatePreRegisterChild({
         awakeFile: finalAvatarFile,
         sleptFile: finalSleptAvatarFile,
         sayName: { en: data.sayname_translations_en, fa: selected },
@@ -372,22 +376,6 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
                   </CustomSelect>
                 </FormControl>
               </Grid>
-
-              {/* <Grid item md={6} xs={12}>
-                <CustomFormLabel htmlFor="sayname_translations_fa">
-                  {t('child.sayname_translations.fa')}
-                </CustomFormLabel>
-                <TextField
-                  required
-                  id="sayname_translations_fa"
-                  variant="outlined"
-                  size="large"
-                  control={control}
-                  {...register('sayname_translations_fa')}
-                  error={!!errors.sayname_translations_fa || similarError.fa > 0}
-                  helperText={similarError.fa > 0 && t(`error.similarNames`)}
-                />
-              </Grid> */}
               <Grid item md={6} xs={12}>
                 <Autocomplete
                   id="asynchronous-names"
@@ -430,6 +418,7 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
                   size="large"
                   control={control}
                   {...register('sayname_translations_en')}
+                  error={!!errors.sayname_translations_en}
                 />
               </Grid>
             </Grid>
@@ -467,6 +456,7 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
               {t('child.button.add')}
             </LoadingButton>
           </DialogActions>
+          {errorPreRegister && <Alert severity="error">{errorPreRegister}</Alert>}
         </Dialog>
       </form>
       {/* Child Image */}
@@ -502,8 +492,10 @@ export default function ChildPreRegisterAddDialog({ open, setOpen }) {
   );
 }
 
-ChildPreRegisterAddDialog.propTypes = {
+ChildPreRegisterCreateDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
   dialogValues: PropTypes.object,
+  selected: PropTypes.any,
+  setSelected: PropTypes.func,
 };
