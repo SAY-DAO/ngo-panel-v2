@@ -50,6 +50,7 @@ export default function NgoArrival() {
             <TableCell>{t('ngo.name')}</TableCell>
             <TableCell align="left">{t('ngo.deliveryCode')}</TableCell>
             <TableCell align="left">{t('ngo.deliveryItems')}</TableCell>
+            <TableCell align="left">{t('ngo.purchased')}</TableCell>
             <TableCell align="left">{t('ngo.arrivalDate')}</TableCell>
             <TableCell align="left">{t('button.update')}</TableCell>
             <TableCell align="left">{t('ngo.arrivalCode')}</TableCell>
@@ -83,6 +84,15 @@ export default function NgoArrival() {
                 <TableCell align="left">{a.deliveryCode}</TableCell>
                 <TableCell component="th" scope="row">
                   {a.itemCount}
+                </TableCell>
+                <TableCell align="left">
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                    }}
+                  >
+                    {a.maxDate && dateConvertor(new Date(a.maxDate).toUTCString())}
+                  </Typography>
                 </TableCell>
                 <TableCell align="left">
                   <Typography

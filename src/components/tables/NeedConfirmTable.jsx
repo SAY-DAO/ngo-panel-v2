@@ -22,6 +22,8 @@ import {
   FormControlLabel,
   FormGroup,
   Tooltip,
+  MenuItem,
+  Menu,
 } from '@mui/material';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,7 +31,9 @@ import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Link as RouterLink } from 'react-router-dom';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { LoadingButton } from '@mui/lab';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -44,7 +48,8 @@ import {
   urlSimilarityPercentage,
 } from '../../utils/helpers';
 import { dateConvertor } from '../../utils/persianToEnglish';
-import { colorChoices, Colors } from '../../utils/types';
+import { colorChoices, Colors, PaymentStatusEnum } from '../../utils/types';
+import GenericDialog from '../dialogs/GenericDialog';
 
 const NeedConfirmTable = () => {
   const dispatch = useDispatch();
@@ -77,6 +82,9 @@ const NeedConfirmTable = () => {
     const { row } = props;
 
     const [open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [dialogValues, setDialogValues] = useState();
 
     const handleManualConfirm = (id) => {
       const newList = manualIds.find((i) => id === i)
@@ -91,7 +99,24 @@ const NeedConfirmTable = () => {
       setManualIds(newList);
     };
 
-    
+    const openMore = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+    const ITEM_HEIGHT = 48;
+
+    const handleDeleteDialog = (needId) => {
+      setOpenDelete(true);
+      setDialogValues({
+        needId,
+        type: 'deleteNeed',
+      });
+    };
+
     return (
       <>
         <TableRow
@@ -156,13 +181,55 @@ const NeedConfirmTable = () => {
             )}
           </TableCell>
           <TableCell component="th" scope="row">
-            <RouterLink
-              style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex` }}
-              to={`/need/edit/${row.need.child.flaskId}/${row.need.flaskId}`}
-              target="_blank"
+            <IconButton
+              aria-label="more"
+              id="long-button"
+              aria-controls={openMore ? 'long-menu' : undefined}
+              aria-expanded={openMore ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
             >
-              <EditIcon sx={{ width: 20, height: 20, mr: 1 }} />
-            </RouterLink>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                'aria-labelledby': 'long-button',
+              }}
+              anchorEl={anchorEl}
+              open={openMore}
+              onClose={handleClose}
+              slotProps={{
+                paper: {
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: '15ch',
+                  },
+                },
+              }}
+            >
+              <MenuItem onClick={handleClose}>
+                <RouterLink
+                  style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex`}}
+                  to={`/need/edit/${row.need.child.flaskId}/${row.need.flaskId}`}
+                  target="_blank"
+                >
+                  <EditIcon sx={{ width: 20, height: 20, ml: 2, mr: 2 }} /> {t('button.update')}
+                </RouterLink>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                {row.need.status === PaymentStatusEnum.NOT_PAID && !row.need.isConfirmed && (
+                  <LoadingButton
+                    fullWidth
+                    // variant="customDelete"
+                    onClick={() => handleDeleteDialog(row.need.flaskId)}
+                  >
+                    <DeleteForeverIcon sx={{width: 20, height: 20, mr: 1 }} />
+                    {t('button.delete')}
+                  </LoadingButton>
+                )}
+              </MenuItem>
+            </Menu>
           </TableCell>
 
           <TableCell component="th" scope="row">
@@ -376,6 +443,7 @@ const NeedConfirmTable = () => {
             </Collapse>
           </TableCell>
         </TableRow>
+        <GenericDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
       </>
     );
   }

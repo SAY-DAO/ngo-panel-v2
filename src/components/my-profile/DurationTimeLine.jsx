@@ -45,6 +45,8 @@ export default function DurationTimeLine({ need, signature }) {
   if (theNeed.ngo_delivery_date) {
     theNeed.ngoDeliveryDate = need.ngo_delivery_date;
   }
+
+  let totalPaid = 0;
   return (
     <Timeline position="alternate" sx={{ pt: 4, pl: 0, pr: 0 }}>
       {theIpfs && (
@@ -351,7 +353,15 @@ export default function DurationTimeLine({ need, signature }) {
           <TimelineSeparator>
             <Tooltip
               title={
-                <Typography sx={{ fontSize: 12 }}>{dateConvertor(theNeed.purchaseDate)}</Typography>
+                <>
+                  <Typography sx={{ fontSize: 12 }}>
+                    {dateConvertor(theNeed.purchaseDate)}
+                  </Typography>
+                  -
+                  <Typography sx={{ fontSize: 12 }}>
+                    deliveryCode: {theNeed.deliveryCode}
+                  </Typography>
+                </>
               }
             >
               <TimelineDot variant="outlined" color="primary" />
@@ -422,9 +432,8 @@ export default function DurationTimeLine({ need, signature }) {
       )}
       {theNeed.status === PaymentStatusEnum.PARTIAL_PAY && (
         <TimelineItem>
-          {
-            theNeed.payments && (
-              <TimelineOppositeContent color="text.secondary" fontSize={12}>
+          {theNeed.payments && (
+            <TimelineOppositeContent color="text.secondary" fontSize={12}>
               {parseInt(
                 moment(theNeed.payments.find((p) => p.verified && p.need_amount > 0).created).diff(
                   moment(theNeed.confirmDate),
@@ -439,9 +448,8 @@ export default function DurationTimeLine({ need, signature }) {
                     theNeed.payments.find((p) => p.verified && p.need_amount > 0).created,
                   ).diff(moment(theNeed.confirmDate), 'hours')} ${t('myPage.taskCard.date.hours')}`}
             </TimelineOppositeContent>
-            )
-          }
-  
+          )}
+
           <TimelineSeparator>
             <Tooltip
               title={
@@ -452,18 +460,15 @@ export default function DurationTimeLine({ need, signature }) {
                     )}
                   </Typography>
                   <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
-                    {theNeed.payments
-                      .find((p) => p.verified && p.need_amount > 0)
-                      .need_amount.toLocaleString()}
+                    {theNeed.payments.forEach((p) => {
+                      if (p.verified && p.need_amount > 0) {
+                        totalPaid += p.need_amount;
+                      }
+                    })}
+                    {totalPaid.toLocaleString()}
                   </Typography>
                   <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
-                    ~{' '}
-                    {Math.round(
-                      (theNeed.payments.find((p) => p.verified && p.need_amount > 0).need_amount /
-                        theNeed._cost) *
-                        100,
-                    )}
-                    %
+                    ~ {Math.round((totalPaid / theNeed._cost) * 100)}%
                   </Typography>
                   <Typography sx={{ fontSize: 12, textAlign: 'center' }}>
                     UserIds:
