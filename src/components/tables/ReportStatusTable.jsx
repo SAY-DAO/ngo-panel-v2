@@ -682,7 +682,7 @@ const ReportStatusTable = () => {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {row.informations ? row.informations : row.details ? row.details : ''}
+                  {row.informations > 5 ? row.informations : row.details ? row.details : ''}
                 </Typography>
               </Tooltip>
             </TableCell>
