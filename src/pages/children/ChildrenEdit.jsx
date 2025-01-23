@@ -146,7 +146,7 @@ const ChildEdit = () => {
       setValue('bio_summary_translations_fa', truncateString(result.bio_translations.fa, 120));
       setValue('sex', result.gender === true ? 2 : 1);
       setValue('education', result.education);
-      setValue('schoolType', childPreRegister.schoolType);
+      setValue('schoolType', childPreRegister && childPreRegister.schoolType);
       setValue('familyCount', parseInt(result.familyCount, 10));
       setValue(
         'country',
