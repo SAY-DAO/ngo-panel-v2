@@ -456,6 +456,8 @@ const ChildrenTable = () => {
       currentStatus,
     });
   };
+  console.log(childList);
+  console.log(childList && childList.length);
 
   return (
     <PageContainer>
@@ -465,7 +467,7 @@ const ChildrenTable = () => {
       <Grid>
         <SelectCheckBox setFilters={setFilters} />
       </Grid>
-      {!swInfo || (!successChildren && !successMyChildren) ? (
+      {!swInfo || (!successChildren && !successMyChildren && childList.length <= 0) ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>

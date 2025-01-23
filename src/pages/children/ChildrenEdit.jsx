@@ -45,6 +45,7 @@ import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
 import { EducationEnum, HousingStatusEnum, SchoolTypeEnum, SexEnum } from '../../utils/types';
 import { getAge, truncateString } from '../../utils/helpers';
+import collaborators from '../../utils/temp';
 
 const ChildEdit = () => {
   const dispatch = useDispatch();
@@ -69,6 +70,10 @@ const ChildEdit = () => {
   const [uploadSleptAvatar, setUploadSleptAvatar] = useState(
     location.state && location.state.newImage,
   );
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+
   const [uploadVoice, setUploadVoice] = useState(location.state && location.state.newImage);
   const [birthDate, setBirthDate] = useState(new Date());
 
@@ -295,23 +300,25 @@ const ChildEdit = () => {
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                      <IconButton
-                        onClick={handleRemoveAvatar}
-                        color="secondary"
-                        sx={{
-                          position: 'absolute',
-                          bottom: '-5px',
-                          right: '65px',
-                        }}
-                      >
-                        <RemoveCircleOutlineIcon
+                      !collaborators.includes(swInfo.id) && (
+                        <IconButton
+                          onClick={handleRemoveAvatar}
                           color="secondary"
-                          fontSize="small"
                           sx={{
-                            borderRadius: '20%',
+                            position: 'absolute',
+                            bottom: '-5px',
+                            right: '65px',
                           }}
-                        />
-                      </IconButton>
+                        >
+                          <RemoveCircleOutlineIcon
+                            color="secondary"
+                            fontSize="small"
+                            sx={{
+                              borderRadius: '20%',
+                            }}
+                          />
+                        </IconButton>
+                      )
                     }
                   >
                     <div className="upload__image-wrapper">
@@ -337,31 +344,55 @@ const ChildEdit = () => {
                             style={{ display: 'none' }}
                             onChange={onAvatarChange}
                           />
-
-                          <IconButton
-                            name="upload-image-avatar"
-                            id="upload-image-avatar"
-                            color="primary"
-                            component="div"
-                            sx={{
-                              position: 'absolute',
-                              bottom: '0px',
-                              right: '0px',
-                            }}
-                          >
-                            <AddCircleOutlineIcon
+                          {!collaborators.includes(swInfo.id) && (
+                            <IconButton
+                              name="upload-image-avatar"
+                              id="upload-image-avatar"
                               color="primary"
-                              fontSize="small"
+                              component="div"
                               sx={{
-                                zIndex: 10,
-                                borderRadius: '20%',
+                                position: 'absolute',
+                                bottom: '0px',
+                                right: '0px',
                               }}
-                            />
-                          </IconButton>
+                            >
+                              <AddCircleOutlineIcon
+                                color="primary"
+                                fontSize="small"
+                                sx={{
+                                  zIndex: 10,
+                                  borderRadius: '20%',
+                                }}
+                              />
+                            </IconButton>
+                          )}
+                          {!collaborators.includes(swInfo.id) && (
+                            <IconButton
+                              name="upload-image-avatar"
+                              id="upload-image-avatar"
+                              color="primary"
+                              component="div"
+                              sx={{
+                                position: 'absolute',
+                                bottom: '0px',
+                                right: '0px',
+                              }}
+                            >
+                              <AddCircleOutlineIcon
+                                color="primary"
+                                fontSize="small"
+                                sx={{
+                                  zIndex: 10,
+                                  borderRadius: '20%',
+                                }}
+                              />
+                            </IconButton>
+                          )}
                         </label>
                       </Grid>
                     </div>
                   </Badge>
+
                   <Typography variant="body2" sx={{ mt: 2, color: 'gray' }}>
                     {t('child.awakeAvatarUrl')}
                   </Typography>
@@ -374,23 +405,25 @@ const ChildEdit = () => {
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                      <IconButton
-                        onClick={handleRemoveAvatar}
-                        color="secondary"
-                        sx={{
-                          position: 'absolute',
-                          bottom: '-5px',
-                          right: '65px',
-                        }}
-                      >
-                        <RemoveCircleOutlineIcon
+                      !collaborators.includes(swInfo.id) && (
+                        <IconButton
+                          onClick={handleRemoveAvatar}
                           color="secondary"
-                          fontSize="small"
                           sx={{
-                            borderRadius: '20%',
+                            position: 'absolute',
+                            bottom: '-5px',
+                            right: '65px',
                           }}
-                        />
-                      </IconButton>
+                        >
+                          <RemoveCircleOutlineIcon
+                            color="secondary"
+                            fontSize="small"
+                            sx={{
+                              borderRadius: '20%',
+                            }}
+                          />
+                        </IconButton>
+                      )
                     }
                   >
                     <div className="upload__image-wrapper">
@@ -416,27 +449,28 @@ const ChildEdit = () => {
                             style={{ display: 'none' }}
                             onChange={onSleptAvatarChange}
                           />
-
-                          <IconButton
-                            name="upload-image-slept-avatar"
-                            id="upload-image-slept-avatar"
-                            color="primary"
-                            component="div"
-                            sx={{
-                              position: 'absolute',
-                              bottom: '0px',
-                              right: '0px',
-                            }}
-                          >
-                            <AddCircleOutlineIcon
+                          {!collaborators.includes(swInfo.id) && (
+                            <IconButton
+                              name="upload-image-slept-avatar"
+                              id="upload-image-slept-avatar"
                               color="primary"
-                              fontSize="small"
+                              component="div"
                               sx={{
-                                zIndex: 10,
-                                borderRadius: '20%',
+                                position: 'absolute',
+                                bottom: '0px',
+                                right: '0px',
                               }}
-                            />
-                          </IconButton>
+                            >
+                              <AddCircleOutlineIcon
+                                color="primary"
+                                fontSize="small"
+                                sx={{
+                                  zIndex: 10,
+                                  borderRadius: '20%',
+                                }}
+                              />
+                            </IconButton>
+                          )}
                         </label>
                       </Grid>
                     </div>
@@ -469,6 +503,7 @@ const ChildEdit = () => {
                           color="primary"
                           component="div"
                           variant="outlined"
+                          disabled={collaborators.includes(swInfo.id)}
                           sx={{
                             bottom: '0px',
                             right: '0px',
@@ -939,6 +974,7 @@ const ChildEdit = () => {
                   <LoadingButton
                     loading={loadingUpdate}
                     color="primary"
+                    disabled={collaborators.includes(swInfo.id)}
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
                     variant="contained"
