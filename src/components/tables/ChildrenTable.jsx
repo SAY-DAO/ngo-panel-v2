@@ -381,14 +381,13 @@ const ChildrenTable = () => {
 
   // fetch children
   useEffect(() => {
-    console.log(filters);
     if (swInfo) {
       dispatch(fetchChildList(page, rowsPerPage, filters));
     }
   }, [swInfo, page, rowsPerPage, filters]);
 
   useEffect(() => {
-    if (children || myChildren) {
+    if ((children && children[0]) || (myChildren && myChildren.data[0])) {
       setChildList(children ? children.children : myChildren && myChildren.data);
     }
   }, [children, myChildren]);
