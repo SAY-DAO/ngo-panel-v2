@@ -27,6 +27,7 @@ import {
 } from '../../utils/types';
 import VoiceBar from '../VoiceBar';
 import { getAge, prepareUrl } from '../../utils/helpers';
+import collaborators from '../../utils/temp';
 
 function PreRegisterCard({
   preRegistered,
@@ -89,48 +90,50 @@ function PreRegisterCard({
             <FeatherIcon icon="more-vertical" width="18" />
           </IconButton>
         </Tooltip>
-        <Menu
-          id="long-menu"
-          MenuListProps={{
-            'aria-labelledby': 'long-button',
-          }}
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-        >
-          {swInfo &&
-            (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-              swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
-              <div>
-                {preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED && (
-                  <MenuItem onClick={() => handleApprove(preRegistered)}>
-                    {t('button.confirm')}
-                  </MenuItem>
-                )}
-
-                <MenuItem onClick={() => handleDelete(preRegistered.id)}>
-                  {t('button.delete')}
-                </MenuItem>
-              </div>
-            )}
-          {(preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED ||
-            (preRegistered.status === PreRegisterStatusEnum.CONFIRMED &&
+        {!collaborators.includes(swInfo.id) && (
+          <Menu
+            id="long-menu"
+            MenuListProps={{
+              'aria-labelledby': 'long-button',
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            {swInfo &&
               (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-                swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN))) && (
-            <MenuItem onClick={() => handleUpdate(preRegistered)}>{t('button.update')}</MenuItem>
-          )}
-          {preRegistered.status === PreRegisterStatusEnum.CONFIRMED && (
-            <MenuItem>Child Id: {preRegistered.flaskChildId}</MenuItem>
-          )}
-        </Menu>
+                swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
+                <div>
+                  {preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED && (
+                    <MenuItem onClick={() => handleApprove(preRegistered)}>
+                      {t('button.confirm')}
+                    </MenuItem>
+                  )}
+
+                  <MenuItem onClick={() => handleDelete(preRegistered.id)}>
+                    {t('button.delete')}
+                  </MenuItem>
+                </div>
+              )}
+            {(preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED ||
+              (preRegistered.status === PreRegisterStatusEnum.CONFIRMED &&
+                (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                  swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN))) && (
+              <MenuItem onClick={() => handleUpdate(preRegistered)}>{t('button.update')}</MenuItem>
+            )}
+            {preRegistered.status === PreRegisterStatusEnum.CONFIRMED && (
+              <MenuItem>Child Id: {preRegistered.flaskChildId}</MenuItem>
+            )}
+          </Menu>
+        )}
       </Box>
       <Grid container justifyContent="center" spacing={2}>
         <Grid container item xs={12}>

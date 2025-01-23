@@ -989,6 +989,7 @@ const TaskCard = ({
                   <LoadingButton
                     loading={loadingConfirm || loadingDuplicates}
                     disabled={
+                      collaborators.includes(swInfo.id) ||
                       swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
                       swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
                     }
@@ -1005,6 +1006,7 @@ const TaskCard = ({
                     fullWidth
                     variant="customDelete"
                     onClick={() => handleDeleteDialog(need.id)}
+                    disabled={collaborators.includes(swInfo.id)}
                   >
                     {t('button.delete')}
                   </LoadingButton>

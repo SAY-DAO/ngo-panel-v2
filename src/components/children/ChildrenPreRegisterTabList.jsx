@@ -14,6 +14,7 @@ import PreRegisterCard from './PreRegisterCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 import ChildPreRegisterUpdateDialog from '../dialogs/ChildPreRegisterUpdateDialog ';
 import { CHECK_SIMILAR_NAMES_RESET } from '../../redux/constants/childrenConstants';
+import collaborators from '../../utils/temp';
 
 export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
         swInfo &&
         (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
           swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
-          <LoadingButton onClick={handleDialog}>
+          <LoadingButton onClick={handleDialog} disabled={collaborators.includes(swInfo.id)}>
             <AddIcon />
           </LoadingButton>
         )}

@@ -39,6 +39,7 @@ import { ChildExistenceEnum, FlaskUserTypesEnum } from '../../utils/types';
 import { getAge, prepareUrl } from '../../utils/helpers';
 import SelectCheckBox from '../children/SelectCheckBox';
 import { fetchChildList } from '../../redux/actions/childrenAction';
+import collaborators from '../../utils/temp';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -467,7 +468,7 @@ const ChildrenTable = () => {
       <Grid>
         <SelectCheckBox setFilters={setFilters} />
       </Grid>
-      {!swInfo || (!successChildren && !successMyChildren && childList.length <= 0) ? (
+      {!swInfo || (!successChildren && !successMyChildren) || childList.length <= 0 ? (
         <Grid sx={{ textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -519,7 +520,7 @@ const ChildrenTable = () => {
                               <IconButton
                                 onClick={() => handleEdit(row)}
                                 color="primary"
-                                aria-label="update social worker"
+                                aria-label="update child"
                               >
                                 <EditOutlinedIcon />
                               </IconButton>
@@ -605,10 +606,9 @@ const ChildrenTable = () => {
                               <Typography color="textSecondary" variant="h6" fontWeight="600">
                                 <LoadingButton
                                   disabled={
-                                    !(
-                                      swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-                                      swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
-                                    )
+                                    (swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
+                                      swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN) ||
+                                    collaborators.includes(swInfo.id)
                                   }
                                   variant="outlined"
                                   onClick={() => handleStatusDialog(row.id, row.existence_status)}

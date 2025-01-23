@@ -61,6 +61,7 @@ import ContributionOverview from './ContributionOverview';
 import { daysDifference } from '../../utils/helpers';
 import NgoArrivalSummery from '../../pages/ngos/NgoArrivalSummery';
 import SignatureArrivalDialog from '../dialogs/SignatureArrivalDialog';
+import collaborators from '../../utils/temp';
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
   <Tooltip placement="left" {...props} classes={{ popper: className }} />
@@ -140,7 +141,6 @@ const CoverCard = ({
       dispatch(fetchNonce());
     }
   }, [swInfo]);
-
 
   // toast
   useEffect(() => {
@@ -398,6 +398,7 @@ const CoverCard = ({
           }}
         >
           {swInfo &&
+            !collaborators.includes(swInfo.id) &&
             (swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
               swInfo.typeId === FlaskUserTypesEnum.ADMIN) && (
               <Box

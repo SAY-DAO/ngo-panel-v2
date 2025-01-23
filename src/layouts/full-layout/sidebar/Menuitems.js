@@ -74,7 +74,7 @@ export const Menuitems = [
     icon: 'user',
     href: PROFILE_VIEW,
     admin: false,
-    collaborator: true,
+    collaborator: false,
   },
   {
     title: 'sidebar.signatures',
