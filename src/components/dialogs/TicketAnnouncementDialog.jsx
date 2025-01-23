@@ -72,22 +72,24 @@ export default function TicketAnnouncementDialog({
   };
 
   const handleConfirm = () => {
-    dispatch(
-      addTicket({
-        roles: ['AUDITOR'],
-        title: need.name_translations.en,
-        flaskUserId: pageDetails.panelFlaskUserId,
-        userTypeId: pageDetails.typeId,
-        flaskNeedId: need.id,
-        statuses: need.status_updates,
-        receipts: need.receipts_,
-        payments: need.payments,
-        announcement: openAnnouncement.arrival
-          ? AnnouncementEnum.ARRIVED_AT_NGO
-          : openAnnouncement.moneyReceived && AnnouncementEnum.NGO_RECEIVED_MONEY,
-        arrivalDate,
-      }),
-    );
+    if (arrivalDate) {
+      dispatch(
+        addTicket({
+          roles: ['AUDITOR'],
+          title: need.name_translations.en,
+          flaskUserId: pageDetails.panelFlaskUserId,
+          userTypeId: pageDetails.typeId,
+          flaskNeedId: need.id,
+          statuses: need.status_updates,
+          receipts: need.receipts_,
+          payments: need.payments,
+          announcement: openAnnouncement.arrival
+            ? AnnouncementEnum.ARRIVED_AT_NGO
+            : openAnnouncement.moneyReceived && AnnouncementEnum.NGO_RECEIVED_MONEY,
+          arrivalDate,
+        }),
+      );
+    }
   };
 
   useEffect(() => {

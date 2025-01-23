@@ -66,6 +66,7 @@ import signatureIcon from '../../resources/images/signature.svg';
 import GenericDialog from '../dialogs/GenericDialog';
 import { NEST_GRACE_PERIOD } from '../../utils/configs';
 import { deleteNeed } from '../../redux/actions/needsAction';
+import collaborators from '../../utils/temp';
 
 function CircularProgressWithLabel(props) {
   const { t } = useTranslation();
@@ -512,7 +513,8 @@ const TaskCard = ({
                       </MenuItem>
                     )}
                     {!need.ipfs &&
-                      (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                      ((!collaborators.includes(swInfo.id) &&
+                        swInfo.typeId === FlaskUserTypesEnum.ADMIN) ||
                         swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
                         swInfo.id === need.created_by_id) && (
                         <MenuItem>
@@ -531,6 +533,7 @@ const TaskCard = ({
                         {t('myPage.taskCard.menu.readTicket')}
                       </MenuItem>
                     ) : (
+                      !collaborators.includes(swInfo.id) &&
                       !need.ipfs && (
                         <MenuItem onClick={() => handleOpenConfirm()}>
                           <FlagOutlinedIcon sx={{ ml: 1, mr: 1 }} />
@@ -538,7 +541,8 @@ const TaskCard = ({
                         </MenuItem>
                       )
                     )}
-                    {swInfo.id === need.created_by_id &&
+                    {!collaborators.includes(swInfo.id) &&
+                      swInfo.id === need.created_by_id &&
                       need.type === NeedTypeEnum.PRODUCT &&
                       need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
                       (!need.tickets[0] ||
@@ -552,7 +556,8 @@ const TaskCard = ({
                           {t('myPage.taskCard.menu.deliveryTicket')}
                         </MenuItem>
                       )}
-                    {swInfo.id === need.created_by_id &&
+                    {!collaborators.includes(swInfo.id) &&
+                      swInfo.id === need.created_by_id &&
                       need.type === NeedTypeEnum.SERVICE &&
                       need.status === ServiceStatusEnum.MONEY_TO_NGO &&
                       (!need.tickets[0] ||

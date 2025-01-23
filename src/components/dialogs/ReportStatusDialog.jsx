@@ -158,11 +158,14 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   };
 
   const handleExpDeliveryChange = (newValue) => {
-    setExpProductDelivery(newValue);
+    
+    setExpProductDelivery(new Date(newValue));
   };
 
   const handleDeliveredChange = (newValue) => {
-    setProductDelivered(newValue);
+    console.log(new Date(newValue));
+
+    setProductDelivered(new Date(newValue));
   };
 
   const onSubmit = async (data) => {

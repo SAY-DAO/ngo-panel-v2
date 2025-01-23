@@ -50,18 +50,22 @@ export default function SelectCheckBox({ setFilters }) {
       options={existenceStatus.map((option) => option.status)}
       getOptionLabel={(option) => existenceStatus.find((s) => s.status === option).title}
       renderTags={(v, getTagProps) =>
+        swInfo &&
         v.map((option, index) => (
           <Chip
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
             variant="outlined"
             label={
               (existenceStatus.find((s) => s.status === option) &&
                 existenceStatus.find((s) => s.status === option).title) ||
               option
             }
-            {...getTagProps({ index })}
+            tabIndex={getTagProps({ index }).tabIndex}
+            onDelete={getTagProps({ index }).onDelete}
+            data-tag-index={getTagProps({ index })['data-tag-index']}
             disabled={
-              (swInfo &&
-                swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
+              (swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
                 swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN &&
                 existenceStatus.find((s) => s.status === option) &&
                 existenceStatus.find((s) => s.status === option).status ===

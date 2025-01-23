@@ -147,7 +147,7 @@ const SocialWorkerEdit = () => {
 
   useEffect(() => {
     if (result) {
-      setBirthDate(result.birthDate);
+      setBirthDate(new Date(result.birthDate));
 
       setValues({
         ...values,
@@ -302,6 +302,7 @@ const SocialWorkerEdit = () => {
   const handleChangeInput = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
+
   const shapeStyles = { bgcolor: 'transparent', width: 80, height: 50 };
   const rectangle = (
     <Box component="span" sx={shapeStyles}>
@@ -674,6 +675,7 @@ const SocialWorkerEdit = () => {
                             value={birthDate}
                             onChange={handleDateChange}
                             renderInput={(params) => <TextField {...params} />}
+                            error={!!errors.birthDate}
                           />
                         </LocalizationProvider>
                       </Grid>
@@ -722,7 +724,11 @@ const SocialWorkerEdit = () => {
                         <CustomSelect
                           labelId="ngoId-controlled-open-select-label"
                           id="ngoId-controlled-open-select"
-                          defaultValue={ngoList && ngoList.find((n) => n.id === result.ngoId).id}
+                          defaultValue={
+                            result && ngoList && ngoList.find((n) => n.id === result.ngoId)
+                              ? ngoList.find((n) => n.id === result.ngoId).id
+                              : 0
+                          }
                           register={{ ...register('ngoId') }}
                           control={control}
                           error={!!errors.ngoId}

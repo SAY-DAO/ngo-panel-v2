@@ -5,3 +5,4 @@ yarn.lock
 .vscode
 build
 campaignContent.txt
+.yarn

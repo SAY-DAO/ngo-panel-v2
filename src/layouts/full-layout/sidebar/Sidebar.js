@@ -17,9 +17,10 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import { SidebarWidth } from '../../../resources/global/Theme-variable';
-import Menuitems from './Menuitems';
+import { Menuitems, CollaboratorItems } from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
 import { FlaskUserTypesEnum } from '../../../utils/types';
+import collaborators from '../../../utils/temp';
 
 const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   const { t } = useTranslation();
@@ -47,7 +48,9 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
 
   useEffect(() => {
     if (swInfo) {
-      if (
+      if (collaborators.includes(swInfo.id)) {
+        setMyMenuItems(CollaboratorItems);
+      } else if (
         swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
         swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
       ) {

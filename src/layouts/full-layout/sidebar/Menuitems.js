@@ -46,18 +46,20 @@ import {
   CAMPAIGN_NEWSLETTER
 } from '../../../routes/RouteConstants';
 
-const Menuitems = [
+export const Menuitems = [
   {
     navlabel: true,
     subheader: 'sidebar.daoHeader',
     href: 'DAO',
     admin: true,
+    collaborator: false,
   },
   {
     title: 'sidebar.dashboard',
     icon: <HubIcon />,
     href: DAO_HOME,
     admin: true,
+    collaborator: false,
   },
   {
     navlabel: true,
@@ -65,18 +67,21 @@ const Menuitems = [
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
     admin: false,
+    collaborator: true,
   },
   {
     title: 'sidebar.myPage',
     icon: 'user',
     href: PROFILE_VIEW,
     admin: false,
+    collaborator: true,
   },
   {
     title: 'sidebar.signatures',
     icon: <HandshakeOutlinedIcon />,
     href: MY_SIGNATURES,
     admin: false,
+    collaborator: false,
   },
   {
     title: 'sidebar.children.title',
@@ -84,6 +89,7 @@ const Menuitems = [
     href: '/children',
     collapse: true,
     admin: false,
+    collaborator: true,
     children: [
       {
         title: 'sidebar.listConfirmedChildren',
@@ -113,6 +119,7 @@ const Menuitems = [
     href: '/need',
     admin: false,
     collapse: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -139,6 +146,7 @@ const Menuitems = [
     href: '/dao/milestone',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -158,6 +166,7 @@ const Menuitems = [
     href: REPORTS,
     collapse: true,
     admin: false,
+    collaborator: false,
   },
   // Admin
   {
@@ -166,6 +175,7 @@ const Menuitems = [
     icon: 'mdi mdi-dots-horizontal',
     href: 'Reports',
     admin: true,
+    collaborator: false,
   },
   {
     title: 'sidebar.ngos.title',
@@ -173,6 +183,7 @@ const Menuitems = [
     href: '/ngo',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -200,6 +211,7 @@ const Menuitems = [
     href: '/provider',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -221,6 +233,7 @@ const Menuitems = [
     href: '/sw',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -246,6 +259,7 @@ const Menuitems = [
     title: 'sidebar.users.title',
     icon: <EscalatorWarningIcon />,
     href: USERS_PAGE,
+    collaborator: false,
     admin: true,
   },
   {
@@ -254,6 +268,7 @@ const Menuitems = [
     href: '/admin/catagories',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -275,6 +290,7 @@ const Menuitems = [
     href: '/admin/midjourney',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -290,6 +306,7 @@ const Menuitems = [
     href: '/admin/comment',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -305,6 +322,7 @@ const Menuitems = [
     href: '/admin/contribution',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.list',
@@ -320,6 +338,7 @@ const Menuitems = [
     href: '/admin/campaign',
     collapse: true,
     admin: true,
+    collaborator: false,
     children: [
       {
         title: 'sidebar.campaign.type.report',
@@ -337,4 +356,5 @@ const Menuitems = [
   },
 ];
 
-export default Menuitems;
+export const CollaboratorItems = Menuitems.filter((item)=> item.collaborator)
+
