@@ -14,17 +14,14 @@ import LogoIcon from '../../layouts/full-layout/logo/LogoIcon';
 import { login } from '../../redux/actions/userAction';
 import Message from '../../components/Message';
 import { fetchSocialWorkerDetails } from '../../redux/actions/socialWorkerAction';
+import collaborators from '../../utils/temp';
+import { CHILDREN_LIST, HOME } from '../../routes/RouteConstants';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const location = useLocation();
-
-  const redirect = location.search
-    ? // eslint-disable-next-line no-restricted-globals
-      location.search.split('redirect=')[1]
-    : '/';
 
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,11 +32,19 @@ const Login = () => {
   const { loading: loadingLogin, error: errorLogin, success: successLogin } = userLogin;
 
   const swDetails = useSelector((state) => state.swDetails);
-  const { loading: loadingSwDetails, success: successSwDetails } = swDetails;
+  const { swInfo, loading: loadingSwDetails, success: successSwDetails } = swDetails;
+
+  const redirect =
+    swInfo && location.search && !collaborators.includes(swInfo.id)
+      ? // eslint-disable-next-line no-restricted-globals
+       `/${location.search.split('redirect=')[1]}`
+      : swInfo && !location.search && !collaborators.includes(swInfo.id)
+      ? HOME
+      : CHILDREN_LIST;
 
   useEffect(() => {
     if (successLogin && successSwDetails) {
-      navigate(`/${redirect}`);
+      navigate(`${redirect}`);
     }
   }, [redirect, successLogin, successSwDetails]);
 

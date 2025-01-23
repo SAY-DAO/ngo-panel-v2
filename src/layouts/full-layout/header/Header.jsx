@@ -38,6 +38,10 @@ import {
   NEED_ADD,
   PROVIDER_LIST,
   SW_LIST,
+  CHILDREN_LIST,
+  NEED_LIST,
+  REPORTS,
+  MY_SIGNATURES,
 } from '../../../routes/RouteConstants';
 import { fetchNgoList } from '../../../redux/actions/ngoAction';
 import {
@@ -66,6 +70,7 @@ import { WebsocketContext } from '../../../contexts/WebsocketContext';
 import { socketRefreshNotifications } from '../../../utils/socketHelpers';
 import { NOTIFICATION_TIMER } from '../../../utils/configs';
 import { WALLET_INFORMATION_RESET } from '../../../redux/constants/daoConstants';
+import collaborators from '../../../utils/temp';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -115,10 +120,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     }
   }, [successTicketList, swInfo]);
 
-  // do not let non admin user to navigate to the following pages
   useEffect(() => {
+    // do not let non admin user to navigate to the following pages
     if (
       swInfo &&
+      !collaborators.includes(swInfo.id) &&
       swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
       swInfo.typeId !== FlaskUserTypesEnum.NGO_SUPERVISOR &&
       swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN
@@ -132,6 +138,24 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         location.pathname === MILESTONE_ADD
       ) {
         navigate(PROFILE_VIEW);
+      }
+    }
+    // do not let collaborators to navigate to the following pages
+    if (swInfo && collaborators.includes(swInfo.id) && swInfo.typeId === FlaskUserTypesEnum.ADMIN) {
+      if (
+        location.pathname === DAO_HOME ||
+        location.pathname === SW_LIST ||
+        location.pathname === PROVIDER_LIST ||
+        location.pathname === NGO_LIST ||
+        location.pathname === MILESTONE_LIST ||
+        location.pathname === MILESTONE_ADD ||
+        location.pathname === NEED_ADD ||
+        location.pathname === NEED_LIST ||
+        location.pathname === REPORTS ||
+        location.pathname === MY_SIGNATURES ||
+        location.pathname === PROFILE_VIEW
+      ) {
+        navigate(CHILDREN_LIST);
       }
     }
   }, [swInfo, location]);
