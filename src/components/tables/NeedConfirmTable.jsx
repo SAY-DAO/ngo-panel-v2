@@ -50,6 +50,7 @@ import {
 import { dateConvertor } from '../../utils/persianToEnglish';
 import { colorChoices, Colors, PaymentStatusEnum } from '../../utils/types';
 import GenericDialog from '../dialogs/GenericDialog';
+import collaborators from '../../utils/temp';
 
 const NeedConfirmTable = () => {
   const dispatch = useDispatch();
@@ -61,6 +62,8 @@ const NeedConfirmTable = () => {
   const [manualIds, setManualIds] = useState([]);
   const [totalMissMatch, setTotalMissMatch] = useState(0);
   const [confirmCandidate, setConfirmCandidate] = useState();
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const BCrumb = [
     {
@@ -210,7 +213,7 @@ const NeedConfirmTable = () => {
             >
               <MenuItem onClick={handleClose}>
                 <RouterLink
-                  style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex`}}
+                  style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex` }}
                   to={`/need/edit/${row.need.child.flaskId}/${row.need.flaskId}`}
                   target="_blank"
                 >
@@ -218,16 +221,18 @@ const NeedConfirmTable = () => {
                 </RouterLink>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                {row.need.status === PaymentStatusEnum.NOT_PAID && !row.need.isConfirmed && (
-                  <LoadingButton
-                    fullWidth
-                    // variant="customDelete"
-                    onClick={() => handleDeleteDialog(row.need.flaskId)}
-                  >
-                    <DeleteForeverIcon sx={{width: 20, height: 20, mr: 1 }} />
-                    {t('button.delete')}
-                  </LoadingButton>
-                )}
+                {!collaborators.includes(swInfo.id) &&
+                  row.need.status === PaymentStatusEnum.NOT_PAID &&
+                  !row.need.isConfirmed && (
+                    <LoadingButton
+                      fullWidth
+                      // variant="customDelete"
+                      onClick={() => handleDeleteDialog(row.need.flaskId)}
+                    >
+                      <DeleteForeverIcon sx={{ width: 20, height: 20, mr: 1 }} />
+                      {t('button.delete')}
+                    </LoadingButton>
+                  )}
               </MenuItem>
             </Menu>
           </TableCell>
@@ -507,7 +512,7 @@ const NeedConfirmTable = () => {
       <Breadcrumb items={BCrumb} />
       {/* end breadcrumb */}
 
-      {loading ? (
+      {loading || !swInfo ? (
         <Grid sx={{ margin: 4, textAlign: 'center' }}>
           <CircularProgress />
         </Grid>
@@ -517,7 +522,7 @@ const NeedConfirmTable = () => {
             <CardContent>
               <Box>
                 <LoadingButton
-                  disabled={confirmCandidate < 1}
+                  disabled={confirmCandidate < 1 || collaborators.includes(swInfo.id)}
                   loading={loadingMassConfirm}
                   variant="outlined"
                   onClick={handleMassConfirm}
