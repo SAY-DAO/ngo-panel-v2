@@ -40,6 +40,7 @@ import Message from '../../components/Message';
 import { apiDao } from '../../env';
 import { getAge } from '../../utils/helpers';
 import { NeedTypeEnum } from '../../utils/types';
+import collaborators from '../../utils/temp';
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
@@ -68,6 +69,9 @@ const NeedEdit = () => {
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
 
   const [justProvider, setJustProvider] = useState();
+  
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails
   const providerAll = useSelector((state) => state.providerAll);
   const { providerList } = providerAll;
 
@@ -659,6 +663,7 @@ const NeedEdit = () => {
                       </Card>
                       <LoadingButton
                         loading={loadingUpdateNeed}
+                        disabled={collaborators.includes(swInfo.id)}
                         color="primary"
                         type="submit"
                         onClick={handleSubmit(onSubmit)}

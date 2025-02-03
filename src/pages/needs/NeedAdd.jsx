@@ -66,6 +66,7 @@ import {
 } from '../../utils/types';
 import ProviderDialog from '../../components/dialogs/ProviderDialog';
 import { UNCONFIRMED_NEEDS_THRESHOLD } from '../../utils/configs';
+import collaborators from '../../utils/temp';
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
@@ -976,6 +977,7 @@ const NeedAdd = () => {
                         loading={loadingAddNeed}
                         color="primary"
                         type="submit"
+                        disabled={collaborators.includes(swInfo.id)}
                         onClick={handleSubmit(onSubmit)}
                         variant="contained"
                         sx={{ mt: 4 }}
