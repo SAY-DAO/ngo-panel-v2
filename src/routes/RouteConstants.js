@@ -33,3 +33,4 @@ export const NEED_COMMENT = '/comment/list';
 export const CONTRIBUTION = '/contribution/list';
 export const CAMPAIGN_MONTHLY = '/campaign/list'
 export const CAMPAIGN_NEWSLETTER = '/newsletter/add'
+export const UI_PERMISSIONS = '/permissions' // only UI level for onboarding new admins

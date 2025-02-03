@@ -36,7 +36,9 @@ import {
   USERS_PAGE,
   NEED_CONFIRM,
   CAMPAIGN_NEWSLETTER,
+  UI_PERMISSIONS
 } from './RouteConstants';
+
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank-layout/BlankLayout')));
@@ -79,6 +81,7 @@ const DaoMidJourneyList = Loadable(lazy(() => import('../pages/midjourney/DaoMid
 const DaoCommentList = Loadable(lazy(() => import('../pages/comment/DaoCommentList')));
 const DaoMonthlyCampaign = Loadable(lazy(() => import('../pages/campaign/DaoMonthlyCampaign')));
 const DaoNewsLetterCampaign = Loadable(lazy(() => import('../pages/campaign/DaoNewsLetterCampaign')));
+const PermissionsList = Loadable(lazy(() => import('../pages/permissions/PermissionsList')));
 
 const DaoContributionList = Loadable(
   lazy(() => import('../pages/contribution/DaoContributionList')),
@@ -124,6 +127,7 @@ const Router = [
       { path: CAMPAIGN_MONTHLY, exact: true, element: <DaoMonthlyCampaign /> },
       { path: CAMPAIGN_NEWSLETTER, exact: true, element: <DaoNewsLetterCampaign /> },
       { path: CONTRIBUTION, exact: true, element: <DaoContributionList /> },
+      { path: UI_PERMISSIONS, exact: true, element: <PermissionsList /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

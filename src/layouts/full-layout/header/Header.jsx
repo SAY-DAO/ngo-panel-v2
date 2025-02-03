@@ -39,8 +39,8 @@ import {
   PROVIDER_LIST,
   SW_LIST,
   CHILDREN_LIST,
-  NEED_LIST,
-  REPORTS,
+  // NEED_LIST,
+  // REPORTS,
   MY_SIGNATURES,
 } from '../../../routes/RouteConstants';
 import { fetchNgoList } from '../../../redux/actions/ngoAction';
@@ -141,7 +141,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       }
     }
     // do not let collaborators to navigate to the following pages
-    if (swInfo && collaborators.includes(swInfo.id) && swInfo.typeId === FlaskUserTypesEnum.ADMIN) {
+    if (swInfo && collaborators.includes(swInfo.id)) {
       if (
         location.pathname === DAO_HOME ||
         location.pathname === SW_LIST ||
@@ -149,9 +149,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         location.pathname === NGO_LIST ||
         location.pathname === MILESTONE_LIST ||
         location.pathname === MILESTONE_ADD ||
-        location.pathname === NEED_ADD ||
-        location.pathname === NEED_LIST ||
-        location.pathname === REPORTS ||
+        // location.pathname === NEED_ADD ||
+        // location.pathname === NEED_LIST ||
+        // location.pathname === REPORTS ||
         location.pathname === MY_SIGNATURES ||
         location.pathname === PROFILE_VIEW
       ) {
