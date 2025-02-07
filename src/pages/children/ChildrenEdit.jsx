@@ -974,7 +974,7 @@ const ChildEdit = () => {
                   <LoadingButton
                     loading={loadingUpdate}
                     color="primary"
-                    disabled={collaborators.includes(swInfo.id)}
+                    // disabled={collaborators.includes(swInfo.id)}
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
                     variant="contained"

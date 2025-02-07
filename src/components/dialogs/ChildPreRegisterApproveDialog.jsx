@@ -17,6 +17,7 @@ import { approvePreRegister } from '../../redux/actions/childrenAction';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import VoiceBar from '../VoiceBar';
 import { apiDao } from '../../env';
+import collaborators from '../../utils/temp';
 
 export default function ChildPreRegisterApproveDialog({ open, setOpen, dialogValues }) {
   const dispatch = useDispatch();
@@ -26,6 +27,9 @@ export default function ChildPreRegisterApproveDialog({ open, setOpen, dialogVal
 
   const { loading, approved } = useSelector((state) => state.childPreRegister);
 
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
+  
   const validationSchema = Yup.object().shape({
     lastName_translations_en: Yup.string().required('Please enter your address'),
     firstName_translations_en: Yup.string().required('Please enter your address'),
@@ -214,6 +218,7 @@ export default function ChildPreRegisterApproveDialog({ open, setOpen, dialogVal
               loading={loading}
               color="primary"
               type="submit"
+              disabled={collaborators.includes(swInfo.id)}
               onClick={handleSubmit(onSubmit)}
               autoFocus
             >
