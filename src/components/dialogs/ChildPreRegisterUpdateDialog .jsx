@@ -128,7 +128,7 @@ export default function ChildPreRegisterUpdateDialog({
                   error={!!errors.lastName_translations_fa}
                 />
               </Grid>
-              {/* <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
+              <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
                 <Grid container sx={{ m: 'auto' }}>
                   <Grid item xs={12} sx={{ width: '100%' }}>
                     <VoiceBar url={uploadVoice && URL.createObjectURL(uploadVoice)} />
@@ -159,7 +159,7 @@ export default function ChildPreRegisterUpdateDialog({
                     </label>
                   </Grid>
                 </Grid>
-              </Card> */}
+              </Card>
               <Grid item xs={12}>
                 <CustomFormLabel htmlFor="bio_translations_fa">
                   {t('child.bio_translations.fa')}
