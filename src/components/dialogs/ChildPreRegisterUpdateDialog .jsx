@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card, DialogTitle, FormControl, Grid, MenuItem, TextField } from '@mui/material';
+import { DialogTitle, FormControl, Grid, MenuItem, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -14,7 +14,7 @@ import { updatePreRegisterChild } from '../../redux/actions/childrenAction';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import { EducationEnum, HousingStatusEnum, SchoolTypeEnum } from '../../utils/types';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
-import VoiceBar from '../VoiceBar';
+// import VoiceBar from '../VoiceBar';
 
 export default function ChildPreRegisterUpdateDialog({
   open,
@@ -25,7 +25,7 @@ export default function ChildPreRegisterUpdateDialog({
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const [uploadVoice, setUploadVoice] = useState();
+  // const [uploadVoice, setUploadVoice] = useState();
 
   const { loading, approved, updated } = useSelector((state) => state.childPreRegister);
 
@@ -60,13 +60,13 @@ export default function ChildPreRegisterUpdateDialog({
     reset();
   };
 
-  const onVoiceChange = (e) => {
-    if (e.target.files[0]) {
-      setUploadVoice(e.target.files[0]);
-      console.log(e.target.files[0]);
-      console.log(URL.createObjectURL(e.target.files[0]));
-    }
-  };
+  // const onVoiceChange = (e) => {
+  //   if (e.target.files[0]) {
+  //     setUploadVoice(e.target.files[0]);
+  //     console.log(e.target.files[0]);
+  //     console.log(URL.createObjectURL(e.target.files[0]));
+  //   }
+  // };
   const onSubmit = async (data) => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
@@ -80,7 +80,7 @@ export default function ChildPreRegisterUpdateDialog({
         housingStatus: Number(data.housingStatus),
         firstName: data.firstName_translations_fa,
         lastName: data.lastName_translations_fa,
-        voiceFile: uploadVoice,
+        // voiceFile: uploadVoice,
       }),
     );
   };
@@ -128,7 +128,7 @@ export default function ChildPreRegisterUpdateDialog({
                   error={!!errors.lastName_translations_fa}
                 />
               </Grid>
-              <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
+              {/* <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
                 <Grid container sx={{ m: 'auto' }}>
                   <Grid item xs={12} sx={{ width: '100%' }}>
                     <VoiceBar url={uploadVoice && URL.createObjectURL(uploadVoice)} />
@@ -159,7 +159,7 @@ export default function ChildPreRegisterUpdateDialog({
                     </label>
                   </Grid>
                 </Grid>
-              </Card>
+              </Card> */}
               <Grid item xs={12}>
                 <CustomFormLabel htmlFor="bio_translations_fa">
                   {t('child.bio_translations.fa')}
