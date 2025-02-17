@@ -31,6 +31,12 @@
       "content": "Are you sure you want to confirm this pre register?"
     }
   },
+  "updateModal": {
+    "preRegister": {
+      "title": "Editing Pre register",
+      "content": "Are you sure you want to edit this pre register?"
+    }
+  },
   "childStatusModal": {
     "checkBox": "I am sure!"
   },
