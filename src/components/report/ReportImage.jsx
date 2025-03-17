@@ -25,6 +25,7 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import { useTheme } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { addReceiptToNeed, fetchNeedReceipts } from '../../redux/actions/reportAction';
@@ -36,6 +37,9 @@ export default function ReportImage({ row, statusId }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const theme = useTheme();
+  console.log(theme.palette);
+  
 
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
@@ -268,7 +272,11 @@ export default function ReportImage({ row, statusId }) {
                   sx={{ mb: 1 }}
                   control={control}
                   {...register('description')}
-                  style={{ width: '100%', background: 'transparent' }}
+                  style={{
+                    width: '100%',
+                    background: 'transparent',
+                    color: theme.palette.text.primary
+                  }}
                 />
               </Grid>
               <ReportUploadImage
