@@ -38,8 +38,6 @@ export default function ReportImage({ row, statusId }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const theme = useTheme();
-  console.log(theme.palette);
-  
 
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
