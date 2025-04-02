@@ -666,7 +666,7 @@ const ReportStatusTable = () => {
           {typeId === NeedTypeEnum.PRODUCT && (
             <TableCell>
               <Tooltip
-                title={row.informations ? row.informations : row.details ? row.details : ''}
+                title={(row.informations && typeof row.informations === 'string' && row.informations.length > 4) ? row.informations : row.details ? row.details : ''}
                 placement="top-end"
               >
                 <Typography
