@@ -677,12 +677,12 @@ const ReportStatusTable = () => {
                     maxWidth: '400px',
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
-                    width: '160px',
-                    height: '1.2em',
+                    width: '100px',
+                    height: '1.4em',
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {row.informations > 5 ? row.informations : row.details ? row.details : ''}
+                 {(row.informations && typeof row.informations === 'string' && row.informations.length > 4) ? row.informations : row.details ? row.details : ''}
                 </Typography>
               </Tooltip>
             </TableCell>
