@@ -42,6 +42,7 @@ import PageContainer from '../container/PageContainer';
 import { prepareConfirmNeeds, massNeedConfirm } from '../../redux/actions/needsAction';
 import {
   categoryToString,
+  getAge,
   getCurrentStatusString,
   getSimilarityPercentage,
   prepareUrl,
@@ -131,7 +132,7 @@ const NeedConfirmTable = () => {
                 !manualIds.find((i) => i === row.need.flaskId) &&
                 row.possibleMissMatch.length > 0 &&
                 !row.errorMsg
-                  ? '#7f5c1b'
+                  ? '#7f84d5'
                   : !manualIds.find((i) => i === row.need.flaskId) && row.errorMsg
                   ? '#8f4646'
                   : !manualIds.find((i) => i === row.need.flaskId) &&
@@ -147,7 +148,11 @@ const NeedConfirmTable = () => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell>
+          <TableCell
+            sx={{
+              maxWidth: '50px !important',
+            }}
+          >
             {(row.errorMsg ||
               (row.validCount && row.validCount > 0) ||
               row.possibleMissMatch.length > 0) && (
@@ -170,6 +175,7 @@ const NeedConfirmTable = () => {
                       <IconButton
                         disabled={checked}
                         onClick={() => handleManualConfirm(row.need.flaskId)}
+                        sx={{ p: 0 }}
                       >
                         <AddCircleRoundedIcon color="success" sx={{ display: checked && 'none' }} />
                       </IconButton>
@@ -183,7 +189,13 @@ const NeedConfirmTable = () => {
               </Tooltip>
             )}
           </TableCell>
-          <TableCell component="th" scope="row">
+          <TableCell
+            sx={{
+              maxWidth: '30px !important',
+            }}
+            component="th"
+            scope="row"
+          >
             <IconButton
               aria-label="more"
               id="long-button"
@@ -237,7 +249,14 @@ const NeedConfirmTable = () => {
             </Menu>
           </TableCell>
 
-          <TableCell component="th" scope="row">
+          <TableCell
+            sx={{
+              fontSize: 9,
+              maxWidth: '50px !important',
+            }}
+            component="th"
+            scope="row"
+          >
             {row.need.flaskId}
           </TableCell>
           <TableCell align="center">
@@ -282,25 +301,109 @@ const NeedConfirmTable = () => {
             {row.need.title || row.need.name}
           </TableCell>
           <TableCell align="center" sx={{ fontWeight: 200 }}>
-            {row.need.child.sayNameTranslations.en}
+            {row.need.child.sayNameTranslations.en} <br /> ({getAge(row.need.child.birthDate)})
           </TableCell>
-          <TableCell align="center">
-            {row.need.link && <Link href={row.need.link}>Link </Link>}
-            <Typography sx={{ fontSize: 10 }}>{row.need.provider.name}</Typography>
-          </TableCell>
-          <TableCell align="center">{t(categoryToString(row.need.category))}</TableCell>
           <TableCell
             sx={{
-              maxWidth: '200px !important',
+              maxWidth: '50px !important',
+            }}
+            align="center"
+          >
+            {row.need.link && (
+              <Link href={row.need.link} target="_blank">
+                <Avatar sx={{ width: 50, height: 50, m: 'auto' }} src={row.need.needRetailerImg} />
+              </Link>
+            )}
+            <Typography sx={{ fontSize: 10 }}>{row.need.provider.name}</Typography>
+          </TableCell>
+          <TableCell
+            align="center"
+            sx={{
+              maxWidth: '20px !important',
+            }}
+          >
+            {t(categoryToString(row.need.category))}
+          </TableCell>
+          <TableCell
+            sx={{
+              maxWidth: '150px !important',
               textOverflow: 'ellipsis',
               overflow: 'hidden',
               height: '1.2em',
               whiteSpace: 'nowrap',
-              fontWeight: 150,
+              fontWeight: 200,
             }}
             align="center"
           >
-            {row.need.descriptionTranslations.en}
+            <Tooltip
+              title={
+                row.need.informations &&
+                typeof row.need.informations === 'string' &&
+                row.need.informations.length > 4
+                  ? row.need.informations
+                  : row.need.details &&
+                    typeof row.need.details === 'string' &&
+                    row.need.details.length > 4
+                  ? row.need.details
+                  : '-'
+              }
+            >
+              <div>
+                {row.need.informations &&
+                typeof row.need.informations === 'string' &&
+                row.need.informations.length > 4
+                  ? row.need.informations
+                  : row.need.details &&
+                    typeof row.need.details === 'string' &&
+                    row.need.details.length > 4
+                  ? row.need.details
+                  : '-'}
+              </div>
+            </Tooltip>
+          </TableCell>
+          <TableCell
+            align="center"
+            sx={{
+              maxWidth: '200px !important',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <Tooltip
+              title={
+                <div>
+                  <div>{row.need.descriptionTranslations.en}</div>
+                  <br />
+                  <div>{row.need.descriptionTranslations.fa}</div>
+                </div>
+              }
+            >
+              <div>
+                <div
+                  style={{
+                    maxWidth: '200px !important',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    height: '1.2em',
+                    whiteSpace: 'nowrap',
+                    fontWeight: 150,
+                  }}
+                >
+                  {row.need.descriptionTranslations.en}
+                </div>
+                <div
+                  style={{
+                    maxWidth: '200px !important',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    height: '1.2em',
+                    whiteSpace: 'nowrap',
+                    fontWeight: 150,
+                  }}
+                >
+                  {row.need.descriptionTranslations.fa}
+                </div>
+              </div>
+            </Tooltip>
           </TableCell>
           <TableCell>{row.need.cost.toLocaleString()}</TableCell>
           <TableCell>{dateConvertor(row.need.created)}</TableCell>
@@ -352,13 +455,13 @@ const NeedConfirmTable = () => {
                         <TableCell align="center">Id</TableCell>
                         <TableCell align="center">Icon</TableCell>
                         <TableCell align="center">Title</TableCell>
-                        <TableCell align="center">Child</TableCell>
                         <TableCell align="center">Link</TableCell>
                         <TableCell align="center">Category</TableCell>
                         <TableCell align="center">Description</TableCell>
                         <TableCell align="center">Price (T)</TableCell>
                         <TableCell align="center">Created</TableCell>
                         <TableCell align="center">Confirmed</TableCell>
+                        <TableCell align="center">Paid</TableCell>
                         <TableCell align="center">Validation</TableCell>
                       </TableRow>
                     </TableHead>
@@ -408,9 +511,6 @@ const NeedConfirmTable = () => {
                               {d.validation.titleResult}% - {d.title}
                             </Typography>
                           </TableCell>
-                          <TableCell align="center" sx={{ fontWeight: 200 }}>
-                            {/* {d.child.sayNameTranslations.en}{' '} */}
-                          </TableCell>
                           <TableCell align="center">
                             <Link href={d.link}>Link</Link>
                           </TableCell>
@@ -434,9 +534,12 @@ const NeedConfirmTable = () => {
                             %
                           </TableCell>
                           <TableCell>{d._cost.toLocaleString()}</TableCell>
-                          <TableCell>{dateConvertor(d.created)}</TableCell>
-                          <TableCell>
+                          <TableCell sx={{ fontSize: 10 }}>{dateConvertor(d.created)}</TableCell>
+                          <TableCell sx={{ fontSize: 10 }}>
                             {d.confirmDate ? dateConvertor(d.confirmDate) : '-'}
+                          </TableCell>
+                          <TableCell sx={{ fontSize: 10 }}>
+                            {d.doneAt && dateConvertor(d.doneAt)}
                           </TableCell>
                           <TableCell>{d.validation && d.validation.msg}</TableCell>
                         </TableRow>
@@ -499,13 +602,28 @@ const NeedConfirmTable = () => {
   useEffect(() => {
     if (result && result.list) {
       setConfirmCandidate(
-        result.list.filter((n) => !n.errorMsg && !n.validCount).length -
-          (!checked ? totalMissMatch : 0) +
+        result.list.filter((n) => n.possibleMissMatch.length < 1 && !n.errorMsg && !n.validCount)
+          .length +
+          (checked ? totalMissMatch : 0) +
           manualIds.length,
       );
     }
   }, [result, checked, manualIds, totalMissMatch]);
 
+  const circleStyle = {
+    width: '20px',
+    height: '20px',
+    borderRadius: '50%',
+    display: 'inline-block',
+    marginRight: '10px',
+    marginLeft: '10px',
+  };
+
+  const items = [
+    { msg: 'Possible Mismatch', color: '#7f84d5' },
+    { msg: 'Error Found', color: '#8f4646' },
+    { msg: 'Valid Duplicates', color: '#695b19' },
+  ];
   return (
     <PageContainer title="Needs Table" sx={{ maxWidth: '100%' }}>
       {/* breadcrumb */}
@@ -520,6 +638,18 @@ const NeedConfirmTable = () => {
         result && (
           <Card sx={{ maxWidth: '100%' }}>
             <CardContent>
+              <div style={{ textAlign: 'center' }}>
+                {items.map((i) => (
+                  <Tooltip key={i.color} title={i.msg}>
+                    <div
+                      style={{
+                        ...circleStyle,
+                        backgroundColor: i.color,
+                      }}
+                    />
+                  </Tooltip>
+                ))}
+              </div>
               <Box>
                 <LoadingButton
                   disabled={confirmCandidate < 1 || collaborators.includes(swInfo.id)}
@@ -529,6 +659,7 @@ const NeedConfirmTable = () => {
                 >
                   Confirm {confirmCandidate} of {result.list.length} Needs
                 </LoadingButton>
+
                 <FormGroup>
                   <FormControlLabel
                     control={
@@ -571,6 +702,7 @@ const NeedConfirmTable = () => {
                             Provider
                           </TableCell>
                           <TableCell align="center">Category</TableCell>
+                          <TableCell align="center">SW notes</TableCell>
                           <TableCell align="center">Description</TableCell>
                           <TableCell align="center">Price (T)</TableCell>
                           <TableCell align="center">Created</TableCell>

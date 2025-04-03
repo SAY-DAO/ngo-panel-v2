@@ -34,7 +34,7 @@ export default function GenericDialog({ open, setOpen, dialogValues }) {
   };
 
   return (
-    <div>
+    <>
       {dialogValues && (
         <Dialog
           open={open}
@@ -66,7 +66,7 @@ export default function GenericDialog({ open, setOpen, dialogValues }) {
           </DialogActions>
         </Dialog>
       )}
-    </div>
+    </>
   );
 }
 

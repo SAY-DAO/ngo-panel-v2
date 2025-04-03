@@ -354,28 +354,6 @@ export const Menuitems = [
       },
     ],
   },
-    {
-    title: 'sidebar.campaign.title',
-    icon: <MailOutlineIcon />,
-    href: '/admin/campaign',
-    collapse: true,
-    admin: true,
-    collaborator: false,
-    children: [
-      {
-        title: 'sidebar.campaign.type.report',
-        icon: 'list',
-        href: CAMPAIGN_MONTHLY,
-        admin: true,
-      },
-      {
-        title: 'sidebar.campaign.type.newsletter',
-        icon: 'plus-square',
-        href: CAMPAIGN_NEWSLETTER,
-        admin: true,
-      },
-    ],
-  },
 
 ];
 
