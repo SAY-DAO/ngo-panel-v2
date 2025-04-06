@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -298,15 +297,22 @@ const NeedAdd = () => {
   }, [successAddProvider]);
 
   const onSubmit = async (data) => {
-    // console.log(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
+
+    if (Number(data.type) === NeedTypeEnum.PRODUCT && (!data.link || data.link.length < 10)) {
+      setError('link', {
+        message: 'لینک را اضافه کنید',
+        type: 'required',
+      });
+    }
     if (
       (!finalImageFile || finalImageFile.length < 3) &&
       (!oneNeed || (oneNeed.imageUrl && oneNeed.imageUrl.split('company/')[1].length < 3))
     ) {
       setError('imageUrl', {
-        message: 'We need an icon',
+        message: 'آیکون را اضافه کنید',
         type: 'required',
       });
     } else {
@@ -391,7 +397,12 @@ const NeedAdd = () => {
               }
               loading={loadingSw || !children}
               renderOption={(props, option) => (
-                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                <Box
+                  component="li"
+                  sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                  {...props}
+                  key={option.id}
+                >
                   {option.isConfirmed &&
                   option.existence_status === ChildExistenceEnum.aliveAndPresent ? (
                     <>
@@ -584,6 +595,7 @@ const NeedAdd = () => {
                             component="li"
                             sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                             {...props}
+                            key={option.id}
                           >
                             {/* <Avatar
                               src={option.imageUrl}

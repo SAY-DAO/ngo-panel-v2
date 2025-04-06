@@ -13,7 +13,7 @@ import {
 import { PropTypes } from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import ReplayIcon from '@mui/icons-material/Replay';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 import { prepareUrl, shortenWallet } from '../../../utils/helpers';
@@ -27,8 +27,7 @@ const SignatureCard = ({ signature, need }) => {
   const [images, setImages] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  const { isConnected } = useAccount();
-  const { chain } = useNetwork();
+  const { chain, isConnected } = useAccount();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;

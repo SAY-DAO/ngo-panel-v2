@@ -25,7 +25,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { useAccount, useConnect, useWalletClient, useNetwork, useSignMessage } from 'wagmi';
+import { useAccount, useConnect, useWalletClient, useSignMessage } from 'wagmi';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useTheme } from '@mui/material/styles';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
@@ -166,11 +166,10 @@ const TaskCard = ({
   const [ipfsMetaData, setIpfsMetaData] = useState();
   const open = Boolean(anchorEl);
 
-  const { address, isConnected } = useAccount();
+  const { chain, address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { isLoading, pendingConnector } = useConnect();
   const { isLoading: isLoadingSignIn } = useSignMessage();
-  const { chain } = useNetwork();
 
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;

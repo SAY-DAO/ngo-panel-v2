@@ -1,3 +1,4 @@
+import { readContract } from '@wagmi/core'
 import { daoApi, publicApi } from '../../apis/sayBase';
 import {
   FAMILY_NETWORK_REQUEST,
@@ -39,7 +40,6 @@ import {
 } from '../constants/daoConstants';
 import VerifyVoucherContract from '../../build/contracts/needModule/VerifyVoucher.sol/VerifyVoucher.json';
 import network from '../../build/contracts/network-settings.json';
-import { publicClient } from '../../wallet';
 
 export const fetchNonce = () => async (dispatch, getState) => {
   try {
@@ -382,7 +382,7 @@ export const verifySignature = (values, signatureHash) => async (dispatch, getSt
       ],
       blockTag: 'safe',
     });
-    const verifiedAddress = await publicClient.readContract({
+    const verifiedAddress = await readContract({
       address: network.mainnet.verifyVoucherAddress,
       abi: VerifyVoucherContract.abi,
       functionName: '_verify',

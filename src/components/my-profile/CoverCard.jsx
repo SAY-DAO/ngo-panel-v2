@@ -24,14 +24,7 @@ import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  useAccount,
-  useDisconnect,
-  useEnsAvatar,
-  useEnsName,
-  useNetwork,
-  useSignMessage,
-} from 'wagmi';
+import { useAccount, useDisconnect, useEnsAvatar, useEnsName, useSignMessage } from 'wagmi';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { SiweMessage } from 'siwe';
 import DeliveryDiningOutlinedIcon from '@mui/icons-material/DeliveryDiningOutlined';
@@ -101,8 +94,7 @@ const CoverCard = ({
   const [dateList, setDateList] = useState();
   const isLoadingSw = openSocialWorkers && optionsSocialWorkers.length === 0;
   // wallet
-  const { address, isConnected } = useAccount();
-  const { chain } = useNetwork();
+  const { chain, address, isConnected } = useAccount();
   const { reset, status, error: errorSignIn, isSuccess, signMessageAsync } = useSignMessage();
   const { data: ensAvatar } = useEnsAvatar({ address });
   const { data: ensName } = useEnsName({ address });

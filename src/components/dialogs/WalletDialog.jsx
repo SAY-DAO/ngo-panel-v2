@@ -39,6 +39,7 @@ function TheDialog(props) {
     }
     setWalletToastOpen(false);
   };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -57,41 +58,23 @@ function TheDialog(props) {
       <List>
         {connectors.map((connector) => (
           <ListItem disableGutters key={connector.id}>
-            {!connector.ready ? (
-              <LoadingButton
-                fullWidth
-                variant="outlined"
-                onClick={() => window.open('https://metamask.io/download', connector.name)}
-                sx={{ justifyContent: 'flex-start', ml: 1, mr: 1, border: 0, p: 0 }}
-              >
-                <ListItemAvatar>
-                  <img
-                    src={connector.name === 'MetaMask' ? metamask : walletConnect}
-                    alt={connector.name}
-                    style={{ maxWidth: '25px', margin: 1 }}
-                  />
-                </ListItemAvatar>
-                {t(`wallet.download`)}
-              </LoadingButton>
-            ) : (
-              <LoadingButton
-                fullWidth
-                variant="outlined"
-                loading={isLoading && connector.id === pendingConnector?.id && true}
-                disabled={!connector.ready}
-                onClick={() => connect({ connector })}
-                sx={{ justifyContent: 'flex-start', ml: 1, mr: 1, border: 0, p: 0 }}
-              >
-                <ListItemAvatar>
-                  <img
-                    src={connector.name === 'MetaMask' ? metamask : walletConnect}
-                    alt={connector.name}
-                    style={{ maxWidth: '25px', margin: 1 }}
-                  />
-                </ListItemAvatar>
-                {connector.ready && connector.name}
-              </LoadingButton>
-            )}
+            <LoadingButton
+              fullWidth
+              variant="outlined"
+              loading={isLoading && connector.id === pendingConnector?.id && true}
+              // disabled={!connector.ready}
+              onClick={() => connect({ connector })}
+              sx={{ justifyContent: 'flex-start', ml: 1, mr: 1, border: 0, p: 0 }}
+            >
+              <ListItemAvatar>
+                <img
+                  src={connector.name === 'MetaMask' ? metamask : walletConnect}
+                  alt={connector.name}
+                  style={{ maxWidth: '25px', margin: 1 }}
+                />
+              </ListItemAvatar>
+              {connector.name}
+            </LoadingButton>
           </ListItem>
         ))}
       </List>

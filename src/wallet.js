@@ -1,40 +1,16 @@
-import { createConfig, configureChains, mainnet, sepolia } from 'wagmi';
-import { infuraProvider } from 'wagmi/providers/infura';
-import { publicProvider } from 'wagmi/providers/public';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-// import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { createPublicClient, webSocket } from 'viem';
+/* eslint-disable import/prefer-default-export */
+import { http, createConfig } from 'wagmi';
+import { mainnet, base } from 'wagmi/chains';
+import { metaMask } from 'wagmi/connectors';
 
-// Two popular providers are Alchemy (alchemy.com) and Infura (infura.io)
-export const { chains, webSocketPublicClient } = configureChains(
-  [mainnet, sepolia],
-  [
-    infuraProvider({ apiKey: process.env.REACT_APP_INFURA_KEY, stallTimeout: 8000 }),
-    publicProvider(),
-  ],
-);
-
-export const publicClient = createPublicClient({
-  // batch: {
-  //   multicall: true,
-  // },
-  // transport: webSocket(`wss://mainnet.infura.io/ws/v3/${process.env.REACT_APP_INFURA_KEY}`),
-  transport: webSocket(`wss://eth.getblock.io/${process.env.REACT_APP_GET_BLOCK_KEY}/mainnet/`),
-  chain: mainnet,
-});
-
-// Set up client
 export const config = createConfig({
-  autoConnect: true,
+  chains: [mainnet, base],
   connectors: [
-    new MetaMaskConnector({ chains }),
-    // new WalletConnectConnector({
-    //   chains,
-    //   options: {
-    //     projectId: process.env.REACT_APP_WC_PROJECT_ID,
-    //   },
-    // }),
+    // walletConnect({ projectId: process.env.REACT_APP_WC_PROJECT_ID }),
+    metaMask(),
   ],
-  publicClient,
-  // webSocketPublicClient,
+  transports: {
+    [mainnet.id]: http(),
+    [base.id]: http(),
+  },
 });

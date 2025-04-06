@@ -317,7 +317,7 @@
     "contact": "At SAY, we listen to you.",
     "address": "4th Floor, No 22, Azarshahr St, Iranshahr St, Karimkhan Zand St, Tehran, Iran",
     "phoneNumber": "Tel: <1>0 2 1 - 2 2 3 4 7 8 1 4</1>",
-    "download": "بارپردازی",
+    "download": "بارگیری",
     "receipt": {
       "code": "شماره رسید",
       "title": "عنوان رسید",
@@ -691,7 +691,7 @@
     },
     "awakeAvatarUrl": "آواتار کودک",
     "sleptAvatarUrl": "آواتار خواب کودک",
-    "downloadVoice": "بارپردازی صدای کودک",
+    "downloadVoice": "بارگیری صدای کودک",
     "uploadVoice": "بارگذاری صدای کودک",
     "bio": "داستان کودک",
     "bioSummary": "خلاصه داستان کودک",
@@ -917,7 +917,7 @@
     "relative": "خویشاوند"
   },
   "wallet": {
-    "download": "باربرداری...",
+    "download": "بارگیری...",
     "dialog": {
       "title": "انتخاب کیف پول",
       "context": "کیف پول ارز های مجازی برای ارسال و دریافت رمز ارز‌ها روی بلاک‌چین استفاده می‌شود. و همچنین از طریق اتصال کیف پول می‌توان صحت تبادلات و پرداخت‌ها را بدون نیاز نام کاربری و پسورد بررسی کرد.",

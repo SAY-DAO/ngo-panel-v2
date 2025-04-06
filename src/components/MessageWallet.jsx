@@ -25,10 +25,11 @@ export default function MessageWallet({
       if (typeof walletError === 'string') {
         return walletError;
       }
-      if (walletError.code === -32603) {
-        return t('error.wallet.32603');
+      if (walletError.name === 'ProviderNotFoundError') {
+        return walletError.shortMessage;
       }
     }
+
     return t('error.wallet.0');
   };
 
