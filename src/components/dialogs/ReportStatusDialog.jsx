@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -198,7 +197,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
       }
     }
 
-    // dispatch(updateNeedStatus(values));
+    dispatch(updateNeedStatus(values));
   };
 
   return (
