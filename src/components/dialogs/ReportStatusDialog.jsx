@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -84,7 +85,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
     if (need) {
       setValue('paid', need.cost);
       // setValue('purchasedCost', need.cost);
-      setProductDelivered(new Date(need.expected_delivery_date));
+      // setProductDelivered(new Date(need.expected_delivery_date));
     }
   }, [need]);
 
@@ -158,13 +159,10 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
   };
 
   const handleExpDeliveryChange = (newValue) => {
-    
     setExpProductDelivery(new Date(newValue));
   };
 
   const handleDeliveredChange = (newValue) => {
-    console.log(new Date(newValue));
-
     setProductDelivered(new Date(newValue));
   };
 
@@ -200,7 +198,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
       }
     }
 
-    dispatch(updateNeedStatus(values));
+    // dispatch(updateNeedStatus(values));
   };
 
   return (
@@ -268,10 +266,13 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                       isOptionEqualToValue={(option, value) => option.id === value.id}
                       getOptionLabel={(option) => `${option.id} - ${option.title} `}
                       renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                          <>
-                            <Typography>{`${option.id} - ${option.title} `}</Typography>
-                          </>
+                        <Box
+                          component="li"
+                          sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                          key={option.id}
+                          {...props}
+                        >
+                          <Typography>{`${option.id} - ${option.title} `}</Typography>
                         </Box>
                       )}
                       renderInput={(params) => (
@@ -293,7 +294,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
                             <DateTimePicker
                               id="expProductToNgo"
-                              value={productExpDelivery}
+                              value={new Date(productExpDelivery)}
                               control={control}
                               {...register('expProductToNgo', { required: true })}
                               onChange={handleExpDeliveryChange}
@@ -372,7 +373,7 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
                           <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
                             <DateTimePicker
                               id="productDeliveredToNgo"
-                              value={productDelivered}
+                              defaultValue={new Date(productDelivered)}
                               control={control}
                               {...register('productDeliveredToNgo', { required: true })}
                               onChange={handleDeliveredChange}

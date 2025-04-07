@@ -16,11 +16,12 @@ import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { TextField } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import { addTicket } from '../../redux/actions/ticketAction';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import TodayCard from '../TodayCard';
 import { AnnouncementEnum, NeedTypeEnum, ProductStatusEnum } from '../../utils/types';
+import { daysDifference } from '../../utils/helpers';
 
 export default function TicketAnnouncementDialog({
   openAnnouncement,
@@ -56,6 +57,7 @@ export default function TicketAnnouncementDialog({
     register,
     control,
     formState: { errors },
+    setError,
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -72,7 +74,7 @@ export default function TicketAnnouncementDialog({
   };
 
   const handleConfirm = () => {
-    if (arrivalDate) {
+    if (arrivalDate && daysDifference(new Date(), arrivalDate)) {
       dispatch(
         addTicket({
           roles: ['AUDITOR'],
@@ -89,6 +91,11 @@ export default function TicketAnnouncementDialog({
           arrivalDate,
         }),
       );
+    } else {
+      setError('arrivalDate', {
+        message: 'تاریح را بررسی کنید',
+        type: 'required',
+      });
     }
   };
 
@@ -152,6 +159,15 @@ export default function TicketAnnouncementDialog({
           </Button>
         </DialogActions>
       </Dialog>
+      <ul>
+        {errors && errors.arrivalDate && (
+          <li>
+            <Typography color="error" variant="span">
+              {errors && errors.arrivalDate?.message}
+            </Typography>
+          </li>
+        )}
+      </ul>
     </div>
   );
 }

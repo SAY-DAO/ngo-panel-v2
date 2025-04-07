@@ -60,9 +60,9 @@ import {
   DELETE_CANDIDATES_REQUEST,
   DELETE_CANDIDATES_SUCCESS,
   DELETE_CANDIDATES_FAIL,
-  UPDATE_CANDIDATES_REQUEST,
-  UPDATE_CANDIDATES_SUCCESS,
-  UPDATE_CANDIDATES_FAIL,
+  GET_CANDIDATES_REQUEST,
+  GET_CANDIDATES_SUCCESS,
+  GET_CANDIDATES_FAIL,
 } from '../constants/needConstant';
 
 export const fetchAllNeeds = (ngoId, take) => async (dispatch, getState) => {
@@ -676,7 +676,7 @@ export const deleteOldNeeds = () => async (dispatch, getState) => {
   }
 };
 
-
+// automatically change the status from delivered_ngo to delivered_children
 export const updateArrivedNeeds = () => async (dispatch, getState) => {
   try {
     dispatch({ type: UPDATE_ARRIVALS_REQUEST });
@@ -693,7 +693,7 @@ export const updateArrivedNeeds = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await daoApi.get(`/needs/update/arrivals`, config);
+    const { data } = await daoApi.get(`/needs/update/arrived`, config);
 
     dispatch({
       type: UPDATE_ARRIVALS_SUCCESS,
@@ -741,7 +741,7 @@ export const deleteCandidates = () => async (dispatch, getState) => {
 
 export const updateCandidates = () => async (dispatch, getState) => {
   try {
-    dispatch({ type: UPDATE_CANDIDATES_REQUEST });
+    dispatch({ type: GET_CANDIDATES_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -754,14 +754,14 @@ export const updateCandidates = () => async (dispatch, getState) => {
         flaskId: userInfo && userInfo.id,
       },
     };
-    const { data } = await daoApi.get(`/needs/update/candidates`, config);
+    const { data } = await daoApi.get(`/needs/arrived/candidates`, config);
     dispatch({
-      type: UPDATE_CANDIDATES_SUCCESS,
+      type: GET_CANDIDATES_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: UPDATE_CANDIDATES_FAIL,
+      type: GET_CANDIDATES_FAIL,
       payload:
         e.response && e.response.data.detail ? e.response.data.detail : e.response.data.message,
     });

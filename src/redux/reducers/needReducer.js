@@ -62,9 +62,9 @@ import {
   UPDATE_ARRIVALS_REQUEST,
   UPDATE_ARRIVALS_SUCCESS,
   UPDATE_ARRIVALS_FAIL,
-  UPDATE_CANDIDATES_REQUEST,
-  UPDATE_CANDIDATES_SUCCESS,
-  UPDATE_CANDIDATES_FAIL,
+  GET_CANDIDATES_REQUEST,
+  GET_CANDIDATES_SUCCESS,
+  GET_CANDIDATES_FAIL,
   DELETE_CANDIDATES_REQUEST,
   DELETE_CANDIDATES_SUCCESS,
   DELETE_CANDIDATES_FAIL,
@@ -309,11 +309,11 @@ export const updateArrivalsReducer = (state = {}, action) => {
       return { count: state.count, loading: false, success: true, result: action.payload };
     case UPDATE_ARRIVALS_FAIL:
       return { count: state.count, loading: false, error: action.payload };
-    case UPDATE_CANDIDATES_REQUEST:
+    case GET_CANDIDATES_REQUEST:
       return { loading: true, success: false };
-    case UPDATE_CANDIDATES_SUCCESS:
+    case GET_CANDIDATES_SUCCESS:
       return { loading: false, success: true, arrivedCandidates: action.payload };
-    case UPDATE_CANDIDATES_FAIL:
+    case GET_CANDIDATES_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

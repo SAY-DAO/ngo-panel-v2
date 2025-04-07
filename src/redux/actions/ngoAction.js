@@ -278,7 +278,7 @@ export const fetchNgoArrivals = () => async (dispatch, getState) => {
   }
 };
 
-export const updateNgoArrivals = (deliveryCode, arrivalCode) => async (dispatch, getState) => {
+export const updateNgoArrival = (deliveryCode, arrivalCode) => async (dispatch, getState) => {
   try {
     dispatch({ type: UPDATE_NGO_ARRIVAL_REQUEST });
     const {
@@ -292,7 +292,7 @@ export const updateNgoArrivals = (deliveryCode, arrivalCode) => async (dispatch,
         flaskId: userInfo && userInfo.id,
       },
     };
-    console.log(config);
+    
     const { data } = await daoApi.patch(
       `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,
       {},

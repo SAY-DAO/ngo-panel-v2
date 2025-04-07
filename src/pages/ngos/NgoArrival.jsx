@@ -12,7 +12,7 @@ import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import { Grid, IconButton, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { fetchNgoArrivals, updateNgoArrivals } from '../../redux/actions/ngoAction';
+import { fetchNgoArrivals, updateNgoArrival } from '../../redux/actions/ngoAction';
 import { dateConvertor } from '../../utils/persianToEnglish';
 import { daysDifference } from '../../utils/helpers';
 import TodayCard from '../../components/TodayCard';
@@ -37,7 +37,7 @@ export default function NgoArrival() {
   };
 
   const handleNewCode = (deliveryCode) => {
-    dispatch(updateNgoArrivals(deliveryCode, arrivalCode));
+    dispatch(updateNgoArrival(deliveryCode, arrivalCode));
   };
 
   return (
