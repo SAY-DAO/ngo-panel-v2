@@ -147,7 +147,6 @@ export default function ChildPreRegisterCreateDialog({ open, setOpen, selected, 
     clearErrors();
     dispatch({ type: CHECK_SIMILAR_NAMES_RESET });
   };
-  console.log(errorPreRegister);
 
   // dialog image
   const handleImageClickOpen = () => {

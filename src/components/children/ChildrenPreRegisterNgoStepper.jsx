@@ -289,8 +289,6 @@ export default function ChildrenPreRegisterNgoStepper() {
   const onVoiceChange = (e) => {
     if (e.target.files[0]) {
       setUploadVoice(e.target.files[0]);
-      console.log(e.target.files[0]);
-      console.log(URL.createObjectURL(e.target.files[0]));
     }
   };
 
