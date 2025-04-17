@@ -137,43 +137,47 @@ export default function ChildPreRegisterUpdateDialog({
                   error={!!errors.lastName_translations_fa}
                 />
               </Grid>
-              <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
-                <Grid container sx={{ m: 'auto' }}>
-                  <Grid item xs={12} sx={{ width: '100%' }}>
-                    <VoiceBar url={uploadVoice && URL.createObjectURL(uploadVoice)} />
-                  </Grid>
-                  <Grid item xs={12} sx={{ m: 'auto', width: '100%' }}>
-                    <label htmlFor="upload-voice">
-                      <input
-                        id="upload-voice"
-                        type="file"
-                        style={{ display: 'none' }}
-                        onChange={onVoiceChange}
-                      />
+              {!collaborators.includes(swInfo.id) &&
+                (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                  swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
+                  <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
+                    <Grid container sx={{ m: 'auto' }}>
+                      <Grid item xs={12} sx={{ width: '100%' }}>
+                        <VoiceBar url={uploadVoice && URL.createObjectURL(uploadVoice)} />
+                      </Grid>
+                      <Grid item xs={12} sx={{ m: 'auto', width: '100%' }}>
+                        <label htmlFor="upload-voice">
+                          <input
+                            id="upload-voice"
+                            type="file"
+                            style={{ display: 'none' }}
+                            onChange={onVoiceChange}
+                          />
 
-                      <Button
-                        name="upload-voice"
-                        id="upload-voice"
-                        color="primary"
-                        component="div"
-                        variant="outlined"
-                        disabled={
-                          collaborators.includes(swInfo.id) ||
-                          swInfo.typeId !== FlaskUserTypesEnum.ADMIN ||
-                          swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN
-                        }
-                        sx={{
-                          m: 2,
-                          bottom: '0px',
-                          right: '0px',
-                        }}
-                      >
-                        {t('child.uploadVoice')}
-                      </Button>
-                    </label>
-                  </Grid>
-                </Grid>
-              </Card>
+                          <Button
+                            name="upload-voice"
+                            id="upload-voice"
+                            color="primary"
+                            component="div"
+                            variant="outlined"
+                            disabled={
+                              collaborators.includes(swInfo.id) ||
+                              (swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
+                                swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN)
+                            }
+                            sx={{
+                              m: 2,
+                              bottom: '0px',
+                              right: '0px',
+                            }}
+                          >
+                            {t('child.uploadVoice')}
+                          </Button>
+                        </label>
+                      </Grid>
+                    </Grid>
+                  </Card>
+                )}
               <Grid item xs={12}>
                 <CustomFormLabel htmlFor="bio_translations_fa">
                   {t('child.bio_translations.fa')}
