@@ -5,7 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, DialogTitle, FormControl, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, Card, DialogTitle, FormControl, Grid, MenuItem, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -151,7 +151,7 @@ export default function ChildPreRegisterUpdateDialog({
                         onChange={onVoiceChange}
                       />
 
-                      <LoadingButton
+                      <Button
                         name="upload-voice"
                         id="upload-voice"
                         color="primary"
@@ -169,7 +169,7 @@ export default function ChildPreRegisterUpdateDialog({
                         }}
                       >
                         {t('child.uploadVoice')}
-                      </LoadingButton>
+                      </Button>
                     </label>
                   </Grid>
                 </Grid>
