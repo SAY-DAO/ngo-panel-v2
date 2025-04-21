@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+import { round } from 'lodash';
 import {
   NeedTypeEnum,
   PaymentStatusEnum,
@@ -303,27 +304,37 @@ export function shuffleArray(array) {
   return array;
 }
 
-export function getSimilarityPercentage(sentence1, sentence2) {
-  // Convert sentences to sets of words
-  const set1 = new Set(sentence1.split(' '));
-  const set2 = new Set(sentence2.split(' '));
+// Function to calculate Levenshtein distance
+function levenshtein(a, b) {
+  const tmp = [];
 
-  // Calculate intersection and union of the sets
-  let intersection = 0;
-  set1.forEach(word => {
-    if (set2.has(word)) {
-      intersection++;
+  for (let i = 0; i <= b.length; i++) {
+    tmp[i] = [i];
+  }
+
+  for (let i = 0; i <= a.length; i++) {
+    tmp[0][i] = i;
+  }
+
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      tmp[i][j] = Math.min(
+        tmp[i - 1][j] + 1, // Deletion
+        tmp[i][j - 1] + 1, // Insertion
+        tmp[i - 1][j - 1] + (a[j - 1] === b[i - 1] ? 0 : 1), // Substitution
+      );
     }
-  });
-  const union = set1.size + set2.size - intersection;
+  }
 
-  // Calculate Jaccard similarity coefficient
-  const similarity = intersection / union;
+  return tmp[b.length][a.length];
+}
 
-  // Convert similarity coefficient to percentage
-  const similarityPercentage = Math.round(similarity * 100);
+export function getSimilarityPercentage(sentence1, sentence2) {
+  const distance = levenshtein(sentence1.toLowerCase(), sentence2.toLowerCase());
+  const maxLength = Math.max(sentence1.length, sentence2.length);
+  const similarity = 1 - distance / maxLength;
 
-  return similarityPercentage;
+  return round(similarity * 100);
 }
 
 export function urlSimilarityPercentage(url1, url2) {
@@ -353,8 +364,8 @@ export function urlSimilarityPercentage(url1, url2) {
         } else {
           matrix[i][j] = Math.min(
             matrix[i - 1][j - 1] + 1, // substitution
-            matrix[i][j - 1] + 1,     // insertion
-            matrix[i - 1][j] + 1      // deletion
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1, // deletion
           );
         }
       }
@@ -372,9 +383,14 @@ export function urlSimilarityPercentage(url1, url2) {
 }
 
 export function categoryToString(category) {
-  if (category === 0) { return ('need.categories.growth') }
-  if (category === 1) { return ('need.categories.joy') }
-  if (category === 2) { return ('need.categories.health') }
-  return ('need.categories.surroundings')
+  if (category === 0) {
+    return 'need.categories.growth';
+  }
+  if (category === 1) {
+    return 'need.categories.joy';
+  }
+  if (category === 2) {
+    return 'need.categories.health';
+  }
+  return 'need.categories.surroundings';
 }
-

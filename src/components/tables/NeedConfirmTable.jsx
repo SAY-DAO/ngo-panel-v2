@@ -46,7 +46,6 @@ import {
   getCurrentStatusString,
   getSimilarityPercentage,
   prepareUrl,
-  urlSimilarityPercentage,
 } from '../../utils/helpers';
 import { dateConvertor } from '../../utils/persianToEnglish';
 import { colorChoices, Colors, PaymentStatusEnum } from '../../utils/types';
@@ -447,105 +446,191 @@ const NeedConfirmTable = () => {
                     None
                   </Typography>
                 )}
-
                 {row && row.duplicates && row.duplicates.length > 0 && (
-                  <Table size="small" aria-label="purchases">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">Id</TableCell>
-                        <TableCell align="center">Icon</TableCell>
-                        <TableCell align="center">Title</TableCell>
-                        <TableCell align="center">Link</TableCell>
-                        <TableCell align="center">Category</TableCell>
-                        <TableCell align="center">Description</TableCell>
-                        <TableCell align="center">Price (T)</TableCell>
-                        <TableCell align="center">Created</TableCell>
-                        <TableCell align="center">Confirmed</TableCell>
-                        <TableCell align="center">Paid</TableCell>
-                        <TableCell align="center">Validation</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {row.duplicates.map((d) => (
-                        <TableRow
-                          key={d.id}
-                          sx={{
-                            backgroundColor:
-                              d.validation && d.validation.isValidDuplicate ? '#557d55' : '#8f4646',
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {d.id}
-                          </TableCell>
-                          <TableCell align="right">
-                            <Avatar
-                              variant="square"
-                              sx={{ border: '1px solid lightGrey' }}
-                              src={prepareUrl(d.imageUrl)}
-                            />
-                            {d.imageUrl &&
-                              row.need.imageUrl &&
-                              urlSimilarityPercentage(
-                                prepareUrl(d.imageUrl),
-                                prepareUrl(row.need.imageUrl),
-                              )}
-                            %
-                          </TableCell>
-                          <TableCell align="center">
-                            <Typography
+                  <Card raised>
+                    Duplicates for {row.need.child.sayNameTranslations.en}
+                    <Table size="small" aria-label="purchases">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="center">Id</TableCell>
+                          <TableCell align="center">Icon</TableCell>
+                          <TableCell align="center">Title</TableCell>
+                          <TableCell align="center">Link</TableCell>
+                          <TableCell align="center">Category</TableCell>
+                          <TableCell align="center">Description</TableCell>
+                          <TableCell align="center">Price (T)</TableCell>
+                          <TableCell align="center">Created</TableCell>
+                          <TableCell align="center">Confirmed</TableCell>
+                          <TableCell align="center">Paid</TableCell>
+                          <TableCell align="center">Validation</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {row.duplicates.map((d) => (
+                          <TableRow
+                            key={d.id}
+                            sx={{
+                              backgroundColor:
+                                d.validation && d.validation.isValidDuplicate
+                                  ? '#557d55'
+                                  : '#8f4646',
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {d.id}
+                            </TableCell>
+                            <TableCell align="right">
+                              <Avatar
+                                variant="square"
+                                sx={{ border: '1px solid lightGrey' }}
+                                src={prepareUrl(d.imageUrl)}
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              <Typography
+                                sx={{
+                                  maxWidth: '140px !important',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  height: '3em',
+                                  whiteSpace: 'nowrap',
+                                  fontWeight: 200,
+                                }}
+                              >
+                                {getSimilarityPercentage(
+                                  `${d.name_translations.en}`,
+                                  `${row.need.nameTranslations.en}`,
+                                )}
+                                % - {d.name_translations.en}
+                                <br />
+                                {d.validation.titleResult}% - {d.title}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="center">
+                              <Link href={d.link}>Link</Link>
+                            </TableCell>
+                            <TableCell align="center">{t(categoryToString(d.category))}</TableCell>
+                            <TableCell
                               sx={{
-                                maxWidth: '140px !important',
+                                maxWidth: '200px !important',
                                 textOverflow: 'ellipsis',
                                 overflow: 'hidden',
-                                height: '3em',
+                                height: '1.2em',
                                 whiteSpace: 'nowrap',
                                 fontWeight: 200,
                               }}
+                              align="center"
                             >
+                              {d.description_translations.en} {' - '}
                               {getSimilarityPercentage(
-                                `${d.name_translations.en}`,
-                                `${row.need.nameTranslations.en}`,
+                                `${d.description_translations.en}`,
+                                `${row.need.descriptionTranslations.en}`,
                               )}
-                              % - {d.name_translations.en}
-                              <br />
-                              {d.validation.titleResult}% - {d.title}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="center">
-                            <Link href={d.link}>Link</Link>
-                          </TableCell>
-                          <TableCell align="center">{t(categoryToString(d.category))}</TableCell>
-                          <TableCell
-                            sx={{
-                              maxWidth: '200px !important',
-                              textOverflow: 'ellipsis',
-                              overflow: 'hidden',
-                              height: '1.2em',
-                              whiteSpace: 'nowrap',
-                              fontWeight: 200,
-                            }}
-                            align="center"
-                          >
-                            {d.description_translations.en} {' - '}
-                            {getSimilarityPercentage(
-                              `${d.description_translations.en}`,
-                              `${row.need.descriptionTranslations.en}`,
-                            )}
-                            %
-                          </TableCell>
-                          <TableCell>{d._cost.toLocaleString()}</TableCell>
-                          <TableCell sx={{ fontSize: 10 }}>{dateConvertor(d.created)}</TableCell>
-                          <TableCell sx={{ fontSize: 10 }}>
-                            {d.confirmDate ? dateConvertor(d.confirmDate) : '-'}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: 10 }}>
-                            {d.doneAt && dateConvertor(d.doneAt)}
-                          </TableCell>
-                          <TableCell>{d.validation && d.validation.msg}</TableCell>
+                              %
+                            </TableCell>
+                            <TableCell>{d._cost.toLocaleString()}</TableCell>
+                            <TableCell sx={{ fontSize: 10 }}>{dateConvertor(d.created)}</TableCell>
+                            <TableCell sx={{ fontSize: 10 }}>
+                              {d.confirmDate ? dateConvertor(d.confirmDate) : '-'}
+                            </TableCell>
+                            <TableCell sx={{ fontSize: 10 }}>
+                              {d.doneAt && dateConvertor(d.doneAt)}
+                            </TableCell>
+                            <TableCell>{d.validation && d.validation.msg}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Card>
+                )}
+                {row && row.similarTitleNeeds && row.similarTitleNeeds.length > 0 && (
+                  <Card raised>
+                    Similar Needs
+                    <Table size="small" aria-label="purchases">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="center">Id</TableCell>
+                          <TableCell align="center">Icon</TableCell>
+                          <TableCell align="center">Title</TableCell>
+                          <TableCell align="center">Link</TableCell>
+                          <TableCell align="center">Category</TableCell>
+                          <TableCell align="center">Description</TableCell>
+                          <TableCell align="center">Price (T)</TableCell>
+                          <TableCell align="center">Created</TableCell>
+                          <TableCell align="center">Confirmed</TableCell>
+                          <TableCell align="center">Paid</TableCell>
+                          <TableCell align="center">Validation</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHead>
+                      <TableBody>
+                        {row.similarTitleNeeds.map((s) => (
+                          <TableRow key={s.id}>
+                            <TableCell component="th" scope="row">
+                              {s.id}
+                            </TableCell>
+                            <TableCell align="right">
+                              <Avatar
+                                variant="square"
+                                sx={{ border: '1px solid lightGrey' }}
+                                src={prepareUrl(s.imageUrl)}
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              <Typography
+                                sx={{
+                                  maxWidth: '140px !important',
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  height: '3em',
+                                  whiteSpace: 'nowrap',
+                                  fontWeight: 200,
+                                }}
+                              >
+                                {getSimilarityPercentage(
+                                  `${s.name_translations.en}`,
+                                  `${row.need.nameTranslations.en}`,
+                                )}
+                                % - {s.name_translations.en}
+                                <br />
+                                {s.title}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="center">
+                              <Link href={s.link}>Link</Link>
+                            </TableCell>
+                            <TableCell align="center">{t(categoryToString(s.category))}</TableCell>
+                            <TableCell
+                              sx={{
+                                maxWidth: '200px !important',
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                height: '1.2em',
+                                whiteSpace: 'nowrap',
+                                fontWeight: 200,
+                              }}
+                              align="center"
+                            >
+                              {s.description_translations.en} {' - '}
+                              {getSimilarityPercentage(
+                                `${s.description_translations.en}`,
+                                `${row.need.descriptionTranslations.en}`,
+                              )}
+                              %
+                            </TableCell>
+                            <TableCell>{s._cost && s._cost.toLocaleString()}</TableCell>
+                            <TableCell sx={{ fontSize: 10 }}>{dateConvertor(s.created)}</TableCell>
+                            <TableCell sx={{ fontSize: 10 }}>
+                              {s.confirmDate ? dateConvertor(s.confirmDate) : '-'}
+                            </TableCell>
+                            <TableCell sx={{ fontSize: 10 }}>
+                              {s.doneAt && dateConvertor(s.doneAt)}
+                            </TableCell>
+                            <TableCell>{s.validation && s.validation.msg}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Card>
                 )}
               </Box>
             </Collapse>

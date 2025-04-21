@@ -2,4 +2,4 @@
 // here is a temporary solution
 const collaborators = [13011];
 
-export default  collaborators;
+export default collaborators;
