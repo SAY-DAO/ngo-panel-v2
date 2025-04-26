@@ -646,6 +646,7 @@
     "sleptAvatarUrl": "Sleep",
     "downloadVoice": "Download Voice",
     "uploadVoice": "Upload Voice",
+    "uploadVoiceOrg":  "Upload Original Voice",
     "bio": "Bio",
     "bioSummary": "Summary",
     "bioSummaryTranslations": "Translation",

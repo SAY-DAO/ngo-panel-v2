@@ -171,7 +171,7 @@ export default function ChildPreRegisterUpdateDialog({
                               right: '0px',
                             }}
                           >
-                            {t('child.uploadVoice')}
+                            {t('child.uploadVoiceOrg')}
                           </Button>
                         </label>
                       </Grid>
