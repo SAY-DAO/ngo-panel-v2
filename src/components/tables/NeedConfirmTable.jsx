@@ -367,10 +367,10 @@ const NeedConfirmTable = () => {
           >
             <Tooltip
               title={
-                row.need.informations &&
-                typeof row.need.informations === 'string' &&
-                row.need.informations.length > 4
-                  ? row.need.informations
+                row.need.information &&
+                typeof row.need.information === 'string' &&
+                row.need.information.length > 4
+                  ? row.need.information
                   : row.need.details &&
                     typeof row.need.details === 'string' &&
                     row.need.details.length > 4
@@ -379,10 +379,10 @@ const NeedConfirmTable = () => {
               }
             >
               <div>
-                {row.need.informations &&
-                typeof row.need.informations === 'string' &&
-                row.need.informations.length > 4
-                  ? row.need.informations
+                {row.need.information &&
+                typeof row.need.information === 'string' &&
+                row.need.information.length > 4
+                  ? row.need.information
                   : row.need.details &&
                     typeof row.need.details === 'string' &&
                     row.need.details.length > 4
