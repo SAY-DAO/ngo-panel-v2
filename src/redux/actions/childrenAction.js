@@ -202,8 +202,8 @@ export const updateChild = (values) => async (dispatch, getState) => {
     };
 
     const formData = new FormData();
-    // formData.append('awakeAvatarUrl', values.awakeAvatarUrl);
-    // formData.append('sleptAvatarUrl', values.sleptAvatarUrl);
+    formData.append('awakeAvatarUrl', values.awakeAvatarUrl);
+    formData.append('sleptAvatarUrl', values.sleptAvatarUrl);
     // formData.append('voiceUrl', values.voiceUrl);
     formData.append('gender', values.gender);
     formData.append('cityId', values.city);

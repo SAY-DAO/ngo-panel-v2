@@ -172,11 +172,17 @@ const NeedConfirmTable = () => {
                       />
                     ) : (
                       <IconButton
-                        disabled={checked}
+                        disabled={checked || collaborators.includes(swInfo.id)}
                         onClick={() => handleManualConfirm(row.need.flaskId)}
                         sx={{ p: 0 }}
                       >
-                        <AddCircleRoundedIcon color="success" sx={{ display: checked && 'none' }} />
+                        <AddCircleRoundedIcon
+                          color="success"
+                          sx={{
+                            display: checked && 'none',
+                            color: collaborators.includes(swInfo.id) && 'gray',
+                          }}
+                        />
                       </IconButton>
                     )}
                   </Grid>
@@ -217,27 +223,42 @@ const NeedConfirmTable = () => {
                 paper: {
                   style: {
                     maxHeight: ITEM_HEIGHT * 4.5,
-                    width: '15ch',
+                    width: '16ch',
                   },
                 },
               }}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem dense onClick={handleClose}>
                 <RouterLink
-                  style={{ textDecoration: 'none', color: '#e6e5e8', display: `flex` }}
+                  style={{
+                    textDecoration: 'none',
+                    color: '#e6e5e8',
+                    display: `flex`,
+                    justifyContent: 'flex-start',
+                  }}
                   to={`/need/edit/${row.need.child.flaskId}/${row.need.flaskId}`}
                   target="_blank"
                 >
-                  <EditIcon sx={{ width: 20, height: 20, ml: 2, mr: 2 }} /> {t('button.update')}
+                  <EditIcon sx={{ width: 20, height: 20, ml: 1, mr: 1 }} /> {t('button.update')}
                 </RouterLink>
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem dense onClick={handleClose}>
+                <LoadingButton
+                  fullWidth
+                  onClick={() => handleManualConfirm(row.need.flaskId)}
+                  sx={{ justifyContent: 'flex-start' }}
+                >
+                  <AddCircleRoundedIcon sx={{ width: 20, height: 20, mr: 1 }} />
+                  {t('button.add')}
+                </LoadingButton>{' '}
+              </MenuItem>
+              <MenuItem dense onClick={handleClose}>
                 {!collaborators.includes(swInfo.id) &&
                   row.need.status === PaymentStatusEnum.NOT_PAID &&
                   !row.need.isConfirmed && (
                     <LoadingButton
                       fullWidth
-                      // variant="customDelete"
+                      sx={{ justifyContent: 'flex-start' }}
                       onClick={() => handleDeleteDialog(row.need.flaskId)}
                     >
                       <DeleteForeverIcon sx={{ width: 20, height: 20, mr: 1 }} />
@@ -272,7 +293,7 @@ const NeedConfirmTable = () => {
               </Typography>
               <Typography
                 sx={{
-                  maxWidth: '120px !important',
+                  maxWidth: '100px !important',
                   textOverflow: 'ellipsis',
                   overflow: 'hidden',
                   height: '1.2em',
@@ -284,23 +305,38 @@ const NeedConfirmTable = () => {
               </Typography>
             </Grid>
           </TableCell>
-          <TableCell
-            sx={{
-              maxWidth: '120px !important',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-              height: '1.2em',
-              whiteSpace: 'nowrap',
-              fontWeight: 200,
-            }}
-            align="center"
+          <Tooltip
+            title={
+              row.need.title && typeof row.need.title === 'string' && row.need.title.length > 4
+                ? row.need.title
+                : row.need.name && typeof row.need.name === 'string' && row.need.name.length > 4
+                ? row.need.name
+                : '-'
+            }
           >
-            {row.need.nameTranslations.en}
-            <br />
-            {row.need.title || row.need.name}
-          </TableCell>
-          <TableCell align="center" sx={{ fontWeight: 200 }}>
-            {row.need.child.sayNameTranslations.en} <br /> ({getAge(row.need.child.birthDate)})
+            <TableCell
+              sx={{
+                maxWidth: '120px !important',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                height: '1.2em',
+                whiteSpace: 'nowrap',
+                fontWeight: 200,
+              }}
+              align="center"
+            >
+              {row.need.nameTranslations.en}
+              <br />
+              {row.need.title || row.need.name}
+            </TableCell>
+          </Tooltip>
+          <TableCell
+            align="center"
+            sx={{
+              maxWidth: '20px !important',
+            }}
+          >
+            {t(categoryToString(row.need.category))}
           </TableCell>
           <TableCell
             sx={{
@@ -315,13 +351,8 @@ const NeedConfirmTable = () => {
             )}
             <Typography sx={{ fontSize: 10 }}>{row.need.provider.name}</Typography>
           </TableCell>
-          <TableCell
-            align="center"
-            sx={{
-              maxWidth: '20px !important',
-            }}
-          >
-            {t(categoryToString(row.need.category))}
+          <TableCell align="center" sx={{ fontWeight: 200 }}>
+            {row.need.child.sayNameTranslations.en} <br /> ({getAge(row.need.child.birthDate)})
           </TableCell>
           <TableCell
             sx={{
@@ -412,7 +443,7 @@ const NeedConfirmTable = () => {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1, mb: 8 }}>
                 <Typography variant="h5" gutterBottom component="div">
-                  Duplicates Validation
+                  Validation Result
                 </Typography>
                 <Typography
                   variant="h6"
@@ -437,7 +468,8 @@ const NeedConfirmTable = () => {
                         target="_blank"
                       >
                         Need - {t(categoryToString(o.category))} -{' '}
-                        {t(`need.needStatus.${getCurrentStatusString(o)}`)}
+                        {t(`need.needStatus.${getCurrentStatusString(o)}`)} -{' '}
+                        {o.title || (o.name_translations && o.name_translations.fa)}
                       </RouterLink>
                     </div>
                   ))
@@ -545,7 +577,8 @@ const NeedConfirmTable = () => {
                 )}
                 {row && row.similarTitleNeeds && row.similarTitleNeeds.length > 0 && (
                   <Card raised>
-                    Similar Needs
+                    Similar Needs Different Child - {row.similarTitleNeeds.length} of{' '}
+                    {row.similarTitleCount}
                     <Table size="small" aria-label="purchases">
                       <TableHead>
                         <TableRow>
@@ -559,7 +592,6 @@ const NeedConfirmTable = () => {
                           <TableCell align="center">Created</TableCell>
                           <TableCell align="center">Confirmed</TableCell>
                           <TableCell align="center">Paid</TableCell>
-                          <TableCell align="center">Validation</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -592,7 +624,9 @@ const NeedConfirmTable = () => {
                                 )}
                                 % - {s.name_translations.en}
                                 <br />
-                                {s.title}
+                                {s.title &&
+                                  getSimilarityPercentage(`${s.title}`, `${row.need.title}`)}
+                                % - {s.title}
                               </Typography>
                             </TableCell>
                             <TableCell align="center">
@@ -625,7 +659,6 @@ const NeedConfirmTable = () => {
                             <TableCell sx={{ fontSize: 10 }}>
                               {s.doneAt && dateConvertor(s.doneAt)}
                             </TableCell>
-                            <TableCell>{s.validation && s.validation.msg}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -782,11 +815,11 @@ const NeedConfirmTable = () => {
                             Icon
                           </TableCell>
                           <TableCell align="center">Title</TableCell>
-                          <TableCell align="center">Child</TableCell>
+                          <TableCell align="center">Category</TableCell>
                           <TableCell sx={{ minWidth: 150 }} align="center">
                             Provider
                           </TableCell>
-                          <TableCell align="center">Category</TableCell>
+                          <TableCell align="center">Child</TableCell>
                           <TableCell align="center">SW notes</TableCell>
                           <TableCell align="center">Description</TableCell>
                           <TableCell align="center">Price (T)</TableCell>

@@ -108,6 +108,7 @@
     "rotate": "Rotate"
   },
   "button": {
+    "add": "Add to list",
     "reset": "Reset",
     "finish": "Finish",
     "finish-test": "Send Test",
