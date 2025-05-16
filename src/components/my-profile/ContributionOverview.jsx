@@ -21,6 +21,7 @@ const ContributionOverview = ({ swNewDetails }) => {
   const [values, setValues] = useState({
     confirms: [],
     creations: [],
+    deletions: [],
   });
 
   const myPage = useSelector((state) => state.myPage);
@@ -36,7 +37,8 @@ const ContributionOverview = ({ swNewDetails }) => {
   }, [pageDetails]);
 
   const primary = theme.palette.primary.main;
-  const secondary = theme.palette.secondary.main;
+  const secondary = theme.palette.warning.main;
+  const deletedColor = theme.palette.error.main;
 
   const optionsContributionOverview = {
     grid: {
@@ -60,7 +62,7 @@ const ContributionOverview = ({ swNewDetails }) => {
       },
     },
 
-    colors: [primary, secondary],
+    colors: [primary, secondary, deletedColor],
     fill: {
       type: 'solid',
       opacity: 1,
@@ -149,16 +151,21 @@ const ContributionOverview = ({ swNewDetails }) => {
 
       // those zero are later than 6 months
       keys.forEach((key) => {
-        if (contribution.inMonth[key].created > 0 || contribution.inMonth[key].confirmed > 0) {
+        if (
+          contribution.inMonth[key].created > 0 ||
+          contribution.inMonth[key].confirmed > 0 ||
+          contribution.inMonth[key].deleted > 0
+        ) {
           myList.push({
             [persianMonthStringFarsi(Number(key))]: {
               created: contribution.inMonth[key].created,
               confirmed: contribution.inMonth[key].confirmed,
+              deleted: contribution.inMonth[key].deleted,
             },
           });
         }
       });
-      
+
       if (myList.length > 5) myList.reverse().shift();
       setGraphData(myList);
     }
@@ -166,6 +173,7 @@ const ContributionOverview = ({ swNewDetails }) => {
 
   const confirms = [];
   const creations = [];
+  const deletions = [];
   useEffect(() => {
     if (graphData) {
       // eslint-disable-next-line no-unused-expressions
@@ -174,10 +182,12 @@ const ContributionOverview = ({ swNewDetails }) => {
           if (d && d[Object.keys(d)[0]]) {
             confirms.push(d[Object.keys(d)[0]].confirmed);
             creations.push(d[Object.keys(d)[0]].created);
+            deletions.push(d[Object.keys(d)[0]].deleted);
           }
           setValues({
             confirms,
             creations,
+            deletions,
           });
         });
     }
@@ -191,6 +201,10 @@ const ContributionOverview = ({ swNewDetails }) => {
     {
       name: t('myPage.countJobs.titleCreated'),
       data: [...values.creations],
+    },
+    {
+      name: t('myPage.countJobs.titleDeleted'),
+      data: [...values.deletions],
     },
   ];
 
@@ -207,7 +221,7 @@ const ContributionOverview = ({ swNewDetails }) => {
             display="flex"
             alignItems="center"
             sx={{
-              color: () => theme.palette.primary.main,
+              color: primary,
             }}
           >
             <Typography
@@ -228,14 +242,14 @@ const ContributionOverview = ({ swNewDetails }) => {
             display="flex"
             alignItems="center"
             sx={{
-              color: () => theme.palette.secondary.main,
+              color: secondary,
             }}
           >
             <Typography
               sx={{
                 color: 'secondary.main',
                 '& svg': {
-                  fill: () => theme.palette.secondary.main,
+                  fill: secondary,
                 },
                 mr: '5px',
               }}
@@ -243,6 +257,27 @@ const ContributionOverview = ({ swNewDetails }) => {
               <FeatherIcon icon="circle" width="10" height="10" />
             </Typography>
             {t('myPage.countJobs.titleCreated')}
+          </Typography>
+          <Typography
+            variant="h6"
+            display="flex"
+            alignItems="center"
+            sx={{
+              color: deletedColor,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'secondary.main',
+                '& svg': {
+                  fill: deletedColor,
+                },
+                mr: '5px',
+              }}
+            >
+              <FeatherIcon icon="circle" width="10" height="10" />
+            </Typography>
+            {t('myPage.countJobs.titleDeleted')}
           </Typography>
         </Stack>
       }

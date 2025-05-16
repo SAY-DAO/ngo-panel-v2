@@ -807,6 +807,7 @@
     "countJobs": {
       "titleCreated": "اضافه شده",
       "titleConfirmed": "تأیید شده",
+      "titleDeleted": "حذف شده",
       "count": {
         "first": "در ۴۸ ساعت",
         "second": "در یک هفته",

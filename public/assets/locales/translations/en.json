@@ -759,7 +759,8 @@
     },
     "countJobs": {
       "titleCreated": "Created",
-      "titleConfirmed": "Condiremd",
+      "titleConfirmed": "Confirmed",
+      "titleDeleted": "Deleted",
       "count": {
         "first": "In 48 hrs",
         "second": "In a week",
