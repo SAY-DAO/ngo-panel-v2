@@ -10,6 +10,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DashboardCard from '../base-card/DashboardCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 import { fetchUserContribution } from '../../redux/actions/analyticAction';
+import { persianMonthStringFarsi } from '../../utils/helpers';
 
 const ContributionOverview = ({ swNewDetails }) => {
   const dispatch = useDispatch();
@@ -44,16 +45,18 @@ const ContributionOverview = ({ swNewDetails }) => {
       strokeDashArray: 2,
       padding: {
         left: 0,
-        right: 0,
-        bottom: -13,
+        right: 10,
+        bottom: -10,
+        top: -20,
       },
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '42%',
+        barHeight: '100%',
+        columnWidth: '52%',
         endingShape: 'rounded',
-        borderRadius: 5,
+        borderRadius: 1,
       },
     },
 
@@ -63,6 +66,7 @@ const ContributionOverview = ({ swNewDetails }) => {
       opacity: 1,
     },
     chart: {
+      // height: 880,
       toolbar: {
         show: false,
       },
@@ -73,7 +77,7 @@ const ContributionOverview = ({ swNewDetails }) => {
       enabled: false,
     },
     markers: {
-      size: 0,
+      size: 1,
     },
     legend: {
       show: false,
@@ -114,7 +118,7 @@ const ContributionOverview = ({ swNewDetails }) => {
           graphData && graphData[4] ? graphData[4][Object.keys(graphData[4])[0]].confirmed : 0,
           graphData && graphData[5] ? graphData[5][Object.keys(graphData[5])[0]].confirmed : 0,
         ),
-      tickAmount: 3,
+      tickAmount: 5,
     },
     stroke: {
       show: true,
@@ -130,18 +134,32 @@ const ContributionOverview = ({ swNewDetails }) => {
   useEffect(() => {
     const myList = [];
     if (contribution) {
-      const keys = Object.keys(contribution.inMonth);
+      const keys = Object.keys(contribution.inMonth).map((k) => Number(k));
+
+      // 1. Compute today’s month (1–12)
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1; // getMonth() is 0–11:contentReference[oaicite:2]{index=2}
+
+      // 2. Sort in-place so that currentMonth comes first, then previous months
+      keys.sort((a, b) => {
+        const rankA = (currentMonth - a + 12) % 12;
+        const rankB = (currentMonth - b + 12) % 12;
+        return rankA - rankB; // ascending by rank
+      });
+
       // those zero are later than 6 months
       keys.forEach((key) => {
         if (contribution.inMonth[key].created > 0 || contribution.inMonth[key].confirmed > 0) {
           myList.push({
-            [key]: {
+            [persianMonthStringFarsi(Number(key))]: {
               created: contribution.inMonth[key].created,
               confirmed: contribution.inMonth[key].confirmed,
             },
           });
         }
       });
+      
+      if (myList.length > 5) myList.reverse().shift();
       setGraphData(myList);
     }
   }, [contribution]);
@@ -235,9 +253,8 @@ const ContributionOverview = ({ swNewDetails }) => {
             options={optionsContributionOverview}
             series={seriesContributionOverview}
             type="bar"
-            height="150px"
-            width="320px"
-            style={{ direction: 'ltr' }}
+            height="180px"
+            width="350px"
           />
         )}
       </Box>

@@ -394,3 +394,37 @@ export function categoryToString(category) {
   }
   return 'need.categories.surroundings';
 }
+
+export function persianMonthString(value) {
+  return new Intl.DateTimeFormat('en-US-u-ca-persian', {
+    month: 'short',
+  }).format(value);
+}
+
+export function persianMonthStringFarsi(pm) {
+  return pm === 1
+    ? 'فروردین'
+    : pm === 2
+    ? 'اردیبهشت'
+    : pm === 3
+    ? 'خرداد'
+    : pm === 4
+    ? 'تیر'
+    : pm === 5
+    ? 'مرداد'
+    : pm === 6
+    ? 'شهریور'
+    : pm === 7
+    ? 'مهر'
+    : pm === 8
+    ? 'آبان'
+    : pm === 9
+    ? 'آذر'
+    : pm === 10
+    ? 'دی'
+    : pm === 11
+    ? 'بهمن'
+    : pm === 12
+    ? 'اسفند'
+    : null;
+}
