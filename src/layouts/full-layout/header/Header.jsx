@@ -196,10 +196,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   // if not active log out
   useEffect(() => {
     if (errorSwDetails || (successSwDetails && !swInfo.isActive)) {
-      navigate(LOGIN);
       dispatch(logout());
+      navigate(LOGIN);
       disconnect();
-      console.log('here');
     }
   }, [successSwDetails, timeLeft]);
 
