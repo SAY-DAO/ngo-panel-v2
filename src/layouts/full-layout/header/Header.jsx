@@ -83,6 +83,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorProfile, setAnchorProfile] = useState(null);
   const [anchorNotify, setAnchorNotify] = useState(null);
   const [showSearchDrawer, setShowSearchDrawer] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
 
   const { disconnect } = useDisconnect();
 
@@ -198,6 +199,34 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       disconnect();
     }
   }, [successSwDetails]);
+
+  // auth checks interval
+  // Function to update the timer and dispatch every X minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Update timer (countdown)
+      setTimeLeft((prevTime) => {
+        if (prevTime === 1) {
+          // Dispatch the action when time runs out
+          dispatch(fetchSocialWorkerDetails());
+          // Reset the timer
+          return 15 * 60;
+        }
+        return prevTime - 1;
+      });
+    }, 1000); // Decrease timer every second
+    // Cleanup the interval when component unmounts
+    return () => clearInterval(interval);
+  }, [dispatch]);
+
+  // Convert timeLeft from seconds to MM:SS format
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+  };
+
+  console.log(`Time left to check auth: ${formatTime(timeLeft)}`);
 
   const socket = useContext(WebsocketContext);
   let notificationsInterval;
