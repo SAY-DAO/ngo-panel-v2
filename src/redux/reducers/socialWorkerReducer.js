@@ -39,7 +39,7 @@ import {
 export const swDetailsReducer = (state = { success: false }, action) => {
   switch (action.type) {
     case SW_DETAILS_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
     case SW_DETAILS_SUCCESS:
       return { loading: false, success: true, swInfo: action.payload };
     case SW_DETAILS_FAIL:

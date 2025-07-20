@@ -1,4 +1,5 @@
 export const HOME = '/';
+export const LOGIN = '/auth/login';
 export const PROFILE_VIEW = '/page/view';
 export const MY_SIGNATURES = '/signatures/me';
 export const PROFILE_EDIT = '/profile/edit';

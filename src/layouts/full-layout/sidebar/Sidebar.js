@@ -134,8 +134,8 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                         )}
                       </ListItem>
                       <Collapse in={index === open} timeout="auto" unmountOnExit>
-                        {swInfo === FlaskUserTypesEnum.ADMIN ||
-                        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ? (
+                        {(swInfo && swInfo === FlaskUserTypesEnum.ADMIN) ||
+                        (swInfo && swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) ? (
                           <List component="li" disablePadding>
                             {item.children.map((child) => {
                               return (

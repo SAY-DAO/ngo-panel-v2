@@ -456,9 +456,7 @@ const ChildrenTable = () => {
       currentStatus,
     });
   };
-  console.log(childList);
-  console.log(childList && childList.length);
-
+  
   return (
     <PageContainer>
       {/* breadcrumb */}

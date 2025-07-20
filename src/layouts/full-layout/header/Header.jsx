@@ -42,6 +42,7 @@ import {
   // NEED_LIST,
   // REPORTS,
   MY_SIGNATURES,
+  LOGIN,
 } from '../../../routes/RouteConstants';
 import { fetchNgoList } from '../../../redux/actions/ngoAction';
 import {
@@ -163,10 +164,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   useEffect(() => {
     if (!successLogin) {
-      navigate('/auth/login');
+      navigate(LOGIN);
     }
     if (errorSwDetails && errorSwDetails.status === 403) {
-      navigate('/auth/login');
+      navigate(LOGIN);
     }
   }, [successLogin, location, errorSwDetails]);
 
@@ -194,17 +195,18 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   // if not active log out
   useEffect(() => {
-    if (successSwDetails && !swInfo.isActive) {
+    if (errorSwDetails || (successSwDetails && !swInfo.isActive)) {
+      navigate(LOGIN);
       dispatch(logout());
       disconnect();
+      console.log('here');
     }
-  }, [successSwDetails]);
+  }, [successSwDetails, timeLeft]);
 
   // auth checks interval
   // Function to update the timer and dispatch every X minutes
   useEffect(() => {
     const interval = setInterval(() => {
-      // Update timer (countdown)
       setTimeLeft((prevTime) => {
         if (prevTime === 1) {
           // Dispatch the action when time runs out

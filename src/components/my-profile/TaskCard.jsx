@@ -394,679 +394,707 @@ const TaskCard = ({
     needSignatures && needSignatures.find((s) => s.flaskUserId === need.confirmUser);
 
   return (
-    <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
-      {(deletedId !== need.id || !deleted) && (
-        <Card
-          elevation={8}
-          sx={{
-            p: 0,
-            maxHeight: isSelected ? '1400px' : `${randomIntFromInterval(320, 320)}px`,
-            '&:hover': {
-              border: 'ridge',
-              borderColor: () =>
-                isSelected ? theme.palette.primary.dark : theme.palette.secondary.dark,
-              borderWidth: '0.2em',
-            },
-            border: 'solid',
-            borderColor: () =>
-              needSignatures && needSignatures[0]
-                ? theme.palette.warning.main
-                : isSelected
-                ? theme.palette.primary.dark
-                : theme.palette.text.secondary,
-            borderWidth: needSignatures && needSignatures[0] ? '0.2em' : '0.1em',
-          }}
-        >
-          <CardContent>
-            <Box display="flex" alignItems="center">
-              <Box
-                sx={{
-                  borderRadius: '50%',
-                  width: '50px',
-                  height: '50px',
-                  background:
-                    need.imageUrl && !need.imageUrl.includes('wrong') && need.child.awakeAvatarUrl
-                      ? `url(
-                            ${awakeImage}
-                          )`
-                      : `url(${iconImage})`,
-                  '&:hover': {
-                    background: `url(${iconImage})`,
-                    backgroundPosition: 'center',
-                    backgroundSize: 'cover',
-                  },
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                }}
-              >
-                {(!need.imageUrl || need.imageUrl.includes('wrong')) && (
-                  <Tooltip title={t('need.tooltip.addIcon')}>
-                    <IconButton>
-                      <AddCircleRoundedIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </Box>
-
-              <Box
-                sx={{
-                  ml: 2,
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  fontWeight="600"
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    fontSize: 12,
-                  }}
-                >
-                  {firstName} {lastName}
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  variant="h6"
-                  fontWeight="300"
-                  sx={{ fontSize: 11 }}
-                >
-                  {sayName}
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  ml: 'auto',
-                }}
-              >
-                <Tooltip title={t('myPage.taskCard.menu.more')}>
-                  <IconButton
-                    aria-expanded={open ? 'true' : undefined}
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    <FeatherIcon icon="more-horizontal" width="18" />
-                  </IconButton>
-                </Tooltip>
-                {pageDetails && (
-                  <Menu
-                    id="long-menu"
-                    MenuListProps={{
-                      'aria-labelledby': 'long-button',
-                    }}
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                  >
-                    {(swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-                      swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
-                      <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
-                        <EditIcon sx={{ ml: 1, mr: 1 }} />
-                        {t('myPage.taskCard.menu.updateChild')}
-                      </MenuItem>
-                    )}
-                    {!need.ipfs &&
-                      ((!collaborators.includes(swInfo.id) &&
-                        swInfo.typeId === FlaskUserTypesEnum.ADMIN) ||
-                        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
-                        swInfo.id === need.created_by_id) && (
-                        <MenuItem>
-                          <EditIcon sx={{ ml: 1, mr: 1 }} />
-                          <RouterLink
-                            style={{ textDecoration: 'none', color: '#e6e5e8' }}
-                            to={`/need/edit/${need.child.id}/${need.id}`}
-                          >
-                            {t('myPage.taskCard.menu.updateٔNeed')}
-                          </RouterLink>
-                        </MenuItem>
-                      )}
-                    {need.tickets && need.tickets[0] ? (
-                      <MenuItem onClick={() => handleOpenTicketing(need.tickets[0].id)}>
-                        <VisibilityIcon sx={{ ml: 1, mr: 1 }} />
-                        {t('myPage.taskCard.menu.readTicket')}
-                      </MenuItem>
-                    ) : (
-                      !collaborators.includes(swInfo.id) &&
-                      !need.ipfs && (
-                        <MenuItem onClick={() => handleOpenConfirm()}>
-                          <FlagOutlinedIcon sx={{ ml: 1, mr: 1 }} />
-                          {t('myPage.taskCard.menu.addTicket')}
-                        </MenuItem>
-                      )
-                    )}
-                    {!collaborators.includes(swInfo.id) &&
-                      swInfo.id === need.created_by_id &&
-                      need.type === NeedTypeEnum.PRODUCT &&
-                      need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
-                      (!need.tickets[0] ||
-                        !need.tickets.find(
-                          (item) => item.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO,
-                        )) && (
-                        <MenuItem
-                          onClick={() => handleAnnouncement(AnnouncementEnum.ARRIVED_AT_NGO)}
-                        >
-                          <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
-                          {t('myPage.taskCard.menu.deliveryTicket')}
-                        </MenuItem>
-                      )}
-                    {!collaborators.includes(swInfo.id) &&
-                      swInfo.id === need.created_by_id &&
-                      need.type === NeedTypeEnum.SERVICE &&
-                      need.status === ServiceStatusEnum.MONEY_TO_NGO &&
-                      (!need.tickets[0] ||
-                        need.tickets.find(
-                          (item2) => item2.lastAnnouncement !== AnnouncementEnum.NGO_RECEIVED_MONEY,
-                        )) &&
-                      (receipts && receipts[0] ? (
-                        <MenuItem
-                          onClick={() => handleAnnouncement(AnnouncementEnum.NGO_RECEIVED_MONEY)}
-                        >
-                          <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
-                          {t('myPage.taskCard.menu.moneyToNgoTicket')}
-                        </MenuItem>
-                      ) : (
-                        <MenuItem disabled>
-                          <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
-                          {t('myPage.taskCard.menu.addReceipt')}
-                        </MenuItem>
-                      ))}
-
-                    {need && need.ipfs && need.ipfs.needDetailsHash && (
-                      <MenuItem>
-                        <DatasetLinkedOutlinedIcon sx={{ ml: 1, mr: 1 }} />
-                        <RouterLink
-                          style={{ textDecoration: 'none', color: '#e6e5e8' }}
-                          to={`${process.env.REACT_APP_IPFS_GATEWAY_2}/${need.ipfs.needDetailsHash}/metadata.json`}
-                        >
-                          {t('myPage.taskCard.menu.ipfs')}
-                        </RouterLink>
-                      </MenuItem>
-                    )}
-                  </Menu>
-                )}
-              </Box>
-            </Box>
-          </CardContent>
-          <CardActionArea onClick={handleCardClick}>
-            <CardContent
+    <>
+      {swInfo && (
+        <Box sx={{ opacity: cardSelected === need.id || cardSelected === 0 ? 1 : 0.4 }}>
+          {(deletedId !== need.id || !deleted) && (
+            <Card
+              elevation={8}
               sx={{
-                p: '20px',
-                pt: 0,
+                p: 0,
+                maxHeight: isSelected ? '1400px' : `${randomIntFromInterval(320, 320)}px`,
+                '&:hover': {
+                  border: 'ridge',
+                  borderColor: () =>
+                    isSelected ? theme.palette.primary.dark : theme.palette.secondary.dark,
+                  borderWidth: '0.2em',
+                },
+                border: 'solid',
+                borderColor: () =>
+                  needSignatures && needSignatures[0]
+                    ? theme.palette.warning.main
+                    : isSelected
+                    ? theme.palette.primary.dark
+                    : theme.palette.text.secondary,
+                borderWidth: needSignatures && needSignatures[0] ? '0.2em' : '0.1em',
               }}
             >
-              <Grid container>
-                <Grid item xs={9}>
-                  <Typography color="textSecondary" variant="h5" component="span" fontWeight="600">
-                    {name}
-                  </Typography>
-                  {((informations && typeof informations === 'string' && informations.length > 4) ||
-                    (details && typeof details === 'string' && details.length > 4)) && (
-                    <Tooltip
-                      arrow
-                      title={
-                        <Typography>
-                          {informations}
-                          {details}
-                        </Typography>
-                      }
-                      placement="left"
-                    >
-                      <IconButton component="div" sx={{ pt: 0, pb: 0, opacity: 0.8 }}>
-                        <HelpOutlineOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </Grid>
-
-                <Grid item xs={3} sx={{ maxHeight: '40px' }}>
-                  {need.tickets && need.tickets[0] && (
-                    <>
-                      {/* flag Icon- ticketHistory has one item in it due to announcement */}
-                      {(need.tickets[0].lastAnnouncement === AnnouncementEnum.NONE ||
-                        need.tickets[0].lastAnnouncement === AnnouncementEnum.ERROR ||
-                        !need.tickets[0].lastAnnouncement) && (
-                        <Box
-                          sx={{
-                            textAlign: 'center',
-                            backgroundColor:
-                              need.tickets[0].color === Colors.YELLOW
-                                ? () => theme.palette.background.ripple
-                                : '',
-                            animation:
-                              need.tickets[0].color === Colors.YELLOW
-                                ? 'ripple 1.4s  infinite ease-in-out'
-                                : '',
-
-                            borderRadius: '50%',
-                            '@keyframes ripple': {
-                              '0%': {
-                                transform: 'scale(.7)',
-                                opacity: 0.7,
-                              },
-                              '100%': {
-                                transform: 'scale(0.8)',
-                                opacity: 1,
-                              },
-                            },
-                            height: '40px',
-                            width: '40px',
-                            paddingTop: '7px',
-                          }}
-                        >
-                          {need.tickets[0].color === Colors.RED && (
-                            <>
-                              <CircularProgressWithLabel value={progress} need={need} />
-                              <Typography sx={{ fontSize: 10, color: '#dd3976' }}>
-                                {`${Math.round(progress)}%`}
-                              </Typography>
-                            </>
-                          )}
-                          {(need.tickets[0].color === Colors.YELLOW ||
-                            need.tickets[0].color === Colors.BLUE) && (
-                            <FlagOutlinedIcon
-                              sx={{
-                                color:
-                                  need.tickets[0].color === Colors.YELLOW
-                                    ? colorChoices[1].code
-                                    : need.tickets[0].color === Colors.BLUE && colorChoices[0].code,
-                              }}
-                            />
-                          )}
-                        </Box>
-                      )}
-                      {/* Announcement Icon */}
-                      <Box
-                        sx={{
-                          textAlign: 'center',
-
-                          borderRadius: '50%',
-                          '@keyframes ripple': {
-                            '0%': {
-                              transform: 'scale(.7)',
-                              opacity: 0.7,
-                            },
-                            '100%': {
-                              transform: 'scale(0.8)',
-                              opacity: 1,
-                            },
-                          },
-                          height: '40px',
-                          width: '40px',
-                          paddingTop: '7px',
-                        }}
-                      >
-                        {need.tickets.find(
-                          (item) => item.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO,
-                        ) && <CampaignOutlinedIcon />}
-                        {need.tickets.find(
-                          (item2) => item2.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY,
-                        ) && <CampaignOutlinedIcon />}
-                      </Box>
-                    </>
-                  )}
-                  {/* Signature Icon */}
+              <CardContent>
+                <Box display="flex" alignItems="center">
                   <Box
                     sx={{
-                      textAlign: 'center',
-                      height: '40px',
-                      width: '40px',
+                      borderRadius: '50%',
+                      width: '50px',
+                      height: '50px',
+                      background:
+                        need.imageUrl &&
+                        !need.imageUrl.includes('wrong') &&
+                        need.child.awakeAvatarUrl
+                          ? `url(
+                            ${awakeImage}
+                          )`
+                          : `url(${iconImage})`,
+                      '&:hover': {
+                        background: `url(${iconImage})`,
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                      },
+                      backgroundPosition: 'center',
+                      backgroundSize: 'cover',
                     }}
                   >
-                    {needSignatures && needSignatures[0] && (
-                      <Tooltip
-                        arrow
-                        title={
-                          <>
-                            <Typography sx={{ fontSize: 12 }}>
-                              {` ${t('roles.socialWorker')}:
-                                  ${swSignature && swSignature.user && swSignature.user.firstName}`}
-                            </Typography>
-                            <Typography sx={{ fontSize: 12 }}>
-                              {auditorSignature &&
-                                `${t('roles.auditor')}:
-                                  ${auditorSignature.user && auditorSignature.user.firstName}`}
-                            </Typography>
-                          </>
-                        }
-                        placement="right-end"
-                        sx={{ width: '100%' }}
-                      >
-                        <img
-                          style={{ minHeight: '10px' }}
-                          srcSet={`${signatureIcon} 1x, ${signatureIcon} 2x`}
-                          alt={need.img}
-                          width="100%"
-                        />
+                    {(!need.imageUrl || need.imageUrl.includes('wrong')) && (
+                      <Tooltip title={t('need.tooltip.addIcon')}>
+                        <IconButton>
+                          <AddCircleRoundedIcon />
+                        </IconButton>
                       </Tooltip>
                     )}
                   </Box>
-                  {need.ipfs && <WaterWaveText hash={need.ipfs && need.ipfs.needDetailsHash} />}
-                </Grid>
-              </Grid>
-              <Typography
-                sx={{
-                  mb: 1,
-                  fontSize: 10,
-                  opacity: 0.8,
-                }}
-                fontWeight="300"
-              >
-                ( {t(category)} )
-              </Typography>
-              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                {t('myPage.taskCard.cost')}: {cost}
-              </Typography>
-              <Grid container>
-                {typeof affiliateLinkUrl === 'string' &&
-                  affiliateLinkUrl.length > 5 &&
-                  !affiliateLinkUrl.includes('false') && (
-                    <Typography color="textSecondary" variant="span" fontWeight="400">
-                      {t('myPage.taskCard.provider')}:
-                      <Link
-                        href={affiliateLinkUrl}
-                        sx={{ pl: 1, pr: 1 }}
-                        underline="none"
-                        target="_blank"
-                      >
-                        Affiliate
-                      </Link>
-                    </Typography>
-                  )}
-                {link && (
-                  <Typography color="textSecondary" variant="span" fontWeight="400" sx={{ pb: 1 }}>
-                    {t('myPage.taskCard.provider')}:
-                    <Link href={link} underline="none" sx={{ pl: 1, pr: 1 }} target="_blank">
-                      Link
-                    </Link>
-                  </Typography>
-                )}
-              </Grid>
-              <Grid>
-                {receipts && receipts[0] ? (
-                  <AvatarGroup>
-                    {receipts.map((r) => (
-                      <ReceiptImage receipt={r.receipt[0]} key={r.id} />
-                    ))}
-                  </AvatarGroup>
-                ) : (
-                  need.type === NeedTypeEnum.SERVICE &&
-                  need.status >= ServiceStatusEnum.MONEY_TO_NGO && (
-                    <Typography
-                      sx={{ color: () => theme.palette.warning.dark }}
-                      variant="h6"
-                      fontWeight="400"
-                    >
-                      {t('myPage.taskCard.noReceipt')}
-                    </Typography>
-                  )
-                )}
-              </Grid>
-            </CardContent>
 
-            <Box sx={{ position: 'relative' }}>
-              <ListItem
-                sx={{
-                  mt: '40px',
-                  position: 'absolute',
-                }}
-              >
-                {need.type === NeedTypeEnum.PRODUCT &&
-                  need.status < ProductStatusEnum.PURCHASED_PRODUCT &&
-                  isUnpayable(need) && (
-                    <Chip
+                  <Box
+                    sx={{
+                      ml: 2,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      fontWeight="600"
                       sx={{
-                        color: '#ff0000',
-                        zIndex: 10,
-                        opacity: 0.8,
-                        borderColor: '#ff0000',
+                        whiteSpace: 'nowrap',
+                        fontSize: 12,
                       }}
-                      label={t('myPage.taskCard.tags.unpayable')}
-                      size="small"
-                      variant="outlined"
-                    />
-                  )}
-                {!need.isConfirmed && (
-                  <Chip
+                    >
+                      {firstName} {lastName}
+                    </Typography>
+                    <Typography
+                      color="textSecondary"
+                      variant="h6"
+                      fontWeight="300"
+                      sx={{ fontSize: 11 }}
+                    >
+                      {sayName}
+                    </Typography>
+                  </Box>
+                  <Box
                     sx={{
-                      color: '#ff0000',
-                      zIndex: 10,
-                      opacity: 0.8,
-                      borderColor: '#ff0000',
+                      ml: 'auto',
                     }}
-                    label={t('myPage.taskCard.tags.notConfirmed')}
-                    size="small"
-                    variant="outlined"
-                  />
-                )}
-              </ListItem>
-              <ListItem
-                sx={{
-                  position: 'absolute',
-                }}
-              >
-                <Chip
+                  >
+                    <Tooltip title={t('myPage.taskCard.menu.more')}>
+                      <IconButton
+                        aria-expanded={open ? 'true' : undefined}
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                      >
+                        <FeatherIcon icon="more-horizontal" width="18" />
+                      </IconButton>
+                    </Tooltip>
+                    {pageDetails && (
+                      <Menu
+                        id="long-menu"
+                        MenuListProps={{
+                          'aria-labelledby': 'long-button',
+                        }}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                      >
+                        {(swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
+                          swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
+                          <MenuItem onClick={() => navigate(`/children/edit/${need.child.id}`)}>
+                            <EditIcon sx={{ ml: 1, mr: 1 }} />
+                            {t('myPage.taskCard.menu.updateChild')}
+                          </MenuItem>
+                        )}
+                        {!need.ipfs &&
+                          ((!collaborators.includes(swInfo.id) &&
+                            swInfo.typeId === FlaskUserTypesEnum.ADMIN) ||
+                            swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+                            swInfo.id === need.created_by_id) && (
+                            <MenuItem>
+                              <EditIcon sx={{ ml: 1, mr: 1 }} />
+                              <RouterLink
+                                style={{ textDecoration: 'none', color: '#e6e5e8' }}
+                                to={`/need/edit/${need.child.id}/${need.id}`}
+                              >
+                                {t('myPage.taskCard.menu.updateٔNeed')}
+                              </RouterLink>
+                            </MenuItem>
+                          )}
+                        {need.tickets && need.tickets[0] ? (
+                          <MenuItem onClick={() => handleOpenTicketing(need.tickets[0].id)}>
+                            <VisibilityIcon sx={{ ml: 1, mr: 1 }} />
+                            {t('myPage.taskCard.menu.readTicket')}
+                          </MenuItem>
+                        ) : (
+                          !collaborators.includes(swInfo.id) &&
+                          !need.ipfs && (
+                            <MenuItem onClick={() => handleOpenConfirm()}>
+                              <FlagOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                              {t('myPage.taskCard.menu.addTicket')}
+                            </MenuItem>
+                          )
+                        )}
+                        {!collaborators.includes(swInfo.id) &&
+                          swInfo.id === need.created_by_id &&
+                          need.type === NeedTypeEnum.PRODUCT &&
+                          need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
+                          (!need.tickets[0] ||
+                            !need.tickets.find(
+                              (item) => item.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO,
+                            )) && (
+                            <MenuItem
+                              onClick={() => handleAnnouncement(AnnouncementEnum.ARRIVED_AT_NGO)}
+                            >
+                              <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                              {t('myPage.taskCard.menu.deliveryTicket')}
+                            </MenuItem>
+                          )}
+                        {!collaborators.includes(swInfo.id) &&
+                          swInfo.id === need.created_by_id &&
+                          need.type === NeedTypeEnum.SERVICE &&
+                          need.status === ServiceStatusEnum.MONEY_TO_NGO &&
+                          (!need.tickets[0] ||
+                            need.tickets.find(
+                              (item2) =>
+                                item2.lastAnnouncement !== AnnouncementEnum.NGO_RECEIVED_MONEY,
+                            )) &&
+                          (receipts && receipts[0] ? (
+                            <MenuItem
+                              onClick={() =>
+                                handleAnnouncement(AnnouncementEnum.NGO_RECEIVED_MONEY)
+                              }
+                            >
+                              <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                              {t('myPage.taskCard.menu.moneyToNgoTicket')}
+                            </MenuItem>
+                          ) : (
+                            <MenuItem disabled>
+                              <CampaignOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                              {t('myPage.taskCard.menu.addReceipt')}
+                            </MenuItem>
+                          ))}
+
+                        {need && need.ipfs && need.ipfs.needDetailsHash && (
+                          <MenuItem>
+                            <DatasetLinkedOutlinedIcon sx={{ ml: 1, mr: 1 }} />
+                            <RouterLink
+                              style={{ textDecoration: 'none', color: '#e6e5e8' }}
+                              to={`${process.env.REACT_APP_IPFS_GATEWAY_2}/${need.ipfs.needDetailsHash}/metadata.json`}
+                            >
+                              {t('myPage.taskCard.menu.ipfs')}
+                            </RouterLink>
+                          </MenuItem>
+                        )}
+                      </Menu>
+                    )}
+                  </Box>
+                </Box>
+              </CardContent>
+              <CardActionArea onClick={handleCardClick}>
+                <CardContent
                   sx={{
-                    color: need.type === NeedTypeEnum.PRODUCT ? '#e66cf2' : '#5888e3',
-                    zIndex: 10,
-                    opacity: 0.8,
-                    borderColor: need.type === NeedTypeEnum.PRODUCT ? '#e66cf2' : '#5888e3',
-                  }}
-                  label={
-                    need.type === NeedTypeEnum.PRODUCT
-                      ? t('myPage.taskCard.tags.product')
-                      : t('myPage.taskCard.tags.service')
-                  }
-                  size="small"
-                  variant="outlined"
-                />
-                {((need.type === NeedTypeEnum.PRODUCT &&
-                  need.status <= ProductStatusEnum.PURCHASED_PRODUCT) ||
-                  (need.type === NeedTypeEnum.SERVICE &&
-                    need.status <= ServiceStatusEnum.MONEY_TO_NGO)) && (
-                  <Chip
-                    sx={{
-                      color:
-                        need.status === PaymentStatusEnum.PARTIAL_PAY
-                          ? '#ddf96a'
-                          : need.status === PaymentStatusEnum.COMPLETE_PAY
-                          ? '#00ffb8'
-                          : need.status === PaymentStatusEnum.NOT_PAID
-                          ? '#f331a6'
-                          : ((need.type === NeedTypeEnum.PRODUCT &&
-                              need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
-                              (need.type === NeedTypeEnum.SERVICE &&
-                                need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
-                            '#ffb100',
-                      zIndex: 10,
-                      opacity: 0.8,
-                      m: 1,
-                      borderColor:
-                        need.status === PaymentStatusEnum.PARTIAL_PAY
-                          ? '#ddf96a'
-                          : need.status === PaymentStatusEnum.COMPLETE_PAY
-                          ? '#00ffb8'
-                          : need.status === PaymentStatusEnum.NOT_PAID
-                          ? '#f331a6'
-                          : ((need.type === NeedTypeEnum.PRODUCT &&
-                              need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
-                              (need.type === NeedTypeEnum.SERVICE &&
-                                need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
-                            '#ffb100',
-                    }}
-                    label={
-                      need.status === PaymentStatusEnum.PARTIAL_PAY
-                        ? t('myPage.taskCard.tags.partialPay')
-                        : need.status === PaymentStatusEnum.NOT_PAID
-                        ? t('myPage.taskCard.tags.notPaid')
-                        : need.status === PaymentStatusEnum.COMPLETE_PAY
-                        ? t('myPage.taskCard.tags.completePay')
-                        : need.type === NeedTypeEnum.PRODUCT &&
-                          need.status === ProductStatusEnum.PURCHASED_PRODUCT
-                        ? t('myPage.taskCard.tags.purchased')
-                        : need.type === NeedTypeEnum.SERVICE &&
-                          need.status === ProductStatusEnum.MONEY_TO_NGO &&
-                          t('myPage.taskCard.tags.moneyToNgo')
-                    }
-                    size="small"
-                    variant="outlined"
-                  />
-                )}
-              </ListItem>
-              {((need.type === NeedTypeEnum.PRODUCT &&
-                need.status === ProductStatusEnum.DELIVERED) ||
-                (need.type === NeedTypeEnum.SERVICE &&
-                  need.status === ServiceStatusEnum.DELIVERED)) && (
-                <ListItem
-                  sx={{
-                    mt: '40px',
-                    position: 'absolute',
+                    p: '20px',
+                    pt: 0,
                   }}
                 >
-                  <Chip
+                  <Grid container>
+                    <Grid item xs={9}>
+                      <Typography
+                        color="textSecondary"
+                        variant="h5"
+                        component="span"
+                        fontWeight="600"
+                      >
+                        {name}
+                      </Typography>
+                      {((informations &&
+                        typeof informations === 'string' &&
+                        informations.length > 4) ||
+                        (details && typeof details === 'string' && details.length > 4)) && (
+                        <Tooltip
+                          arrow
+                          title={
+                            <Typography>
+                              {informations}
+                              {details}
+                            </Typography>
+                          }
+                          placement="left"
+                        >
+                          <IconButton component="div" sx={{ pt: 0, pb: 0, opacity: 0.8 }}>
+                            <HelpOutlineOutlinedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ maxHeight: '40px' }}>
+                      {need.tickets && need.tickets[0] && (
+                        <>
+                          {/* flag Icon- ticketHistory has one item in it due to announcement */}
+                          {(need.tickets[0].lastAnnouncement === AnnouncementEnum.NONE ||
+                            need.tickets[0].lastAnnouncement === AnnouncementEnum.ERROR ||
+                            !need.tickets[0].lastAnnouncement) && (
+                            <Box
+                              sx={{
+                                textAlign: 'center',
+                                backgroundColor:
+                                  need.tickets[0].color === Colors.YELLOW
+                                    ? () => theme.palette.background.ripple
+                                    : '',
+                                animation:
+                                  need.tickets[0].color === Colors.YELLOW
+                                    ? 'ripple 1.4s  infinite ease-in-out'
+                                    : '',
+
+                                borderRadius: '50%',
+                                '@keyframes ripple': {
+                                  '0%': {
+                                    transform: 'scale(.7)',
+                                    opacity: 0.7,
+                                  },
+                                  '100%': {
+                                    transform: 'scale(0.8)',
+                                    opacity: 1,
+                                  },
+                                },
+                                height: '40px',
+                                width: '40px',
+                                paddingTop: '7px',
+                              }}
+                            >
+                              {need.tickets[0].color === Colors.RED && (
+                                <>
+                                  <CircularProgressWithLabel value={progress} need={need} />
+                                  <Typography sx={{ fontSize: 10, color: '#dd3976' }}>
+                                    {`${Math.round(progress)}%`}
+                                  </Typography>
+                                </>
+                              )}
+                              {(need.tickets[0].color === Colors.YELLOW ||
+                                need.tickets[0].color === Colors.BLUE) && (
+                                <FlagOutlinedIcon
+                                  sx={{
+                                    color:
+                                      need.tickets[0].color === Colors.YELLOW
+                                        ? colorChoices[1].code
+                                        : need.tickets[0].color === Colors.BLUE &&
+                                          colorChoices[0].code,
+                                  }}
+                                />
+                              )}
+                            </Box>
+                          )}
+                          {/* Announcement Icon */}
+                          <Box
+                            sx={{
+                              textAlign: 'center',
+
+                              borderRadius: '50%',
+                              '@keyframes ripple': {
+                                '0%': {
+                                  transform: 'scale(.7)',
+                                  opacity: 0.7,
+                                },
+                                '100%': {
+                                  transform: 'scale(0.8)',
+                                  opacity: 1,
+                                },
+                              },
+                              height: '40px',
+                              width: '40px',
+                              paddingTop: '7px',
+                            }}
+                          >
+                            {need.tickets.find(
+                              (item) => item.lastAnnouncement === AnnouncementEnum.ARRIVED_AT_NGO,
+                            ) && <CampaignOutlinedIcon />}
+                            {need.tickets.find(
+                              (item2) =>
+                                item2.lastAnnouncement === AnnouncementEnum.NGO_RECEIVED_MONEY,
+                            ) && <CampaignOutlinedIcon />}
+                          </Box>
+                        </>
+                      )}
+                      {/* Signature Icon */}
+                      <Box
+                        sx={{
+                          textAlign: 'center',
+                          height: '40px',
+                          width: '40px',
+                        }}
+                      >
+                        {needSignatures && needSignatures[0] && (
+                          <Tooltip
+                            arrow
+                            title={
+                              <>
+                                <Typography sx={{ fontSize: 12 }}>
+                                  {` ${t('roles.socialWorker')}:
+                                  ${swSignature && swSignature.user && swSignature.user.firstName}`}
+                                </Typography>
+                                <Typography sx={{ fontSize: 12 }}>
+                                  {auditorSignature &&
+                                    `${t('roles.auditor')}:
+                                  ${auditorSignature.user && auditorSignature.user.firstName}`}
+                                </Typography>
+                              </>
+                            }
+                            placement="right-end"
+                            sx={{ width: '100%' }}
+                          >
+                            <img
+                              style={{ minHeight: '10px' }}
+                              srcSet={`${signatureIcon} 1x, ${signatureIcon} 2x`}
+                              alt={need.img}
+                              width="100%"
+                            />
+                          </Tooltip>
+                        )}
+                      </Box>
+                      {need.ipfs && <WaterWaveText hash={need.ipfs && need.ipfs.needDetailsHash} />}
+                    </Grid>
+                  </Grid>
+                  <Typography
                     sx={{
-                      color: '#1bf500',
-                      zIndex: 10,
+                      mb: 1,
+                      fontSize: 10,
                       opacity: 0.8,
-                      borderColor: '#1bf500',
                     }}
-                    label={t('myPage.taskCard.tags.delivered')}
-                    size="small"
-                    variant="outlined"
-                  />
-                </ListItem>
-              )}
-              {need.type === NeedTypeEnum.SERVICE &&
-                need.status === ServiceStatusEnum.MONEY_TO_NGO && (
+                    fontWeight="300"
+                  >
+                    ( {t(category)} )
+                  </Typography>
+                  <Typography color="textSecondary" variant="h6" fontWeight="400">
+                    {t('myPage.taskCard.cost')}: {cost}
+                  </Typography>
+                  <Grid container>
+                    {typeof affiliateLinkUrl === 'string' &&
+                      affiliateLinkUrl.length > 5 &&
+                      !affiliateLinkUrl.includes('false') && (
+                        <Typography color="textSecondary" variant="span" fontWeight="400">
+                          {t('myPage.taskCard.provider')}:
+                          <Link
+                            href={affiliateLinkUrl}
+                            sx={{ pl: 1, pr: 1 }}
+                            underline="none"
+                            target="_blank"
+                          >
+                            Affiliate
+                          </Link>
+                        </Typography>
+                      )}
+                    {link && (
+                      <Typography
+                        color="textSecondary"
+                        variant="span"
+                        fontWeight="400"
+                        sx={{ pb: 1 }}
+                      >
+                        {t('myPage.taskCard.provider')}:
+                        <Link href={link} underline="none" sx={{ pl: 1, pr: 1 }} target="_blank">
+                          Link
+                        </Link>
+                      </Typography>
+                    )}
+                  </Grid>
+                  <Grid>
+                    {receipts && receipts[0] ? (
+                      <AvatarGroup>
+                        {receipts.map((r) => (
+                          <ReceiptImage receipt={r.receipt[0]} key={r.id} />
+                        ))}
+                      </AvatarGroup>
+                    ) : (
+                      need.type === NeedTypeEnum.SERVICE &&
+                      need.status >= ServiceStatusEnum.MONEY_TO_NGO && (
+                        <Typography
+                          sx={{ color: () => theme.palette.warning.dark }}
+                          variant="h6"
+                          fontWeight="400"
+                        >
+                          {t('myPage.taskCard.noReceipt')}
+                        </Typography>
+                      )
+                    )}
+                  </Grid>
+                </CardContent>
+
+                <Box sx={{ position: 'relative' }}>
                   <ListItem
                     sx={{
                       mt: '40px',
                       position: 'absolute',
                     }}
                   >
+                    {need.type === NeedTypeEnum.PRODUCT &&
+                      need.status < ProductStatusEnum.PURCHASED_PRODUCT &&
+                      isUnpayable(need) && (
+                        <Chip
+                          sx={{
+                            color: '#ff0000',
+                            zIndex: 10,
+                            opacity: 0.8,
+                            borderColor: '#ff0000',
+                          }}
+                          label={t('myPage.taskCard.tags.unpayable')}
+                          size="small"
+                          variant="outlined"
+                        />
+                      )}
+                    {!need.isConfirmed && (
+                      <Chip
+                        sx={{
+                          color: '#ff0000',
+                          zIndex: 10,
+                          opacity: 0.8,
+                          borderColor: '#ff0000',
+                        }}
+                        label={t('myPage.taskCard.tags.notConfirmed')}
+                        size="small"
+                        variant="outlined"
+                      />
+                    )}
+                  </ListItem>
+                  <ListItem
+                    sx={{
+                      position: 'absolute',
+                    }}
+                  >
                     <Chip
                       sx={{
-                        color: '#ff9800',
+                        color: need.type === NeedTypeEnum.PRODUCT ? '#e66cf2' : '#5888e3',
                         zIndex: 10,
                         opacity: 0.8,
-                        borderColor: '#ff9800',
+                        borderColor: need.type === NeedTypeEnum.PRODUCT ? '#e66cf2' : '#5888e3',
                       }}
-                      label={t('myPage.taskCard.tags.moneyToNgo')}
+                      label={
+                        need.type === NeedTypeEnum.PRODUCT
+                          ? t('myPage.taskCard.tags.product')
+                          : t('myPage.taskCard.tags.service')
+                      }
                       size="small"
                       variant="outlined"
                     />
+                    {((need.type === NeedTypeEnum.PRODUCT &&
+                      need.status <= ProductStatusEnum.PURCHASED_PRODUCT) ||
+                      (need.type === NeedTypeEnum.SERVICE &&
+                        need.status <= ServiceStatusEnum.MONEY_TO_NGO)) && (
+                      <Chip
+                        sx={{
+                          color:
+                            need.status === PaymentStatusEnum.PARTIAL_PAY
+                              ? '#ddf96a'
+                              : need.status === PaymentStatusEnum.COMPLETE_PAY
+                              ? '#00ffb8'
+                              : need.status === PaymentStatusEnum.NOT_PAID
+                              ? '#f331a6'
+                              : ((need.type === NeedTypeEnum.PRODUCT &&
+                                  need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
+                                  (need.type === NeedTypeEnum.SERVICE &&
+                                    need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
+                                '#ffb100',
+                          zIndex: 10,
+                          opacity: 0.8,
+                          m: 1,
+                          borderColor:
+                            need.status === PaymentStatusEnum.PARTIAL_PAY
+                              ? '#ddf96a'
+                              : need.status === PaymentStatusEnum.COMPLETE_PAY
+                              ? '#00ffb8'
+                              : need.status === PaymentStatusEnum.NOT_PAID
+                              ? '#f331a6'
+                              : ((need.type === NeedTypeEnum.PRODUCT &&
+                                  need.status === ProductStatusEnum.PURCHASED_PRODUCT) ||
+                                  (need.type === NeedTypeEnum.SERVICE &&
+                                    need.status === ProductStatusEnum.MONEY_TO_NGO)) &&
+                                '#ffb100',
+                        }}
+                        label={
+                          need.status === PaymentStatusEnum.PARTIAL_PAY
+                            ? t('myPage.taskCard.tags.partialPay')
+                            : need.status === PaymentStatusEnum.NOT_PAID
+                            ? t('myPage.taskCard.tags.notPaid')
+                            : need.status === PaymentStatusEnum.COMPLETE_PAY
+                            ? t('myPage.taskCard.tags.completePay')
+                            : need.type === NeedTypeEnum.PRODUCT &&
+                              need.status === ProductStatusEnum.PURCHASED_PRODUCT
+                            ? t('myPage.taskCard.tags.purchased')
+                            : need.type === NeedTypeEnum.SERVICE &&
+                              need.status === ProductStatusEnum.MONEY_TO_NGO &&
+                              t('myPage.taskCard.tags.moneyToNgo')
+                        }
+                        size="small"
+                        variant="outlined"
+                      />
+                    )}
                   </ListItem>
-                )}
-              {need.type === NeedTypeEnum.PRODUCT && need.img ? (
-                <img
-                  style={{ opacity: !cardSelected ? '30%' : '80%', minHeight: '100px' }}
-                  srcSet={`${retailerImage} 1x, ${retailerImage} 2x`}
-                  alt={need.img}
-                  width="100%"
-                />
-              ) : (
-                <Grid sx={{ mb: 4, minHeight: '100px', width: '100%' }} />
-              )}
-
-              {/* dates */}
-              <Grid container sx={{ p: 0 }}>
-                <Grid item xs={12}>
-                  <DurationTimeLine need={need} signature={thisCardSignature} />
-                </Grid>
-              </Grid>
-            </Box>
-          </CardActionArea>
-          <CardActions>
-            {!need.isConfirmed &&
-              convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR && (
-                <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-                  <LoadingButton
-                    loading={loadingConfirm || loadingDuplicates}
-                    disabled={
-                      collaborators.includes(swInfo.id) ||
-                      swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
-                      swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
-                    }
-                    onClick={() => handleDialog(need)}
-                  >
-                    {t('button.confirm')}
-                  </LoadingButton>
-                </Grid>
-              )}
-            {need.status === PaymentStatusEnum.NOT_PAID && (
-              <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-                {!need.isConfirmed && (
-                  <LoadingButton
-                    fullWidth
-                    variant="customDelete"
-                    onClick={() => handleDeleteDialog(need.id)}
-                    disabled={collaborators.includes(swInfo.id)}
-                  >
-                    {t('button.delete')}
-                  </LoadingButton>
-                )}
-              </Grid>
-            )}
-            {need.created_by_id === swInfo.id && need.status === ProductStatusEnum.DELIVERED && (
-              <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
-                {(!needSignatures ||
-                  !needSignatures[0] ||
-                  !needSignatures.find((s) => s.flaskUserId === swInfo.id)) &&
-                  (!isConnected ? (
-                    <WalletButton fullWidth variant="outlined" onClick={() => setOpenWallets(true)}>
-                      {t('button.wallet.connect')}
-                    </WalletButton>
+                  {((need.type === NeedTypeEnum.PRODUCT &&
+                    need.status === ProductStatusEnum.DELIVERED) ||
+                    (need.type === NeedTypeEnum.SERVICE &&
+                      need.status === ServiceStatusEnum.DELIVERED)) && (
+                    <ListItem
+                      sx={{
+                        mt: '40px',
+                        position: 'absolute',
+                      }}
+                    >
+                      <Chip
+                        sx={{
+                          color: '#1bf500',
+                          zIndex: 10,
+                          opacity: 0.8,
+                          borderColor: '#1bf500',
+                        }}
+                        label={t('myPage.taskCard.tags.delivered')}
+                        size="small"
+                        variant="outlined"
+                      />
+                    </ListItem>
+                  )}
+                  {need.type === NeedTypeEnum.SERVICE &&
+                    need.status === ServiceStatusEnum.MONEY_TO_NGO && (
+                      <ListItem
+                        sx={{
+                          mt: '40px',
+                          position: 'absolute',
+                        }}
+                      >
+                        <Chip
+                          sx={{
+                            color: '#ff9800',
+                            zIndex: 10,
+                            opacity: 0.8,
+                            borderColor: '#ff9800',
+                          }}
+                          label={t('myPage.taskCard.tags.moneyToNgo')}
+                          size="small"
+                          variant="outlined"
+                        />
+                      </ListItem>
+                    )}
+                  {need.type === NeedTypeEnum.PRODUCT && need.img ? (
+                    <img
+                      style={{ opacity: !cardSelected ? '30%' : '80%', minHeight: '100px' }}
+                      srcSet={`${retailerImage} 1x, ${retailerImage} 2x`}
+                      alt={need.img}
+                      width="100%"
+                    />
                   ) : (
-                    isConnected && (
-                      <>
-                        <WalletButton
-                          fullWidth
-                          signbutton="true"
-                          loading={
-                            isLoadingSignIn ||
-                            loadingSignature ||
-                            loadingInformation ||
-                            isLoading ||
-                            pendingConnector
-                          }
-                          onClick={handleSignature}
-                          sx={{ color: 'black' }}
-                        >
-                          {t('button.wallet.sign')}
-                        </WalletButton>
-                      </>
-                    )
-                  ))}
-              </Grid>
-            )}
-          </CardActions>
-        </Card>
-      )}
+                    <Grid sx={{ mb: 4, minHeight: '100px', width: '100%' }} />
+                  )}
 
-      {openConfirm && (
-        <TicketConfirmDialog
-          openConfirm={openConfirm}
-          setOpenConfirm={setOpenConfirm}
-          loading={loadingTicketAdd}
-          need={need}
-        />
+                  {/* dates */}
+                  <Grid container sx={{ p: 0 }}>
+                    <Grid item xs={12}>
+                      <DurationTimeLine need={need} signature={thisCardSignature} />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </CardActionArea>
+              <CardActions>
+                {!need.isConfirmed &&
+                  convertFlaskToSayRoles(swInfo.typeId) === SAYPlatformRoles.AUDITOR && (
+                    <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+                      <LoadingButton
+                        loading={loadingConfirm || loadingDuplicates}
+                        disabled={
+                          collaborators.includes(swInfo.id) ||
+                          swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
+                          swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
+                        }
+                        onClick={() => handleDialog(need)}
+                      >
+                        {t('button.confirm')}
+                      </LoadingButton>
+                    </Grid>
+                  )}
+                {need.status === PaymentStatusEnum.NOT_PAID && (
+                  <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+                    {!need.isConfirmed && (
+                      <LoadingButton
+                        fullWidth
+                        variant="customDelete"
+                        onClick={() => handleDeleteDialog(need.id)}
+                        disabled={collaborators.includes(swInfo.id)}
+                      >
+                        {t('button.delete')}
+                      </LoadingButton>
+                    )}
+                  </Grid>
+                )}
+                {need.created_by_id === swInfo.id &&
+                  need.status === ProductStatusEnum.DELIVERED && (
+                    <Grid item sx={{ textAlign: 'center', mt: 3 }} xs={12}>
+                      {(!needSignatures ||
+                        !needSignatures[0] ||
+                        !needSignatures.find((s) => s.flaskUserId === swInfo.id)) &&
+                        (!isConnected ? (
+                          <WalletButton
+                            fullWidth
+                            variant="outlined"
+                            onClick={() => setOpenWallets(true)}
+                          >
+                            {t('button.wallet.connect')}
+                          </WalletButton>
+                        ) : (
+                          isConnected && (
+                            <>
+                              <WalletButton
+                                fullWidth
+                                signbutton="true"
+                                loading={
+                                  isLoadingSignIn ||
+                                  loadingSignature ||
+                                  loadingInformation ||
+                                  isLoading ||
+                                  pendingConnector
+                                }
+                                onClick={handleSignature}
+                                sx={{ color: 'black' }}
+                              >
+                                {t('button.wallet.sign')}
+                              </WalletButton>
+                            </>
+                          )
+                        ))}
+                    </Grid>
+                  )}
+              </CardActions>
+            </Card>
+          )}
+
+          {openConfirm && (
+            <TicketConfirmDialog
+              openConfirm={openConfirm}
+              setOpenConfirm={setOpenConfirm}
+              loading={loadingTicketAdd}
+              need={need}
+            />
+          )}
+          {openAnnouncement && (
+            <TicketAnnouncementDialog
+              openAnnouncement={openAnnouncement}
+              setOpenAnnouncement={setOpenAnnouncement}
+              loading={loadingTicketAdd}
+              need={need}
+            />
+          )}
+          <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
+          <GenericDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
+        </Box>
       )}
-      {openAnnouncement && (
-        <TicketAnnouncementDialog
-          openAnnouncement={openAnnouncement}
-          setOpenAnnouncement={setOpenAnnouncement}
-          loading={loadingTicketAdd}
-          need={need}
-        />
-      )}
-      <WalletDialog openWallets={openWallets} setOpenWallets={setOpenWallets} />
-      <GenericDialog open={openDelete} setOpen={setOpenDelete} dialogValues={dialogValues} />
-    </Box>
+    </>
   );
 };
 
