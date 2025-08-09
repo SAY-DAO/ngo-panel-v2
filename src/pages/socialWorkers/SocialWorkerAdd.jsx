@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Card,
@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -44,6 +44,7 @@ import { FlaskUserTypesEnum } from '../../utils/types';
 
 const SocialWorkerAdd = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -84,7 +85,7 @@ const SocialWorkerAdd = () => {
   });
 
   const swAdd = useSelector((state) => state.swAdd);
-  const { success: successAddUpdate, loading: loadingAddSw, error: errorAddUpdate } = swAdd;
+  const { success: successAddSw, loading: loadingAddSw, error: errorAddUpdate } = swAdd;
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
@@ -119,6 +120,12 @@ const SocialWorkerAdd = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  useEffect(() => {
+    if (successAddSw) {
+      navigate(`/sw/list`);
+    }
+  }, [successAddSw]);
+
   const onSubmit = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -146,17 +153,10 @@ const SocialWorkerAdd = () => {
   };
 
   // dialog image
-  const handleImageClickOpen = () => {
-    setOpenImageDialog(true);
-  };
   const handleImageClose = () => {
     setOpenImageDialog(false);
   };
 
-  // dialog id image
-  const handleIdImageClickOpen = () => {
-    setOpenIdImageDialog(true);
-  };
   const handleIdImageClose = () => {
     setOpenIdImageDialog(false);
   };
@@ -168,14 +168,14 @@ const SocialWorkerAdd = () => {
   const onImageChange = (e) => {
     if (e.target.files[0]) {
       setUploadImage(e.target.files[0]);
-      handleImageClickOpen();
+      setOpenImageDialog(true);
     }
   };
 
   const onIdImageChange = (e) => {
     if (e.target.files[0]) {
       setUploadIdImage(e.target.files[0]);
-      handleIdImageClickOpen();
+      setOpenIdImageDialog(true);
     }
   };
 
@@ -271,9 +271,8 @@ const SocialWorkerAdd = () => {
       ) : (
         successNgoList && (
           <>
-            <Breadcrumb title="Add page" subtitle="Social Worker" />
             <Grid container spacing={0}>
-              <Grid item lg={4} md={12} xs={12}>
+              <Grid item lg={3} md={12} xs={12}>
                 <Card sx={{ p: 3, textAlign: 'center' }}>
                   <Badge
                     overlap="circular"
@@ -356,78 +355,149 @@ const SocialWorkerAdd = () => {
                   </Grid>
                 </Card>
               </Grid>
-              <Grid item lg={8} md={12} xs={12}>
+              <Grid item lg={9} md={12} xs={12}>
                 <Card sx={{ p: 3 }}>
                   <Typography variant="h6" fontWeight="600" sx={{ mb: 3 }}>
                     {t('socialWorker.titleAdd')}
                   </Typography>
                   <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
-                    <TextField
-                      required
-                      id="firstName"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      control={control}
-                      {...register('firstName')}
-                      error={!!errors.firstName}
-                      helperText={errors && errors.firstName && errors.firstName.message}
-                    />
-                    <CustomFormLabel htmlFor="lastName">
-                      {t('socialWorker.lastName')}
-                    </CustomFormLabel>
-                    <TextField
-                      required
-                      id="lastName"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('lastName')}
-                      error={!!errors.lastName}
-                      helperText={errors && errors.lastName && errors.lastName.message}
-                    />
-                    <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
-                    <TextField
-                      id="Email"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('email')}
-                      error={!!errors.email}
-                      helperText={errors && errors.email && errors.email.message}
-                    />
+                    <Grid container spacing={1}>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="firstName">First Name</CustomFormLabel>
+                        <TextField
+                          required
+                          id="firstName"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          control={control}
+                          {...register('firstName')}
+                          error={!!errors.firstName}
+                          helperText={errors && errors.firstName && errors.firstName.message}
+                        />
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="lastName">
+                          {t('socialWorker.lastName')}
+                        </CustomFormLabel>
+                        <TextField
+                          required
+                          id="lastName"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          control={control}
+                          {...register('lastName')}
+                          error={!!errors.lastName}
+                          helperText={errors && errors.lastName && errors.lastName.message}
+                        />
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="Email">{t('socialWorker.email')}</CustomFormLabel>
+                        <TextField
+                          id="Email"
+                          variant="outlined"
+                          fullWidth
+                          size="large"
+                          sx={{ mb: 1 }}
+                          control={control}
+                          {...register('email')}
+                          error={!!errors.email}
+                          helperText={errors && errors.email && errors.email.message}
+                        />
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="birthDate">
+                          {t('socialWorker.birthDate')}
+                        </CustomFormLabel>
 
-                    <CustomFormLabel htmlFor="country">{t('socialWorker.country')}</CustomFormLabel>
-                    <CustomSelect
-                      labelId="country-controlled-open-select-label"
-                      id="country-controlled-open-select"
-                      defaultValue={1}
-                      control={control}
-                      register={{ ...register('country') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
-                    </CustomSelect>
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.country && errors.country.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
-                    <CustomSelect
-                      labelId="city-controlled-open-select-label"
-                      id="city-controlled-open-select"
-                      defaultValue={1}
-                      control={control}
-                      register={{ ...register('city') }}
-                    >
-                      <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
-                    </CustomSelect>
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.city && errors.city.message}
-                    </FormHelperText>
+                        <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
+                          <DesktopDatePicker
+                            id="birthDate"
+                            inputFormat="MM/dd/yyyy"
+                            value={birthDate}
+                            onChange={handleDateChange}
+                            renderInput={(params) => <TextField {...params} />}
+                            helperText={errors && errors.birthDate && errors.birthDate.message}
+                            sx={{ width: '100%' }}
+                          />
+                        </LocalizationProvider>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="country">
+                          {t('socialWorker.country')}
+                        </CustomFormLabel>
+                        <CustomSelect
+                          labelId="country-controlled-open-select-label"
+                          id="country-controlled-open-select"
+                          defaultValue={1}
+                          control={control}
+                          register={{ ...register('country') }}
+                          sx={{ width: '100%' }}
+                        >
+                          <MenuItem value={1}>{t('socialWorker.countries.one')}</MenuItem>
+                        </CustomSelect>
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.country && errors.country.message}
+                        </FormHelperText>
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="city">{t('socialWorker.city')}</CustomFormLabel>
+                        <CustomSelect
+                          labelId="city-controlled-open-select-label"
+                          id="city-controlled-open-select"
+                          defaultValue={1}
+                          control={control}
+                          register={{ ...register('city') }}
+                          sx={{ width: '100%' }}
+                        >
+                          <MenuItem value={1}>{t('socialWorker.cities.one')}</MenuItem>
+                        </CustomSelect>
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.city && errors.city.message}
+                        </FormHelperText>
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="telegramId">
+                          {t('socialWorker.telegramId')}
+                        </CustomFormLabel>
+                        <OutlinedInput
+                          id="telegramId"
+                          startAdornment={<InputAdornment position="start">@</InputAdornment>}
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          control={control}
+                          defaultValue="-"
+                          {...register('telegramId')}
+                          error={!!errors.telegramId}
+                        />
+                        <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
+                          {errors && errors.telegramId && errors.telegramId.message}
+                        </FormHelperText>
+                      </Grid>
+
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="idNumber">
+                          {t('socialWorker.idNumber')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="idNumber"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          control={control}
+                          {...register('idNumber')}
+                          error={!!errors.idNumber}
+                          helperText={errors && errors.lastName && errors.lastName.message}
+                        />
+                      </Grid>
+                    </Grid>
                     <CustomFormLabel htmlFor="postalAddress">
                       {t('socialWorker.postalAddress')}
                     </CustomFormLabel>
@@ -443,158 +513,156 @@ const SocialWorkerAdd = () => {
                       register={{ ...register('postalAddress') }}
                       helperText={errors && errors.postalAddress && errors.postalAddress.message}
                     />
-                    <CustomFormLabel htmlFor="birthDate">
-                      {t('socialWorker.birthDate')}
-                    </CustomFormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
-                      <DesktopDatePicker
-                        id="birthDate"
-                        inputFormat="MM/dd/yyyy"
-                        value={birthDate}
-                        onChange={handleDateChange}
-                        renderInput={(params) => <TextField {...params} />}
-                        helperText={errors && errors.birthDate && errors.birthDate.message}
-                      />
-                    </LocalizationProvider>
-
-                    <CustomFormLabel htmlFor="telegramId">
-                      {t('socialWorker.telegramId')}
-                    </CustomFormLabel>
-                    <OutlinedInput
-                      id="telegramId"
-                      startAdornment={<InputAdornment position="start">@</InputAdornment>}
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('telegramId')}
-                      error={!!errors.telegramId}
-                    />
-                    <FormHelperText sx={{ color: '#e46a76' }} id="component-error-text">
-                      {errors && errors.telegramId && errors.telegramId.message}
-                    </FormHelperText>
-                    <CustomFormLabel htmlFor="idNumber">
-                      {t('socialWorker.idNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="idNumber"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('idNumber')}
-                      error={!!errors.idNumber}
-                      helperText={errors && errors.lastName && errors.lastName.message}
-                    />
-                    <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
-                      {t('socialWorker.ngoName')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="ngoId-controlled-open-select-label"
-                      id="ngoId-controlled-open-select"
-                      defaultValue={ngoList[1].id}
-                      register={{ ...register('ngoId') }}
-                      control={control}
-                      error={!!errors.ngoId}
-                    >
-                      {ngoList &&
-                        Object.keys(ngoList).map((key) => (
-                          <MenuItem key={key} value={ngoList[key].id}>
-                            {ngoList[key].name}
+                    <Grid container spacing={1}>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel id="ngoId-controlled-open-select-label" htmlFor="ngoId">
+                          {t('socialWorker.ngoName')}
+                        </CustomFormLabel>
+                        <CustomSelect
+                          labelId="ngoId-controlled-open-select-label"
+                          id="ngoId-controlled-open-select"
+                          defaultValue={ngoList[1].id}
+                          register={{ ...register('ngoId') }}
+                          control={control}
+                          error={!!errors.ngoId}
+                          sx={{ width: '100%' }}
+                        >
+                          {ngoList &&
+                            Object.keys(ngoList).map((key) => (
+                              <MenuItem key={key} value={ngoList[key].id}>
+                                {ngoList[key].name}
+                              </MenuItem>
+                            ))}
+                        </CustomSelect>
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel id="typeId-controlled-open-select-label" htmlFor="typeId">
+                          {t('socialWorker.typeId')}
+                        </CustomFormLabel>
+                        <CustomSelect
+                          labelId="typeId-controlled-open-select-label"
+                          id="typeId-controlled-open-select"
+                          defaultValue={4}
+                          control={control}
+                          register={{ ...register('typeId') }}
+                          sx={{ width: '100%' }}
+                        >
+                          <MenuItem value={FlaskUserTypesEnum.SUPER_ADMIN}>
+                            {t('socialWorker.roles.SUPER_ADMIN')}
                           </MenuItem>
-                        ))}
-                    </CustomSelect>
-                    <CustomFormLabel id="typeId-controlled-open-select-label" htmlFor="typeId">
-                      {t('socialWorker.typeId')}
-                    </CustomFormLabel>
-                    <CustomSelect
-                      labelId="typeId-controlled-open-select-label"
-                      id="typeId-controlled-open-select"
-                      defaultValue={4}
-                      control={control}
-                      register={{ ...register('typeId') }}
-                    >
-                      <MenuItem value={1}>{FlaskUserTypesEnum.SUPER_ADMIN}</MenuItem>
-                      <MenuItem value={2}>{t('socialWorker.roles.SOCIAL_WORKER')}</MenuItem>
-                      <MenuItem value={3}>{t('socialWorker.roles.COORDINATOR')}</MenuItem>
-                      <MenuItem value={4}>{t('socialWorker.roles.NGO_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={5}>{t('socialWorker.roles.SAY_SUPERVISOR')}</MenuItem>
-                      <MenuItem value={6}>{t('socialWorker.roles.ADMIN')}</MenuItem>
-                    </CustomSelect>
-                    <CustomFormLabel htmlFor="phoneNumber">
-                      {t('socialWorker.phoneNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="phoneNumber"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('phoneNumber')}
-                      error={!!errors.phoneNumber}
-                      helperText={errors && errors.phoneNumber && errors.phoneNumber.message}
-                    />
-                    <CustomFormLabel htmlFor="emergencyPhoneNumber">
-                      {t('socialWorker.emergencyPhoneNumber')}
-                    </CustomFormLabel>
-                    <TextField
-                      id="emergencyPhoneNumber"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      sx={{ mb: 1 }}
-                      control={control}
-                      {...register('emergencyPhoneNumber')}
-                      error={!!errors.emergencyPhoneNumber}
-                      helperText={
-                        errors && errors.emergencyPhoneNumber && errors.emergencyPhoneNumber.message
-                      }
-                    />
-                    <FormControlLabel
-                      sx={{ width: '100%' }}
-                      control={
-                        <Switch
-                          id="isCoordinator"
+                          <MenuItem value={FlaskUserTypesEnum.SOCIAL_WORKER}>
+                            {t('socialWorker.roles.SOCIAL_WORKER')}
+                          </MenuItem>
+                          <MenuItem value={FlaskUserTypesEnum.COORDINATOR}>
+                            {t('socialWorker.roles.COORDINATOR')}
+                          </MenuItem>
+                          <MenuItem value={FlaskUserTypesEnum.NGO_SUPERVISOR}>
+                            {t('socialWorker.roles.NGO_SUPERVISOR')}
+                          </MenuItem>
+                          <MenuItem value={FlaskUserTypesEnum.SAY_SUPERVISOR}>
+                            {t('socialWorker.roles.SAY_SUPERVISOR')}
+                          </MenuItem>
+                          <MenuItem value={FlaskUserTypesEnum.ADMIN}>
+                            {t('socialWorker.roles.ADMIN')}
+                          </MenuItem>
+                        </CustomSelect>
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="emergencyPhoneNumber">
+                          {t('socialWorker.emergencyPhoneNumber')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="emergencyPhoneNumber"
                           variant="outlined"
-                          checked={coordChecked}
-                          onChange={handleChangeCoord}
-                          inputProps={{ 'aria-label': 'controlled' }}
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          control={control}
+                          {...register('emergencyPhoneNumber')}
+                          error={!!errors.emergencyPhoneNumber}
+                          helperText={
+                            errors &&
+                            errors.emergencyPhoneNumber &&
+                            errors.emergencyPhoneNumber.message
+                          }
                         />
-                      }
-                      label={
-                        <Grid>
-                          <Box
-                            sx={{
-                              display: 'inline-block',
-                              backgroundColor:
-                                coordChecked === true
-                                  ? (theme) => theme.palette.success.main
-                                  : (theme) => theme.palette.error.main,
-                              borderRadius: '100%',
-                              height: '10px',
-                              width: '10px',
-                            }}
-                          />
-                          {'  '}
-                          <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
-                            {t('socialWorker.isCoordinator')}
-                          </Typography>
-                        </Grid>
-                      }
-                    />
-                    <LoadingButton
-                      loading={loadingAddSw}
-                      color="primary"
-                      type="submit"
-                      onClick={handleSubmit(onSubmit)}
-                      variant="contained"
-                      sx={{ mt: 4 }}
-                    >
-                      {t('socialWorker.button.update')}
-                    </LoadingButton>
+                      </Grid>
+                      <Grid item lg={6} md={6} xs={12}>
+                        <CustomFormLabel htmlFor="phoneNumber">
+                          {t('socialWorker.phoneNumber')}
+                        </CustomFormLabel>
+                        <TextField
+                          id="phoneNumber"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          sx={{ mb: 1 }}
+                          control={control}
+                          {...register('phoneNumber')}
+                          error={!!errors.phoneNumber}
+                          helperText={errors && errors.phoneNumber && errors.phoneNumber.message}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControlLabel
+                          sx={{ width: '100%' }}
+                          control={
+                            <Switch
+                              id="isCoordinator"
+                              variant="outlined"
+                              checked={coordChecked}
+                              onChange={handleChangeCoord}
+                              inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                          }
+                          label={
+                            <Grid>
+                              <Box
+                                sx={{
+                                  display: 'inline-block',
+                                  backgroundColor:
+                                    coordChecked === true
+                                      ? (theme) => theme.palette.success.main
+                                      : (theme) => theme.palette.error.main,
+                                  borderRadius: '100%',
+                                  height: '10px',
+                                  width: '10px',
+                                }}
+                              />
+                              {'  '}
+                              <Typography variant="subtitle2" sx={{ display: 'inline-block' }}>
+                                {t('socialWorker.isCoordinator')}
+                              </Typography>
+                            </Grid>
+                          }
+                        />
+                      </Grid>
+                      <Grid item sx={{ m: 'auto', mt: 4 }}>
+                        <LoadingButton
+                          loading={loadingAddSw}
+                          color="primary"
+                          type="submit"
+                          onClick={handleSubmit(onSubmit)}
+                          variant="contained"
+                          sx={{ mt: 4 }}
+                        >
+                          {t('button.add')}
+                        </LoadingButton>
+                      </Grid>
+                    </Grid>
+                    <Grid>
+                      {(successAddSw || errorAddUpdate) && (
+                        <Message
+                          severity={successAddSw ? 'success' : 'error'}
+                          variant="filled"
+                          input="addSw"
+                          backError={errorAddUpdate}
+                          sx={{ width: '100%' }}
+                        >
+                          {successAddSw && t('socialWorker.updated')}
+                        </Message>
+                      )}
+                    </Grid>
                   </form>
                 </Card>
               </Grid>
@@ -633,6 +701,7 @@ const SocialWorkerAdd = () => {
                     uploadImage={uploadIdImage}
                     handleImageClose={handleIdImageClose}
                     setFinalImageFile={setFinalIdImageFile}
+                    customBorderRadius={10}
                   />
                 </Box>
               </DialogContent>
@@ -640,19 +709,6 @@ const SocialWorkerAdd = () => {
                 <Button onClick={handleImageClose}>{t('button.close')}</Button>
               </DialogActions>
             </Dialog>
-            <Grid>
-              {(successAddUpdate || errorAddUpdate) && (
-                <Message
-                  severity={successAddUpdate ? 'success' : 'error'}
-                  variant="filled"
-                  input="addSw"
-                  backError={errorAddUpdate}
-                  sx={{ width: '100%' }}
-                >
-                  {successAddUpdate && t('socialWorker.updated')}
-                </Message>
-              )}
-            </Grid>
           </>
         )
       )}

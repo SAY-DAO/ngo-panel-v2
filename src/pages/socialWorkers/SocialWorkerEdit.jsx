@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,9 +47,12 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import {
   SW_BY_ID_RESET,
   UPDATE_SW_IS_ACTIVE_RESET,
+  UPDATE_SW_RESET,
 } from '../../redux/constants/socialWorkerConstants';
+import { SW_LIST } from '../../routes/RouteConstants';
 
 const SocialWorkerEdit = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const { id } = useParams();
@@ -110,6 +113,14 @@ const SocialWorkerEdit = () => {
 
   const ngoAll = useSelector((state) => state.ngoAll);
   const { ngoList, success: successNgoList, loading: loadingNgoAll } = ngoAll;
+
+  useEffect(() => {
+    if (successSwUpdate) {
+      navigate(SW_LIST);
+      dispatch({ type: UPDATE_SW_RESET });
+      dispatch({ type: SW_BY_ID_RESET });
+    }
+  }, [successSwUpdate]);
 
   useEffect(() => {
     if (!id && userInfo) {
@@ -254,7 +265,6 @@ const SocialWorkerEdit = () => {
         password: data.newPassword && data.newPassword,
       }),
     );
-    dispatch({ type: SW_BY_ID_RESET });
   };
 
   // dialog
@@ -834,6 +844,19 @@ const SocialWorkerEdit = () => {
                       </Grid>
                     </Grid>
                   </Card>
+                  <Grid>
+                    {(successSwUpdate || errorSwUpdate) && (
+                      <Message
+                        severity={successSwUpdate ? 'success' : 'error'}
+                        variant="filled"
+                        input="addSw"
+                        backError={errorSwUpdate}
+                        sx={{ width: '100%' }}
+                      >
+                        {successSwUpdate && t('socialWorker.updated')}
+                      </Message>
+                    )}
+                  </Grid>
                 </form>
               </Grid>
             </Grid>
@@ -924,19 +947,6 @@ const SocialWorkerEdit = () => {
                 <Button onClick={handleImageClose}>Close</Button>
               </DialogActions>
             </Dialog>
-            <Grid>
-              {(successSwUpdate || errorSwUpdate) && (
-                <Message
-                  severity={successSwUpdate ? 'success' : 'error'}
-                  variant="filled"
-                  input="addSw"
-                  backError={errorSwUpdate}
-                  sx={{ width: '100%' }}
-                >
-                  {successSwUpdate && t('socialWorker.updated')}
-                </Message>
-              )}
-            </Grid>
           </>
         )
       )}

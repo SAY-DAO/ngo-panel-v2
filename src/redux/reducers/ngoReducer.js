@@ -20,12 +20,26 @@ import {
   NGO_LIST_REQUEST,
   NGO_LIST_RESET,
   NGO_LIST_SUCCESS,
+  PRE_REGISTER_NGO_LIST_FAIL,
+  PRE_REGISTER_NGO_LIST_REQUEST,
+  PRE_REGISTER_NGO_LIST_RESET,
+  PRE_REGISTER_NGO_LIST_SUCCESS,
   UPDATE_NGO_FAIL,
   UPDATE_NGO_IS_ACTIVE_FAIL,
   UPDATE_NGO_IS_ACTIVE_REQUEST,
   UPDATE_NGO_IS_ACTIVE_SUCCESS,
   UPDATE_NGO_REQUEST,
   UPDATE_NGO_SUCCESS,
+  PRE_REGISTER_NGO_CREATE_REQUEST,
+  PRE_REGISTER_NGO_CREATE_SUCCESS,
+  PRE_REGISTER_NGO_CREATE_FAIL,
+  PRE_REGISTER_NGO_UPDATE_REQUEST,
+  PRE_REGISTER_NGO_UPDATE_SUCCESS,
+  PRE_REGISTER_NGO_UPDATE_FAIL,
+  PRE_REGISTER_NGO_REQUEST,
+  PRE_REGISTER_NGO_SUCCESS,
+  PRE_REGISTER_NGO_FAIL,
+  PRE_REGISTER_NGO_RESET,
 } from '../constants/ngoConstants';
 
 export const ngoByIdReducer = (state = { success: false }, action) => {
@@ -52,6 +66,60 @@ export const ngoListReducer = (state = { success: false }, action) => {
     case NGO_LIST_FAIL:
       return { loading: false, error: action.payload };
     case NGO_LIST_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const ngoPreRegisterReducer = (state = { success: false }, action) => {
+  switch (action.type) {
+    case PRE_REGISTER_NGO_LIST_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_NGO_LIST_SUCCESS:
+      return { loading: false, success: true, ngosPreRegisterList: action.payload };
+    case PRE_REGISTER_NGO_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case PRE_REGISTER_NGO_LIST_RESET:
+      return {};
+    case PRE_REGISTER_NGO_CREATE_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_NGO_CREATE_SUCCESS:
+      return { loading: false, success: true, added: action.payload };
+    case PRE_REGISTER_NGO_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    case PRE_REGISTER_NGO_UPDATE_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_NGO_UPDATE_SUCCESS:
+      return { loading: false, success: true, updated: action.payload };
+    case PRE_REGISTER_NGO_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    // case PRE_REGISTER_NGO_DELETE_REQUEST:
+    //   return { ...state, loading: true, success: false };
+    // case PRE_REGISTER_NGO_DELETE_SUCCESS:
+    //   return { ...state, loading: false, success: true, deleted: action.payload };
+    // case PRE_REGISTER_NGO_DELETE_FAIL:
+    //   return { ...state, loading: false, error: action.payload };
+    // case PRE_REGISTER_NGO_APPROVE_REQUEST:
+    //   return { ...state, loading: true, success: false };
+    // case PRE_REGISTER_NGO_APPROVE_SUCCESS:
+    //   return { ...state, loading: false, success: true, approved: action.payload };
+    // case PRE_REGISTER_NGO_APPROVE_FAIL:
+    //   return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const oneNgoPreRegisterReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRE_REGISTER_NGO_REQUEST:
+      return { loading: true };
+    case PRE_REGISTER_NGO_SUCCESS:
+      return { loading: false, success: true, ngoPreRegister: action.payload };
+    case PRE_REGISTER_NGO_FAIL:
+      return { loading: false, error: action.payload };
+    case PRE_REGISTER_NGO_RESET:
       return {};
     default:
       return state;

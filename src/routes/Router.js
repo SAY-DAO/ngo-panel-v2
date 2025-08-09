@@ -36,7 +36,8 @@ import {
   USERS_PAGE,
   NEED_CONFIRM,
   CAMPAIGN_NEWSLETTER,
-  UI_PERMISSIONS
+  UI_PERMISSIONS,
+  PRE_REGISTER_NGO_LIST,
 } from './RouteConstants';
 
 /* ***Layouts**** */
@@ -61,11 +62,14 @@ const ProviderList = Loadable(lazy(() => import('../pages/providers/ProviderList
 const ProviderEdit = Loadable(lazy(() => import('../pages/providers/ProviderEdit')));
 const ProviderAdd = Loadable(lazy(() => import('../pages/providers/ProviderAdd')));
 const NgoList = Loadable(lazy(() => import('../pages/ngos/NgoList')));
+const NgoPreList = Loadable(lazy(() => import('../pages/ngos/NgoPreList')));
 const NgoEdit = Loadable(lazy(() => import('../pages/ngos/NgoEdit')));
 const NgoAdd = Loadable(lazy(() => import('../pages/ngos/NgoAdd')));
 const ChildrenList = Loadable(lazy(() => import('../pages/children/ChildrenList')));
 const ChildrenEdit = Loadable(lazy(() => import('../pages/children/ChildrenEdit')));
-const ChildrenPreRegisterUpdate = Loadable(lazy(() => import('../pages/children/ChildrenPreRegisterUpdate')));
+const ChildrenPreRegisterUpdate = Loadable(
+  lazy(() => import('../pages/children/ChildrenPreRegisterUpdate')),
+);
 const ChildrenPreRegisterTabs = Loadable(
   lazy(() => import('../pages/children/ChildrenPreRegisterTabs')),
 );
@@ -80,7 +84,9 @@ const DaoMileStoneList = Loadable(lazy(() => import('../pages/milestone/DaoMileS
 const DaoMidJourneyList = Loadable(lazy(() => import('../pages/midjourney/DaoMidJourneyList')));
 const DaoCommentList = Loadable(lazy(() => import('../pages/comment/DaoCommentList')));
 const DaoMonthlyCampaign = Loadable(lazy(() => import('../pages/campaign/DaoMonthlyCampaign')));
-const DaoNewsLetterCampaign = Loadable(lazy(() => import('../pages/campaign/DaoNewsLetterCampaign')));
+const DaoNewsLetterCampaign = Loadable(
+  lazy(() => import('../pages/campaign/DaoNewsLetterCampaign')),
+);
 const PermissionsList = Loadable(lazy(() => import('../pages/permissions/PermissionsList')));
 
 const DaoContributionList = Loadable(
@@ -107,6 +113,7 @@ const Router = [
       { path: PROVIDER_EDIT, exact: true, element: <ProviderEdit /> },
       { path: PROVIDER_ADD, exact: true, element: <ProviderAdd /> },
       { path: NGO_LIST, exact: true, element: <NgoList /> },
+      { path: PRE_REGISTER_NGO_LIST, exact: true, element: <NgoPreList /> },
       { path: NGO_EDIT, exact: true, element: <NgoEdit /> },
       { path: NGO_ADD, exact: true, element: <NgoAdd /> },
       { path: CHILDREN_LIST, exact: true, element: <ChildrenList /> },

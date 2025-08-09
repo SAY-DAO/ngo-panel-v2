@@ -33,7 +33,11 @@ export const fetchCountryList = () => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: COUNTRY_LIST_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      payload: e.response
+        ? e.response.status
+          ? e.response
+          : e.response.data.message
+        : e.message && e.message,
     });
   }
 };

@@ -34,6 +34,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { prepareUrl } from '../../utils/helpers';
+import GenericDialog from '../dialogs/GenericDialog';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -241,11 +242,17 @@ EnhancedTableHead.propTypes = {
 const EnhancedTableToolbar = (props) => {
   // const dispatch = useDispatch();
 
+  const [deleteDialogValues, setDeleteDialogValues] = useState();
+  const [openDelete, setOpenDelete] = useState(false);
+
   const { numSelected, selected } = props;
 
   const handleDelete = () => {
-    // dispatch(deleteSw(selected[0]));
-    console.log(selected);
+    setDeleteDialogValues({
+      id: selected,
+      type: 'deleteSw',
+    });
+    setOpenDelete(true);
   };
 
   return (
@@ -271,6 +278,7 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       )}
+      <GenericDialog open={openDelete} setOpen={setOpenDelete} dialogValues={deleteDialogValues} />
     </Toolbar>
   );
 };
@@ -412,7 +420,11 @@ const SocialWorkerTable = ({ swList }) => {
                                   }}
                                 />
                               </TableCell>
-
+                              <TableCell>
+                                <Typography color="textSecondary" variant="h6" fontWeight="400">
+                                  {row.id}
+                                </Typography>
+                              </TableCell>
                               <TableCell>
                                 <Box display="flex" alignItems="center">
                                   <Box
@@ -426,23 +438,9 @@ const SocialWorkerTable = ({ swList }) => {
                                       width: '10px',
                                     }}
                                   />
-                                  <Typography
-                                    color="textSecondary"
-                                    variant="body1"
-                                    fontWeight="400"
-                                    sx={{
-                                      ml: 1,
-                                    }}
-                                  >
-                                    {row.is_active}
-                                  </Typography>
                                 </Box>
                               </TableCell>
-                              <TableCell>
-                                <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                  {row.id}
-                                </Typography>
-                              </TableCell>
+
                               <TableCell>
                                 <IconButton
                                   onClick={() => handleEdit(row)}

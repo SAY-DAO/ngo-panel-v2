@@ -182,7 +182,7 @@ export default function UploadImage({
         <div className="setting body-content flex-col al-center">
           <AvatarEditor
             image={file}
-            width={window.innerWidth - 100}
+            width={window.innerWidth - 100 + (customBorderRadius ? 900 : 0)}
             height={window.innerWidth - 100}
             ref={setEditorRef}
             border={50}

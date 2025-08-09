@@ -44,7 +44,7 @@ import VoiceBar from '../VoiceBar';
 import { fetchSocialWorkersList } from '../../redux/actions/socialWorkerAction';
 import { assignPreRegisterChild } from '../../redux/actions/childrenAction';
 import { CHILDREN_PRE_REGISTER_LIST } from '../../routes/RouteConstants';
-import { PRE_REGISTER_CHILD_LIST_REST } from '../../redux/constants/childrenConstants';
+import { PRE_REGISTER_CHILD_LIST_RESET } from '../../redux/constants/childrenConstants';
 
 const steps = ['child.steps.first', 'child.steps.second', 'child.steps.third'];
 
@@ -116,7 +116,7 @@ export default function ChildrenPreRegisterNgoStepper() {
 
   useEffect(() => {
     if (activeStep === 0) {
-      dispatch({ type: PRE_REGISTER_CHILD_LIST_REST });
+      dispatch({ type: PRE_REGISTER_CHILD_LIST_RESET });
     }
   }, [activeStep]);
 

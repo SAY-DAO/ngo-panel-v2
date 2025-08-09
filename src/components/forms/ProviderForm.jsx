@@ -34,7 +34,7 @@ import CustomSelect from './custom-elements/CustomSelect';
 import { fetchCityList, fetchCountryList, fetchStateList } from '../../redux/actions/countryAction';
 import { addProvider } from '../../redux/actions/providerAction';
 import { COUNTRY_LIST_RESET } from '../../redux/constants/countryConstants';
-import { ADD_PROVIDER_REST } from '../../redux/constants/providerConstants';
+import { ADD_PROVIDER_RESET } from '../../redux/constants/providerConstants';
 import { NeedTypeEnum } from '../../utils/types';
 
 export default function ProviderForm() {
@@ -117,7 +117,7 @@ export default function ProviderForm() {
       dispatch(fetchCountryList());
     }
     return () => {
-      dispatch({ type: ADD_PROVIDER_REST });
+      dispatch({ type: ADD_PROVIDER_RESET });
     };
   }, [successCountryList]);
 

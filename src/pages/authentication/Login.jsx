@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Box, Typography, FormGroup, FormControlLabel } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Typography,
+  FormGroup,
+  FormControlLabel,
+  Tabs,
+  Tab,
+  Link as Link2,
+} from '@mui/material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -16,6 +25,29 @@ import Message from '../../components/Message';
 import { fetchSocialWorkerDetails } from '../../redux/actions/socialWorkerAction';
 import collaborators from '../../utils/temp';
 import { CHILDREN_LIST, HOME } from '../../routes/RouteConstants';
+import NgoRegisterDialog from '../../components/dialogs/NgoRegisterDialog';
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -25,8 +57,10 @@ const Login = () => {
 
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [value, setValue] = useState(1);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { loading: loadingLogin, error: errorLogin, success: successLogin } = userLogin;
@@ -37,7 +71,7 @@ const Login = () => {
   const redirect =
     swInfo && location.search && !collaborators.includes(swInfo.id)
       ? // eslint-disable-next-line no-restricted-globals
-       `/${location.search.split('redirect=')[1]}`
+        `/${location.search.split('redirect=')[1]}`
       : swInfo && !location.search && !collaborators.includes(swInfo.id)
       ? HOME
       : CHILDREN_LIST;
@@ -82,6 +116,25 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     dispatch(login(email, password));
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleClickOpen = () => {
+    setModal(true);
+  };
+
+  const handleClose = () => {
+    setModal(false);
   };
   return (
     <PageContainer title="Login" description="this is Login page">
@@ -146,35 +199,41 @@ const Login = () => {
                 <Typography fontWeight="700" variant="h2">
                   {t('login.title')}
                 </Typography>
-                {/* <Box display="flex" alignItems="center">
-                  <Typography
-                    color="textSecondary"
-                    variant="h6"
-                    fontWeight="500"
-                    sx={{
-                      mr: 1,
-                    }}
-                  >
-                    Do not have an account?
-                  </Typography>
-                  <Typography
-                    component={Link}
-                    to="/auth/register"
-                    fontWeight="500"
-                    sx={{
-                      display: 'block',
-                      textDecoration: 'none',
-                      color: 'primary.main',
-                    }}
-                  >
-                    Create an account
-                  </Typography>
-                </Box> */}
+
                 <Box
                   sx={{
                     mt: 4,
                   }}
                 >
+                  <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                    <Tab label={t('login.tab1')} {...a11yProps(0)} />
+                    <Tab label={t('login.tab2')} {...a11yProps(1)} />
+                  </Tabs>
+                </Box>
+                <CustomTabPanel value={value} index={0}>
+                  <Box alignItems="center">
+                    <Typography fontSize={13} fontWeight="300" variant="subtitle2">
+                      {t('login.ngo.intro1')}
+                    </Typography>
+                    <Typography fontSize={13} fontWeight="300" variant="subtitle2">
+                      {t('login.ngo.intro2')}.
+                      <Link2
+                        href="https://docs.saydao.org"
+                        underline="none"
+                        target="_blank"
+                        sx={{ p: 1 }}
+                      >
+                        {t('login.ngo.intro3')}.
+                      </Link2>
+                    </Typography>
+                    <Box sx={{ textAlign: 'center', width: '100%', mt: 2 }}>
+                      <LoadingButton onClick={handleClickOpen} variant="outlined" sx={{ m: 2 }}>
+                        {t('login.ngo.register')}
+                      </LoadingButton>
+                    </Box>
+                  </Box>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
                   <CustomFormLabel htmlFor="email"> {t('login.username')}</CustomFormLabel>
                   <CustomTextField
                     id="email"
@@ -251,11 +310,15 @@ const Login = () => {
                   >
                     {t('button.login')}
                   </LoadingButton>
-                </Box>
+                </CustomTabPanel>
+
                 <Grid item xs={12} sx={{ textAlign: 'center' }}>
                   {errorLogin && (
                     <Message backError={errorLogin} variant="standard" severity="error" />
                   )}
+                </Grid>
+                <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                  {modal && <NgoRegisterDialog handleClose={handleClose} open={modal} />}
                 </Grid>
               </Box>
             </Grid>

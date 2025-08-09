@@ -2,8 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Box } from '@mui/material';
-// import LogoDark from '../../../resources/images/logos/logo-dark.png';
-// import LogoLight from '../../../resources/images/logos/logo-white.png';
 
 const LogoIcon = () => {
   const customizer = useSelector((state) => state.CustomizerReducer);

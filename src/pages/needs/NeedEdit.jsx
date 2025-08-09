@@ -69,9 +69,9 @@ const NeedEdit = () => {
   const [uploadImage, setUploadImage] = useState(location.state && location.state.newImage);
 
   const [justProvider, setJustProvider] = useState();
-  
+
   const swDetails = useSelector((state) => state.swDetails);
-  const { swInfo } = swDetails
+  const { swInfo } = swDetails;
   const providerAll = useSelector((state) => state.providerAll);
   const { providerList } = providerAll;
 
@@ -663,7 +663,7 @@ const NeedEdit = () => {
                       </Card>
                       <LoadingButton
                         loading={loadingUpdateNeed}
-                        disabled={collaborators.includes(swInfo.id)}
+                        disabled={successUpdateNeed || collaborators.includes(swInfo.id)}
                         color="primary"
                         type="submit"
                         onClick={handleSubmit(onSubmit)}

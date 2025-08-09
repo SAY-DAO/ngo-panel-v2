@@ -11,6 +11,7 @@ import { DialogTitle } from '@mui/material';
 import { deleteReceipt } from '../../redux/actions/reportAction';
 import { deleteNeed } from '../../redux/actions/needsAction';
 import { deletePreRegister } from '../../redux/actions/childrenAction';
+import { deleteSw } from '../../redux/actions/socialWorkerAction';
 
 export default function GenericDialog({ open, setOpen, dialogValues }) {
   const dispatch = useDispatch();
@@ -30,6 +31,9 @@ export default function GenericDialog({ open, setOpen, dialogValues }) {
     if (dialogValues.type === 'deletePreregister') {
       dispatch(deletePreRegister(dialogValues.preRegisterId));
     }
+    if (dialogValues.type === 'deleteSw') {
+      dispatch(deleteSw(dialogValues.id));
+    }
     setOpen(false);
   };
 
@@ -47,7 +51,9 @@ export default function GenericDialog({ open, setOpen, dialogValues }) {
               ? t('deleteModal.need.title')
               : dialogValues.type === 'deleteReceipt'
               ? t('deleteModal.receipt.title')
-              : dialogValues.type === 'deletePreregister' && t('deleteModal.preRegister.title')}
+              : dialogValues.type === 'deletePreregister'
+              ? t('deleteModal.preRegister.title')
+              : dialogValues.type === 'deleteSw' && t('deleteModal.sw.title')}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -55,7 +61,9 @@ export default function GenericDialog({ open, setOpen, dialogValues }) {
                 ? t('deleteModal.need.content')
                 : dialogValues.type === 'deleteReceipt'
                 ? t('deleteModal.receipt.content')
-                : dialogValues.type === 'deletePreregister' && t('deleteModal.preRegister.content')}
+                : dialogValues.type === 'deletePreregister'
+                ? t('deleteModal.preRegister.content')
+                : dialogValues.type === 'deleteSw' && t('deleteModal.sw.content')}
             </DialogContentText>
           </DialogContent>
           <DialogActions>

@@ -37,15 +37,15 @@ import {
   PRE_REGISTER_CHILD_ASSIGN_REQUEST,
   PRE_REGISTER_CHILD_ASSIGN_SUCCESS,
   PRE_REGISTER_CHILD_ASSIGN_FAIL,
-  PRE_REGISTER_DELETE_REQUEST,
-  PRE_REGISTER_DELETE_SUCCESS,
-  PRE_REGISTER_DELETE_FAIL,
+  PRE_REGISTER_CHILD_DELETE_REQUEST,
+  PRE_REGISTER_CHILD_DELETE_SUCCESS,
+  PRE_REGISTER_CHILD_DELETE_FAIL,
   SAY_NAMES_REQUEST,
   SAY_NAMES_SUCCESS,
   SAY_NAMES_FAIL,
-  PRE_REGISTER_APPROVE_REQUEST,
-  PRE_REGISTER_APPROVE_SUCCESS,
-  PRE_REGISTER_APPROVE_FAIL,
+  PRE_REGISTER_CHILD_APPROVE_REQUEST,
+  PRE_REGISTER_CHILD_APPROVE_SUCCESS,
+  PRE_REGISTER_CHILD_APPROVE_FAIL,
   PRE_REGISTER_CHILD_REQUEST,
   PRE_REGISTER_CHILD_SUCCESS,
   PRE_REGISTER_CHILD_FAIL,
@@ -498,7 +498,7 @@ export const getChildPreRegister = (flaskChildId) => async (dispatch, getState) 
   }
 };
 
-export const getPreRegisters = (tabNumber, take, limit) => async (dispatch, getState) => {
+export const getChildrenPreRegisters = (tabNumber, take, limit) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRE_REGISTER_CHILD_LIST_REQUEST });
     const {
@@ -611,7 +611,7 @@ export const AddChild = (values) => async (dispatch, getState) => {
 
 export const approvePreRegister = (id, values) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRE_REGISTER_APPROVE_REQUEST });
+    dispatch({ type: PRE_REGISTER_CHILD_APPROVE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -634,12 +634,12 @@ export const approvePreRegister = (id, values) => async (dispatch, getState) => 
     const { data } = await daoApi.patch(`/children/preregister/approve/${id}`, formData, config);
 
     dispatch({
-      type: PRE_REGISTER_APPROVE_SUCCESS,
+      type: PRE_REGISTER_CHILD_APPROVE_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: PRE_REGISTER_APPROVE_FAIL,
+      type: PRE_REGISTER_CHILD_APPROVE_FAIL,
       payload:
         e.response && e.response.data.detail
           ? e.response.data
@@ -652,7 +652,7 @@ export const approvePreRegister = (id, values) => async (dispatch, getState) => 
 
 export const deletePreRegister = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: PRE_REGISTER_DELETE_REQUEST });
+    dispatch({ type: PRE_REGISTER_CHILD_DELETE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -669,12 +669,12 @@ export const deletePreRegister = (id) => async (dispatch, getState) => {
     const { data } = await daoApi.delete(`/children/preregister/${id}`, config);
 
     dispatch({
-      type: PRE_REGISTER_DELETE_SUCCESS,
+      type: PRE_REGISTER_CHILD_DELETE_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: PRE_REGISTER_DELETE_FAIL,
+      type: PRE_REGISTER_CHILD_DELETE_FAIL,
       payload:
         e.response && e.response.data.detail
           ? e.response.data

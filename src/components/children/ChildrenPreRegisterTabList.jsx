@@ -6,7 +6,7 @@ import { CircularProgress, Container, Grid, TablePagination } from '@mui/materia
 import AddIcon from '@mui/icons-material/Add';
 import { LoadingButton } from '@mui/lab';
 import { PropTypes } from 'prop-types';
-import { getPreRegisters } from '../../redux/actions/childrenAction';
+import { getChildrenPreRegisters } from '../../redux/actions/childrenAction';
 import ChildPreRegisterCreateDialog from '../dialogs/ChildPreRegisterCreateDialog';
 import GenericDialog from '../dialogs/GenericDialog';
 import ChildPreRegisterApproveDialog from '../dialogs/ChildPreRegisterApproveDialog';
@@ -34,12 +34,12 @@ export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
   const swDetails = useSelector((state) => state.swDetails);
   const { swInfo } = swDetails;
 
-  const { preRegisterList, assigned, updated, added, deleted, approved } = useSelector(
+  const { childrenPreRegisterList, assigned, updated, added, deleted, approved } = useSelector(
     (state) => state.childPreRegister,
   );
 
   useEffect(() => {
-    dispatch(getPreRegisters(tabNumber, page, rowsPerPage, isConfirmed));
+    dispatch(getChildrenPreRegisters(tabNumber, page, rowsPerPage, isConfirmed));
   }, [deleted, assigned, updated, added, approved, tabNumber, page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
@@ -73,7 +73,7 @@ export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
           </LoadingButton>
         )}
       <Grid container sx={{ minWidth: '100%' }}>
-        {!preRegisterList || (preRegisterList && !preRegisterList.data) ? (
+        {!childrenPreRegisterList || (childrenPreRegisterList && !childrenPreRegisterList.data) ? (
           <Grid item sx={{ textAlign: 'center' }} xs={12}>
             <CircularProgress />
           </Grid>
@@ -85,11 +85,11 @@ export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
               gap={5}
               sx={{ minWidth: '100%', minHeight: 600 }}
             >
-              {preRegisterList &&
-                preRegisterList.data &&
+              {childrenPreRegisterList &&
+                childrenPreRegisterList.data &&
                 (tabNumber === 0
-                  ? preRegisterList.data.filter((p) => !p.voiceUrl)
-                  : preRegisterList.data
+                  ? childrenPreRegisterList.data.filter((p) => !p.voiceUrl)
+                  : childrenPreRegisterList.data
                 )
                   // .filter((pr) => !pr.isConfirmed)
                   .map((p) => (
@@ -110,7 +110,7 @@ export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
               rowsPerPageOptions={[6, 12, 24]}
               component="div"
               colSpan={6}
-              count={preRegisterList.meta.totalItems}
+              count={childrenPreRegisterList.meta.totalItems}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{

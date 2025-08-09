@@ -7,8 +7,10 @@ import {
   ngoByIdReducer,
   ngoDeleteReducer,
   ngoListReducer,
+  ngoPreRegisterReducer,
   ngoUpdateIsActiveReducer,
   ngoUpdateReducer,
+  oneNgoPreRegisterReducer,
 } from './ngoReducer';
 import {
   swDetailsReducer,
@@ -34,7 +36,13 @@ import {
   childUpdateStatusReducer,
   oneChildPreRegisterReducer,
 } from './childrenReducer';
-import { userLoginReducer, myPageReducer, userChangePasswordReducer, userSearchReducer, userChildrenReducer } from './userReducer';
+import {
+  userLoginReducer,
+  myPageReducer,
+  userChangePasswordReducer,
+  userSearchReducer,
+  userChildrenReducer,
+} from './userReducer';
 import {
   allNeedsReducer,
   allReportNeedsReducer,
@@ -153,6 +161,9 @@ export default combineReducers({
   ngoStatusUpdate: ngoUpdateIsActiveReducer,
   ngoById: ngoByIdReducer,
   ngoAll: ngoListReducer,
+  ngoPreAll: ngoPreRegisterReducer,
+  oneNgoPreRegister: oneNgoPreRegisterReducer,
+  ngoPreRegister: ngoPreRegisterReducer,
   ngoArrivals: ngoArrivalReducer,
   ngoUpdate: ngoUpdateReducer,
   ngoAdd: ngoAddReducer,
@@ -173,5 +184,5 @@ export default combineReducers({
   updateArrivals: updateArrivalsReducer,
   commentResult: commentsReducer,
   campaignResult: campaignsReducer,
-  campaignNewsLetter: newsLetterReducer
+  campaignNewsLetter: newsLetterReducer,
 });

@@ -176,19 +176,20 @@ export const NeedCategoryEnum = {
   SURROUNDING: 3,
 };
 
-
 export const PreRegisterStatusEnum = {
   NOT_REGISTERED: 0,
   PRE_REGISTERED: 1,
   CONFIRMED: 2,
-}
+};
 
 export const CampaignNameEnum = {
   MONTHLY_CAMPAIGNS: 'MONTHLY_CAMPAIGNS',
-  CHILD_CONFIRMATION: 'CHILD_CONFIRMATION'
-}
+  CHILD_CONFIRMATION: 'CHILD_CONFIRMATION',
+  NEWS_LETTER: 'NEWS_LETTER',
+  NEWS_LETTER_FOLLOW_UP: 'NEWS_LETTER_FOLLOW_UP',
+};
 
 export const CampaignTypeEnum = {
   EMAIL: 1,
-  SMS: 2
-}
+  SMS: 2,
+};

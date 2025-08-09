@@ -43,7 +43,8 @@ import {
   CAMPAIGN_MONTHLY,
   USERS_PAGE,
   NEED_CONFIRM,
-  CAMPAIGN_NEWSLETTER
+  CAMPAIGN_NEWSLETTER,
+  PRE_REGISTER_NGO_LIST,
 } from '../../../routes/RouteConstants';
 
 export const Menuitems = [
@@ -186,7 +187,13 @@ export const Menuitems = [
     collaborator: false,
     children: [
       {
-        title: 'sidebar.list',
+        title: 'sidebar.ngos.preList',
+        icon: 'list',
+        href: PRE_REGISTER_NGO_LIST,
+        admin: true,
+      },
+      {
+        title: 'sidebar.ngos.list',
         icon: 'list',
         href: NGO_LIST,
         admin: true,
@@ -354,8 +361,6 @@ export const Menuitems = [
       },
     ],
   },
-
 ];
 
-export const CollaboratorItems = Menuitems.filter((item)=> item.collaborator)
-
+export const CollaboratorItems = Menuitems.filter((item) => item.collaborator);

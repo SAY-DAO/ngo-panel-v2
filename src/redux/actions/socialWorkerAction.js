@@ -427,14 +427,18 @@ export const deleteSw = (swId) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    const config = {
+    // const config = {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: userInfo && userInfo.access_token,
+    //   },
+    // };
+
+    const { data } = await publicApi.delete(`/socialworkers/${swId}`, {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
       },
-    };
-
-    const { data } = await publicApi.delete(`/socialworkers/${swId}`, {}, config);
+    });
     dispatch({
       type: DELETE_SW_SUCCESS,
       payload: data,

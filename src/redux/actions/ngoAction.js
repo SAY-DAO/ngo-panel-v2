@@ -1,8 +1,5 @@
 import { daoApi, publicApi } from '../../apis/sayBase';
 import {
-  ADD_NGO_FAIL,
-  ADD_NGO_REQUEST,
-  ADD_NGO_SUCCESS,
   DELETE_NGO_FAIL,
   DELETE_NGO_REQUEST,
   DELETE_NGO_SUCCESS,
@@ -18,12 +15,18 @@ import {
   NGO_LIST_FAIL,
   NGO_LIST_REQUEST,
   NGO_LIST_SUCCESS,
+  PRE_REGISTER_NGO_LIST_FAIL,
+  PRE_REGISTER_NGO_LIST_REQUEST,
+  PRE_REGISTER_NGO_LIST_SUCCESS,
   UPDATE_NGO_FAIL,
   UPDATE_NGO_IS_ACTIVE_FAIL,
   UPDATE_NGO_IS_ACTIVE_REQUEST,
   UPDATE_NGO_IS_ACTIVE_SUCCESS,
   UPDATE_NGO_REQUEST,
   UPDATE_NGO_SUCCESS,
+  PRE_REGISTER_NGO_CREATE_REQUEST,
+  PRE_REGISTER_NGO_CREATE_SUCCESS,
+  PRE_REGISTER_NGO_CREATE_FAIL,
 } from '../constants/ngoConstants';
 
 export const fetchNgoById = (id) => async (dispatch, getState) => {
@@ -80,9 +83,9 @@ export const fetchNgoList = () => async (dispatch, getState) => {
   }
 };
 
-export const updateNgoIsActive = (id, status) => async (dispatch, getState) => {
+export const fetchNgoPreList = (take, limit) => async (dispatch, getState) => {
   try {
-    dispatch({ type: UPDATE_NGO_IS_ACTIVE_REQUEST });
+    dispatch({ type: PRE_REGISTER_NGO_LIST_REQUEST });
     const {
       userLogin: { userInfo },
     } = getState();
@@ -91,17 +94,20 @@ export const updateNgoIsActive = (id, status) => async (dispatch, getState) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+        'X-TAKE': take,
+        'X-LIMIT': limit,
       },
     };
-    const { data } = await publicApi.patch(`/ngo/${status}/ngoId=${id}`, id, config);
+    const { data } = await daoApi.get(`/ngo/preregisters`, config);
 
     dispatch({
-      type: UPDATE_NGO_IS_ACTIVE_SUCCESS,
+      type: PRE_REGISTER_NGO_LIST_SUCCESS,
       payload: data,
     });
   } catch (e) {
     dispatch({
-      type: UPDATE_NGO_IS_ACTIVE_FAIL,
+      type: PRE_REGISTER_NGO_LIST_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
@@ -160,64 +166,6 @@ export const updateNgo = (values) => async (dispatch, getState) => {
   } catch (e) {
     dispatch({
       type: UPDATE_NGO_FAIL,
-      payload: e.response && (e.response.status ? e.response : e.response.data.message),
-    });
-  }
-};
-
-export const addNgo = (values) => async (dispatch, getState) => {
-  try {
-    console.log(values);
-    console.log('values');
-
-    dispatch({ type: ADD_NGO_REQUEST });
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: userInfo && userInfo.access_token,
-      },
-    };
-
-    const formData = new FormData();
-    if (values.name) {
-      formData.set('name', values.name);
-    }
-    if (values.emailAddress) {
-      formData.set('emailAddress', values.emailAddress);
-    }
-    if (values.country) {
-      formData.set('country', values.country);
-    }
-    if (values.city) {
-      formData.set('cityId', values.city);
-    }
-    if (values.phoneNumber) {
-      formData.set('phoneNumber', values.phoneNumber);
-    }
-    if (values.website) {
-      formData.set('website', values.website);
-    }
-    if (values.postalAddress) {
-      formData.set('postalAddress', values.postalAddress);
-    }
-
-    if (values.logoUrl) {
-      formData.set('logoUrl', values.logoUrl);
-    }
-
-    const { data } = await publicApi.post(`/ngo/add`, formData, config);
-    dispatch({
-      type: ADD_NGO_SUCCESS,
-      payload: data,
-    });
-  } catch (e) {
-    console.log(e);
-    dispatch({
-      type: ADD_NGO_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }
@@ -292,7 +240,7 @@ export const updateNgoArrival = (deliveryCode, arrivalCode) => async (dispatch, 
         flaskId: userInfo && userInfo.id,
       },
     };
-    
+
     const { data } = await daoApi.patch(
       `/ngo/arrivals/update/${userInfo.id}/${deliveryCode}/${arrivalCode}`,
       {},
@@ -305,6 +253,102 @@ export const updateNgoArrival = (deliveryCode, arrivalCode) => async (dispatch, 
   } catch (e) {
     dispatch({
       type: UPDATE_NGO_ARRIVAL_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const updateNgoIsActive = (id, status) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_NGO_IS_ACTIVE_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+      },
+    };
+    const { data } = await publicApi.patch(`/ngo/${status}/ngoId=${id}`, id, config);
+
+    dispatch({
+      type: UPDATE_NGO_IS_ACTIVE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: UPDATE_NGO_IS_ACTIVE_FAIL,
+      payload: e.response && (e.response.status ? e.response : e.response.data.message),
+    });
+  }
+};
+
+export const createPreRegisterNgo = (values) => async (dispatch) => {
+  try {
+    dispatch({ type: PRE_REGISTER_NGO_CREATE_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': `multipart/form-data`,
+      },
+    };
+
+    console.log(values);
+
+    const formData = new FormData();
+    if (values.name) {
+      formData.set('name', values.name);
+    }
+    if (values.emailAddress) {
+      formData.set('emailAddress', values.emailAddress);
+    }
+    if (values.country) {
+      formData.set('country', values.country);
+    }
+    if (values.state) {
+      formData.set('state', values.state);
+    }
+    if (values.city) {
+      formData.set('city', values.city);
+    }
+    if (values.phoneNumber) {
+      formData.set('phoneNumber', values.phoneNumber);
+    }
+    if (values.swPhoneNumber) {
+      formData.set('swPhoneNumber', values.swPhoneNumber);
+    }
+    if (values.website) {
+      formData.set('website', values.website);
+    }
+    if (values.postalAddress) {
+      formData.set('postalAddress', values.postalAddress);
+    }
+    if (values.firstName) {
+      formData.set('firstName', values.firstName);
+    }
+    if (values.lastName) {
+      formData.set('lastName', values.lastName);
+    }
+    if (values.logoFile) {
+      formData.set('logoFile', values.logoFile);
+    }
+    if (values.docFile) {
+      formData.set('docFile', values.docFile);
+    }
+    if (values.idCardFile) {
+      formData.set('idCardFile', values.idCardFile);
+    }
+
+    const { data } = await daoApi.post(`/ngo/preregister`, formData, config);
+    dispatch({
+      type: PRE_REGISTER_NGO_CREATE_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: PRE_REGISTER_NGO_CREATE_FAIL,
       payload: e.response && (e.response.status ? e.response : e.response.data.message),
     });
   }

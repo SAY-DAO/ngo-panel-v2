@@ -64,7 +64,7 @@ export default function SocialWorkerMigrate() {
       dispatch(fetchSocialWorkersList());
     }
     if (swList) {
-      const filterActive = swList && swList.filter((sw) => sw.isActive === true);
+      const filterActive = swList && swList.filter((sw) => sw.is_active === true);
       setOptions([...filterActive]);
     }
     if (!openFrom && !openTo) {
@@ -145,6 +145,7 @@ export default function SocialWorkerMigrate() {
       toSw,
     });
   };
+
   return (
     <PageContainer title="Social Worker Edit" description="this is Social Worker Edit page">
       {/* breadcrumb */}
@@ -167,7 +168,7 @@ export default function SocialWorkerMigrate() {
               getOptionLabel={(option) => {
                 return !option.firstName
                   ? `${option.id}`
-                  : `${option.id} - ${option.firstName} ${option.lastName} - ${option.ngoName}`;
+                  : `ID:${option.id} - ${option.firstName} ${option.lastName} - NGO:${option.ngo_id}`;
               }}
               options={options}
               loading={loadingSwAll}
@@ -207,7 +208,7 @@ export default function SocialWorkerMigrate() {
               getOptionLabel={(option) => {
                 return !option.firstName
                   ? 'no name'
-                  : `${option.id} - ${option.firstName} ${option.lastName} - ${option.ngoName}`;
+                  : `ID:${option.id} - ${option.firstName} ${option.lastName} - NGO:${option.ngo_id}`;
               }}
               options={options}
               loading={loadingSwAll}

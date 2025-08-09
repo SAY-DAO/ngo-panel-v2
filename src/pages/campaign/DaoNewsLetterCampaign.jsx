@@ -67,6 +67,7 @@ export default function DaoNewsLetterCampaign() {
       }),
     );
   };
+
   return (
     <>
       <Grid container sx={{ width: '100%' }}>

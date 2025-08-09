@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CircularProgress, Grid } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../../components/container/PageContainer';
 import NgoTable from '../../components/tables/NgoTable';
+import { fetchNgoPreList } from '../../redux/actions/ngoAction';
 
-const NgoList = () => {
+const NgoPreList = () => {
+  const dispatch = useDispatch();
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const ngoAll = useSelector((state) => state.ngoAll);
-  const { ngoList, loading, success } = ngoAll;
+  const ngoPreRegister = useSelector((state) => state.ngoPreRegister);
+  const { ngosPreRegisterList, loading, success } = ngoPreRegister;
+
+  useEffect(() => {
+    dispatch(fetchNgoPreList(page, rowsPerPage));
+    return () => {};
+  }, []);
+
+  console.log(ngosPreRegisterList);
 
   return (
     <>
@@ -26,7 +36,7 @@ const NgoList = () => {
                 setPage={setPage}
                 rowsPerPage={rowsPerPage}
                 setRowsPerPage={setRowsPerPage}
-                ngoList={ngoList}
+                ngoList={ngosPreRegisterList.data}
               />
             </Grid>
           </PageContainer>
@@ -36,4 +46,4 @@ const NgoList = () => {
   );
 };
 
-export default NgoList;
+export default NgoPreList;

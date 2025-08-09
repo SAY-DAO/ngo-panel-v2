@@ -36,11 +36,7 @@ import { NGO_BY_ID_RESET } from '../../redux/constants/ngoConstants';
 import { deleteNgo } from '../../redux/actions/ngoAction';
 
 function descendingComparator(a, b, orderBy) {
-  if (
-    orderBy === 'updated' ||
-    orderBy === 'created' ||
-    orderBy === 'registerDate'
-  ) {
+  if (orderBy === 'updated' || orderBy === 'created' || orderBy === 'registerDate') {
     if (new Date(b[orderBy]).getTime() < new Date(a[orderBy]).getTime()) {
       return -1;
     }
@@ -253,26 +249,16 @@ const EnhancedTableToolbar = (props) => {
         }),
       }}
     >
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
           {numSelected} selected
         </Typography>
-      ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
-          Filter
-        </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton onClick={handleDelete}>
             <FeatherIcon icon="trash-2" width="18" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FeatherIcon icon="filter" width="18" />
           </IconButton>
         </Tooltip>
       )}
@@ -285,28 +271,24 @@ EnhancedTableToolbar.propTypes = {
   selected: PropTypes.array.isRequired,
 };
 
-
-const NgoTable = ({ ngoList }) => {
+const NgoTable = ({ page, setPage, rowsPerPage, setRowsPerPage, ngoList }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-
   const BCrumb = [
     {
       to: '/',
-      title: t("BCrumb.home"),
+      title: t('BCrumb.home'),
     },
     {
-      title: t("BCrumb.ngosList"),
+      title: t('BCrumb.ngosList'),
     },
   ];
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('created');
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -340,10 +322,9 @@ const NgoTable = ({ ngoList }) => {
     //   );
     // }
     if (selected[0] === id) {
-      setSelected([])
+      setSelected([]);
     } else {
       setSelected([id]);
-
     }
   };
 
@@ -587,4 +568,8 @@ export default NgoTable;
 
 NgoTable.propTypes = {
   ngoList: PropTypes.array.isRequired,
+  page: PropTypes.number.isRequired,
+  setPage: PropTypes.func.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  setRowsPerPage: PropTypes.func.isRequired,
 };

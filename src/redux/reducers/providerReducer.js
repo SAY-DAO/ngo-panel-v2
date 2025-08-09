@@ -1,7 +1,7 @@
 import {
   ADD_PROVIDER_FAIL,
   ADD_PROVIDER_REQUEST,
-  ADD_PROVIDER_REST,
+  ADD_PROVIDER_RESET,
   ADD_PROVIDER_SUCCESS,
   DELETE_PROVIDER_FAIL,
   DELETE_PROVIDER_REQUEST,
@@ -104,7 +104,7 @@ export const providerAddReducer = (state = { success: false }, action) => {
       return { loading: false, success: true, added: action.payload };
     case ADD_PROVIDER_FAIL:
       return { loading: false, error: action.payload };
-    case ADD_PROVIDER_REST:
+    case ADD_PROVIDER_RESET:
       return {};
     default:
       return state;
