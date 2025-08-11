@@ -278,7 +278,7 @@ const NeedAdd = () => {
     if (successNeedEx && oneNeed) {
       setValue('name_fa', oneNeed.name_translations.fa);
       setValue('name_en', oneNeed.name_translations.en);
-      // setValue('category', oneNeed.category);
+      setValue('category', oneNeed.category);
       setValue('isUrgent', oneNeed.isUrgent);
       setValue('desc_fa', oneNeed.description_translations.fa);
       setValue('desc_en', oneNeed.description_translations.en);
@@ -709,7 +709,6 @@ const NeedAdd = () => {
                                   register={{ ...register('category', { required: true }) }}
                                   error={!!errors.category}
                                 >
-                                  <option value="">-</option>
                                   <option value={NeedCategoryEnum.GROWTH}>
                                     {t('need.categories.growth')}
                                   </option>

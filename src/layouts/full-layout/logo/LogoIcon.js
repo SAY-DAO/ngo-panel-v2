@@ -14,7 +14,7 @@ const LogoIcon = () => {
       }}
     >
       <Link
-        to="https://say.company"
+        to="https://saydao.org"
         style={{
           textDecoration: 'none',
         }}
