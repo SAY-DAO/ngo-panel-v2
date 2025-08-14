@@ -98,6 +98,7 @@ import {
 import { midjourneyReducer } from './midjourneyReducer';
 import { commentsReducer } from './commentReducer';
 import { campaignsReducer, newsLetterReducer } from './campaignReducer';
+import crawlReducer from './crawlerReducer';
 
 export default combineReducers({
   CustomizerReducer,
@@ -185,4 +186,5 @@ export default combineReducers({
   commentResult: commentsReducer,
   campaignResult: campaignsReducer,
   campaignNewsLetter: newsLetterReducer,
+  crawls: crawlReducer,
 });

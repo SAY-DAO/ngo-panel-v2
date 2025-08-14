@@ -168,35 +168,35 @@ export const fetchExampleNeeds = () => async (dispatch, getState) => {
 
 export const fetchChildNeeds =
   (childId, take = 500) =>
-    async (dispatch, getState) => {
-      try {
-        dispatch({ type: CHILD_NEEDS_REQUEST });
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: CHILD_NEEDS_REQUEST });
 
-        const {
-          userLogin: { userInfo },
-        } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: userInfo && userInfo.access_token,
-            'X-TAKE': take,
-          },
-        };
-        const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+          'X-TAKE': take,
+        },
+      };
+      const { data } = await publicApi.get(`/child/childId=${childId}/needs`, config);
 
-        dispatch({
-          type: CHILD_NEEDS_SUCCESS,
-          payload: data,
-        });
-      } catch (e) {
-        // check for generic and custom message to return using ternary statement
-        dispatch({
-          type: CHILD_NEEDS_FAIL,
-          payload: e.response && (e.response.status ? e.response : e.response.data.message),
-        });
-      }
-    };
+      dispatch({
+        type: CHILD_NEEDS_SUCCESS,
+        payload: data,
+      });
+    } catch (e) {
+      // check for generic and custom message to return using ternary statement
+      dispatch({
+        type: CHILD_NEEDS_FAIL,
+        payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      });
+    }
+  };
 
 export const fetchChildOneNeed = (needId) => async (dispatch, getState) => {
   try {
@@ -363,16 +363,16 @@ export const updateNeed = (justProvider, values) => async (dispatch, getState) =
     );
 
     // create relation between nest provider and flask need if not available
-      const config2 = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: userInfo && userInfo.access_token,
-          flaskId: userInfo && userInfo.id,
-        },
-      };
+    const config2 = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
 
-      const request = { flaskNeedId: data.id, nestProviderId: justProvider.id };
-      await daoApi.post(`/providers/join`, request, config2);
+    const request = { flaskNeedId: data.id, nestProviderId: justProvider.id };
+    await daoApi.post(`/providers/join`, request, config2);
 
     dispatch({
       type: UPDATE_ONE_NEED_SUCCESS,
@@ -524,7 +524,6 @@ export const AddNeed = (values, providerId) => async (dispatch, getState) => {
   }
 };
 
-
 export const prepareConfirmNeeds = () => async (dispatch, getState) => {
   try {
     dispatch({ type: PREPARE_CONFIRM_NEEDS_REQUEST });
@@ -554,7 +553,6 @@ export const prepareConfirmNeeds = () => async (dispatch, getState) => {
     });
   }
 };
-
 
 export const massNeedConfirm = (needIds) => async (dispatch, getState) => {
   try {
