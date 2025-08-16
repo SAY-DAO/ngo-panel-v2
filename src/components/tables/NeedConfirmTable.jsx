@@ -598,7 +598,7 @@ const NeedConfirmTable = () => {
                         {row.similarTitleNeeds.map((s) => (
                           <TableRow key={s.id}>
                             <TableCell component="th" scope="row">
-                              {s.id}
+                              {s.id} - {s.child_id}
                             </TableCell>
                             <TableCell align="right">
                               <Avatar
