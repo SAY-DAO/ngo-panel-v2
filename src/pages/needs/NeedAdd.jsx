@@ -860,7 +860,6 @@ const NeedAdd = () => {
                                         id="name_fa"
                                         variant="outlined"
                                         fullWidth
-                                        disabled
                                         size="small"
                                         control={control}
                                         {...register('name_fa', { required: true })}
@@ -874,7 +873,6 @@ const NeedAdd = () => {
                                       <TextField
                                         id="name_en"
                                         variant="outlined"
-                                        disabled
                                         fullWidth
                                         size="small"
                                         control={control}
