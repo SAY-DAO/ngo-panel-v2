@@ -150,12 +150,6 @@ const NeedAdd = () => {
   const { success: successAddProvider } = providerAdd;
 
   useEffect(() => {
-    if (successAddNeed) {
-      navigate(`/need/list`);
-    }
-  }, [successAddNeed]);
-
-  useEffect(() => {
     dispatch(fetchProviderList());
     dispatch(fetchUnconfirmedCount());
     dispatch({ type: ADD_ONE_NEED_RESET });
@@ -275,10 +269,21 @@ const NeedAdd = () => {
     control,
     handleSubmit,
     setError,
+    clearErrors,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  useEffect(() => {
+    if (successAddNeed) {
+      dispatch({ type: CHILD_ONE_NEED_RESET });
+      reset();
+      clearErrors();
+      navigate(`/need/list`);
+    }
+  }, [successAddNeed]);
 
   useEffect(() => {
     if (link && theProvider && theProvider.type === NeedTypeEnum.PRODUCT) {
@@ -368,7 +373,6 @@ const NeedAdd = () => {
           theProvider.id,
         ),
       );
-      dispatch({ type: CHILD_ONE_NEED_RESET });
     }
   };
 
@@ -1072,7 +1076,11 @@ const NeedAdd = () => {
                                   loading={loadingAddNeed}
                                   color="primary"
                                   type="submit"
-                                  disabled={successAddNeed || collaborators.includes(swInfo.id)}
+                                  disabled={
+                                    loadingAddNeed ||
+                                    successAddNeed ||
+                                    collaborators.includes(swInfo.id)
+                                  }
                                   onClick={handleSubmit(onSubmit)}
                                   variant="contained"
                                   sx={{ mt: 4 }}
