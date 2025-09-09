@@ -42,6 +42,9 @@ import {
   userChangePasswordReducer,
   userSearchReducer,
   userChildrenReducer,
+  userBuilderStatusReducer,
+  userFetchReducer,
+  userCheckPointsReducer,
 } from './userReducer';
 import {
   allNeedsReducer,
@@ -120,6 +123,9 @@ export default combineReducers({
   myPage: myPageReducer,
   userLogin: userLoginReducer,
   userSearch: userSearchReducer,
+  userBuilderStatus: userBuilderStatusReducer,
+  user: userFetchReducer,
+  userCheckPoints: userCheckPointsReducer,
   userChildrenList: userChildrenReducer,
   signature: signatureReducer,
   signaturesVerification: signatureVerificationReducer,

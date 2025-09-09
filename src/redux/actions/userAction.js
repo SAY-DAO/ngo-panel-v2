@@ -27,10 +27,19 @@ import {
   USER_SEARCH_REQUEST,
   USER_SEARCH_SUCCESS,
   USER_SEARCH_FAIL,
+  USER_IS_BUILDER_REQUEST,
+  USER_IS_BUILDER_SUCCESS,
+  USER_IS_BUILDER_FAIL,
   USER_CHILDREN_REQUEST,
   USER_CHILDREN_SUCCESS,
   USER_CHILDREN_FAIL,
   MY_PAGE_RESET,
+  USER_BY_ID_REQUEST,
+  USER_BY_ID_SUCCESS,
+  USER_BY_ID_FAIL,
+  USER_CHECKPOINTS_REQUEST,
+  USER_CHECKPOINTS_SUCCESS,
+  USER_CHECKPOINTS_FAIL,
 } from '../constants/userConstants';
 
 export const register = (userName, password, theKey, value, otp) => async (dispatch) => {
@@ -179,53 +188,53 @@ export const resetPassword = (password) => async (dispatch, getState) => {
 
 export const userEditProfile =
   (phoneAuth, emailAuth, avatarUrl, firstName, lastName, phoneNumber, email, userName) =>
-    async (dispatch, getState) => {
-      try {
-        dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
 
-        const {
-          userLogin: { userInfo },
-        } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: userInfo && userInfo.access_token,
-          },
-        };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+        },
+      };
 
-        const formData = new FormData();
-        if (userInfo.user.avatarUrl !== avatarUrl) {
-          formData.append('avatarUrl', avatarUrl);
-        }
-        if (userInfo.user.firstName !== firstName) {
-          formData.append('firstName', firstName);
-        }
-        if (userInfo.user.lastName !== lastName) {
-          formData.append('lastName', lastName);
-        }
-        if (phoneAuth && userInfo.user.phone_number !== phoneNumber) {
-          formData.append('phoneNumber', phoneNumber);
-        }
-        if (emailAuth && userInfo.user.emailAddress !== email) {
-          formData.append('email', email);
-        }
-        if (userInfo.user.userName !== userName) {
-          formData.append('userName', userName);
-        }
-        const { data } = await publicApi.patch(`/user/update/userId=me`, formData, config);
-
-        dispatch({
-          type: USER_UPDATE_PROFILE_SUCCESS,
-          payload: data,
-        });
-      } catch (e) {
-        dispatch({
-          type: USER_UPDATE_PROFILE_FAIL,
-          payload: e.response && (e.response.status ? e.response : e.response.data.message),
-        });
+      const formData = new FormData();
+      if (userInfo.user.avatarUrl !== avatarUrl) {
+        formData.append('avatarUrl', avatarUrl);
       }
-    };
+      if (userInfo.user.firstName !== firstName) {
+        formData.append('firstName', firstName);
+      }
+      if (userInfo.user.lastName !== lastName) {
+        formData.append('lastName', lastName);
+      }
+      if (phoneAuth && userInfo.user.phone_number !== phoneNumber) {
+        formData.append('phoneNumber', phoneNumber);
+      }
+      if (emailAuth && userInfo.user.emailAddress !== email) {
+        formData.append('email', email);
+      }
+      if (userInfo.user.userName !== userName) {
+        formData.append('userName', userName);
+      }
+      const { data } = await publicApi.patch(`/user/update/userId=me`, formData, config);
+
+      dispatch({
+        type: USER_UPDATE_PROFILE_SUCCESS,
+        payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: USER_UPDATE_PROFILE_FAIL,
+        payload: e.response && (e.response.status ? e.response : e.response.data.message),
+      });
+    }
+  };
 
 export const fetchMyPage = (userId, typeId, take, limit) => async (dispatch, getState) => {
   try {
@@ -287,7 +296,6 @@ export const changeUserPassword = (currentPassword, newPassword) => async (dispa
   }
 };
 
-
 export const searchUser = (query) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_SEARCH_REQUEST });
@@ -316,6 +324,97 @@ export const searchUser = (query) => async (dispatch, getState) => {
   }
 };
 
+export const fetchFamilyMember = (flaskUserId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_BY_ID_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.get(`/family/members/${flaskUserId}`, config);
+    dispatch({
+      type: USER_BY_ID_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: USER_BY_ID_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
+
+export const fetchCheckpoints =
+  ({ page = 1, pageSize = 10, q = '', sort = 'createdAt:desc' } = {}) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_CHECKPOINTS_REQUEST });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+          flaskId: userInfo && userInfo.id,
+        },
+      };
+
+      const params = new URLSearchParams();
+      params.set('page', String(page));
+      params.set('pageSize', String(pageSize));
+      params.set('sort', sort);
+      if (q) params.set('q', q);
+
+      const { data } = await daoApi.get(`/checkpoints?${params.toString()}`, config);
+      dispatch({
+        type: USER_CHECKPOINTS_SUCCESS,
+        payload: data,
+      });
+    } catch (e) {
+      dispatch({
+        type: USER_CHECKPOINTS_FAIL,
+        payload: e.response && e.response.status ? e.response : e.response.data.message,
+      });
+    }
+  };
+
+export const updateBuilderStatus = (flaskUserId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_IS_BUILDER_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.patch(`/family/builder/${flaskUserId}`, {}, config);
+    dispatch({
+      type: USER_IS_BUILDER_SUCCESS,
+      payload: data,
+    });
+  } catch (e) {
+    dispatch({
+      type: USER_IS_BUILDER_FAIL,
+      payload: e.response && e.response.status ? e.response : e.response.data.message,
+    });
+  }
+};
 
 export const fetchUserChildren = (flaskUserId) => async (dispatch, getState) => {
   try {

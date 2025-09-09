@@ -12,7 +12,7 @@ import { prepareUrl } from '../../utils/helpers';
 export default function UserTable({ data, setDialogValues }) {
   const handleDialog = (u) => {
     setDialogValues({
-      user: u,
+      flaskUserId: u.id,
       open: true,
     });
   };

@@ -33,8 +33,9 @@ import {
   CHILDREN_PRE_REGISTER,
   CHILDREN_PRE_REGISTER_LIST,
   CAMPAIGN_MONTHLY,
-  USERS_PAGE,
+  USER_SEARCH,
   NEED_CONFIRM,
+  USER_CHECKPOINTS,
   CAMPAIGN_NEWSLETTER,
   UI_PERMISSIONS,
   PRE_REGISTER_NGO_LIST,
@@ -49,7 +50,8 @@ const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 const ChangePass = Loadable(lazy(() => import('../pages/authentication/ChangePass')));
 
 /* ****Pages***** */
-const USERS = Loadable(lazy(() => import('../pages/users/UserMain')));
+const UserSearch = Loadable(lazy(() => import('../pages/users/UserSearch')));
+const UserCheckPoints = Loadable(lazy(() => import('../pages/users/UserCheckPoints')));
 const SocialWorkerList = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerList')));
 const SocialWorkerEdit = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerEdit')));
 const SocialWorkerAdd = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerAdd')));
@@ -104,7 +106,8 @@ const Router = [
       { path: PROFILE_VIEW, exact: true, element: <SocialWorkerProfile /> },
       { path: MY_SIGNATURES, exact: true, element: <MySignatures /> },
       { path: CHANGE_PASS, exac: true, element: <ChangePass /> },
-      { path: USERS_PAGE, exact: true, element: <USERS /> },
+      { path: USER_SEARCH, exact: true, element: <UserSearch /> },
+      { path: USER_CHECKPOINTS, exact: true, element: <UserCheckPoints /> },
       { path: SW_LIST, exact: true, element: <SocialWorkerList /> },
       { path: SW_EDIT, exact: true, element: <SocialWorkerEdit /> },
       { path: SW_ADD, exact: true, element: <SocialWorkerAdd /> },

@@ -62,6 +62,8 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
     }
   }, [Menuitems, swInfo]);
 
+  console.log(myMenuItems);
+
   const SidebarContent = (
     <Scrollbar style={{ height: 'calc(100vh - 5px)' }}>
       <Box sx={{ p: 2 }}>

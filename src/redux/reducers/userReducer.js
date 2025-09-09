@@ -23,6 +23,18 @@ import {
   USER_SEARCH_SUCCESS,
   USER_SEARCH_FAIL,
   USER_SEARCH_RESET,
+  USER_BY_ID_REQUEST,
+  USER_BY_ID_SUCCESS,
+  USER_BY_ID_FAIL,
+  USER_BY_ID_RESET,
+  USER_CHECKPOINTS_REQUEST,
+  USER_CHECKPOINTS_SUCCESS,
+  USER_CHECKPOINTS_FAIL,
+  USER_CHECKPOINTS_RESET,
+  USER_IS_BUILDER_REQUEST,
+  USER_IS_BUILDER_SUCCESS,
+  USER_IS_BUILDER_FAIL,
+  USER_IS_BUILDER_RESET,
   USER_CHILDREN_REQUEST,
   USER_CHILDREN_SUCCESS,
   USER_CHILDREN_FAIL,
@@ -141,6 +153,51 @@ export const userSearchReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const userCheckPointsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_CHECKPOINTS_REQUEST:
+      return { loading: true };
+    case USER_CHECKPOINTS_SUCCESS:
+      return { loading: false, success: true, points: action.payload };
+    case USER_CHECKPOINTS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_CHECKPOINTS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userFetchReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_BY_ID_REQUEST:
+      return { loading: true };
+    case USER_BY_ID_SUCCESS:
+      return { loading: false, success: true, dappUser: action.payload };
+    case USER_BY_ID_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_BY_ID_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userBuilderStatusReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_IS_BUILDER_REQUEST:
+      return { loading: true };
+    case USER_IS_BUILDER_SUCCESS:
+      return { loading: false, success: true, updateResult: action.payload };
+    case USER_IS_BUILDER_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_IS_BUILDER_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
 export const userChildrenReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_CHILDREN_REQUEST:
@@ -155,4 +212,3 @@ export const userChildrenReducer = (state = {}, action) => {
       return state;
   }
 };
-

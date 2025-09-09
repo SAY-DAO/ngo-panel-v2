@@ -316,7 +316,9 @@
       "title": "Providers"
     },
     "users": {
-      "title": "Users"
+      "title": "Virtual Families",
+      "search": "Search",
+      "checkpoints": "Check Points"
     },
     "socialWorkers": {
       "title": "Social Workers",

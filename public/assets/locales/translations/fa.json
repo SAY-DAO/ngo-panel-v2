@@ -362,7 +362,9 @@
       "title": "تامین کننده‌ها"
     },
     "users": {
-      "title": "کاربران"
+      "title": "خانواده مجازی",
+      "search": "جستجو",
+      "checkpoints": "نقطه ذخیره"
     },
     "socialWorkers": {
       "title": "مددکارها",

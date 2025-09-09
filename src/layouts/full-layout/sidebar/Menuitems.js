@@ -2,7 +2,6 @@ import ChildCareIcon from '@mui/icons-material/ChildCare';
 import InterestsIcon from '@mui/icons-material/Interests';
 import HouseIcon from '@mui/icons-material/House';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import HiveIcon from '@mui/icons-material/Hive';
 import HubIcon from '@mui/icons-material/Hub';
 import RouteIcon from '@mui/icons-material/Route';
 import React from 'react';
@@ -17,6 +16,7 @@ import HowToRegIcon from '@mui/icons-material/HowToReg';
 import EscalatorWarningIcon from '@mui/icons-material/EscalatorWarning';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import AirlineStopsIcon from '@mui/icons-material/AirlineStops';
 import {
   PROFILE_VIEW,
   SW_LIST,
@@ -41,7 +41,8 @@ import {
   DAO_HOME,
   CHILDREN_PRE_REGISTER_LIST,
   CAMPAIGN_MONTHLY,
-  USERS_PAGE,
+  USER_SEARCH,
+  USER_CHECKPOINTS,
   NEED_CONFIRM,
   CAMPAIGN_NEWSLETTER,
   PRE_REGISTER_NGO_LIST,
@@ -265,28 +266,21 @@ export const Menuitems = [
   {
     title: 'sidebar.users.title',
     icon: <EscalatorWarningIcon />,
-    href: USERS_PAGE,
-    collaborator: false,
-    admin: true,
-  },
-  {
-    title: 'sidebar.categories.title',
-    icon: <HiveIcon />,
-    href: '/admin/catagories',
+    href: '/users',
     collapse: true,
     admin: true,
     collaborator: false,
     children: [
       {
-        title: 'sidebar.list',
-        icon: 'list',
-        href: '/categories/list',
+        title: 'sidebar.users.checkpoints',
+        icon: <AirlineStopsIcon />,
+        href: USER_CHECKPOINTS,
         admin: true,
       },
       {
-        title: 'sidebar.add',
-        icon: 'plus-square',
-        href: '/categories/add',
+        title: 'sidebar.users.search',
+        icon: 'search',
+        href: USER_SEARCH,
         admin: true,
       },
     ],
