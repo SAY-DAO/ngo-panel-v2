@@ -37,7 +37,7 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { formatDistanceToNowStrict, format } from 'date-fns';
-import { fetchCheckpoints } from '../../redux/actions/userAction';
+import { confirmCheckpoint, deleteCheckpoint, fetchCheckpoints } from '../../redux/actions/userAction';
 import { prepareUrl } from '../../utils/helpers';
 
 /* findLikelyArray helper (same as before) */
@@ -219,11 +219,11 @@ export default function CheckpointsPage() {
 
       if (type === 'confirm') {
         // dispatch confirm thunk (adjust unwrap if using RTK)
-        // await dispatch(confirmCheckpoint(id));
+        await dispatch(confirmCheckpoint(id));
         setSnackbar({ open: true, message: 'Checkpoint confirmed', severity: 'success' });
       } else {
         // delete
-        // await dispatch(deleteCheckpoint(id));
+        await dispatch(deleteCheckpoint(id));
         setSnackbar({ open: true, message: 'Checkpoint deleted', severity: 'success' });
       }
 

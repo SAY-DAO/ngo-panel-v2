@@ -40,6 +40,12 @@ import {
   USER_CHECKPOINTS_REQUEST,
   USER_CHECKPOINTS_SUCCESS,
   USER_CHECKPOINTS_FAIL,
+  USER_CHECKPOINT_DELETE_REQUEST,
+  USER_CHECKPOINT_DELETE_SUCCESS,
+  USER_CHECKPOINT_DELETE_FAIL,
+  USER_CHECKPOINT_CONFIRM_REQUEST,
+  USER_CHECKPOINT_CONFIRM_SUCCESS,
+  USER_CHECKPOINT_CONFIRM_FAIL,
 } from '../constants/userConstants';
 
 export const register = (userName, password, theKey, value, otp) => async (dispatch) => {
@@ -384,6 +390,78 @@ export const fetchCheckpoints =
       dispatch({
         type: USER_CHECKPOINTS_FAIL,
         payload: e.response && e.response.status ? e.response : e.response.data.message,
+      });
+    }
+  };
+
+export const deleteCheckpoint = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_CHECKPOINT_DELETE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: userInfo && userInfo.access_token,
+        flaskId: userInfo && userInfo.id,
+      },
+    };
+
+    const { data } = await daoApi.delete(`/checkpoints/${id}`, config);
+    dispatch({
+      type: USER_CHECKPOINT_DELETE_SUCCESS,
+      payload: data, // depends on API; could be {} or item info
+    });
+
+    // Optional: refresh list automatically (uncomment if desired)
+    // dispatch(fetchCheckpoints());
+  } catch (e) {
+    dispatch({
+      type: USER_CHECKPOINT_DELETE_FAIL,
+      payload:
+        e.response && e.response.data && e.response.data.message
+          ? e.response.data.message
+          : e.message || e,
+    });
+  }
+};
+
+export const confirmCheckpoint =
+  (id, body = {}) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_CHECKPOINT_CONFIRM_REQUEST });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+          flaskId: userInfo && userInfo.id,
+        },
+      };
+
+      const { data } = await daoApi.patch(`/checkpoints/${id}`, body, config);
+      dispatch({
+        type: USER_CHECKPOINT_CONFIRM_SUCCESS,
+        payload: data,
+      });
+
+      // refresh list to pick up patched item
+      dispatch(fetchCheckpoints());
+    } catch (e) {
+      dispatch({
+        type: USER_CHECKPOINT_CONFIRM_FAIL,
+        payload:
+          e.response && e.response.data && e.response.data.message
+            ? e.response.data.message
+            : e.message || e,
       });
     }
   };
