@@ -69,7 +69,7 @@ export default function UserDialog({ setDialogValues, dialogValues }) {
   };
 
   const handleToggleCommunityBuilder = () => {
-    dispatch(updateBuilderStatus(dappUser.flaskUserId));
+    dispatch(updateBuilderStatus(dappUser.id));
   };
 
   const childrenList = Array.isArray(userChildren) ? userChildren : null;
