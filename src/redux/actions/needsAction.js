@@ -417,7 +417,7 @@ export const updateNeedStatus = (values) => async (dispatch, getState) => {
         formData.append('expected_delivery_date', values.expected_delivery_date);
       }
       if (values.statusId === ProductStatusEnum.DELIVERED_TO_NGO) {
-        formData.append('ngo_delivery_date', values.ngo_delivery_date);
+        formData.append('ngo_delivery_date', values.ngo_delivery_date); // we do not use this: backend uses events to update ngo_delivery_date
       }
     }
 

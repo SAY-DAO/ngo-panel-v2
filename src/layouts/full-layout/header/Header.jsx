@@ -30,8 +30,6 @@ import { SW_DETAILS_RESET, SW_LIST_RESET } from '../../../redux/constants/social
 import { FlaskUserTypesEnum } from '../../../utils/types';
 import {
   DAO_HOME,
-  MILESTONE_ADD,
-  MILESTONE_LIST,
   NGO_LIST,
   NEED_EDIT,
   PROFILE_VIEW,
@@ -135,9 +133,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         location.pathname === DAO_HOME ||
         location.pathname === SW_LIST ||
         location.pathname === PROVIDER_LIST ||
-        location.pathname === NGO_LIST ||
-        location.pathname === MILESTONE_LIST ||
-        location.pathname === MILESTONE_ADD
+        location.pathname === NGO_LIST
       ) {
         navigate(PROFILE_VIEW);
       }
@@ -149,8 +145,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         location.pathname === SW_LIST ||
         location.pathname === PROVIDER_LIST ||
         location.pathname === NGO_LIST ||
-        location.pathname === MILESTONE_LIST ||
-        location.pathname === MILESTONE_ADD ||
         // location.pathname === NEED_ADD ||
         // location.pathname === NEED_LIST ||
         // location.pathname === REPORTS ||

@@ -37,8 +37,13 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { formatDistanceToNowStrict, format } from 'date-fns';
-import { confirmCheckpoint, deleteCheckpoint, fetchCheckpoints } from '../../redux/actions/userAction';
+import {
+  confirmCheckpoint,
+  deleteCheckpoint,
+  fetchCheckpoints,
+} from '../../redux/actions/userAction';
 import { prepareUrl } from '../../utils/helpers';
+import { dateConvertor } from '../../utils/persianToEnglish';
 
 /* findLikelyArray helper (same as before) */
 function findLikelyArray(obj, depth = 0, maxDepth = 4, visited = new WeakSet()) {
@@ -345,6 +350,7 @@ export default function CheckpointsPage() {
                 const avatarVal = avatarFromUser(user, cp.userName || cp.userId || 'U');
                 const avatarIsUrl = !!(user && user.avatarUrl);
                 const createdAt = cp.createdAt ? new Date(cp.createdAt) : null;
+                const checkPointDate = cp.checkPointDate ? new Date(cp.checkPointDate) : null;
                 const idKey = cp.id || cp._id || `${cp.title}-${Math.random()}`;
                 const loadingState = loadingMap[cp.id] || {};
 
@@ -413,11 +419,21 @@ export default function CheckpointsPage() {
                             </Box>
                           </Stack>
 
-                          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ width: '100%', mt: 0.5 }}
+                          >
                             {createdAt
                               ? `${format(createdAt, 'PP')} · ${formatDistanceToNowStrict(
                                   createdAt,
                                 )} ago`
+                              : 'No date'}
+                          </Typography>
+                          <br />
+                          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+                            {checkPointDate
+                              ? dateConvertor(format(checkPointDate, 'PP'))
                               : 'No date'}
                           </Typography>
                         </Box>

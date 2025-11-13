@@ -582,7 +582,7 @@ const NeedConfirmTable = () => {
                     <Table size="small" aria-label="purchases">
                       <TableHead>
                         <TableRow>
-                          <TableCell align="center">Id</TableCell>
+                          <TableCell align="center">edit</TableCell>
                           <TableCell align="center">Icon</TableCell>
                           <TableCell align="center">Title</TableCell>
                           <TableCell align="center">Link</TableCell>
@@ -598,7 +598,19 @@ const NeedConfirmTable = () => {
                         {row.similarTitleNeeds.map((s) => (
                           <TableRow key={s.id}>
                             <TableCell component="th" scope="row">
-                              {s.id} - {s.child_id}
+                              <RouterLink
+                                style={{
+                                  textDecoration: 'none',
+                                  color: '#e6e5e8',
+                                  display: `flex`,
+                                  justifyContent: 'flex-start',
+                                }}
+                                to={`/need/edit/${s.child_id}/${s.id}`}
+                                target="_blank"
+                              >
+                                <EditIcon sx={{ width: 20, height: 20, ml: 1, mr: 1 }} />{' '}
+                                {t('button.update')}
+                              </RouterLink>
                             </TableCell>
                             <TableCell align="right">
                               <Avatar

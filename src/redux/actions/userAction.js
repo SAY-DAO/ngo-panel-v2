@@ -46,6 +46,9 @@ import {
   USER_CHECKPOINT_CONFIRM_REQUEST,
   USER_CHECKPOINT_CONFIRM_SUCCESS,
   USER_CHECKPOINT_CONFIRM_FAIL,
+  USER_BUILDERS_REQUEST,
+  USER_BUILDERS_SUCCESS,
+  USER_BUILDERS_FAIL,
 } from '../constants/userConstants';
 
 export const register = (userName, password, theKey, value, otp) => async (dispatch) => {
@@ -521,3 +524,50 @@ export const fetchUserChildren = (flaskUserId) => async (dispatch, getState) => 
     });
   }
 };
+
+export const fetchBuilders =
+  ({ q = '', sort = '' } = {}) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_BUILDERS_REQUEST });
+
+      const {
+        userLogin: { userInfo } = {}, // defensive
+      } = getState();
+
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: userInfo && userInfo.access_token,
+          flaskId: userInfo && userInfo.id,
+        },
+      };
+
+      const params = new URLSearchParams();
+      if (q) params.set('q', q);
+      if (sort) params.set('sort', sort);
+
+      const url = `/family/builders${params.toString() ? `?${params.toString()}` : ''}`;
+
+      const { data } = await daoApi.get(url, config);
+
+      // Dispatch raw payload to reducer — reducer will normalize common shapes
+      dispatch({
+        type: USER_BUILDERS_SUCCESS,
+        payload: data,
+      });
+    } catch (e) {
+      // mirror your error shape handling
+      const payload =
+        e.response && e.response.status
+          ? e.response
+          : (e.response && e.response.data && e.response.data.message) ||
+            e.message ||
+            'Unknown error';
+
+      dispatch({
+        type: USER_BUILDERS_FAIL,
+        payload,
+      });
+    }
+  };

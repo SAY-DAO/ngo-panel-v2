@@ -3,7 +3,6 @@ import InterestsIcon from '@mui/icons-material/Interests';
 import HouseIcon from '@mui/icons-material/House';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import HubIcon from '@mui/icons-material/Hub';
-import RouteIcon from '@mui/icons-material/Route';
 import React from 'react';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
 import StorefrontIcon from '@mui/icons-material/Storefront';
@@ -17,6 +16,7 @@ import EscalatorWarningIcon from '@mui/icons-material/EscalatorWarning';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import AirlineStopsIcon from '@mui/icons-material/AirlineStops';
+import BuildIcon from '@mui/icons-material/Build';
 import {
   PROFILE_VIEW,
   SW_LIST,
@@ -32,8 +32,6 @@ import {
   NEED_LIST,
   NEED_ADD,
   REPORTS,
-  MILESTONE_ADD,
-  MILESTONE_LIST,
   NEED_MIDJOURNEY,
   NEED_COMMENT,
   CONTRIBUTION,
@@ -42,6 +40,7 @@ import {
   CHILDREN_PRE_REGISTER_LIST,
   CAMPAIGN_MONTHLY,
   USER_SEARCH,
+  USER_BUILDERS,
   USER_CHECKPOINTS,
   NEED_CONFIRM,
   CAMPAIGN_NEWSLETTER,
@@ -138,27 +137,6 @@ export const Menuitems = [
         icon: <CheckCircleOutlineIcon />,
         href: NEED_CONFIRM,
         admin: true,
-      },
-    ],
-  },
-
-  {
-    title: 'sidebar.milestone.title',
-    icon: <RouteIcon />,
-    href: '/dao/milestone',
-    collapse: true,
-    admin: true,
-    collaborator: false,
-    children: [
-      {
-        title: 'sidebar.list',
-        icon: 'list',
-        href: MILESTONE_LIST,
-      },
-      {
-        title: 'sidebar.add',
-        icon: 'plus-square',
-        href: MILESTONE_ADD,
       },
     ],
   },
@@ -275,6 +253,12 @@ export const Menuitems = [
         title: 'sidebar.users.checkpoints',
         icon: <AirlineStopsIcon />,
         href: USER_CHECKPOINTS,
+        admin: true,
+      },
+      {
+        title: 'sidebar.users.builders',
+        icon: <BuildIcon />,
+        href: USER_BUILDERS,
         admin: true,
       },
       {

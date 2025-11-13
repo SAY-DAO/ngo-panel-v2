@@ -7,8 +7,6 @@ import {
   CHILDREN_LIST,
   DAO_HOME,
   HOME,
-  MILESTONE_ADD,
-  MILESTONE_LIST,
   NEED_ADD,
   NGO_ARRIVALS,
   NEED_EDIT,
@@ -39,6 +37,7 @@ import {
   CAMPAIGN_NEWSLETTER,
   UI_PERMISSIONS,
   PRE_REGISTER_NGO_LIST,
+  USER_BUILDERS,
 } from './RouteConstants';
 
 /* ***Layouts**** */
@@ -50,6 +49,7 @@ const Error = Loadable(lazy(() => import('../pages/authentication/Error')));
 const ChangePass = Loadable(lazy(() => import('../pages/authentication/ChangePass')));
 
 /* ****Pages***** */
+const UserBuilders = Loadable(lazy(() => import('../pages/users/UserBuilders')));
 const UserSearch = Loadable(lazy(() => import('../pages/users/UserSearch')));
 const UserCheckPoints = Loadable(lazy(() => import('../pages/users/UserCheckPoints')));
 const SocialWorkerList = Loadable(lazy(() => import('../pages/socialWorkers/SocialWorkerList')));
@@ -81,8 +81,6 @@ const NeedEdit = Loadable(lazy(() => import('../pages/needs/NeedEdit')));
 const NeedAdd = Loadable(lazy(() => import('../pages/needs/NeedAdd')));
 const ReportList = Loadable(lazy(() => import('../pages/reports/ReportStatus')));
 const DAO = Loadable(lazy(() => import('../pages/dao/Dao')));
-const DaoMileStoneAdd = Loadable(lazy(() => import('../pages/milestone/DaoMileStoneAdd')));
-const DaoMileStoneList = Loadable(lazy(() => import('../pages/milestone/DaoMileStoneList')));
 const DaoMidJourneyList = Loadable(lazy(() => import('../pages/midjourney/DaoMidJourneyList')));
 const DaoCommentList = Loadable(lazy(() => import('../pages/comment/DaoCommentList')));
 const DaoMonthlyCampaign = Loadable(lazy(() => import('../pages/campaign/DaoMonthlyCampaign')));
@@ -106,6 +104,7 @@ const Router = [
       { path: PROFILE_VIEW, exact: true, element: <SocialWorkerProfile /> },
       { path: MY_SIGNATURES, exact: true, element: <MySignatures /> },
       { path: CHANGE_PASS, exac: true, element: <ChangePass /> },
+      { path: USER_BUILDERS, exact: true, element: <UserBuilders /> },
       { path: USER_SEARCH, exact: true, element: <UserSearch /> },
       { path: USER_CHECKPOINTS, exact: true, element: <UserCheckPoints /> },
       { path: SW_LIST, exact: true, element: <SocialWorkerList /> },
@@ -130,8 +129,6 @@ const Router = [
       { path: NGO_ARRIVALS, exact: true, element: <NgoArrival /> },
       { path: REPORTS, exact: true, element: <ReportList /> },
       { path: DAO_HOME, exact: true, element: <DAO /> },
-      { path: MILESTONE_ADD, exact: true, element: <DaoMileStoneAdd /> },
-      { path: MILESTONE_LIST, exact: true, element: <DaoMileStoneList /> },
       { path: NEED_MIDJOURNEY, exact: true, element: <DaoMidJourneyList /> },
       { path: NEED_COMMENT, exact: true, element: <DaoCommentList /> },
       { path: CAMPAIGN_MONTHLY, exact: true, element: <DaoMonthlyCampaign /> },

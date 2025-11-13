@@ -43,6 +43,10 @@ import {
   USER_CHANGE_PASSWORD_SUCCESS,
   USER_CHANGE_PASSWORD_FAIL,
   USER_CHANGE_PASSWORD_RESET,
+  USER_BUILDERS_REQUEST,
+  USER_BUILDERS_SUCCESS,
+  USER_BUILDERS_FAIL,
+  USER_BUILDERS_RESET,
 } from '../constants/userConstants';
 
 export const userRegisterReducer = (state = { success: false }, action) => {
@@ -193,6 +197,14 @@ export const userBuilderStatusReducer = (state = {}, action) => {
     case USER_IS_BUILDER_FAIL:
       return { loading: false, error: action.payload };
     case USER_IS_BUILDER_RESET:
+      return {};
+    case USER_BUILDERS_REQUEST:
+      return { loading: true };
+    case USER_BUILDERS_SUCCESS:
+      return { loading: false, success: true, builders: action.payload };
+    case USER_BUILDERS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_BUILDERS_RESET:
       return {};
     default:
       return state;

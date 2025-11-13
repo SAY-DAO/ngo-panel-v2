@@ -364,7 +364,8 @@
     "users": {
       "title": "خانواده مجازی",
       "search": "جستجو",
-      "checkpoints": "نقطه ذخیره"
+      "checkpoints": "نقطه ذخیره",
+      "builders": "سازندگان"
     },
     "socialWorkers": {
       "title": "مددکارها",

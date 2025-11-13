@@ -59,10 +59,10 @@ export default function StatusDialog({ need, statusDialog, setStatusDialog, setS
       need.type === NeedTypeEnum.PRODUCT &&
       statusId === ProductStatusEnum.PURCHASED_PRODUCT &&
       Yup.string().required(t('error.report.retailerPaid')),
-    productDeliveredToNgo:
-      need.type === NeedTypeEnum.PRODUCT &&
-      statusId === ProductStatusEnum.DELIVERED_TO_NGO &&
-      Yup.date().required(t('error.report.deliveredToNgo')),
+    // productDeliveredToNgo:
+    //   need.type === NeedTypeEnum.PRODUCT &&
+    //   statusId === ProductStatusEnum.DELIVERED_TO_NGO &&
+    //   Yup.date().required(t('error.report.deliveredToNgo')),
     bankTrackId:
       need.type === NeedTypeEnum.SERVICE &&
       statusId === ServiceStatusEnum.MONEY_TO_NGO &&

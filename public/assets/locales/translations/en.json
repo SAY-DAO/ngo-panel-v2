@@ -318,7 +318,8 @@
     "users": {
       "title": "Virtual Families",
       "search": "Search",
-      "checkpoints": "Check Points"
+      "checkpoints": "Check Points",
+      "builders": "Builders"
     },
     "socialWorkers": {
       "title": "Social Workers",
