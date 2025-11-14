@@ -220,11 +220,13 @@ const TaskCard = ({
   }, [signature, pageDetails]);
 
   const handleCardClick = () => {
-    if (cardSelected === need.id) {
-      setCardSelected(0);
-    }
-    if (cardSelected !== need.id) {
-      setCardSelected(need.id);
+    if (need) {
+      if (cardSelected === need.id) {
+        setCardSelected(0);
+      }
+      if (cardSelected !== need.id) {
+        setCardSelected(need.id);
+      }
     }
   };
 
