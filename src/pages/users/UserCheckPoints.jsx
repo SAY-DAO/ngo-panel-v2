@@ -391,7 +391,7 @@ export default function CheckpointsPage() {
                               sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}
                             >
                               <Typography noWrap variant="subtitle1" sx={{ fontWeight: 800 }}>
-                                {cp.title || 'Untitled checkpoint'}
+                                {cp.title.fa || 'Untitled checkpoint'}
                               </Typography>
                               <Chip
                                 label={cp.type || '—'}
@@ -459,7 +459,7 @@ export default function CheckpointsPage() {
                               overflow: 'hidden',
                             }}
                           >
-                            {cp.description || 'No description.'}
+                            {cp.description.fa || 'No description.'}
                           </Typography>
                         </CardContent>
 
