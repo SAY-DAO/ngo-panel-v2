@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Typography, Box, Stack, CircularProgress, Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Chart from 'react-apexcharts';
@@ -17,16 +17,9 @@ const ContributionOverview = ({ swNewDetails }) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const [graphData, setGraphData] = useState();
-  const [values, setValues] = useState({
-    confirms: [],
-    creations: [],
-    deletions: [],
-  });
-
+  const [graphData, setGraphData] = useState([]);
   const myPage = useSelector((state) => state.myPage);
   const { pageDetails } = myPage;
-
   const contributionAnalytics = useSelector((state) => state.contributionAnalytics);
   const { contribution } = contributionAnalytics;
 
@@ -34,179 +27,197 @@ const ContributionOverview = ({ swNewDetails }) => {
     if (pageDetails) {
       dispatch(fetchUserContribution());
     }
-  }, [pageDetails]);
+  }, [pageDetails, dispatch]);
+
+  // Ensure we always lead with the current month (safe date)
+  useEffect(() => {
+    if (!contribution || !contribution.inMonth) {
+      setGraphData([]);
+      return;
+    }
+
+    const { inMonth } = contribution;
+    // parse keys as numbers 1..12
+    const allKeys = Object.keys(inMonth)
+      .map((k) => Number(k))
+      .filter((k) => !Number.isNaN(k));
+
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1; // 1..12
+
+    // Build a map for quick lookup
+    const map = {};
+    allKeys.forEach((k) => {
+      map[k] = {
+        created: Number(inMonth[k].created) || 0,
+        confirmed: Number(inMonth[k].confirmed) || 0,
+        deleted: Number(inMonth[k].deleted) || 0,
+      };
+    });
+
+    // Always include currentMonth as first entry (zeroed if missing)
+    const orderedMonths = [];
+    // include currentMonth
+    orderedMonths.push(currentMonth);
+    // then previous months in descending order (current-1, current-2, ...)
+    for (let i = 1; i < 6; i += 1) {
+      const m = ((currentMonth - i - 1 + 12) % 12) + 1; // ensures 1..12
+      orderedMonths.push(m);
+    }
+
+    // Build the list, keep months that have any data OR the current month (always)
+    const list = orderedMonths.map((m) => {
+      const entry = map[m] || { created: 0, confirmed: 0, deleted: 0 };
+      return {
+        [persianMonthStringFarsi(Number(m))]: {
+          created: entry.created,
+          confirmed: entry.confirmed,
+          deleted: entry.deleted,
+        },
+      };
+    });
+
+    // Remove trailing months that are all zero except ensure currentMonth (first) stays
+    const filtered = [...list];
+    // keep first (currentMonth) no matter what
+    for (let i = filtered.length - 1; i > 0; i -= 1) {
+      const key = Object.keys(filtered[i])[0];
+      const val = filtered[i][key];
+      if (val.created === 0 && val.confirmed === 0 && val.deleted === 0) {
+        filtered.pop();
+      } else {
+        break;
+      }
+    }
+
+    setGraphData(filtered);
+  }, [contribution]);
+
+  // derive arrays for series from graphData (memoized)
+  const { confirms, creations, deletions, categories } = useMemo(() => {
+    const c = [];
+    const cr = [];
+    const d = [];
+    const cats = [];
+
+    graphData.forEach((g) => {
+      const key = Object.keys(g)[0];
+      const val = g[key] || { confirmed: 0, created: 0, deleted: 0 };
+      cats.push(String(key));
+      c.push(Number(val.confirmed) || 0);
+      cr.push(Number(val.created) || 0);
+      d.push(Number(val.deleted) || 0);
+    });
+
+    return {
+      confirms: c,
+      creations: cr,
+      deletions: d,
+      categories: cats,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [graphData]);
+
+  // compute y-axis maximum robustly
+  const yMax = useMemo(() => {
+    const allValues = [...confirms, ...creations, ...deletions].map((v) => Number(v) || 0);
+    if (allValues.length === 0) return 5;
+    const max = Math.max(...allValues);
+    // add small headroom
+    return Math.max(5, Math.ceil(max * 1.1));
+  }, [confirms, creations, deletions]);
 
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.warning.main;
   const deletedColor = theme.palette.error.main;
 
-  const optionsContributionOverview = {
-    grid: {
-      show: true,
-      borderColor: 'transparent',
-      strokeDashArray: 2,
-      padding: {
-        left: 0,
-        right: 10,
-        bottom: -10,
-        top: -20,
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        barHeight: '100%',
-        columnWidth: '52%',
-        endingShape: 'rounded',
-        borderRadius: 1,
-      },
-    },
-
-    colors: [primary, secondary, deletedColor],
-    fill: {
-      type: 'solid',
-      opacity: 1,
-    },
-    chart: {
-      // height: 880,
-      toolbar: {
-        show: false,
-      },
-      foreColor: '#adb0bb',
-      fontFamily: "'DM Sans',sans-serif",
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    markers: {
-      size: 1,
-    },
-    legend: {
-      show: false,
-    },
-    xaxis: {
-      type: 'category',
-      categories: [
-        graphData && graphData[0] ? String(Object.keys(graphData[0])) : '0',
-        graphData && graphData[1] ? String(Object.keys(graphData[1])) : '0',
-        graphData && graphData[2] ? String(Object.keys(graphData[2])) : '0',
-        graphData && graphData[3] ? String(Object.keys(graphData[3])) : '0',
-        graphData && graphData[4] ? String(Object.keys(graphData[4])) : '0',
-        graphData && graphData[5] ? String(Object.keys(graphData[5])) : '0',
-      ],
-      labels: {
-        style: {
-          cssClass: 'grey--text lighten-2--text fill-color',
+  const optionsContributionOverview = useMemo(() => {
+    return {
+      grid: {
+        show: true,
+        borderColor: 'transparent',
+        strokeDashArray: 2,
+        padding: {
+          left: 0,
+          right: 10,
+          bottom: -10,
+          top: -20,
         },
       },
-    },
-    yaxis: {
-      show: true,
-      min: 0,
-      max:
-        graphData &&
-        graphData[0] &&
-        Math.max(
-          graphData && graphData[0] ? graphData[0][Object.keys(graphData[0])[0]].created : 0,
-          graphData && graphData[1] ? graphData[1][Object.keys(graphData[1])[0]].created : 0,
-          graphData && graphData[2] ? graphData[2][Object.keys(graphData[2])[0]].created : 0,
-          graphData && graphData[3] ? graphData[3][Object.keys(graphData[3])[0]].created : 0,
-          graphData && graphData[4] ? graphData[4][Object.keys(graphData[4])[0]].created : 0,
-          graphData && graphData[5] ? graphData[5][Object.keys(graphData[5])[0]].created : 0,
-          graphData && graphData[0] ? graphData[0][Object.keys(graphData[0])[0]].confirmed : 0,
-          graphData && graphData[1] ? graphData[1][Object.keys(graphData[1])[0]].confirmed : 0,
-          graphData && graphData[2] ? graphData[2][Object.keys(graphData[2])[0]].confirmed : 0,
-          graphData && graphData[3] ? graphData[3][Object.keys(graphData[3])[0]].confirmed : 0,
-          graphData && graphData[4] ? graphData[4][Object.keys(graphData[4])[0]].confirmed : 0,
-          graphData && graphData[5] ? graphData[5][Object.keys(graphData[5])[0]].confirmed : 0,
-        ),
-      tickAmount: 5,
-    },
-    stroke: {
-      show: true,
-      width: 3,
-      lineCap: 'butt',
-      colors: ['transparent'],
-    },
-    tooltip: {
-      theme: 'dark',
-    },
-  };
-  // set graph labels
-  useEffect(() => {
-    const myList = [];
-    if (contribution) {
-      const keys = Object.keys(contribution.inMonth).map((k) => Number(k));
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          barHeight: '100%',
+          columnWidth: '52%',
+          endingShape: 'rounded',
+          borderRadius: 1,
+        },
+      },
 
-      // 1. Compute today’s month (1–12)
-      const today = new Date();
-      const currentMonth = today.getMonth() + 1; // getMonth() is 0–11:contentReference[oaicite:2]{index=2}
+      colors: [primary, secondary, deletedColor],
+      fill: {
+        type: 'solid',
+        opacity: 1,
+      },
+      chart: {
+        toolbar: {
+          show: false,
+        },
+        foreColor: '#adb0bb',
+        fontFamily: "'DM Sans',sans-serif",
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      markers: {
+        size: 1,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        type: 'category',
+        categories: categories.length ? categories : ['0', '0', '0', '0', '0', '0'],
+        labels: {
+          style: {
+            cssClass: 'grey--text lighten-2--text fill-color',
+          },
+        },
+      },
+      yaxis: {
+        show: true,
+        min: 0,
+        max: yMax,
+        tickAmount: 5,
+      },
+      stroke: {
+        show: true,
+        width: 3,
+        lineCap: 'butt',
+        colors: ['transparent'],
+      },
+      tooltip: {
+        theme: 'dark',
+      },
+    };
+  }, [primary, secondary, deletedColor, categories, yMax]);
 
-      // 2. Sort in-place so that currentMonth comes first, then previous months
-      keys.sort((a, b) => {
-        const rankA = (currentMonth - a + 12) % 12;
-        const rankB = (currentMonth - b + 12) % 12;
-        return rankA - rankB; // ascending by rank
-      });
-
-      // those zero are later than 6 months
-      keys.forEach((key) => {
-        if (
-          contribution.inMonth[key].created > 0 ||
-          contribution.inMonth[key].confirmed > 0 ||
-          contribution.inMonth[key].deleted > 0
-        ) {
-          myList.push({
-            [persianMonthStringFarsi(Number(key))]: {
-              created: contribution.inMonth[key].created,
-              confirmed: contribution.inMonth[key].confirmed,
-              deleted: contribution.inMonth[key].deleted,
-            },
-          });
-        }
-      });
-
-      if (myList.length > 5) myList.reverse().shift();
-      setGraphData(myList);
-    }
-  }, [contribution]);
-
-  const confirms = [];
-  const creations = [];
-  const deletions = [];
-  useEffect(() => {
-    if (graphData) {
-      // eslint-disable-next-line no-unused-expressions
-      graphData &&
-        graphData.forEach((d) => {
-          if (d && d[Object.keys(d)[0]]) {
-            confirms.push(d[Object.keys(d)[0]].confirmed);
-            creations.push(d[Object.keys(d)[0]].created);
-            deletions.push(d[Object.keys(d)[0]].deleted);
-          }
-          setValues({
-            confirms,
-            creations,
-            deletions,
-          });
-        });
-    }
-  }, [graphData]);
-
-  const seriesContributionOverview = [
-    {
-      name: t('myPage.countJobs.titleConfirmed'),
-      data: [...values.confirms],
-    },
-    {
-      name: t('myPage.countJobs.titleCreated'),
-      data: [...values.creations],
-    },
-    {
-      name: t('myPage.countJobs.titleDeleted'),
-      data: [...values.deletions],
-    },
-  ];
+  const seriesContributionOverview = useMemo(() => {
+    return [
+      {
+        name: t('myPage.countJobs.titleConfirmed'),
+        data: [...confirms],
+      },
+      {
+        name: t('myPage.countJobs.titleCreated'),
+        data: [...creations],
+      },
+      {
+        name: t('myPage.countJobs.titleDeleted'),
+        data: [...deletions],
+      },
+    ];
+  }, [confirms, creations, deletions, t]);
 
   return (
     <DashboardCard
@@ -283,7 +294,7 @@ const ContributionOverview = ({ swNewDetails }) => {
       }
     >
       <Box>
-        {graphData && graphData[0] && (
+        {graphData && graphData.length > 0 && (
           <Chart
             options={optionsContributionOverview}
             series={seriesContributionOverview}
