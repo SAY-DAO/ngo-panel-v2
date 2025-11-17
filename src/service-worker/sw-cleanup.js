@@ -19,7 +19,7 @@ known prefixes. Runs once per client (localStorage guard).
 
   try {
     // Optionally narrow the cache deletion to known prefixes
-    const KNOWN_CACHE_PREFIXES = ['SAY-DAPP-'];
+    const KNOWN_CACHE_PREFIXES = ['SAY-PANEL-'];
 
     // Inspect current registrations and caches
     const regs = await navigator.serviceWorker.getRegistrations();
