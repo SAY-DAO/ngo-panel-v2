@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import { SidebarWidth } from '../../../resources/global/Theme-variable';
-import { Menuitems, CollaboratorItems } from './Menuitems';
+import { Menuitems, TraineeItems } from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
 import { FlaskUserTypesEnum } from '../../../utils/types';
 
@@ -50,12 +50,12 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   };
 
   useEffect(() => {
-    if (swInfo) {
+    if (swInfo && Menuitems) {
       if (trainees.includes(swInfo.id)) {
-        setMyMenuItems(CollaboratorItems);
+        setMyMenuItems(TraineeItems);
       } else if (
-        swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
-        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN
+        swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
+        swInfo.typeId === FlaskUserTypesEnum.SAY_SUPERVISOR
       ) {
         setMyMenuItems(Menuitems);
       } else {
@@ -64,7 +64,6 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
       }
     }
   }, [Menuitems, swInfo]);
-
 
   const SidebarContent = (
     <Scrollbar style={{ height: 'calc(100vh - 5px)' }}>

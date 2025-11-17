@@ -47,6 +47,9 @@ import { CHILDREN_PRE_REGISTER_LIST } from '../../routes/RouteConstants';
 import { PRE_REGISTER_CHILD_LIST_RESET } from '../../redux/constants/childrenConstants';
 
 const steps = ['child.steps.first', 'child.steps.second', 'child.steps.third'];
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 export default function ChildrenPreRegisterNgoStepper() {
   const dispatch = useDispatch();
@@ -789,6 +792,7 @@ export default function ChildrenPreRegisterNgoStepper() {
                           />
 
                           <Button
+                            disabled={trainees.includes(swInfo.id)}
                             name="upload-voice"
                             id="upload-voice"
                             color="primary"
@@ -828,7 +832,7 @@ export default function ChildrenPreRegisterNgoStepper() {
             )}
             {activeStep === steps.length - 1 && (
               <LoadingButton
-                disabled={!uploadVoice}
+                disabled={trainees.includes(swInfo.id) || !uploadVoice}
                 loading={loading}
                 type="submit"
                 onClick={handleSubmit(onSubmit)}

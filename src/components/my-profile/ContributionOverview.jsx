@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Typography, Box, Stack, CircularProgress, Tooltip } from '@mui/material';
+import { Typography, Box, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Chart from 'react-apexcharts';
 import FeatherIcon from 'feather-icons-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DashboardCard from '../base-card/DashboardCard';
-import { FlaskUserTypesEnum } from '../../utils/types';
 import { fetchUserContribution } from '../../redux/actions/analyticAction';
 import { persianMonthStringFarsi } from '../../utils/helpers';
 
-const ContributionOverview = ({ swNewDetails }) => {
+const ContributionOverview = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -304,52 +301,8 @@ const ContributionOverview = ({ swNewDetails }) => {
           />
         )}
       </Box>
-      <Tooltip
-        title={
-          <>
-            {swNewDetails.typeId === FlaskUserTypesEnum.ADMIN ||
-            swNewDetails.typeId === FlaskUserTypesEnum.SUPER_ADMIN ? (
-              <Typography>
-                <strong>{t('myPage.countJobs.titleConfirmed')}</strong>
-              </Typography>
-            ) : (
-              <Typography>
-                <strong>{t('myPage.countJobs.titleCreated')}</strong>
-              </Typography>
-            )}
-            {!contribution ? (
-              <CircularProgress size={15} />
-            ) : (
-              <Typography>
-                {t('myPage.countJobs.count.first')}: {contribution.summary.inTwoDays}
-              </Typography>
-            )}
-            {!contribution ? (
-              <CircularProgress size={15} />
-            ) : (
-              <Typography>
-                {t('myPage.countJobs.count.second')}: {contribution.summary.inWeek}
-              </Typography>
-            )}
-            {!contribution ? (
-              <CircularProgress size={15} />
-            ) : (
-              <Typography>
-                {t('myPage.countJobs.count.third')}: {contribution.summary.inThirtyDays}
-              </Typography>
-            )}
-          </>
-        }
-        arrow
-      >
-        <HelpOutlineIcon />
-      </Tooltip>
     </DashboardCard>
   );
 };
 
 export default ContributionOverview;
-
-ContributionOverview.propTypes = {
-  swNewDetails: PropTypes.object,
-};

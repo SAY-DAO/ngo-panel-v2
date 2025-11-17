@@ -145,14 +145,14 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     if (swInfo && trainees.includes(swInfo.id)) {
       if (
         location.pathname === DAO_HOME ||
-        location.pathname === SW_LIST ||
+        // location.pathname === SW_LIST ||
         location.pathname === PROVIDER_LIST ||
-        location.pathname === NGO_LIST ||
+        // location.pathname === NGO_LIST ||
         // location.pathname === NEED_ADD ||
         // location.pathname === NEED_LIST ||
         // location.pathname === REPORTS ||
-        location.pathname === MY_SIGNATURES ||
-        location.pathname === PROFILE_VIEW
+        location.pathname === MY_SIGNATURES 
+        // location.pathname === PROFILE_VIEW
       ) {
         navigate(CHILDREN_LIST);
       }

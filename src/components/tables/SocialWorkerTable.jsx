@@ -26,7 +26,7 @@ import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomCheckbox from '../forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../forms/custom-elements/CustomSwitch';
@@ -35,6 +35,11 @@ import PageContainer from '../container/PageContainer';
 import { SW_BY_ID_RESET } from '../../redux/constants/socialWorkerConstants';
 import { prepareUrl } from '../../utils/helpers';
 import GenericDialog from '../dialogs/GenericDialog';
+import { FlaskUserTypesEnum } from '../../utils/types';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -240,7 +245,8 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  // const dispatch = useDispatch();
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const [deleteDialogValues, setDeleteDialogValues] = useState();
   const [openDelete, setOpenDelete] = useState(false);
@@ -273,7 +279,12 @@ const EnhancedTableToolbar = (props) => {
       )}
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton onClick={handleDelete}>
+          <IconButton
+            disabled={
+              swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN || trainees.includes(swInfo.id)
+            }
+            onClick={handleDelete}
+          >
             <FeatherIcon icon="trash-2" width="18" />
           </IconButton>
         </Tooltip>

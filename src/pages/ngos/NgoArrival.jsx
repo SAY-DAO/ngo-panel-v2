@@ -18,11 +18,18 @@ import { daysDifference } from '../../utils/helpers';
 import TodayCard from '../../components/TodayCard';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
+
 export default function NgoArrival() {
   const dispatch = useDispatch();
 
   const [edit, setEdit] = useState();
   const [arrivalCode, setArrivalCode] = useState();
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const ngoArrivals = useSelector((state) => state.ngoArrivals);
   const { arrivals, updatedCode } = ngoArrivals;
@@ -95,7 +102,10 @@ export default function NgoArrival() {
                 </TableCell>
                 <TableCell align="left">
                   {edit !== a.deliveryCode ? (
-                    <IconButton onClick={() => setEdit(a.deliveryCode)}>
+                    <IconButton
+                      disabled={trainees.includes(swInfo.id)}
+                      onClick={() => setEdit(a.deliveryCode)}
+                    >
                       <ModeEditOutlineIcon />
                     </IconButton>
                   ) : (

@@ -521,8 +521,7 @@ const TaskCard = ({
                           </MenuItem>
                         )}
                         {!need.ipfs &&
-                          ((!trainees.includes(swInfo.id) &&
-                            swInfo.typeId === FlaskUserTypesEnum.ADMIN) ||
+                          (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
                             swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
                             swInfo.id === need.created_by_id) && (
                             <MenuItem>

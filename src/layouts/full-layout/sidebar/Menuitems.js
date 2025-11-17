@@ -53,14 +53,14 @@ export const Menuitems = [
     subheader: 'sidebar.daoHeader',
     href: 'DAO',
     admin: true,
-    collaborator: false,
+    trainee: false,
   },
   {
     title: 'sidebar.dashboard',
     icon: <HubIcon />,
     href: DAO_HOME,
     admin: true,
-    collaborator: false,
+    trainee: false,
   },
   {
     navlabel: true,
@@ -68,21 +68,21 @@ export const Menuitems = [
     icon: 'mdi mdi-dots-horizontal',
     href: 'Dashboard',
     admin: false,
-    collaborator: true,
+    trainee: true,
   },
   {
     title: 'sidebar.myPage',
     icon: 'user',
     href: PROFILE_VIEW,
     admin: false,
-    collaborator: false,
+    trainee: true,
   },
   {
     title: 'sidebar.signatures',
     icon: <HandshakeOutlinedIcon />,
     href: MY_SIGNATURES,
     admin: false,
-    collaborator: false,
+    trainee: false,
   },
   {
     title: 'sidebar.children.title',
@@ -90,7 +90,7 @@ export const Menuitems = [
     href: '/children',
     collapse: true,
     admin: false,
-    collaborator: true,
+    trainee: true,
     children: [
       {
         title: 'sidebar.listConfirmedChildren',
@@ -120,7 +120,7 @@ export const Menuitems = [
     href: '/need',
     admin: false,
     collapse: true,
-    collaborator: true,
+    trainee: true,
     children: [
       {
         title: 'sidebar.list',
@@ -146,7 +146,7 @@ export const Menuitems = [
     href: REPORTS,
     collapse: true,
     admin: false,
-    collaborator: false,
+    trainee: false,
   },
   // Admin
   {
@@ -155,7 +155,7 @@ export const Menuitems = [
     icon: 'mdi mdi-dots-horizontal',
     href: 'Reports',
     admin: true,
-    collaborator: false,
+    trainee: false,
   },
   {
     title: 'sidebar.ngos.title',
@@ -163,19 +163,20 @@ export const Menuitems = [
     href: '/ngo',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: true,
     children: [
       {
         title: 'sidebar.ngos.preList',
         icon: 'list',
         href: PRE_REGISTER_NGO_LIST,
         admin: true,
+    trainee: true,
       },
       {
         title: 'sidebar.ngos.list',
         icon: 'list',
         href: NGO_LIST,
-        admin: true,
+        // admin: true,
       },
       {
         title: 'sidebar.add',
@@ -187,7 +188,7 @@ export const Menuitems = [
         title: 'sidebar.ngos.arrivals',
         icon: <DeliveryDiningIcon />,
         href: NGO_ARRIVALS,
-        admin: true,
+        // admin: true,
       },
     ],
   },
@@ -197,7 +198,7 @@ export const Menuitems = [
     href: '/provider',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: false,
     children: [
       {
         title: 'sidebar.list',
@@ -219,13 +220,13 @@ export const Menuitems = [
     href: '/sw',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: true,
     children: [
       {
         title: 'sidebar.list',
         icon: 'list',
         href: SW_LIST,
-        admin: true,
+        // admin: true,
       },
       {
         title: 'sidebar.add',
@@ -247,7 +248,7 @@ export const Menuitems = [
     href: '/users',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: false,
     children: [
       {
         title: 'sidebar.users.checkpoints',
@@ -275,7 +276,7 @@ export const Menuitems = [
     href: '/admin/midjourney',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: false,
     children: [
       {
         title: 'sidebar.list',
@@ -291,7 +292,7 @@ export const Menuitems = [
     href: '/admin/comment',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: false,
     children: [
       {
         title: 'sidebar.list',
@@ -307,7 +308,7 @@ export const Menuitems = [
     href: '/admin/contribution',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: false,
     children: [
       {
         title: 'sidebar.list',
@@ -323,7 +324,7 @@ export const Menuitems = [
     href: '/admin/campaign',
     collapse: true,
     admin: true,
-    collaborator: false,
+    trainee: false,
     children: [
       {
         title: 'sidebar.campaign.type.report',
@@ -341,4 +342,4 @@ export const Menuitems = [
   },
 ];
 
-export const CollaboratorItems = Menuitems.filter((item) => item.collaborator);
+export const TraineeItems = Menuitems.filter((item) => item.trainee);

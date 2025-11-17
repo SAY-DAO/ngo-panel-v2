@@ -51,12 +51,19 @@ import {
 } from '../../redux/constants/socialWorkerConstants';
 import { SW_LIST } from '../../routes/RouteConstants';
 
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
+
 const SocialWorkerEdit = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const { id } = useParams();
   const { t } = useTranslation();
+
+  const swDetails = useSelector((state) => state.swDetails);
+  const { swInfo } = swDetails;
 
   const BCrumb = [
     {
@@ -441,7 +448,7 @@ const SocialWorkerEdit = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        disabled={userInfo.id === result.id}
+                        disabled={userInfo.id === result.id || trainees.includes(swInfo.id)}
                         id="isActive"
                         variant="outlined"
                         defaultValue={result.isActive}
@@ -474,7 +481,7 @@ const SocialWorkerEdit = () => {
                   <FormControlLabel
                     control={
                       <Switch
-                        disabled={userInfo.id === result.id}
+                        disabled={userInfo.id === result.id || trainees.includes(swInfo.id)}
                         id="isCoordinator"
                         variant="outlined"
                         defaultValue={result.isCoordinator}
@@ -833,6 +840,7 @@ const SocialWorkerEdit = () => {
                       </Grid>
                       <Grid item sx={{ m: 'auto' }}>
                         <LoadingButton
+                          disabled={trainees.includes(swInfo.id)}
                           loading={loadingSwUpdate}
                           color="primary"
                           type="submit"
