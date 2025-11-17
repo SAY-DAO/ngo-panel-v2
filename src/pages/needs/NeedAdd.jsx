@@ -64,9 +64,12 @@ import {
 } from '../../utils/types';
 import ProviderDialog from '../../components/dialogs/ProviderDialog';
 import { UNCONFIRMED_NEEDS_THRESHOLD } from '../../utils/configs';
-import collaborators from '../../utils/temp';
 import crawlTheLink from '../../redux/actions/crawlAction';
 import { CRAWL_LINK_RESET } from '../../redux/constants/crawlConstant';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 const NeedAdd = () => {
   const dispatch = useDispatch();
@@ -1077,9 +1080,7 @@ const NeedAdd = () => {
                                   color="primary"
                                   type="submit"
                                   disabled={
-                                    loadingAddNeed ||
-                                    successAddNeed ||
-                                    collaborators.includes(swInfo.id)
+                                    loadingAddNeed || successAddNeed || trainees.includes(swInfo.id)
                                   }
                                   onClick={handleSubmit(onSubmit)}
                                   variant="contained"

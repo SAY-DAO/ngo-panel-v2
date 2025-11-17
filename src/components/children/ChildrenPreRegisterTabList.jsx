@@ -14,11 +14,13 @@ import PreRegisterCard from './PreRegisterCard';
 import { FlaskUserTypesEnum } from '../../utils/types';
 import ChildPreRegisterUpdateDialog from '../dialogs/ChildPreRegisterUpdateDialog ';
 import { CHECK_SIMILAR_NAMES_RESET } from '../../redux/constants/childrenConstants';
-import collaborators from '../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
   const dispatch = useDispatch();
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [dialogValues, setDialogValues] = useState();
@@ -68,7 +70,7 @@ export default function ChildrenPreRegisterTabList({ isConfirmed, tabNumber }) {
         swInfo &&
         (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
           swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
-          <LoadingButton onClick={handleDialog} disabled={collaborators.includes(swInfo.id)}>
+          <LoadingButton onClick={handleDialog} disabled={trainees.includes(swInfo.id)}>
             <AddIcon />
           </LoadingButton>
         )}

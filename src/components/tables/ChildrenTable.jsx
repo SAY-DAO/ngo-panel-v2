@@ -39,7 +39,10 @@ import { ChildExistenceEnum, FlaskUserTypesEnum } from '../../utils/types';
 import { getAge, prepareUrl } from '../../utils/helpers';
 import SelectCheckBox from '../children/SelectCheckBox';
 import { fetchChildList } from '../../redux/actions/childrenAction';
-import collaborators from '../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -456,7 +459,7 @@ const ChildrenTable = () => {
       currentStatus,
     });
   };
-  
+
   return (
     <PageContainer>
       {/* breadcrumb */}
@@ -605,7 +608,7 @@ const ChildrenTable = () => {
                                   disabled={
                                     (swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
                                       swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN) ||
-                                    collaborators.includes(swInfo.id)
+                                    trainees.includes(swInfo.id)
                                   }
                                   variant="outlined"
                                   onClick={() => handleStatusDialog(row.id, row.existence_status)}

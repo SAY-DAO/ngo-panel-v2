@@ -40,7 +40,10 @@ import Message from '../../components/Message';
 import { apiDao } from '../../env';
 import { getAge } from '../../utils/helpers';
 import { NeedTypeEnum } from '../../utils/types';
-import collaborators from '../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 const NeedEdit = () => {
   const dispatch = useDispatch();
@@ -663,7 +666,7 @@ const NeedEdit = () => {
                       </Card>
                       <LoadingButton
                         loading={loadingUpdateNeed}
-                        disabled={successUpdateNeed || collaborators.includes(swInfo.id)}
+                        disabled={successUpdateNeed || trainees.includes(swInfo.id)}
                         color="primary"
                         type="submit"
                         onClick={handleSubmit(onSubmit)}

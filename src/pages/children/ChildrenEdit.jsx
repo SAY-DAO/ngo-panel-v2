@@ -45,7 +45,10 @@ import UploadImage from '../../components/UploadImage';
 import VoiceBar from '../../components/VoiceBar';
 import { EducationEnum, HousingStatusEnum, SchoolTypeEnum, SexEnum } from '../../utils/types';
 import { getAge, truncateString } from '../../utils/helpers';
-import collaborators from '../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 const ChildEdit = () => {
   const dispatch = useDispatch();
@@ -300,7 +303,7 @@ const ChildEdit = () => {
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                      !collaborators.includes(swInfo.id) && (
+                      !trainees.includes(swInfo.id) && (
                         <IconButton
                           onClick={handleRemoveAvatar}
                           color="secondary"
@@ -344,7 +347,7 @@ const ChildEdit = () => {
                             style={{ display: 'none' }}
                             onChange={onAvatarChange}
                           />
-                          {!collaborators.includes(swInfo.id) && (
+                          {!trainees.includes(swInfo.id) && (
                             <IconButton
                               name="upload-image-avatar"
                               id="upload-image-avatar"
@@ -366,7 +369,7 @@ const ChildEdit = () => {
                               />
                             </IconButton>
                           )}
-                          {!collaborators.includes(swInfo.id) && (
+                          {!trainees.includes(swInfo.id) && (
                             <IconButton
                               name="upload-image-avatar"
                               id="upload-image-avatar"
@@ -405,7 +408,7 @@ const ChildEdit = () => {
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                      !collaborators.includes(swInfo.id) && (
+                      !trainees.includes(swInfo.id) && (
                         <IconButton
                           onClick={handleRemoveAvatar}
                           color="secondary"
@@ -449,7 +452,7 @@ const ChildEdit = () => {
                             style={{ display: 'none' }}
                             onChange={onSleptAvatarChange}
                           />
-                          {!collaborators.includes(swInfo.id) && (
+                          {!trainees.includes(swInfo.id) && (
                             <IconButton
                               name="upload-image-slept-avatar"
                               id="upload-image-slept-avatar"
@@ -503,7 +506,7 @@ const ChildEdit = () => {
                           color="primary"
                           component="div"
                           variant="outlined"
-                          disabled={collaborators.includes(swInfo.id)}
+                          disabled={trainees.includes(swInfo.id)}
                           sx={{
                             bottom: '0px',
                             right: '0px',
@@ -974,7 +977,7 @@ const ChildEdit = () => {
                   <LoadingButton
                     loading={loadingUpdate}
                     color="primary"
-                    // disabled={collaborators.includes(swInfo.id)}
+                    // disabled={trainees.includes(swInfo.id)}
                     type="submit"
                     onClick={handleSubmit(onSubmit)}
                     variant="contained"

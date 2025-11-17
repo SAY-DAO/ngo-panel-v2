@@ -50,7 +50,10 @@ import {
 import { dateConvertor } from '../../utils/persianToEnglish';
 import { colorChoices, Colors, PaymentStatusEnum } from '../../utils/types';
 import GenericDialog from '../dialogs/GenericDialog';
-import collaborators from '../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 const NeedConfirmTable = () => {
   const dispatch = useDispatch();
@@ -172,7 +175,7 @@ const NeedConfirmTable = () => {
                       />
                     ) : (
                       <IconButton
-                        disabled={checked || collaborators.includes(swInfo.id)}
+                        disabled={checked || trainees.includes(swInfo.id)}
                         onClick={() => handleManualConfirm(row.need.flaskId)}
                         sx={{ p: 0 }}
                       >
@@ -180,7 +183,7 @@ const NeedConfirmTable = () => {
                           color="success"
                           sx={{
                             display: checked && 'none',
-                            color: collaborators.includes(swInfo.id) && 'gray',
+                            color: trainees.includes(swInfo.id) && 'gray',
                           }}
                         />
                       </IconButton>
@@ -253,7 +256,7 @@ const NeedConfirmTable = () => {
                 </LoadingButton>{' '}
               </MenuItem>
               <MenuItem dense onClick={handleClose}>
-                {!collaborators.includes(swInfo.id) &&
+                {!trainees.includes(swInfo.id) &&
                   row.need.status === PaymentStatusEnum.NOT_PAID &&
                   !row.need.isConfirmed && (
                     <LoadingButton
@@ -782,7 +785,7 @@ const NeedConfirmTable = () => {
               </div>
               <Box>
                 <LoadingButton
-                  disabled={confirmCandidate < 1 || collaborators.includes(swInfo.id)}
+                  disabled={confirmCandidate < 1 || trainees.includes(swInfo.id)}
                   loading={loadingMassConfirm}
                   variant="outlined"
                   onClick={handleMassConfirm}

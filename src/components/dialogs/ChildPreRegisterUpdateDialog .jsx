@@ -35,9 +35,12 @@ import {
 } from '../../utils/types';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
 import VoiceBar from '../VoiceBar';
-import collaborators from '../../utils/temp';
 import UploadImage from '../UploadImage';
 import { apiDao } from '../../env';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 export default function ChildPreRegisterUpdateDialog({
   open,
@@ -196,7 +199,7 @@ export default function ChildPreRegisterUpdateDialog({
                               id="upload-image-avatar"
                               color="primary"
                               component="div"
-                              disabled={!swInfo || collaborators.includes(swInfo.id)}
+                              disabled={!swInfo || trainees.includes(swInfo.id)}
                               sx={{
                                 position: 'absolute',
                                 bottom: '0px',
@@ -205,9 +208,7 @@ export default function ChildPreRegisterUpdateDialog({
                             >
                               <AddCircleOutlineIcon
                                 color={
-                                  !swInfo || collaborators.includes(swInfo.id)
-                                    ? 'disabled'
-                                    : 'primary'
+                                  !swInfo || trainees.includes(swInfo.id) ? 'disabled' : 'primary'
                                 }
                                 fontSize="small"
                                 sx={{
@@ -260,7 +261,7 @@ export default function ChildPreRegisterUpdateDialog({
                               name="upload-image-slept-avatar"
                               id="upload-image-slept-avatar"
                               color="primary"
-                              disabled={!swInfo || collaborators.includes(swInfo.id)}
+                              disabled={!swInfo || trainees.includes(swInfo.id)}
                               component="div"
                               sx={{
                                 position: 'absolute',
@@ -270,9 +271,7 @@ export default function ChildPreRegisterUpdateDialog({
                             >
                               <AddCircleOutlineIcon
                                 color={
-                                  !swInfo || collaborators.includes(swInfo.id)
-                                    ? 'disabled'
-                                    : 'primary'
+                                  !swInfo || trainees.includes(swInfo.id) ? 'disabled' : 'primary'
                                 }
                                 fontSize="small"
                                 sx={{
@@ -328,7 +327,7 @@ export default function ChildPreRegisterUpdateDialog({
                       error={!!errors.lastName_translations_fa}
                     />
                   </Grid>
-                  {!collaborators.includes(swInfo.id) &&
+                  {!trainees.includes(swInfo.id) &&
                     (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
                       swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
                       <Card sx={{ p: 3, m: 0, mt: 1, textAlign: 'center' }}>
@@ -352,7 +351,7 @@ export default function ChildPreRegisterUpdateDialog({
                                 component="div"
                                 variant="outlined"
                                 disabled={
-                                  collaborators.includes(swInfo.id) ||
+                                  trainees.includes(swInfo.id) ||
                                   (swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
                                     swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN)
                                 }

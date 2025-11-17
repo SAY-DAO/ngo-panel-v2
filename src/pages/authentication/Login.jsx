@@ -23,9 +23,12 @@ import LogoIcon from '../../layouts/full-layout/logo/LogoIcon';
 import { login } from '../../redux/actions/userAction';
 import Message from '../../components/Message';
 import { fetchSocialWorkerDetails } from '../../redux/actions/socialWorkerAction';
-import collaborators from '../../utils/temp';
 import { CHILDREN_LIST, HOME } from '../../routes/RouteConstants';
 import NgoRegisterDialog from '../../components/dialogs/NgoRegisterDialog';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -69,10 +72,10 @@ const Login = () => {
   const { swInfo, loading: loadingSwDetails, success: successSwDetails } = swDetails;
 
   const redirect =
-    swInfo && location.search && !collaborators.includes(swInfo.id)
+    swInfo && location.search && !trainees.includes(swInfo.id)
       ? // eslint-disable-next-line no-restricted-globals
         `/${location.search.split('redirect=')[1]}`
-      : swInfo && !location.search && !collaborators.includes(swInfo.id)
+      : swInfo && !location.search && !trainees.includes(swInfo.id)
       ? HOME
       : CHILDREN_LIST;
 

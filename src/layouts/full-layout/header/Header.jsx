@@ -69,7 +69,10 @@ import { WebsocketContext } from '../../../contexts/WebsocketContext';
 import { socketRefreshNotifications } from '../../../utils/socketHelpers';
 import { NOTIFICATION_TIMER } from '../../../utils/configs';
 import { WALLET_INFORMATION_RESET } from '../../../redux/constants/daoConstants';
-import collaborators from '../../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const dispatch = useDispatch();
@@ -124,7 +127,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     // do not let non admin user to navigate to the following pages
     if (
       swInfo &&
-      !collaborators.includes(swInfo.id) &&
+      !trainees.includes(swInfo.id) &&
       swInfo.typeId !== FlaskUserTypesEnum.ADMIN &&
       swInfo.typeId !== FlaskUserTypesEnum.NGO_SUPERVISOR &&
       swInfo.typeId !== FlaskUserTypesEnum.SUPER_ADMIN
@@ -138,8 +141,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         navigate(PROFILE_VIEW);
       }
     }
-    // do not let collaborators to navigate to the following pages
-    if (swInfo && collaborators.includes(swInfo.id)) {
+    // do not let trainees to navigate to the following pages
+    if (swInfo && trainees.includes(swInfo.id)) {
       if (
         location.pathname === DAO_HOME ||
         location.pathname === SW_LIST ||

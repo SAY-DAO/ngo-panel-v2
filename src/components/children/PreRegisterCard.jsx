@@ -27,7 +27,10 @@ import {
 } from '../../utils/types';
 import VoiceBar from '../VoiceBar';
 import { getAge, prepareUrl } from '../../utils/helpers';
-import collaborators from '../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 function PreRegisterCard({
   preRegistered,
@@ -112,14 +115,13 @@ function PreRegisterCard({
             (swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
               swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN) && (
               <div>
-                {
-                  preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED && (
-                    <MenuItem onClick={() => handleApprove(preRegistered)}>
-                      {t('button.confirm')}
-                    </MenuItem>
-                  )}
+                {preRegistered.status === PreRegisterStatusEnum.PRE_REGISTERED && (
+                  <MenuItem onClick={() => handleApprove(preRegistered)}>
+                    {t('button.confirm')}
+                  </MenuItem>
+                )}
 
-                {!collaborators.includes(swInfo.id) && (
+                {!trainees.includes(swInfo.id) && (
                   <MenuItem onClick={() => handleDelete(preRegistered.id)}>
                     {t('button.delete')}
                   </MenuItem>

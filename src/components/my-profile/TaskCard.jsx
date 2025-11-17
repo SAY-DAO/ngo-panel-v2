@@ -66,7 +66,10 @@ import signatureIcon from '../../resources/images/signature.svg';
 import GenericDialog from '../dialogs/GenericDialog';
 import { NEST_GRACE_PERIOD } from '../../utils/configs';
 import { deleteNeed } from '../../redux/actions/needsAction';
-import collaborators from '../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 function CircularProgressWithLabel(props) {
   const { t } = useTranslation();
@@ -518,7 +521,7 @@ const TaskCard = ({
                           </MenuItem>
                         )}
                         {!need.ipfs &&
-                          ((!collaborators.includes(swInfo.id) &&
+                          ((!trainees.includes(swInfo.id) &&
                             swInfo.typeId === FlaskUserTypesEnum.ADMIN) ||
                             swInfo.typeId === FlaskUserTypesEnum.SUPER_ADMIN ||
                             swInfo.id === need.created_by_id) && (
@@ -538,7 +541,7 @@ const TaskCard = ({
                             {t('myPage.taskCard.menu.readTicket')}
                           </MenuItem>
                         ) : (
-                          !collaborators.includes(swInfo.id) &&
+                          !trainees.includes(swInfo.id) &&
                           !need.ipfs && (
                             <MenuItem onClick={() => handleOpenConfirm()}>
                               <FlagOutlinedIcon sx={{ ml: 1, mr: 1 }} />
@@ -546,7 +549,7 @@ const TaskCard = ({
                             </MenuItem>
                           )
                         )}
-                        {!collaborators.includes(swInfo.id) &&
+                        {!trainees.includes(swInfo.id) &&
                           swInfo.id === need.created_by_id &&
                           need.type === NeedTypeEnum.PRODUCT &&
                           need.status === ProductStatusEnum.PURCHASED_PRODUCT &&
@@ -561,7 +564,7 @@ const TaskCard = ({
                               {t('myPage.taskCard.menu.deliveryTicket')}
                             </MenuItem>
                           )}
-                        {!collaborators.includes(swInfo.id) &&
+                        {!trainees.includes(swInfo.id) &&
                           swInfo.id === need.created_by_id &&
                           need.type === NeedTypeEnum.SERVICE &&
                           need.status === ServiceStatusEnum.MONEY_TO_NGO &&
@@ -1011,7 +1014,7 @@ const TaskCard = ({
                       <LoadingButton
                         loading={loadingConfirm || loadingDuplicates}
                         disabled={
-                          collaborators.includes(swInfo.id) ||
+                          trainees.includes(swInfo.id) ||
                           swInfo.typeId === FlaskUserTypesEnum.SOCIAL_WORKER ||
                           swInfo.typeId === FlaskUserTypesEnum.NGO_SUPERVISOR
                         }
@@ -1028,7 +1031,7 @@ const TaskCard = ({
                         fullWidth
                         variant="customDelete"
                         onClick={() => handleDeleteDialog(need.id)}
-                        disabled={collaborators.includes(swInfo.id)}
+                        disabled={trainees.includes(swInfo.id)}
                       >
                         {t('button.delete')}
                       </LoadingButton>

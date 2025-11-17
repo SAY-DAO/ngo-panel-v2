@@ -20,7 +20,10 @@ import { SidebarWidth } from '../../../resources/global/Theme-variable';
 import { Menuitems, CollaboratorItems } from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
 import { FlaskUserTypesEnum } from '../../../utils/types';
-import collaborators from '../../../utils/temp';
+
+const trainees = process.env.REACT_APP_TRAINEE_IDS
+  ? process.env.REACT_APP_TRAINEE_IDS.split(',').map(Number)
+  : [];
 
 const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   const { t } = useTranslation();
@@ -48,7 +51,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
 
   useEffect(() => {
     if (swInfo) {
-      if (collaborators.includes(swInfo.id)) {
+      if (trainees.includes(swInfo.id)) {
         setMyMenuItems(CollaboratorItems);
       } else if (
         swInfo.typeId === FlaskUserTypesEnum.ADMIN ||
@@ -62,7 +65,6 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
     }
   }, [Menuitems, swInfo]);
 
-  console.log(myMenuItems);
 
   const SidebarContent = (
     <Scrollbar style={{ height: 'calc(100vh - 5px)' }}>
