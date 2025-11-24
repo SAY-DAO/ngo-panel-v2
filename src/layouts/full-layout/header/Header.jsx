@@ -425,14 +425,14 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="search" width="20" height="20" />
         </IconButton>
-        {/* {lgUp && (
+        {lgUp && (
           <Alert severity="warning">
             <Typography>
               <strong>{t('alert.title')}</strong>
             </Typography>
-            <Typography variant="body2">{t('alert.body7')}</Typography>
+            <Typography variant="body2">{t('alert.body8')}</Typography>
           </Alert>
-        )} */}
+        )}
         <Drawer
           anchor="top"
           open={showSearchDrawer}
