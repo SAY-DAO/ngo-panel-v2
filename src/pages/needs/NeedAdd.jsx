@@ -18,6 +18,7 @@ import {
   InputAdornment,
   OutlinedInput,
   FormControl,
+  LinearProgress,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -145,7 +146,7 @@ const NeedAdd = () => {
   const { unconfirmed } = needUnConfirmCount;
 
   const crawls = useSelector((state) => state.crawls);
-  const { crawlResult } = crawls;
+  const { crawlResult, loading: loadingCrawler, error: errorCrawler } = crawls;
 
   const isLoadingPreNeed = loadingNeedEx && openPreNeed && optionsPreNeed.length === 0;
 
@@ -336,7 +337,7 @@ const NeedAdd = () => {
   }, [successAddProvider]);
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(data, null, 2));
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     console.log(isUrgentChecked);
@@ -780,6 +781,7 @@ const NeedAdd = () => {
                                   </FormControl>
                                 </Stack>
                               </Grid>
+                              {/* Provider type */}
                               <Grid item lg={4} xs={12}>
                                 <CustomFormLabel variant="body2" htmlFor="type">
                                   {t('need.type_name')}
@@ -797,21 +799,29 @@ const NeedAdd = () => {
                                   {theProvider ? theProvider.typeName : t('need.providerSelect')}
                                 </Typography>
                               </Grid>
+                              {/* link */}
                               {theProvider && theProvider.type === NeedTypeEnum.PRODUCT && (
-                                <Grid item xs={12}>
-                                  <CustomFormLabel htmlFor="link">{t('need.link')}</CustomFormLabel>
-                                  <TextField
-                                    id="link"
-                                    variant="outlined"
-                                    fullWidth
-                                    size="small"
-                                    placeholder={t('need.placeholder.link')}
-                                    control={control}
-                                    {...register('link', { required: true })}
-                                    error={!!errors.link}
-                                    onChange={onLinkChange}
-                                  />
-                                </Grid>
+                                <>
+                                  <Grid item xs={12}>
+                                    <CustomFormLabel htmlFor="link">
+                                      {t('need.link')}
+                                    </CustomFormLabel>
+                                    <TextField
+                                      id="link"
+                                      variant="outlined"
+                                      fullWidth
+                                      size="small"
+                                      placeholder={t('need.placeholder.link')}
+                                      control={control}
+                                      {...register('link', { required: true })}
+                                      error={!!errors.link}
+                                      onChange={onLinkChange}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={12} sx={{ pt: '0px !important' }}>
+                                    {loadingCrawler && <LinearProgress />}
+                                  </Grid>
+                                </>
                               )}
 
                               {/* <Grid item xs={6}>
@@ -1090,6 +1100,19 @@ const NeedAdd = () => {
                                 </LoadingButton>
                               </>
                             )}
+                          <Grid>
+                            {(successAddNeed || errorAddNeed || errorCrawler) && (
+                              <Message
+                                severity={successAddNeed ? 'success' : 'error'}
+                                variant="filled"
+                                input="needAdd"
+                                backError={errorAddNeed || errorCrawler}
+                                sx={{ width: '100%' }}
+                              >
+                                {successAddNeed && t('need.updatedNeed')}
+                              </Message>
+                            )}
+                          </Grid>
                         </>
                       )}
 
@@ -1177,19 +1200,6 @@ const NeedAdd = () => {
               </Dialog>
               {/* Need Provider */}
               <ProviderDialog open={openProvider} setOpen={setOpenProvider} />
-              <Grid>
-                {(successAddNeed || errorAddNeed) && (
-                  <Message
-                    severity={successAddNeed ? 'success' : 'error'}
-                    variant="filled"
-                    input="needAdd"
-                    backError={errorAddNeed}
-                    sx={{ width: '100%' }}
-                  >
-                    {successAddNeed && t('need.updatedNeed')}
-                  </Message>
-                )}
-              </Grid>
             </>
           ) : (
             unconfirmed > UNCONFIRMED_NEEDS_THRESHOLD && (

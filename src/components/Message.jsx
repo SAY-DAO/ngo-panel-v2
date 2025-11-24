@@ -17,6 +17,7 @@ export default function Message({
   children,
   severity,
 }) {
+  console.log('backError');
   console.log(backError);
 
   const { t } = useTranslation();
@@ -29,7 +30,10 @@ export default function Message({
         return t(contents.sthIsWrong);
       }
     }
-    if (backError) {
+    if (backError.statusCode) {
+      return t(backError.message);
+    }
+    if (backError && backError.status) {
       if (backError.status === 600) {
         return t(contents.invalidNeed);
       }

@@ -12,7 +12,7 @@ const crawlReducer = (state = {}, action) => {
     case CRAWL_LINK_SUCCESS:
       return { loading: false, success: true, crawlResult: action.payload };
     case CRAWL_LINK_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, error: action.payload.data };
     case CRAWL_LINK_RESET:
       return {};
     default:
