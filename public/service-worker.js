@@ -8,8 +8,8 @@
    ================================================================ */
 
 // service-worker.js
-const STATIC_CACHE = 'SAY-PANEL-static-v2.3.5'; // bump this version when you deploy
-const RUNTIME_CACHE = 'SAY-PANEL-runtime-v2.3.5';
+const STATIC_CACHE = 'SAY-PANEL-static-v2.3.6'; // bump this version when you deploy
+const RUNTIME_CACHE = 'SAY-PANEL-runtime-v2.3.6';
 
 const PRECACHE_URLS = [
   '/',
