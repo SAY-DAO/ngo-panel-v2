@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -75,7 +75,6 @@ const trainees = process.env.REACT_APP_TRAINEE_IDS
 const NeedAdd = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const BCrumb = [
@@ -280,12 +279,14 @@ const NeedAdd = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  // Need Add success
   useEffect(() => {
     if (successAddNeed) {
       dispatch({ type: CHILD_ONE_NEED_RESET });
       reset();
+      setLink();
+      dispatch({ type: CRAWL_LINK_RESET });
       clearErrors();
-      navigate(`/need/list`);
     }
   }, [successAddNeed]);
 
@@ -301,9 +302,15 @@ const NeedAdd = () => {
       theProvider &&
       theProvider.type === NeedTypeEnum.PRODUCT &&
       crawlResult &&
-      crawlResult.cost
+      crawlResult.cost > 0
     ) {
+      clearErrors();
       setValue('cost', crawlResult.cost);
+    } else if (crawlResult && (!crawlResult.cost || crawlResult.cost === 'unavailable')) {
+      setError('link', {
+        message: 'قیمت این کالا موجود نیست!',
+        type: 'required',
+      });
     }
     if (theProvider && theProvider.type === NeedTypeEnum.SERVICE) {
       setValue('cost', 0);
@@ -859,7 +866,7 @@ const NeedAdd = () => {
                             (theProvider.type === NeedTypeEnum.SERVICE ||
                               (theProvider.type === NeedTypeEnum.PRODUCT &&
                                 crawlResult &&
-                                crawlResult.cost)) && (
+                                crawlResult.cost > 0)) && (
                               <>
                                 <Card sx={{ p: 4 }} elevation={5}>
                                   <Grid
@@ -1116,7 +1123,7 @@ const NeedAdd = () => {
                         </>
                       )}
 
-                      {/* <ul>
+                      <ul>
                         {errors && errors.name_fa && (
                           <li>
                             <Typography color="error" variant="span">
@@ -1152,13 +1159,13 @@ const NeedAdd = () => {
                             </Typography>
                           </li>
                         )}
-                        {errors && errors.imageUrl && (
+                        {/* {errors && errors.imageUrl && (
                           <li>
                             <Typography color="error" variant="span">
                               {errors && errors.imageUrl?.message}
                             </Typography>
                           </li>
-                        )}
+                        )} */}
                         {errors && errors.link && (
                           <li>
                             <Typography color="error" variant="span">
@@ -1166,14 +1173,14 @@ const NeedAdd = () => {
                             </Typography>
                           </li>
                         )}
-                        {errors && errors.doing_duration && (
+                        {/* {errors && errors.doing_duration && (
                           <li>
                             <Typography color="error" variant="span">
                               {errors && errors.doing_duration?.message}
                             </Typography>
                           </li>
-                        )}
-                      </ul> */}
+                        )} */}
+                      </ul>
                     </form>
                   </Card>
                 </Grid>
