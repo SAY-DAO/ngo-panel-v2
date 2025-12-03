@@ -68,6 +68,7 @@ import {
   DELETE_CANDIDATES_REQUEST,
   DELETE_CANDIDATES_SUCCESS,
   DELETE_CANDIDATES_FAIL,
+  CHILD_EXAMPLE_NEEDS_RESET,
 } from '../constants/needConstant';
 
 export const allNeedsReducer = (state = {}, action) => {
@@ -108,6 +109,8 @@ export const exampleNeedsReducer = (state = {}, action) => {
       return { loading: false, success: true, exampleNeeds: action.payload };
     case CHILD_EXAMPLE_NEEDS_FAIL:
       return { loading: false, error: action.payload };
+    case CHILD_EXAMPLE_NEEDS_RESET:
+      return {};
     default:
       return state;
   }
@@ -265,7 +268,6 @@ export const prepareConfirmReducer = (state = { success: false }, action) => {
       return state;
   }
 };
-
 
 export const massConfirmReducer = (state = { success: false }, action) => {
   switch (action.type) {

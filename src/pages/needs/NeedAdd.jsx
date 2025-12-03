@@ -283,6 +283,7 @@ const NeedAdd = () => {
   useEffect(() => {
     if (successAddNeed) {
       dispatch({ type: CHILD_ONE_NEED_RESET });
+      dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
       reset();
       setLink();
       dispatch({ type: CRAWL_LINK_RESET });
@@ -297,6 +298,7 @@ const NeedAdd = () => {
     return () => {};
   }, [link, theProvider]);
 
+  // link result
   useEffect(() => {
     if (
       theProvider &&
