@@ -321,7 +321,7 @@ const NeedAdd = () => {
   }, [crawlResult, oneNeed, theProvider]);
 
   useEffect(() => {
-    if (successNeedEx && oneNeed) {
+    if (oneNeed) {
       setValue('name_fa', oneNeed.name_translations.fa);
       setValue('name_en', oneNeed.name_translations.en);
       setValue('category', oneNeed.category);
@@ -330,7 +330,7 @@ const NeedAdd = () => {
       setValue('desc_en', oneNeed.description_translations.en);
       setValue('doing_duration', oneNeed.doing_duration);
     }
-  }, [successNeedEx, oneNeed]);
+  }, [oneNeed]);
 
   // set type when provider is changed
   useEffect(() => {
