@@ -283,6 +283,7 @@ const NeedAdd = () => {
   useEffect(() => {
     if (successAddNeed) {
       dispatch({ type: CHILD_ONE_NEED_RESET });
+      dispatch({ type: ADD_ONE_NEED_RESET });
       dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
       reset();
       setLink();
