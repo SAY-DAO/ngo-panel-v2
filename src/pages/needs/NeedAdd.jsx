@@ -153,7 +153,6 @@ const NeedAdd = () => {
   const { success: successAddProvider } = providerAdd;
 
   useEffect(() => {
-    dispatch(fetchProviderList());
     dispatch(fetchUnconfirmedCount());
     dispatch({ type: ADD_ONE_NEED_RESET });
   }, []);
@@ -285,6 +284,8 @@ const NeedAdd = () => {
       dispatch({ type: CHILD_ONE_NEED_RESET });
       dispatch({ type: ADD_ONE_NEED_RESET });
       dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
+      setOpenProvider(false);
+      setTheProvider();
       reset();
       setLink();
       dispatch({ type: CRAWL_LINK_RESET });
