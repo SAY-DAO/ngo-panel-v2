@@ -287,6 +287,7 @@ const NeedAdd = () => {
       setOpenProvider(false);
       setOpenProviderSelect(false)
       setTheProvider();
+      setTheNeed()
       reset();
       setLink();
       dispatch({ type: CRAWL_LINK_RESET });
