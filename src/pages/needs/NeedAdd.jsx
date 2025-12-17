@@ -221,6 +221,7 @@ const NeedAdd = () => {
   useEffect(() => {
     if (successNeedEx) {
       setOptionsPreNeed(exampleNeeds);
+      dispatch({ type: ADD_ONE_NEED_RESET }); // clear success pop-up
     }
   }, [isLoadingPreNeed, successNeedEx, openPreNeed]);
 
@@ -282,12 +283,12 @@ const NeedAdd = () => {
   useEffect(() => {
     if (successAddNeed) {
       dispatch({ type: CHILD_ONE_NEED_RESET });
-      dispatch({ type: ADD_ONE_NEED_RESET });
       dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
       setOpenProvider(false);
-      setOpenProviderSelect(false)
+      setOptionsPreNeed();
+      setOpenProviderSelect(false);
       setTheProvider();
-      setTheNeed()
+      setTheNeed();
       reset();
       setLink();
       dispatch({ type: CRAWL_LINK_RESET });
