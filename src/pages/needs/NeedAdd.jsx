@@ -159,7 +159,7 @@ const NeedAdd = () => {
 
   useEffect(() => {
     dispatch(fetchProviderList());
-  }, [successAddProvider, op]);
+  }, [successAddProvider]);
 
   // one need
   useEffect(() => {
