@@ -159,7 +159,7 @@ const NeedAdd = () => {
 
   useEffect(() => {
     dispatch(fetchProviderList());
-  }, [successAddProvider]);
+  }, [successAddProvider, op]);
 
   // one need
   useEffect(() => {
@@ -285,6 +285,7 @@ const NeedAdd = () => {
       dispatch({ type: ADD_ONE_NEED_RESET });
       dispatch({ type: CHILD_EXAMPLE_NEEDS_RESET });
       setOpenProvider(false);
+      setOpenProviderSelect(false)
       setTheProvider();
       reset();
       setLink();
